@@ -131,6 +131,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->setMaterial(mat2D);
     }
 
+    size_t numVertices = 0l;
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto &dc = *mDrawCmdArray[i];
         if (dc.Vertices == nullptr) {
@@ -138,17 +139,19 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             continue;
         }
         
-        const ui32 last = mMesh->getLastIndex();
-        mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
-        if (last > 0) {
+        const ui32 lastIndex = mMesh->getLastIndex();
+        if (numVertices > 0) {
             for (size_t j = 0; j < dc.NumIndices; ++j) {
-                dc.Indices[j] += last;
+                dc.Indices[j] += numVertices;
             }
         }
-        mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
-        mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, last);
 
-        mMesh->setLastIndex(last + dc.NumVertices);
+        mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
+        mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
+        mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, lastIndex);
+
+        mMesh->setLastIndex(lastIndex + dc.NumIndices);
+        numVertices += dc.NumVertices;
     }
 
     rbSrv->addMesh(mMesh, 0);
