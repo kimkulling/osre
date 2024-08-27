@@ -77,9 +77,9 @@ protected:
         mCanvasRenderer->selectLayer(0);
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
-        mCanvasRenderer->drawRect(0, 0, 2, 4, false);
+        mCanvasRenderer->drawRect(100, 100, 100, 40, false);
 
-        RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        mCanvasRenderer->drawRect(100, 200, 100, 40, false);
 
         return true;
     }

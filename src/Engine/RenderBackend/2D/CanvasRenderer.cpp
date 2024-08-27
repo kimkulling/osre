@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------------------------
+/*-----------------------------------------77------------------------------------------------------
 The MIT License (MIT)
 
 Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
+#include "Common/Logger.h"
+
 #include <cppcore/Memory/TPoolAllocator.h>
 
 namespace OSRE {
@@ -32,16 +34,24 @@ namespace RenderBackend {
 
 using namespace cppcore;
 
+static constexpr c8 Tag[] = "CanvasRenderer";
+
 struct DrawCmd {
     PrimitiveType mPrimType;
     size_t NumVertices;
     RenderVert *Vertices;
     size_t NumIndices;
-    ui32 *Indices;
+    ui16 *Indices;
 
     DrawCmd() = default;
     ~DrawCmd() = default;
 };
+
+// will rescale coordinates from absolute coordinates into model space coordinates
+inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
+    xOut = static_cast<f32>(x)  / static_cast<f32>(resolution.width)-1.0f;
+    yOut = static_cast<f32>(y) / static_cast<f32>(resolution.height) /* + 1.0f*/;
+}
 
 inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out) {
     x_out = x;
@@ -76,6 +86,7 @@ DrawCmd *alloc() {
 
 void dealloc(DrawCmd *cmd) {
     if (cmd == nullptr) {
+        osre_debug(Tag, "Invalid command to release");
         return;
     }
 
@@ -88,7 +99,10 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
 }
 
 CanvasRenderer::~CanvasRenderer() {
-    // empty
+    for (size_t i = 0; i < mDrawCmdArray.size(); ++i) {
+        auto &dc = *mDrawCmdArray[i];
+        dealloc(&dc);
+    }
 }
 
 void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
@@ -108,21 +122,31 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     }
 
     if (mMesh == nullptr) {
-        mMesh = new Mesh("2d", VertexType::RenderVertex, IndexType::UnsignedInt);
+        mMesh = new Mesh("2d", VertexType::RenderVertex, IndexType::UnsignedShort);
         Material *mat2D = MaterialBuilder::create2DMaterial();
+        if (mat2D == nullptr) {
+            osre_debug(Tag, "Invalid material instance detected.");
+            return;
+        }
         mMesh->setMaterial(mat2D);
     }
 
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto &dc = *mDrawCmdArray[i];
         if (dc.Vertices == nullptr) {
+            osre_debug(Tag, "Invalid draw command detecetd.");
             continue;
         }
         
-        const ui32 last = static_cast<ui32>(mMesh->getLastIndex());
+        const ui32 last = mMesh->getLastIndex();
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
-        mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui32));
+        for (size_t j = 0; j < dc.NumIndices; ++j) {
+            dc.Indices[j] += last;
+        }
+        mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
         mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, last);
+
+        mMesh->setLastIndex(last + dc.NumVertices);
     }
 
     rbSrv->addMesh(mMesh, 0);
@@ -146,6 +170,7 @@ void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {
 
 bool CanvasRenderer::selectLayer(i32 layer) {
     if (layer < 0 || layer >= mNumLayers) {
+        osre_debug(Tag, "Invalid layer selected.");
         return false;
     }
 
@@ -183,7 +208,7 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
     dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
     dc->NumIndices = 2;
-    dc->Indices = new ui32[dc->NumIndices];
+    dc->Indices = new ui16[dc->NumIndices];
     dc->Indices[0] = 0;
     dc->Indices[0] = 1;
 
@@ -194,10 +219,10 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
 
 void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled) {
     DrawCmd *dc = alloc();
-    dc->NumVertices = 3;
-    dc->Vertices = new RenderVert[dc->NumVertices];
 
     i32 x_clipped, y_clipped;
+    dc->NumVertices = 3;
+    dc->Vertices = new RenderVert[dc->NumVertices];
     clip(mResolution, x1, y1, x_clipped, y_clipped);
     dc->Vertices[0].color0 = mPenColor;
     dc->Vertices[0].position.x = (f32)x_clipped;
@@ -215,16 +240,26 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
     dc->Vertices[2].position.x = (f32)x_clipped;
     dc->Vertices[2].position.y = (f32)y_clipped;
     dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
-
+    
     if (filled) {
+        dc->NumIndices = 3;
+        dc->Indices = new ui16[dc->NumIndices];
+        dc->Indices[0] = 0;
+        dc->Indices[1] = 1;
+        dc->Indices[2] = 2;
     } else {
-    }
+        dc->NumIndices = 6;
+        dc->Indices = new ui16[dc->NumIndices];
 
-    dc->NumIndices = 3;
-    dc->Indices = new ui32[dc->NumIndices];
-    dc->Indices[0] = 0;
-    dc->Indices[1] = 1;
-    dc->Indices[2] = 2;
+        dc->Indices[0] = 0;
+        dc->Indices[1] = 1;
+
+        dc->Indices[1] = 1;
+        dc->Indices[2] = 2;
+
+        dc->Indices[2] = 1;
+        dc->Indices[0] = 2;
+    }
 
     mDrawCmdArray.add(dc);
 
@@ -232,105 +267,110 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
-    DrawCmd *dc = alloc();
+    DrawCmd *drawCmd = alloc();
 
     if (filled) {
-        dc->mPrimType = PrimitiveType::TriangleList;
-        dc->NumVertices = 6;
-        dc->Vertices = new RenderVert[dc->NumVertices];
+        drawCmd->mPrimType = PrimitiveType::TriangleList;
+        drawCmd->NumVertices = 6;
+        drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
 
         i32 x_clipped, y_clipped;
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc->Vertices[0].color0 = mPenColor;
-        dc->Vertices[0].position.x = (f32)x_clipped;
-        dc->Vertices[0].position.y = (f32)y_clipped;
-        dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
+        drawCmd->Vertices[0].color0 = mPenColor;
+        drawCmd->Vertices[0].position.x = (f32)x_clipped;
+        drawCmd->Vertices[0].position.y = (f32)y_clipped;
+        drawCmd->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y, x_clipped, y_clipped);
-        dc->Vertices[1].color0 = mPenColor;
-        dc->Vertices[1].position.x = (f32)x_clipped;
-        dc->Vertices[1].position.y = (f32)y_clipped;
-        dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
+        drawCmd->Vertices[1].color0 = mPenColor;
+        drawCmd->Vertices[1].position.x = (f32)x_clipped;
+        drawCmd->Vertices[1].position.y = (f32)y_clipped;
+        drawCmd->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
-        dc->Vertices[2].color0 = mPenColor;
-        dc->Vertices[2].position.x = (f32)x_clipped;
-        dc->Vertices[2].position.y = (f32)y_clipped;
-        dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
+        drawCmd->Vertices[2].color0 = mPenColor;
+        drawCmd->Vertices[2].position.x = (f32)x_clipped;
+        drawCmd->Vertices[2].position.y = (f32)y_clipped;
+        drawCmd->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
-        dc->Vertices[3].color0 = mPenColor;
-        dc->Vertices[3].position.x = (f32)x_clipped;
-        dc->Vertices[3].position.y = (f32)y_clipped;
-        dc->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
+        drawCmd->Vertices[3].color0 = mPenColor;
+        drawCmd->Vertices[3].position.x = (f32)x_clipped;
+        drawCmd->Vertices[3].position.y = (f32)y_clipped;
+        drawCmd->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y+h, x_clipped, y_clipped);
-        dc->Vertices[4].color0 = mPenColor;
-        dc->Vertices[4].position.x = (f32)x_clipped;
-        dc->Vertices[4].position.y = (f32)y_clipped;
-        dc->Vertices[4].position.z = static_cast<f32>(mActiveLayer);
+        drawCmd->Vertices[4].color0 = mPenColor;
+        drawCmd->Vertices[4].position.x = (f32)x_clipped;
+        drawCmd->Vertices[4].position.y = (f32)y_clipped;
+        drawCmd->Vertices[4].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc->Vertices[5].color0 = mPenColor;
-        dc->Vertices[5].position.x = (f32)x_clipped;
-        dc->Vertices[5].position.y = (f32)y_clipped;
-        dc->Vertices[5].position.z = static_cast<f32>(mActiveLayer);
+        drawCmd->Vertices[5].color0 = mPenColor;
+        drawCmd->Vertices[5].position.x = (f32)x_clipped;
+        drawCmd->Vertices[5].position.y = (f32)y_clipped;
+        drawCmd->Vertices[5].position.z = static_cast<f32>(mActiveLayer);
 
-        dc->NumIndices = 6;
-        dc->Indices = new ui32[dc->NumIndices];
-        dc->Indices[0] = 0;
-        dc->Indices[1] = 1;
-        dc->Indices[2] = 2;
+        drawCmd->NumIndices = 6;
+        drawCmd->Indices = new ui16[drawCmd->NumIndices];
+        drawCmd->Indices[0] = 0;
+        drawCmd->Indices[1] = 1;
+        drawCmd->Indices[2] = 2;
 
-        dc->Indices[3] = 2;
-        dc->Indices[4] = 3;
-        dc->Indices[5] = 0;
+        drawCmd->Indices[3] = 2;
+        drawCmd->Indices[4] = 3;
+        drawCmd->Indices[5] = 0;
     } else {
-        dc->NumVertices = 4;
-        dc->mPrimType = PrimitiveType::LineList;
-        dc->Vertices = new RenderVert[dc->NumVertices];
+        drawCmd->NumVertices = 4;
+        drawCmd->mPrimType = PrimitiveType::LineList;
+        drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
 
         i32 x_clipped, y_clipped;
+        f32 x_model, y_model;
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc->Vertices[0].color0 = mPenColor;
-        dc->Vertices[0].position.x = (f32)x_clipped;
-        dc->Vertices[0].position.y = (f32)y_clipped;
-        dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
+        drawCmd->Vertices[0].color0 = mPenColor;
+        drawCmd->Vertices[0].position.x = x_model;
+        drawCmd->Vertices[0].position.y = y_model;
+        drawCmd->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y, x_clipped, y_clipped);
-        dc->Vertices[1].color0 = mPenColor;
-        dc->Vertices[1].position.x = (f32)x_clipped;
-        dc->Vertices[1].position.y = (f32)y_clipped;
-        dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
+        drawCmd->Vertices[1].color0 = mPenColor;
+        drawCmd->Vertices[1].position.x = x_model;
+        drawCmd->Vertices[1].position.y = y_model;
+        drawCmd->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
-        dc->Vertices[2].color0 = mPenColor;
-        dc->Vertices[2].position.x = (f32)x_clipped;
-        dc->Vertices[2].position.y = (f32)y_clipped;
-        dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
+        drawCmd->Vertices[2].color0 = mPenColor;
+        drawCmd->Vertices[2].position.x = x_model;
+        drawCmd->Vertices[2].position.y = y_model;
+        drawCmd->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y+h, x_clipped, y_clipped);
-        dc->Vertices[3].color0 = mPenColor;
-        dc->Vertices[3].position.x = (f32)x_clipped;
-        dc->Vertices[3].position.y = (f32)y_clipped;
-        dc->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
+        drawCmd->Vertices[3].color0 = mPenColor;
+        drawCmd->Vertices[3].position.x = x_model;
+        drawCmd->Vertices[3].position.y = y_model;
+        drawCmd->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
 
-        dc->NumIndices = 8;
-        dc->Indices = new ui32[dc->NumIndices];
-        dc->Indices[0] = 0;
-        dc->Indices[1] = 1;
+        drawCmd->NumIndices = 8;
+        drawCmd->Indices = new ui16[drawCmd->NumIndices];
+        drawCmd->Indices[0] = 0;
+        drawCmd->Indices[1] = 1;
 
-        dc->Indices[2] = 1;
-        dc->Indices[3] = 2;
+        drawCmd->Indices[2] = 1;
+        drawCmd->Indices[3] = 2;
 
-        dc->Indices[4] = 2;
-        dc->Indices[5] = 3;
+        drawCmd->Indices[4] = 2;
+        drawCmd->Indices[5] = 3;
 
-        dc->Indices[6] = 3;
-        dc->Indices[7] = 0;
+        drawCmd->Indices[6] = 3;
+        drawCmd->Indices[7] = 0;
     }
 
-    mDrawCmdArray.add(dc);
+    mDrawCmdArray.add(drawCmd);
 
     setDirty();
 }
