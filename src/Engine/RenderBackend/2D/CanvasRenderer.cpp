@@ -140,8 +140,10 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         
         const ui32 last = mMesh->getLastIndex();
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
-        for (size_t j = 0; j < dc.NumIndices; ++j) {
-            dc.Indices[j] += last;
+        if (last > 0) {
+            for (size_t j = 0; j < dc.NumIndices; ++j) {
+                dc.Indices[j] += last;
+            }
         }
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
         mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, last);
