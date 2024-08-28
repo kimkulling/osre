@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
 #include "Common/Logger.h"
+#include "Debugging/MeshDiagnostic.h"
 
 #include <cppcore/Memory/TPoolAllocator.h>
 
@@ -131,7 +132,8 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->setMaterial(mat2D);
     }
 
-    size_t numVertices = 0l;
+    PrimitiveType prim;
+    size_t numVertices = 0l, numIndices = 0l;
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto &dc = *mDrawCmdArray[i];
         if (dc.Vertices == nullptr) {
@@ -146,13 +148,16 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             }
         }
 
+        Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
-        mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, lastIndex);
-
+        prim = dc.mPrimType;
         mMesh->setLastIndex(lastIndex + dc.NumIndices);
         numVertices += dc.NumVertices;
+        numIndices += dc.NumIndices;
     }
+    mMesh->addPrimitiveGroup(numIndices, prim, 0);
+    Debugging::MeshDiagnostic::dumpIndices((ui16 *)mMesh->getIndexBuffer()->getData(), numIndices);
 
     rbSrv->addMesh(mMesh, 0);
     mDrawCmdArray.resize(0);

@@ -179,7 +179,6 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
 
     Rect2ui rect;
     activeSurface->getWindowsRect(rect);
-    //m_oglBackend->setViewport(rect.x1, rect.y1, rect.width, rect.height);
     m_oglBackend->setViewport(0, 0, rect.width, rect.height);
 
     const String defaultFont = PlatformInterface::getInstance()->getDefaultFontName();
