@@ -160,11 +160,11 @@ enum class PrimitiveType {
 /// @brief  This enum is used to describe the type of build-in matrices.
 enum class MatrixType {
     InvalidMatrixType = -1, ///< Enum for invalid values.
-    Model = 0,              ///<
-    View,                   ///<
-    Projection,             ///<
-    Normal,                 ///<
-    NumMatrixTypes,         ///< Number of matrix types-
+    Model = 0,              ///< The model matrix type
+    View,                   ///< The view matrix type
+    Projection,             ///< The projection matrix type
+    Normal,                 ///< The normal matrix type
+    NumMatrixTypes,         ///< Number of matrix types.
 };
 
 /// @brief  This enum is used to describe the data-type of a parameter.

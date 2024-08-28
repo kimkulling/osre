@@ -284,6 +284,7 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
         drawCmd->mPrimType = PrimitiveType::TriangleList;
         drawCmd->NumVertices = 6;
         drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
+        
         clip(mResolution, x, y, x_clipped, y_clipped);
         mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[0].color0 = mPenColor;
@@ -332,9 +333,9 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
         drawCmd->Indices[1] = 1;
         drawCmd->Indices[2] = 2;
 
-        drawCmd->Indices[3] = 2;
-        drawCmd->Indices[4] = 3;
-        drawCmd->Indices[5] = 0;
+        drawCmd->Indices[3] = 3;
+        drawCmd->Indices[4] = 4;
+        drawCmd->Indices[5] = 5;
     } else {
         drawCmd->NumVertices = 4;
         drawCmd->mPrimType = PrimitiveType::LineList;

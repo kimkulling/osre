@@ -77,13 +77,13 @@ protected:
         mCanvasRenderer->selectLayer(0);
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
-        mCanvasRenderer->drawRect(100, 100, 100, 40, false);
+        mCanvasRenderer->drawRect(100, 100, 100, 40, true);
 
-        mCanvasRenderer->drawRect(100, 200, 90, 50, false);
+        mCanvasRenderer->drawRect(100, 200, 90, 50, true);
 
-        mCanvasRenderer->drawRect(100, 300, 80, 60, false);
+        mCanvasRenderer->drawRect(100, 300, 80, 60, true);
 
-        mCanvasRenderer->drawRect(100, 400, 70, 70, false);
+        mCanvasRenderer->drawRect(100, 400, 70, 70, true);
 
         return true;
     }
