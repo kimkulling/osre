@@ -75,6 +75,10 @@ protected:
 
         mCanvasRenderer = new CanvasRenderer(2, 0, 0, 1024, 768);
         mCanvasRenderer->selectLayer(0);
+        const Color4 Red(1, 0, 0, 0);
+        mCanvasRenderer->setcolor(Red);
+        mCanvasRenderer->drawRect(10, 10, 500, 40, true);
+        
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
         mCanvasRenderer->drawRect(100, 100, 100, 40, true);
@@ -84,6 +88,13 @@ protected:
         mCanvasRenderer->drawRect(100, 300, 80, 60, true);
 
         mCanvasRenderer->drawRect(100, 400, 70, 70, true);
+
+        mCanvasRenderer->drawRect(100, 500, 60, 60, false);
+
+        mCanvasRenderer->selectLayer(2);
+        Color4 yellow(1, 1, 0, 1);
+        mCanvasRenderer->setcolor(yellow);
+        mCanvasRenderer->drawRect(100, 100, 110, 30, true);
 
         return true;
     }

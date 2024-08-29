@@ -55,11 +55,13 @@ static void addMaterialParameter(Material *mat) {
  const String vertex_2d =
         getGLSLVersionString_400() + 
         getGLSLRenderVertexLayout() +
+        "out vec3 v_color0;\n"
         "out vec2 v_texindex;\n"
         "uniform mat4 Model;\n"
         "uniform mat4 View;\n"
         "uniform mat4 Projection;\n"
         "void main() {\n"
+        "    v_color0 = color0;\n"
         "    mat4 u_mvp = Projection * View * Model;\n"
         "    gl_Position = u_mvp * vec4(position, 1.0);\n"
         "    v_texindex = texcoord0;\n"
@@ -67,10 +69,13 @@ static void addMaterialParameter(Material *mat) {
 
 const String fragment_2d = "#version 330 core\n"
                        "in vec2 v_texindex;\n"
+                       "in vec3 v_color0;\n"                   
                        "out vec4 f_color;\n"
                        "uniform sampler2D u_texture;\n"
                        "void main() {\n"
-                       "    f_color = texture(u_texture, v_texindex);\n"
+                       "    f_color = texture(u_texture, v_texindex);\n" 
+                       "    if (f_color.r==0.0 || f_color.g ==0.0 || f_color.b==0.0)\n"
+                       "         f_color = vec4(v_color0,1);\n"
                        "}\n";
 
 static constexpr c8 Render2DMat[] = "2d_mat";
