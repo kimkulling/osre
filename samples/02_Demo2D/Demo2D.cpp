@@ -55,7 +55,9 @@ public:
         // empty
     }
 
-    ~Demo2DApp() override = default;
+    ~Demo2DApp() override {
+        delete mCanvasRenderer;
+    }
 
     void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
