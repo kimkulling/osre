@@ -57,6 +57,7 @@ public:
 
     ~Demo2DApp() override {
         delete mCanvasRenderer;
+        mCanvasRenderer = nullptr;
     }
 
     void quitCallback(ui32, void *) {
