@@ -155,7 +155,9 @@ bool OsreEdApp::onCreate() {
 
 void OsreEdApp::onUpdate() {
     Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-    mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
+    if (mKeyboardTransCtrl != nullptr) {
+        mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
+    }
 
     RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
