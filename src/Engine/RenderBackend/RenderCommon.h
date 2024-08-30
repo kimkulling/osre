@@ -147,14 +147,14 @@ enum class IndexType {
 
 /// @brief  This enum describes the primitive types for rendering vertex information.
 enum class PrimitiveType {
-    InvalidPrimitiveType = -1, ///< Enum for invalid enum.
-    PointList = 0,             ///< A list of points, one index per point.
-    LineList,                  ///< A list of separate lines, 2 indices per line.
-    LineStrip,                 ///< A line strip, Start and end-index and all indices between.
-    TriangleList,              ///< A list of triangles, 3 indices per triangle.
-    TriangelStrip,             ///< A strip of triangles
-    TriangleFan,               ///< A triangle fan.
-    NumPrimitiveTypes          ///< Number of enums.
+    Invalid = -1,    ///< Enum for invalid enum.
+    PointList = 0,   ///< A list of points, one index per point.
+    LineList,        ///< A list of separate lines, 2 indices per line.
+    LineStrip,       ///< A line strip, Start and end-index and all indices between.
+    TriangleList,    ///< A list of triangles, 3 indices per triangle.
+    TriangelStrip,   ///< A strip of triangles
+    TriangleFan,     ///< A triangle fan.
+    Count            ///< Number of enums.
 };
 
 /// @brief  This enum is used to describe the type of build-in matrices.

@@ -56,11 +56,22 @@ TEST_F(CanvasRendererTest, change_resolution_test) {
 TEST_F(CanvasRendererTest, set_layer_test) {
     CanvasRenderer canvasRenderer(2, 0, 0, 1024, 768);
     ASSERT_TRUE(canvasRenderer.selectLayer(0));
+    EXPECT_EQ(0, canvasRenderer.getActiveLayer());
     ASSERT_TRUE(canvasRenderer.selectLayer(1));
+    EXPECT_EQ(1, canvasRenderer.getActiveLayer());
     ASSERT_FALSE(canvasRenderer.selectLayer(2));
+    EXPECT_EQ(1, canvasRenderer.getActiveLayer());
 }
+
+TEST_F(CanvasRendererTest, set_color_test) {
+    CanvasRenderer canvasRenderer(2, 0, 0, 1024, 768);
+
+    static const Color4 Red(1, 0, 0, 0);
+    canvasRenderer.setColor(Red);
+
+    EXPECT_EQ(Red, canvasRenderer.getColor());
+}
+
 
 } // Namespace UnitTest
 } // Namespace OSRE
-
-    
