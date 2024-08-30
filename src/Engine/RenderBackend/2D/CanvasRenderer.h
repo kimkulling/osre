@@ -49,6 +49,7 @@ public:
     void render(RenderBackendService *rbSrv) override;
     void postRender(RenderBackendService *rbSrv) override;
     void setResolution(i32 x, i32 y, i32 w, i32 h);
+    void setResolution(const Rect2i &rect);
     bool selectLayer(i32 layer);
     i32 getActiveLayer() const;
     void setcolor(const Color4 &color);

@@ -169,14 +169,17 @@ void CanvasRenderer::postRender(RenderBackendService *rbSrv) {
     osre_assert(rbSrv != nullptr);
 }
 
-void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {
-    Rect2i newResolution(x, y, w, h);
-    if (mResolution == newResolution) {
+void CanvasRenderer::setResolution(const Rect2i& resolution) {
+    if (mResolution == resolution) {
         return;
     }
-
-    mResolution = newResolution;
+    mResolution = resolution;
     setDirty();
+}
+
+void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {
+    const Rect2i newResolution(x, y, w, h);
+    setResolution(newResolution);
 }
 
 bool CanvasRenderer::selectLayer(i32 layer) {
