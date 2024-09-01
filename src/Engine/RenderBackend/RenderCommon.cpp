@@ -265,11 +265,14 @@ void BufferData::copyFrom(void *data, size_t size) {
 }
 
 void BufferData::attach(const void *data, size_t size) {
-    c8 *ptr = (c8 *)data;
-    for (size_t i = 0; i < size; ++i) {
-        m_buffer.add(*ptr);
-        ++ptr;
+    if (size == 0l) {
+        return;
     }
+    osre_assert(data != nullptr);
+    
+    const size_t oldSize = m_buffer.size();
+    m_buffer.resize(oldSize + size);
+    ::memcpy(&m_buffer[oldSize], data, size);
 }
 
 BufferType BufferData::getBufferType() const {

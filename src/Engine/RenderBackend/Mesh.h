@@ -79,13 +79,14 @@ public:
             mIndexBuffer = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadWrite);
             ::memcpy(mIndexBuffer->getData(), indices, size);
         } else {
-            mVertexBuffer->attach(indices, size);
+            mIndexBuffer->attach(indices, size);
         }
     }
 
     void addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
     void addPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
     void addPrimitiveGroup(PrimitiveGroup *group);
+    void setLastIndex(ui32 lastIndex);
     ui32 getLastIndex() const;
 
     OSRE_NON_COPYABLE(Mesh)
@@ -164,6 +165,10 @@ inline const glm::mat4 &Mesh::getLocalMatrix() const {
 
 inline bool Mesh::isLocal() const {
     return mLocalModelMatrix;
+}
+
+inline void Mesh::setLastIndex(ui32 lastIndex) {
+    mLastIndex = lastIndex;
 }
 
 inline ui32 Mesh::getLastIndex() const {

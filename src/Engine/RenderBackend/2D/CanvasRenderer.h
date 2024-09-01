@@ -43,15 +43,17 @@ class OSRE_EXPORT CanvasRenderer : IRenderPath {
 public:
     using DrawCmdArray = cppcore::TArray<DrawCmd*>;
 
-    CanvasRenderer(i32 numLayers);
+    CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h);
     ~CanvasRenderer() override;
     void preRender(RenderBackendService *rbSrv) override;
     void render(RenderBackendService *rbSrv) override;
     void postRender(RenderBackendService *rbSrv) override;
     void setResolution(i32 x, i32 y, i32 w, i32 h);
+    void setResolution(const Rect2i &rect);
     bool selectLayer(i32 layer);
     i32 getActiveLayer() const;
-    void setcolor(const Color4 &color);
+    void setColor(const Color4 &color);
+    const Color4 &getColor() const;
     void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
     void drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled);
     void drawRect(i32 x, i32 y, i32 w, i32 h, bool filled);
@@ -62,7 +64,7 @@ public:
 private:
     bool mDirty;
     DrawCmdArray mDrawCmdArray;
-    glm::vec3 mPenColor;
+    Color4 mPenColor;
     Rect2i mResolution;
     i32 mActiveLayer;
     i32 mNumLayers;
