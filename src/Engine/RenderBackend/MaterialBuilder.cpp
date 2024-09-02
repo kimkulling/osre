@@ -34,6 +34,75 @@ namespace RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
 
+static void addMaterialParameter(Material *mat) {
+    if (mat == nullptr) {
+        osre_assert(false);
+        return;
+    }
+
+    Shader *shader = mat->m_shader;
+    if (shader == nullptr) {
+        osre_assert(false);
+        return;
+    }
+
+    shader->addUniformBuffer("Model");
+    shader->addUniformBuffer("View");
+    shader->addUniformBuffer("Projection");
+}
+
+// see https://jasonliang.js.org/batch-renderer.html
+ const String vertex_2d =
+        getGLSLVersionString_400() + 
+        getGLSLRenderVertexLayout() +
+        "out vec3 v_color0;\n"
+        "out vec2 v_texindex;\n"
+        "uniform mat4 Model;\n"
+        "uniform mat4 View;\n"
+        "uniform mat4 Projection;\n"
+        "void main() {\n"
+        "    v_color0 = color0;\n"
+        "    mat4 u_mvp = Projection * View * Model;\n"
+        "    gl_Position = u_mvp * vec4(position, 1.0);\n"
+        "    v_texindex = texcoord0;\n"
+        "}\n";
+
+const String fragment_2d = "#version 330 core\n"
+                       "in vec2 v_texindex;\n"
+                       "in vec3 v_color0;\n"                   
+                       "out vec4 f_color;\n"
+                       "uniform sampler2D u_texture;\n"
+                       "void main() {\n"
+                       "    f_color = texture(u_texture, v_texindex);\n" 
+                       "    if (f_color.r==0.0 || f_color.g ==0.0 || f_color.b==0.0)\n"
+                       "         f_color = vec4(v_color0,1);\n"
+                       "}\n";
+
+static constexpr c8 Render2DMat[] = "2d_mat";
+
+Material *MaterialBuilder::create2DMaterial() {
+    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    Material *mat = materialCache->find(Render2DMat);
+    if (nullptr != mat) {
+        return mat;
+    }
+
+    mat = materialCache->create(Render2DMat);
+
+    ShaderSourceArray shArray;
+    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    mat->createShader(shArray);
+
+        // Setup shader attributes and variables
+    if (nullptr != mat->m_shader) {
+        mat->m_shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+        addMaterialParameter(mat);
+    }
+
+    return mat;
+}
+
 static const String GLSLVsSrc =
         getGLSLVersionString_400() +
         getNewLine() +
@@ -150,23 +219,6 @@ void MaterialBuilder::create(GLSLVersion glslVersion) {
 void MaterialBuilder::destroy() {
     delete sData;
     sData = nullptr;
-}
-
-static void addMaterialParameter(Material *mat) {
-    if (mat == nullptr) {
-        osre_assert(false);
-        return;
-    }
-
-    Shader *shader = mat->m_shader;
-    if (shader == nullptr) {
-        osre_assert(false);
-        return;
-    }
-
-    shader->addUniformBuffer("Model");
-    shader->addUniformBuffer("View");
-    shader->addUniformBuffer("Projection");
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
@@ -308,7 +360,7 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
 
 static constexpr c8 DefaultDebugTestMat[] = "debug_text_mat";
 
-RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
+Material *MaterialBuilder::createDebugRenderTextMaterial() {
     MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(DefaultDebugTestMat);
     if (nullptr != mat) {

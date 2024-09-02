@@ -261,7 +261,7 @@ struct Color4 {
         return !(*this == rhs);
     }
 
-    glm::vec4 toVec4() {
+    glm::vec4 toVec4() const {
         glm::vec4 col = {};
         col.r = m_r;
         col.g = m_g;

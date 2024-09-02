@@ -35,33 +35,13 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
 TransformController::TransformController(TransformMatrixBlock &tmb) :
+        mKeyboardMap(),
         mTransform(tmb) {
-    // empty
+    mKeyboardMap.setDefault();
 }
 
-TransformCommandType TransformController::getKeyBinding(Key key) {
-    switch (key) {
-        case Platform::KEY_A:
-            return TransformCommandType::RotateXCommandPositive;
-        case Platform::KEY_D:
-            return TransformCommandType::RotateXCommandNegative;
-        case Platform::KEY_W:
-            return TransformCommandType::RotateYCommandPositive;
-        case Platform::KEY_S:
-            return TransformCommandType::RotateYCommandNegative;
-        case Platform::KEY_Q:
-            return TransformCommandType::RotateZCommandPositive;
-        case Platform::KEY_E:
-            return TransformCommandType::RotateZCommandNegative;
-        case Platform::KEY_PLUS:
-            return TransformCommandType::ScaleInCommand;
-        case Platform::KEY_MINUS:
-            return TransformCommandType::ScaleOutCommand;
-        default:
-            break;
-    }
-
-    return TransformCommandType::InvalidCommand;
+TransformCommandType TransformController::getKeyBinding(Key key) const {
+    return mKeyboardMap.get(key);
 }
 
 void mapToSphere(const glm::vec2 &newPt, glm::vec3 *newVector, f32 w, f32 h, f32 r) {

@@ -73,6 +73,8 @@ public:
     /// @return The instance of the material.
     static RenderBackend::Material *createDebugRenderTextMaterial();
 
+    static Material *create2DMaterial();
+
 private:
     /// @brief The default class constructor.
     MaterialBuilder() = default;

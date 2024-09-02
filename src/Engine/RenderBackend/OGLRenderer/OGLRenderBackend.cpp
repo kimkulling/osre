@@ -1170,10 +1170,12 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
 void OGLRenderBackend::render(size_t primpGrpIdx) {
     OGLPrimGroup *grp(mPrimitives[primpGrpIdx]);
     if (nullptr != grp) {
-        glDrawElements(grp->m_primitive,
-                (GLsizei)grp->m_numIndices,
-                grp->m_indexType,
-                (const GLvoid *)grp->m_startIndex);
+        glDrawRangeElements(grp->m_primitive, 
+            grp->m_startIndex, 
+            grp->m_startIndex + grp->m_numIndices, 
+            grp->m_numIndices, 
+            grp->m_indexType, 
+            nullptr);        
     }
 }
 

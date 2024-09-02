@@ -26,11 +26,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Platform {
-        
+
 ///	@brief  This enum type is used to describe a key.
 enum Key {
     /// The keyboard sym's have been cleverly chosen to map to ASCII.
-    KEY_UNKNOWN = 0,
+    KEY_UNKNOWN = -1,
     KEY_FIRST = 0,
     KEY_BACKSPACE = 8,
     KEY_TAB = 9,

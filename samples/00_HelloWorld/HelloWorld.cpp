@@ -105,7 +105,7 @@ protected:
 
     void onUpdate() override {
         Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-        mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
+        mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         

@@ -55,7 +55,10 @@ public:
         // empty
     }
 
-    ~Demo2DApp() override = default;
+    ~Demo2DApp() override {
+        delete mCanvasRenderer;
+        mCanvasRenderer = nullptr;
+    }
 
     void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
@@ -73,13 +76,28 @@ protected:
             return false;
         }
 
-        mCanvasRenderer = new CanvasRenderer(2);
-
+        mCanvasRenderer = new CanvasRenderer(2, 0, 0, 1024, 768);
+        mCanvasRenderer->selectLayer(0);
+        const Color4 Red(1, 0, 0, 0);
+        mCanvasRenderer->setColor(Red);
+        mCanvasRenderer->drawRect(10, 10, 500, 40, true);
+        
         Color4 green(0, 1, 0, 1);
-        mCanvasRenderer->setcolor(green);
-        mCanvasRenderer->drawRect(1, 1, 100, 100, true);
+        mCanvasRenderer->setColor(green);
+        mCanvasRenderer->drawRect(100, 100, 100, 40, true);
 
-        RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        mCanvasRenderer->drawRect(100, 200, 90, 50, true);
+
+        mCanvasRenderer->drawRect(100, 300, 80, 60, true);
+
+        mCanvasRenderer->drawRect(100, 400, 70, 70, true);
+
+        mCanvasRenderer->drawRect(100, 500, 60, 60, false);
+
+        mCanvasRenderer->selectLayer(2);
+        Color4 yellow(1, 1, 0, 1);
+        mCanvasRenderer->setColor(yellow);
+        mCanvasRenderer->drawRect(100, 100, 110, 30, true);
 
         return true;
     }
