@@ -293,26 +293,31 @@ void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives, PrimitiveTy
 }
 
 Texture::Texture() :
-        m_textureName(""),
-        m_loc(),
-        m_targetType(TextureTargetType::Texture2D),
-        mPixelFormat(PixelFormatType::R8G8B8),
-        m_size(0),
-        m_data(nullptr),
-        m_width(0),
-        m_height(0),
-        m_channels(0),
-        m_texHandle() {
+        TextureName(""),
+        Loc(),
+        TargetType(TextureTargetType::Texture2D),
+        PixelFormat(PixelFormatType::R8G8B8),
+        Size(0),
+        Data(nullptr),
+        Width(0),
+        Height(0),
+        Channels(0),
+        TexHandle() {
     // empty
 }
 
 Texture::~Texture() {
-    delete[] m_data;
+    clear();
+}
+
+void Texture::clear() {
+    delete[] Data;
+    Data = nullptr;
 }
 
 size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
     if (nullptr == tex) {
-        return 0;
+        return 0l;
     }
 
     const String &filename = uri.getAbsPath();
@@ -325,23 +330,23 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
 
     i32 width = 0, height = 0, channels = 0;
     
-    tex->m_data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-    if (nullptr == tex->m_data) {
+    tex->Data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    if (nullptr == tex->Data) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return 0;
     }
-    tex->m_width = width;
-    tex->m_height = height;
-    tex->m_channels = channels;
+    tex->Width = width;
+    tex->Height = height;
+    tex->Channels = channels;
 
     // swap the texture data
     for (i32 j = 0; j * 2 < height; ++j) {
         i32 index1 = j * width * channels;
         i32 index2 = (height - 1 - j) * width * channels;
         for (i32 i = width * channels; i > 0; --i) {
-            uc8 temp = tex->m_data[index1];
-            tex->m_data[index1] = tex->m_data[index2];
-            tex->m_data[index2] = temp;
+            uc8 temp = tex->Data[index1];
+            tex->Data[index1] = tex->Data[index2];
+            tex->Data[index2] = temp;
             ++index1;
             ++index2;
         }
@@ -355,20 +360,27 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
 static Texture *DefaultTexture = nullptr;
 
 RenderBackend::Texture *TextureLoader::getDefaultTexture() {
-    if (nullptr == DefaultTexture) {
-        DefaultTexture = new Texture;
+    if (DefaultTexture != nullptr) {
+        return DefaultTexture;
     }
-
-    DefaultTexture->m_channels = 3;
-    DefaultTexture->m_width = 1;
-    DefaultTexture->m_height = 1;
-    DefaultTexture->m_targetType = TextureTargetType::Texture2D;
-    DefaultTexture->m_data = new uc8[4];
-    DefaultTexture->m_data[0] = 255;
-    DefaultTexture->m_data[1] = 255;
-    DefaultTexture->m_data[2] = 255;
-    DefaultTexture->m_data[3] = 255;
-    DefaultTexture->m_textureName = "default";
+    Texture *texture = new Texture;
+    texture->TextureName = "default";
+    texture->TargetType = TextureTargetType::Texture2D;
+    texture->Width = 256;
+    texture->Height = 256;
+    texture->Channels = 4;
+    const size_t data_size = texture->Width * texture->Height;
+    texture->Data = new unsigned char[data_size * texture->Channels];
+    unsigned char rgba_fg[4] = { 255, 255, 0, 255 }; // yellow
+    unsigned char rgba_bg[4] = { 255, 0, 0, 255 }; // red
+    for (auto it = texture->Data; it < texture->Data + data_size; it += 20) {
+        memset(it, 0, 20);
+        if (((it - texture->Data) + 40) % (20 * 400) == 0) {
+            it += 40;
+        } else if (((it - texture->Data) + 20) % (20 * 400) != 0) {
+            it += 20;
+        }
+    }
 
     return DefaultTexture;
 }
@@ -378,11 +390,11 @@ bool TextureLoader::unload(Texture *tex) {
         return false;
     }
 
-    stbi_image_free(tex->m_data);
-    tex->m_data = nullptr;
-    tex->m_width = 0;
-    tex->m_height = 0;
-    tex->m_channels = 0;
+    stbi_image_free(tex->Data);
+    tex->Data = nullptr;
+    tex->Width = 0;
+    tex->Height = 0;
+    tex->Channels = 0;
 
     return true;
 }
@@ -420,15 +432,15 @@ ResourceState TextureResource::onLoad(const IO::Uri &uri, TextureLoader &loader)
         return ResourceState::Error;
     }
 
-    tex->m_textureName = getName();
-    if (tex->m_textureName.find("$default") != String::npos) {
+    tex->TextureName = getName();
+    if (tex->TextureName.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
         setState(ResourceState::Loaded);
         return getState();
     }
 
     getStats().m_memory = loader.load(uri, tex);
-    tex->m_targetType = m_targetType;
+    tex->TargetType = m_targetType;
     if (0 == getStats().m_memory) {
         setState(ResourceState::Error);
         osre_debug(Tag, "Cannot load texture " + uri.getAbsPath());

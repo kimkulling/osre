@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "CanvasRenderer.h"
 #include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/Shader.h"
 #include <cppcore/Memory/TPoolAllocator.h>
 
@@ -115,7 +116,9 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->attachVertices(dc.Vertices, dc.NumVertices);
         mMesh->attachIndices(dc.Indices, dc.NumIndices);
         mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, last);
+
     }
+    rbSrv->addMesh(mMesh, 0);
 
     mDrawCmdArray.resize(0);
     setClean();

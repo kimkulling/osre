@@ -96,10 +96,10 @@ static void setTexture(const String &resolvedPath, const aiString &texPath,
     texResArray.add(texRes);
 }
 
+    
 AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
         mScene(nullptr),
         mMeshArray(),
-        mDefaultTexture(nullptr),
         mEntity(nullptr),
         mWorld(world),
         mMatArray(),
@@ -111,10 +111,6 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
         mNumVertices(0),
         mNumTriangles(0) {
     // empty
-}
- 
-AssimpWrapper::AssetContext::~AssetContext() {
-    delete mDefaultTexture;
 }
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :

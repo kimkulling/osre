@@ -802,8 +802,8 @@ OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
         return glTex;
     }
 
-    glTex = createEmptyTexture(name, tex->m_targetType, tex->mPixelFormat, tex->m_width, tex->m_height, tex->m_channels);
-    glTexImage2D(glTex->m_target, 0, GL_RGB, tex->m_width, tex->m_height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->m_data);
+    glTex = createEmptyTexture(name, tex->TargetType, tex->PixelFormat, tex->Width, tex->Height, tex->Channels);
+    glTexImage2D(glTex->m_target, 0, GL_RGB, tex->Width, tex->Height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->Data);
     glGenerateMipmap(glTex->m_target);
     glTexParameterf(glTex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
     glBindTexture(glTex->m_target, 0);

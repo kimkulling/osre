@@ -413,20 +413,20 @@ struct OSRE_EXPORT PrimitiveGroup {
 
 ///	@brief
 struct OSRE_EXPORT Texture {
-    String m_textureName;
-    IO::Uri m_loc;
-    TextureTargetType m_targetType;
-    PixelFormatType mPixelFormat;
-    ui32 m_size;
-    uc8 *m_data;
-    ui32 m_width;
-    ui32 m_height;
-    ui32 m_channels;
-    Handle m_texHandle;
+    String TextureName;
+    IO::Uri Loc;
+    TextureTargetType TargetType;
+    PixelFormatType PixelFormat;
+    ui32 Size;
+    uc8 *Data;
+    ui32 Width;
+    ui32 Height;
+    ui32 Channels;
+    Handle TexHandle;
 
     Texture();
     ~Texture();
-
+    void clear();
     OSRE_NON_COPYABLE(Texture)
 };
 

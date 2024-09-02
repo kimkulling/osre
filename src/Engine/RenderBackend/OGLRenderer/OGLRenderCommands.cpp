@@ -89,12 +89,12 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
 
     for (ui32 i = 0; i < numTextures; ++i) {
         Texture *tex(mat->m_textures[i]);
-        if (!tex->m_textureName.empty()) {
-            OGLTexture *oglTexture = rb->createTexture(tex->m_textureName, tex);
+        if (!tex->TextureName.empty()) {
+            OGLTexture *oglTexture = rb->createTexture(tex->TextureName, tex);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
             } else {
-                textures.add(rb->createDefaultTexture(tex->m_targetType, tex->mPixelFormat, tex->m_width, tex->m_height));
+                textures.add(rb->createDefaultTexture(tex->TargetType, tex->PixelFormat, tex->Width, tex->Height));
             }
         }
     }
