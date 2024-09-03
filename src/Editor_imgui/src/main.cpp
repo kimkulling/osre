@@ -21,8 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <stdio.h>
-#include <SDL.h>
-#include <SDL_opengl.h>
 #include <iostream>
 
 #define main main
@@ -59,6 +57,12 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    IO::Uri modelLoc;
+    PlatformOperations::getFileOpenDialog("Select asset for import", "*", modelLoc);
+    if (modelLoc.isValid()) {
+        osreApp.loadAsset(modelLoc);
+    }
+
     // Main loop
     bool done = false;
     while (!done) {
@@ -66,12 +70,6 @@ int main(int argc, char *argv[]) {
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
             static int counter = 0;
-
-            IO::Uri modelLoc;
-            PlatformOperations::getFileOpenDialog("Select asset for import", "*", modelLoc);
-            if (modelLoc.isValid()) {
-                osreApp.loadAsset(modelLoc);
-            }
 
             App::Stage *stage = osreApp.getStage();
             if (stage != nullptr) {
