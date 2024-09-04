@@ -125,7 +125,6 @@ private:
     struct AssetContext {
         const aiScene *mScene;
         RenderBackend::MeshArray mMeshArray;
-        RenderBackend::Texture *mDefaultTexture;
         Entity *mEntity;
         World *mWorld;
         MaterialArray mMatArray;
@@ -138,7 +137,7 @@ private:
         ui32 mNumTriangles;
         
         AssetContext(Common::Ids &ids, World *world);
-        ~AssetContext();
+        ~AssetContext() = default;
         AssetContext(const AssetContext &) = delete;
         AssetContext &operator=(const AssetContext&) = delete;
     } mAssetContext;
