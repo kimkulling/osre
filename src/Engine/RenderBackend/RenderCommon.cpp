@@ -366,16 +366,18 @@ RenderBackend::Texture *TextureLoader::getDefaultTexture() {
     if (DefaultTexture != nullptr) {
         return DefaultTexture;
     }
+    const ui32 Size = 256u;
+    const ui32 FullColorChannel = 255u;
     Texture *texture = new Texture;
     texture->TextureName = "default";
     texture->TargetType = TextureTargetType::Texture2D;
-    texture->Width = 256;
-    texture->Height = 256;
+    texture->Width = Size;
+    texture->Height = Size;
     texture->Channels = 4;
-    const size_t data_size = texture->Width * texture->Height;
+    const size_t data_size = Size * Size;
     texture->Data = new unsigned char[data_size * texture->Channels];
-    unsigned char rgba_fg[4] = { 255, 255, 0, 255 }; // yellow
-    unsigned char rgba_bg[4] = { 255, 0, 0, 255 }; // red
+    unsigned char rgba_fg[4] = { FullColorChannel, FullColorChannel, 0, FullColorChannel }; // yellow
+    unsigned char rgba_bg[4] = { FullColorChannel, 0, 0, FullColorChannel }; // red
     for (auto it = texture->Data; it < texture->Data + data_size; it += 20) {
         memset(it, 0, 20);
         if (((it - texture->Data) + 40) % (20 * 400) == 0) {
