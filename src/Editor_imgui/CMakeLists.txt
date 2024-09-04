@@ -79,7 +79,7 @@ SOURCE_GROUP(Scripting\\              FILES ${scripting_src} )
 
 SOURCE_GROUP(Main\\                   FILES ${main_src})
 
-ADD_EXECUTABLE( osre_ed_imgui
+ADD_EXECUTABLE( osre_ed
     ${actions_src}
     ${gui_src}
     ${inspector_module_src}
@@ -92,7 +92,7 @@ ADD_EXECUTABLE( osre_ed_imgui
 )
 
 IF(WIN32)
-  target_link_libraries( osre_ed_imgui osre ${Python3_LIBRARIES} Ws2_32 SDL2::SDL2 )
+  target_link_libraries( osre_ed osre ${Python3_LIBRARIES} Ws2_32 SDL2::SDL2 )
 ELSE()
-  target_link_libraries( osre_ed_imgui osre ${Python3_LIBRARIES} SDL2::SDL2 )
+  target_link_libraries( osre_ed osre ${Python3_LIBRARIES} SDL2::SDL2 )
 ENDIF(WIN32)
