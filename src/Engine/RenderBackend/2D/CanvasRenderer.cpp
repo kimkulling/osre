@@ -160,7 +160,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             }
         }
 
-        //Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
+        Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
         prim = dc.PrimType;
