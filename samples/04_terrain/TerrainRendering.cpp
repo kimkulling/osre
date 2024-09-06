@@ -186,7 +186,9 @@ protected:
 
     void onUpdate() override {
         Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-        mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
+        if (key != Platform::KEY_UNKNOWN) {
+            mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
+        }
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
