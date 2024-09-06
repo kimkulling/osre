@@ -99,6 +99,8 @@ protected:
         mCanvasRenderer->setColor(yellow);
         mCanvasRenderer->drawRect(100, 100, 110, 30, true);
 
+        mCanvasRenderer->drawRect(100, 600, 110, 124, true);
+
         return true;
     }
 
