@@ -16,7 +16,7 @@ link_directories(
     ${Python3_LIBRARIES}
 )
 
-SET( inspector_module_src 
+SET( inspector_module_src
     src/Modules/InspectorModule/InspectorModule.cpp
     src/Modules/InspectorModule/InspectorModule.h
 )
@@ -31,19 +31,19 @@ SET( editor_module_src
     src/Modules/EditorModule/EditorModule.cpp
 )
 
-SET( modules_src 
+SET( modules_src
     src/Modules/ModuleRegistry.h
     src/Modules/ModuleRegistry.cpp
 )
 
-SET( scripting_src 
+SET( scripting_src
     src/Scripting/PythonInterface.cpp
     src/Scripting/PythonInterface.h
 )
 
 set(renderview_src
     src/RenderView/MainRenderView.cpp
-    src/RenderView/MainRenderView.h    
+    src/RenderView/MainRenderView.h
 )
 
 set(actions_src
@@ -76,7 +76,6 @@ SOURCE_GROUP(Modules\\LogModule       FILES ${log_module_src} )
 SOURCE_GROUP(Modules\\EditorModule    FILES ${editor_module_src} )
 SOURCE_GROUP(Modules\\                FILES ${modules_src} )
 SOURCE_GROUP(Scripting\\              FILES ${scripting_src} )
-
 SOURCE_GROUP(Main\\                   FILES ${main_src})
 
 ADD_EXECUTABLE( osre_ed
