@@ -32,7 +32,7 @@ INCLUDE_DIRECTORIES( BEFORE
     contrib/assimp/include
     contrib/stb
     contrib/glew/include
-	contrib/unzip
+    contrib/unzip
     contrib/cppcore/include
     contrib/assimp/contrib/zlib
     contrib/cppcore/contrib/gtest-1.7.0/include
@@ -96,8 +96,8 @@ endif()
 
 if (WIN32)
     if (OSRE_BUILD_ED)
-        ADD_SUBDIRECTORY( src/Editor_imgui)
-        set_target_properties(osre_ed_imgui PROPERTIES FOLDER Editor)
+        ADD_SUBDIRECTORY( src/Editor)
+        set_target_properties(osre_ed PROPERTIES FOLDER Editor)
     endif()
 endif()
 
