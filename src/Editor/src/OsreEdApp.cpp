@@ -3,7 +3,7 @@
 #include "OSREEdApp.h"
 #include "ProgressReporter.h"
 #include "Actions/ImportAction.h"
-
+#include "Platform/PlatformOperations.h"
 #include "RenderBackend/MeshBuilder.h"
 #include "App/Stage.h"
 #include "App/TransformController.h"
@@ -154,8 +154,16 @@ bool OsreEdApp::onCreate() {
 }
 
 void OsreEdApp::onUpdate() {
+    if (AppBase::isKeyPressed(Platform::KEY_O) || AppBase::isKeyPressed(Platform::KEY_o)) {
+        IO::Uri modelLoc;
+        Platform::PlatformOperations::getFileOpenDialog("Choose asset for import", "*", modelLoc);
+        if (modelLoc.isValid()) {
+            loadAsset(modelLoc);
+        }
+    }
+
     Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-    if (mKeyboardTransCtrl != nullptr) {
+    if (key != Platform::KEY_UNKNOWN && mKeyboardTransCtrl != nullptr) {
         mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
     }
 
