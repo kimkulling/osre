@@ -48,7 +48,6 @@ using namespace OSRE::Editor;
 
 static constexpr c8 Tag[] = "HelloWorldApp";
 
-
 int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
