@@ -82,7 +82,7 @@ AppBase::~AppBase() {
     delete mSettings;
 }
 
-bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, bool childWindow,
+bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, WindowMode mode, WindowType type,
         RenderBackendType renderer) {
     osre_assert(nullptr != mSettings);
 
@@ -90,8 +90,8 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
     mSettings->setInt(Settings::WinY, y);
     mSettings->setInt(Settings::WinWidth, width);
     mSettings->setInt(Settings::WinHeight, height);
-    mSettings->setBool(Settings::FullScreen, fullscreen);
-    mSettings->setBool(Settings::ChildWindow, childWindow);
+    mSettings->setBool(Settings::FullScreen, mode == WindowMode::Fullscreen);
+    mSettings->setBool(Settings::ChildWindow, type == WindowType::Child);
     mSettings->setString(Settings::WindowsTitle, title);
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
         mSettings->setString(Settings::RenderAPI, "opengl");
