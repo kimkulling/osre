@@ -205,7 +205,7 @@ protected:
 
 int main(int argc, char *argv[]) {
     TerrainRenderingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", false, false, RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", WindowMode::Windowed, WindowType::Root, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 
@@ -218,4 +218,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
