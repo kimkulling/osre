@@ -48,10 +48,12 @@ static constexpr GLint InvalidLocationId = -1;
 /// shader stages like vertex-, fragment or geometry-shader.
 /// You can load a shader for a given type from a file or from in-memory string buffer.
 //-------------------------------------------------------------------------------------------------
-class OGLShader : public Common::Object {
+class OGLShader final : public Common::Object {
 public:
+    /// @brief Buffer length.
     static constexpr ui32 MaxLen = 64u;
 
+    /// @brief Declares an active parameter.
     struct ActiveParameter {
         c8 m_name[MaxLen];
         GLint m_location;
@@ -70,15 +72,15 @@ public:
     OGLShader( const String &name );
 
     /// @brief  The class destructor.
-    virtual ~OGLShader();
-    
+    ~OGLShader() override;
+
     /// @brief  Will load the shader type from a given string.
     /// @param  type    [in] The shader type.
     /// @param  src     [in] The shader source to compile.
     /// @return true, if compile was successful, false in case of an error.
     bool loadFromSource( ShaderType type, const String &src );
-    
-    /// @brief	
+
+    /// @brief	Will load the source fir a given io-stream.
     /// @param  type    [in] The shader type.
     /// @param  stream  [in] The stream  containing the source.
     /// @return true, if compile was successful, false in case of an error.
@@ -87,13 +89,13 @@ public:
     /// @brief  Will create and link a shader program.
     /// @return true, if create & link was successful, false in case of an error.
     bool createAndLink();
-    
+
     /// @brief  Will bind this program to the current render context.
     void use();
 
     /// @brief  Will unbind this program to the current render context.
     void unuse();
-    
+
 	///	@brief	Will perform a lookup if the attribute is used in the shader program. 
 	///         The shader program must be compiled before.
 	///	@param	attribute	[in] The name of the attribute to look for.
@@ -113,7 +115,7 @@ public:
     /// @brief  Adds a new uniform to the shader.
     /// @param  uniform     [in] The name of the uniform.
     void addUniform( const String& uniform );
-    
+
     /// @brief  Will create a list with all active attributes.
     void getActiveAttributeList();
 
@@ -136,16 +138,16 @@ public:
     OGLShader &operator = ( const OGLShader & ) = delete;
 
 private:
-    ParameterArray m_attribParams;
-    ParameterArray m_uniformParams;
+    ParameterArray mAttribParams;
+    ParameterArray mUniformParams;
 
-    ui32 m_shaderprog;
-    ui32 m_numShader;
-    ui32 m_shaders[ MaxShaderTypes ];
-    std::map<String, GLint> m_attributeMap;
-    std::map<String, GLint> m_uniformLocationMap;
-    bool m_isCompiledAndLinked;
-	bool m_isInUse;
+    ui32 mShaderprog;
+    ui32 mNumShader;
+    ui32 mShaders[MaxShaderTypes];
+    std::map<String, GLint> mAttributeMap;
+    std::map<String, GLint> mUniformLocationMap;
+    bool mIsCompiledAndLinked;
+	bool mIsInUse;
 };
 
 } // Namespace RenderBackend

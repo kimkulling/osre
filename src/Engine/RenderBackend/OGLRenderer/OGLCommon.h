@@ -48,9 +48,9 @@ void checkOGLErrorState(const c8 *file, ui32 line);
 /// @brief  This macro will check the OpenGL-error state and write a message into the log.
 //-------------------------------------------------------------------------------------------------
 #ifdef _DEBUG
-#define CHECKOGLERRORSTATE() checkOGLErrorState(__FILE__, __LINE__)
+#   define CHECKOGLERRORSTATE() checkOGLErrorState(__FILE__, __LINE__)
 #else
-#define CHECKOGLERRORSTATE()
+#   define CHECKOGLERRORSTATE()
 #endif // _DEBUG
 
 static constexpr GLuint OGLNotSetId = 999999;   ///< Indicates a not inited opengl id.
@@ -67,7 +67,7 @@ struct OGLBuffer {
 
     /// @brief The default class constructor.
     OGLBuffer() : m_handle(0), m_type(BufferType::InvalidType), m_oglId(OGLNotSetId), m_geoId(0), m_size(0){}
-    
+
     /// @brief  The class destructor, default implementation.
     ~OGLBuffer() = default;
 };

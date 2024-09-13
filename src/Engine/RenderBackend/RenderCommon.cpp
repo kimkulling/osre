@@ -531,18 +531,14 @@ bool Viewport::operator!=(const Viewport &rhs) const {
 }
 
 Light::Light() :
-        m_position(0.0f, 0.0f, 0.0f, 1.0f),
-        m_specular(1.0f, 1.0f, 1.0f),
-        m_diffuse(1.0f, 1.0f, 1.0f),
-        m_ambient(1.0f, 1.0f, 1.0f),
-        m_direction(0.0f, 0.0f, 1.0f, 1.0f),
-        m_specularExp(1.0f),
-        mRadius(1.0f),
-        m_type(LightType::InvalidLightType) {
-    // empty
-}
-
-Light::~Light() {
+        Position(0.0f, 0.0f, 0.0f, 1.0f),
+        Specular(1.0f, 1.0f, 1.0f),
+        Diffuse(1.0f, 1.0f, 1.0f),
+        Ambient(1.0f, 1.0f, 1.0f),
+        Direction(0.0f, 0.0f, 1.0f, 1.0f),
+        SpecularExp(1.0f),
+        Radius(1.0f),
+        Type(LightType::InvalidLightType) {
     // empty
 }
 
