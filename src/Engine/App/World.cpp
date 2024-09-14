@@ -178,7 +178,7 @@ void World::updateBoundingTrees() {
         }
         MeshProcessor processor;
         RenderComponent *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
-        for (ui32 j = 0; j < rc->getNumGeometry(); ++j) {
+        for (ui32 j = 0; j < rc->getNumMeshes(); ++j) {
             processor.addMesh(rc->getMeshAt(j));
         }
         if (processor.execute()) {

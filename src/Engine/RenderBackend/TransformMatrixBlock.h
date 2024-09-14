@@ -40,20 +40,20 @@ struct OSRE_EXPORT TransformMatrixBlock {
 
     ///	@brief The class constructor.
     TransformMatrixBlock();
-    
+
     ///	@brief The class destructor.
     ~TransformMatrixBlock() = default;
-    
+
     ///	@brief Will init the data, all matrixes ar unit-matrices again.
     void init();
-    
+
     /// @brief All matrices will be recomputed.
     void update();
-    
+
     /// @brief The model matrix getter.
     /// @return const reference to the model matrix.
     const glm::mat4 &getModel() const;
-    
+
     /// @brief The view matrix getter.
     /// @return const reference to the view matrix.
     const glm::mat4 &getView() const;

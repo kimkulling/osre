@@ -25,12 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-TransformMatrixBlock::TransformMatrixBlock() :
-        mProjection(1.0f),
-        mModel(1.0f),
-        mView(1.0f),
-        mNormal(1.0f),
-        mMvp(1.0f) {
+TransformMatrixBlock::TransformMatrixBlock() {
     init();
 }
 
@@ -76,7 +71,6 @@ const float *TransformMatrixBlock::getMVP() {
     mMvp = mProjection * modelView;
     return glm::value_ptr(mMvp);
 }
-
 
 } // namespace RenderBackend
 } // namespace OSRE
