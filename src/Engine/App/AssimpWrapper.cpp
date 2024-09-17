@@ -216,22 +216,12 @@ Entity *AssimpWrapper::convertScene() {
     if (nullptr != mAssetContext.mScene->mRootNode) {
         importNode(mAssetContext.mScene->mRootNode, nullptr);
     }
-    AnimationMap animLookup;
-    if (nullptr != mAssetContext.mScene->mAnimations) {
-        cppcore::TArray<AnimationTrack> animationTracks;
-        animationTracks.resize(mAssetContext.mScene->mNumAnimations);
-        for (ui32 i = 0; i < mAssetContext.mScene->mNumAnimations; ++i) {
-            importAnimation(mAssetContext.mScene->mAnimations[i], animationTracks[i], animLookup);
-        }
-    }
 
+    importAnimations(mAssetContext.mScene);
+    
     if (!mAssetContext.mMeshArray.isEmpty()) {
         RenderComponent *rc = (RenderComponent*) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
         rc->addStaticMeshArray(mAssetContext.mMeshArray);
-    }
-
-    if (mAssetContext.mScene->hasSkeletons()) {
-        importSkeletons(*mAssetContext.mScene->mSkeletons, mAssetContext.mScene->mNumSkeletons);
     }
 
     return mAssetContext.mEntity;
@@ -535,34 +525,18 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
 
 using Bone2NodeMap = cppcore::THashMap<int, TransformComponent*>;
 
-void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
-    if (numSkeletons == 0 || skeletons == nullptr) {
+void AssimpWrapper::importAnimations(const aiScene *scene) {
+    if (scene == nullptr) {
         return;
     }
-
-    Bone2NodeMap bone2NodeMap;
-    for (size_t skeletonIdx = 0; skeletonIdx < numSkeletons; ++skeletonIdx) {
-        aiSkeleton &currentSkeleton = skeletons[skeletonIdx];
-        for (size_t boneIdx = 0; boneIdx < currentSkeleton.mNumBones; ++boneIdx) {
-            aiSkeletonBone *bone = currentSkeleton.mBones[boneIdx];
-            if (bone == nullptr) {
-                continue;
-            }
-
-            aiMesh *mesh = bone->mMeshId;
-            if (mesh == nullptr) {
-                continue;
-            }
+    
+    for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
+        const aiMesh *mesh = scene->mMeshes[i];
+        for (unsigned int n = 0; n < mesh->mNumBones; ++n) {
+            const aiBone *bone = mesh->mBones[n];
+            mAssetContext.mBone2NodeMap[bone->mName.data] = scene->mRootNode->FindNode(bone->mName);
         }
     }
-}
-
-void AssimpWrapper::importAnimation(aiAnimation *animation, AnimationTrack &currentAnimationTrack, AnimationMap &animLookup) {
-    if (nullptr == animation) {
-        return;
-    }
-
-    currentAnimationTrack.mName = animation->mName.C_Str();
 }
 
 } // namespace App

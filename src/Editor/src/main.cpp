@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
     OsreEdApp osreApp(argc, argv);
-    if (!osreApp.initWindow(100, 100, 1024, 768, "test", false, true, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!osreApp.initWindow(100, 100, 1024, 768, "test", false, true, RenderBackendType::OpenGLRenderBackend)) {
         return -1;
     }
 
