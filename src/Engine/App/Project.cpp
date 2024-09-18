@@ -212,7 +212,7 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
         }
 
         auto *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
-        numMeshes += rc->getNumGeometry();
+        numMeshes += rc->getNumMeshes();
     }
 
     MeshData *md = new MeshData[numMeshes];

@@ -54,14 +54,27 @@ struct OGLParameter;
 struct UniformVar;
 struct SetMaterialStageCmdData;
 
+/// @brief Setup for screenshots
 bool makeScreenShot(const c8 *filename, ui32 w, ui32 h);
+
+/// @brief Setup for textures.
 bool setupTextures(Material* mat, OGLRenderBackend* rb, OGLTextureArray& textures);
+
+/// @brief Setup for materials.
 SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh);
+
+/// @brief Setup for shader parameters.
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);
+
+/// @brief Setup for opengl buffers.
 OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader);
+
+/// @brief Setup for render calls.
 void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& model,
     const cppcore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va);
+
+/// @brief Setup for instanced render calls.
 void setupInstancedDrawCmd(const char* id, const cppcore::TArray<size_t>& ids, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va, size_t numInstances);
 

@@ -124,24 +124,24 @@ inline size_t Component::getIndex( ComponentType type ) {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
-    /// @brief 
-    /// @param owner 
+    /// @brief The class constructor.
+    /// @param owner    The owning entity.
     RenderComponent(Entity *owner);
     
-    /// @brief 
+    /// @brief The class destructor.
     ~RenderComponent() override = default;
     
-    /// @brief 
-    /// @return 
-    size_t getNumGeometry() const;
+    /// @brief  Returns the number of meshes
+    /// @return The number of stored meshes.
+    size_t getNumMeshes() const;
     
-    /// @brief 
-    /// @param idx 
-    /// @return 
+    /// @brief  Returns the mesh at a given index.
+    /// @param[in] idx   The requested index.
+    /// @return The mesh os a nullptr if the index in invalid.
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
     
-    /// @brief 
-    /// @param array 
+    /// @brief  Returns the mesh array.
+    /// @param[inout] array 
     void getMeshArray(RenderBackend::MeshArray &array);
     
     /// @brief 

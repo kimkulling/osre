@@ -70,7 +70,7 @@ void RenderComponent::addStaticMeshArray(const RenderBackend::MeshArray &array) 
     }
 }
 
-size_t RenderComponent::getNumGeometry() const {
+size_t RenderComponent::getNumMeshes() const {
     return m_newGeo.size();
 }
 

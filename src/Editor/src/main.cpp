@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Entity.h"
 #include "Platform/AbstractWindow.h"
 #include "Common/glm_common.h"
-#include "Platform/PlatformOperations.h"
+//#include "Platform/PlatformOperations.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/win32/Win32Window.h"
 
@@ -48,7 +48,6 @@ using namespace OSRE::Editor;
 
 static constexpr c8 Tag[] = "HelloWorldApp";
 
-
 int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
@@ -57,17 +56,12 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    IO::Uri modelLoc;
-    PlatformOperations::getFileOpenDialog("Select asset for import", "*", modelLoc);
-    if (modelLoc.isValid()) {
-        osreApp.loadAsset(modelLoc);
-    }
 
     // Main loop
     bool done = false;
     while (!done) {
         static int counter = 0;
-        osreApp.handleEvents();
+        done = osreApp.handleEvents();
         App::Stage *stage = osreApp.getStage();
         if (stage != nullptr) {
             World *world = stage->getActiveWorld(0);

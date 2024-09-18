@@ -80,20 +80,32 @@ class OGLRenderBackend {
 public:
 	using VertAttribArray = cppcore::TArray<OGLVertexAttribute *>;
 
-	/// The default class constructor.
+	/// @brief The default class constructor.
 	OGLRenderBackend();
-	/// The class destructor.
+
+	/// @brief The class destructor.
 	~OGLRenderBackend();
-	///
+
+	/// @brief Will enumerate the GPU capabilities.
 	void enumerateGPUCaps();
-	/// 
-	void setClearColor(const Color4 &clearColor); 
-	/// Will set the requested global matrix for the frame.
+
+	/// @brief Will set the clear color.
+	/// @param[in] clearColor  The new clear color.
+	void setClearColor(const Color4 &clearColor);
+
+	/// @brief Will set the requested global matrix for the frame.
 	void setMatrix(MatrixType type, const glm::mat4 &mat);
-	/// All matrix values will be applied to the current frame.
+
+	/// @brief All matrix values will be applied to the current frame.
 	void applyMatrix();
+
+	/// @brief 
 	const glm::mat4 &getMatrix(MatrixType type) const;
+
+	/// @brief 
 	bool create(Platform::AbstractOGLRenderContext *renderCtx);
+
+	/// @brief 
 	bool destroy();
 	void setTimer(Platform::AbstractTimer *timer);
 	void setRenderContext(Platform::AbstractOGLRenderContext *renderCtx);

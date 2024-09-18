@@ -635,20 +635,20 @@ struct TIndexCache {
 
 ///	@brief This struct is used to desribe a light source.
 struct OSRE_EXPORT Light {
-    glm::vec4 m_position;  ///< The position of the light
-    glm::vec3 m_specular;  ///< The specular colot.
-    glm::vec3 m_diffuse;   ///< The diffuse color.
-    glm::vec3 m_ambient;   ///< The ambient color.
-    glm::vec4 m_direction; ///< The direction vector.
-    f32 m_specularExp;     ///< The specular exponent.
-    f32 mRadius;           ///< The light radius.
-    LightType m_type;      ///< The light type.
+    glm::vec4 Position;  ///< The position of the light
+    glm::vec3 Specular;  ///< The specular colot.
+    glm::vec3 Diffuse;   ///< The diffuse color.
+    glm::vec3 Ambient;   ///< The ambient color.
+    glm::vec4 Direction; ///< The direction vector.
+    f32 SpecularExp;     ///< The specular exponent.
+    f32 Radius;           ///< The light radius.
+    LightType Type;      ///< The light type.
 
     /// @brief The class constructor.
     Light();
 
     /// @brief The class destructor.
-    ~Light();
+    ~Light() = default;
 };
 
 using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;

@@ -103,6 +103,20 @@ private:
     char mKeymap[Platform::KEY_LAST];
 };
 
+enum class WindowMode {
+    Invalid,
+    Windowed,
+    Fullscreen,
+    Count
+};
+
+enum class WindowType {
+    Invalid,
+    Root,
+    Child,
+    Count
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -143,7 +157,7 @@ public:
     /// @param[in] renderer    The requested render mode.
     /// @return true, if the window was generated.
     virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
-        bool fullscreen, bool childWindow, RenderBackendType renderer);
+        WindowMode mode, WindowType type, RenderBackendType renderer);
 
     /// @brief  Creates the application.
     /// @param  settings         [in] The user-defined settings.
