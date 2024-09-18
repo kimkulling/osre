@@ -86,7 +86,6 @@ public:
     virtual size_t getNumChildren() const;
     virtual TransformComponent *getChildAt(size_t idx) const;
     virtual void releaseChildren();
-    virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setActive(bool isActive);
     virtual bool isActive() const;

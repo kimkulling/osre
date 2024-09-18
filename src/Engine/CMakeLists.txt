@@ -36,8 +36,8 @@ ENDIF( WIN32 )
 #==============================================================================
 SET(animation_src
     Animation/AnimatorBase.h
-    Animation/EnityAnimator.h
-    Animation/EnityAnimator.cpp
+    Animation/AnimatorComponent.h
+    Animation/AnimatorComponent.cpp
 )
 
 #==============================================================================
@@ -280,13 +280,6 @@ SET ( properties_src
     Properties/BasePropertyMap.cpp
     Properties/Settings.cpp
     Properties/Property.cpp
-)
-
-#==============================================================================
-# Animation
-#==============================================================================
-SET( animation_src
-    Animation/AnimatorBase.h
 )
 
 #==============================================================================

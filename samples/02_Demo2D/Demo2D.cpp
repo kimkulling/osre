@@ -101,6 +101,10 @@ protected:
 
         mCanvasRenderer->drawRect(100, 600, 110, 124, true);
 
+        mCanvasRenderer->drawRect(100, 700, 110, 124, true);
+        
+        mCanvasRenderer->drawRect(100, 1000, 110, 124, true);
+
         return true;
     }
 

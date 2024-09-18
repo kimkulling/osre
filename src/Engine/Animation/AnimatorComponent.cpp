@@ -25,11 +25,58 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE{
 namespace Animation {
 
-class AnimatorComponent {
-public:
-    AnimatorComponent();
-    ~AnimatorComponent();
-};
-    
+using namespace OSRE::App;
+
+AnimatorComponent::AnimatorComponent(Entity *owner, ComponentType type) :
+        Component(owner, type),
+        mAnimationTrackArray(),
+        mActiveTrack() {
+    // empty
 }
+
+AnimatorComponent::~AnimatorComponent() {
+    // empty
 }
+
+void AnimatorComponent::addTrack(AnimationTrack *track) {
+    if (track == nullptr) {
+        return;
+    }
+
+    mAnimationTrackArray.add(track);
+}
+
+AnimationTrack *AnimatorComponent::getTrackAt(size_t index) const {
+    if (index >= mAnimationTrackArray.size()) {
+        return nullptr;
+    }
+
+    return mAnimationTrackArray[index];
+}
+
+bool AnimatorComponent::selectTrack(size_t index) {
+    if (index >= mAnimationTrackArray.size()) {
+        return false;
+    }
+
+    mActiveTrack = index;
+
+    return true;
+}
+
+size_t AnimatorComponent::getActiveTrack() const {
+    return mActiveTrack;
+}
+
+bool AnimatorComponent::onUpdate(Time dt) {
+    return true;
+}
+
+bool AnimatorComponent::onRender(RenderBackend::RenderBackendService *renderBackendSrv) {
+    osre_assert(renderBackendSrv != nullptr);
+
+    return true;
+}
+
+} // namespace Animation
+} // namespace OSRE

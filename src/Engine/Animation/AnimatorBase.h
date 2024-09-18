@@ -82,30 +82,37 @@ struct OSRE_EXPORT Skeleton {
 };
 
 struct VectorKey {
-    glm::vec3 mVector;
-    d32 mTime;
+    f32 Time;
+    glm::vec3 Value;
+
+    VectorKey() : Time(1.0f), Value(1) {
+        // empty
+    }
+
+    ~VectorKey() = default;
 };
+
+using VectorKeyArray = ::cppcore::TArray<VectorKey>;
 
 struct RotationKey {
     glm::vec4 mQuad;
     d32 mTime;
 };
 
-using VectorKeyArray = ::cppcore::TArray<VectorKey>;
 using RotationKeyArray = ::cppcore::TArray<RotationKey>;
 
-struct NodeAnimation {
-    VectorKeyArray mPositions;
-    VectorKeyArray mScalings;
-    RotationKeyArray mRotations;
+struct VectorChannel {
+    size_t NumVectorKeys;
+    VectorKeyArray VectorKeys;
+
+    VectorChannel() : NumVectorKeys(0), VectorKeys() {
+        // empty
+    }
+
+    ~VectorChannel() = default;
 };
 
-struct AnimationTrack {
-    String mName;
-    double mDuration;
-    double mTicksPerSecond;
-    cppcore::TArray<NodeAnimation *> mNodeAnimations;
-};
+using VectorChannelArray = ::cppcore::TArray<VectorChannel>;
 
 template <class T>
 struct AnimatorBase {
@@ -128,7 +135,6 @@ enum class TransformCommandType {
     Count
 };
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -139,7 +145,7 @@ class OSRE_EXPORT AnimationControllerBase {
 public:
     /// @brief  The class destructor, virtual.
     virtual ~AnimationControllerBase() = default;
-    
+
     /// @brief Will update the mouse input state.
     /// @param mis   The mouse input.
     virtual void getMouseUpdate(const App::MouseInputState &mis) = 0;

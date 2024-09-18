@@ -66,21 +66,15 @@ int main(int argc, char *argv[]) {
     // Main loop
     bool done = false;
     while (!done) {
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
-            static int counter = 0;
-
-            App::Stage *stage = osreApp.getStage();
-            if (stage != nullptr) {
-                World *world = stage->getActiveWorld(0);
-            }
-
+        static int counter = 0;
+        osreApp.handleEvents();
+        App::Stage *stage = osreApp.getStage();
+        if (stage != nullptr) {
+            World *world = stage->getActiveWorld(0);
         }
+        osreApp.update();
+        osreApp.requestNextFrame();
     }
 
-    osreApp.handleEvents();
-    osreApp.update();
-    osreApp.requestNextFrame();
     return 0;
 }

@@ -73,6 +73,7 @@ bool Entity::update(Time dt) {
     if (nullptr != mBehavior) {
         mBehavior->update(dt);
     }
+
     for (auto &it : mComponentArray) {
         if (it != nullptr) {
             it->update(dt);
@@ -145,7 +146,6 @@ void Entity::serialize( IO::Stream *stream ) {
 void Entity::deserialize( IO::Stream *stream ) {
     osre_assert(stream != nullptr);
 }
-
 
 } // Namespace App
 } // Namespace OSRE

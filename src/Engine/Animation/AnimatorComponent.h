@@ -23,42 +23,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
+#include "Animation/AnimatorBase.h"
+#include "App/Component.h"
 
 namespace OSRE {
 namespace Animation {
-    
-struct VectorKey {
-    f32 Time;
-    glm::vec3 Value; 
-
-    VectorKey() : Time(1.0f), Value(1) {
-        // empty
-    }
-
-    ~VectorKey() = default;
-};
-
-struct VectorChannel {
-    size_t NumVectorKeys;
-    VectorKey *VectorKeys;
-
-    VectorChannel() : NumVectorKeys(0), VectorKeys(nullptr) {
-        // empty
-    }
-
-    ~VectorChannel() {
-        delete [] VectorKeys;
-        VectorKeys = nullptr;
-    }
-};
 
 struct AnimationTrack {
     f32 Duration;
-    f32 mTicksPerSecond;    
+    f32 mTicksPerSecond;
     size_t NumVectorChannels;
     VectorChannel *VectorChannels;
 
-    AnimationTrack() : 
+    AnimationTrack() :
             Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), VectorChannels(nullptr) {
         // empty
     }
@@ -66,8 +43,32 @@ struct AnimationTrack {
     ~AnimationTrack() {
         delete [] VectorChannels;
         VectorChannels = nullptr;
-    } 
+    }
 };
 
-}
-}
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Describes the base class for all components.
+//-------------------------------------------------------------------------------------------------
+class AnimatorComponent : public App::Component {
+public:
+    AnimatorComponent(App::Entity *owner, App::ComponentType type);
+    ~AnimatorComponent();
+    void addTrack(AnimationTrack *track);
+    AnimationTrack *getTrackAt(size_t index) const;
+    bool selectTrack(size_t index);
+    size_t getActiveTrack() const;
+
+protected:
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
+
+private:
+    using AnimationTrackArray = cppcore::TArray<AnimationTrack*>;
+    AnimationTrackArray mAnimationTrackArray;
+    size_t mActiveTrack;
+};
+
+} // namespace Animation
+} // namespace OSRE

@@ -164,10 +164,6 @@ void TransformComponent::releaseChildren() {
     }
 }
 
-void TransformComponent::update(Time dt) {
-    onUpdate(dt);
-}
-
 void TransformComponent::render(RenderBackendService *renderBackendSrv) {
     if (nullptr == renderBackendSrv) {
         return;
