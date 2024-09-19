@@ -34,7 +34,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Entity.h"
 #include "Platform/AbstractWindow.h"
 #include "Common/glm_common.h"
-//#include "Platform/PlatformOperations.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/win32/Win32Window.h"
 
@@ -48,14 +47,19 @@ using namespace OSRE::Editor;
 
 static constexpr c8 Tag[] = "HelloWorldApp";
 
+static constexpr i32 AppOk = 0;
+static constexpr i32 AppError = -1;
+
 int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
     OsreEdApp osreApp(argc, argv);
-    if (!osreApp.initWindow(100, 100, 1024, 768, "test", false, true, RenderBackendType::OpenGLRenderBackend)) {
-        return -1;
+    if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed", 
+            WindowMode::Windowed, 
+            WindowType::Child, 
+            RenderBackendType::OpenGLRenderBackend)) {
+        return AppError;
     }
-
 
     // Main loop
     bool done = false;
@@ -70,5 +74,5 @@ int main(int argc, char *argv[]) {
         osreApp.requestNextFrame();
     }
 
-    return 0;
+    return AppOk;
 }
