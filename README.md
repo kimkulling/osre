@@ -1,4 +1,6 @@
-![OSRE](assets/Icons/osre_logo2.png)
+<p align="center">
+  <img src="https://github.com/kimkulling/osre/blob/master/assets/Icons/osre_logo2.png" />
+</p>
 
 # OSRE - Just another Open Source Render Engine
 
