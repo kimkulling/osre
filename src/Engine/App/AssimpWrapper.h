@@ -79,9 +79,6 @@ public:
     /// @brief Alias for bone to node relations.
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
 
-    /// @brief Name to animation track relation alias.
-    using AnimationMap = std::map<const char*, Animation::AnimationTrack*>;
-
     /// @brief The class constructor.
     /// @param ids      The id container.
     /// @param world    The world to put the imported entity in.
@@ -112,11 +109,9 @@ public:
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
-	//void importBones(aiMesh* mesh);
     void importNode( aiNode *node, TransformComponent *parent );
     void importMaterial( aiMaterial *material );
-    void importSkeletons(aiSkeleton *skeletons, size_t numSkeletons);
-    void importAnimation(aiAnimation *animation, Animation::AnimationTrack &currentAnimationTrack, AnimationMap &animLookup);
+    void importAnimations(const aiScene *scene);
     void optimizeVertexBuffer();
 
 private:

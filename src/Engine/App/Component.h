@@ -49,6 +49,7 @@ enum class ComponentType {
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     CameraComponentType,        ///< For camera components.
+    AnimationComponentType,     ///<
     Count                       ///< The number of components.
 };
 
@@ -65,15 +66,15 @@ public:
     /// @brief The update callback
     /// @param[in] timeSlice The time slice
     virtual void update(Time timeSlice);
-    
+
     /// @brief The render callback.
     /// @param[in] renderBackendSrv  The render backend service.
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
-        
+
     /// @brief  Will return the owning entity.
     /// @return Pointer showing to the entity instance, nullptr in none.
     virtual Entity *getOwner() const;
-    
+
     /// @brief  Will return the component type.
     /// @return The component type.
     virtual ComponentType getType() const;
@@ -88,12 +89,12 @@ protected:
     /// @param[in] owner  The component type.
     /// @param[in] type   The owning entity.
     Component(Entity *owner, ComponentType type);
-    
+
     /// @brief The update callback.
     /// @param[in] dt  The time diff.
     /// @return true if successful.
     virtual bool onUpdate(Time dt) = 0;
-    
+
     /// @brief The render callback.
     /// @param renderBackendSrv   The render backend server.
     /// @return true if successful.

@@ -20,55 +20,63 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <iostream>
+#include "Animation/AnimatorComponent.h"
 
-#define main main
+namespace OSRE{
+namespace Animation {
 
-#include "App/App.h"
-#include "RenderBackend/RenderCommon.h"
-#include "RenderBackend/MeshBuilder.h"
-#include "Common/Logger.h"
-#include "RenderBackend/RenderBackendService.h"
-#include "RenderBackend/TransformMatrixBlock.h"
-#include "App/Entity.h"
-#include "Platform/AbstractWindow.h"
-#include "Common/glm_common.h"
-//#include "Platform/PlatformOperations.h"
-#include "Platform/PlatformInterface.h"
-#include "Platform/win32/Win32Window.h"
-
-#include "OSREEdApp.h"
-
-using namespace OSRE;
-using namespace OSRE::RenderBackend;
 using namespace OSRE::App;
-using namespace OSRE::Platform;
-using namespace OSRE::Editor;
 
-static constexpr c8 Tag[] = "HelloWorldApp";
-
-int main(int argc, char *argv[]) {
-    std::cout << "Editor version 0.1\n";
-
-    OsreEdApp osreApp(argc, argv);
-    if (!osreApp.initWindow(100, 100, 1024, 768, "test", false, true, RenderBackendType::OpenGLRenderBackend)) {
-        return -1;
-    }
-
-
-    // Main loop
-    bool done = false;
-    while (!done) {
-        static int counter = 0;
-        done = osreApp.handleEvents();
-        App::Stage *stage = osreApp.getStage();
-        if (stage != nullptr) {
-            World *world = stage->getActiveWorld(0);
-        }
-        osreApp.update();
-        osreApp.requestNextFrame();
-    }
-
-    return 0;
+AnimatorComponent::AnimatorComponent(Entity *owner, ComponentType type) :
+        Component(owner, type),
+        mAnimationTrackArray(),
+        mActiveTrack() {
+    // empty
 }
+
+AnimatorComponent::~AnimatorComponent() {
+    // empty
+}
+
+void AnimatorComponent::addTrack(AnimationTrack *track) {
+    if (track == nullptr) {
+        return;
+    }
+
+    mAnimationTrackArray.add(track);
+}
+
+AnimationTrack *AnimatorComponent::getTrackAt(size_t index) const {
+    if (index >= mAnimationTrackArray.size()) {
+        return nullptr;
+    }
+
+    return mAnimationTrackArray[index];
+}
+
+bool AnimatorComponent::selectTrack(size_t index) {
+    if (index >= mAnimationTrackArray.size()) {
+        return false;
+    }
+
+    mActiveTrack = index;
+
+    return true;
+}
+
+size_t AnimatorComponent::getActiveTrack() const {
+    return mActiveTrack;
+}
+
+bool AnimatorComponent::onUpdate(Time dt) {
+    return true;
+}
+
+bool AnimatorComponent::onRender(RenderBackend::RenderBackendService *renderBackendSrv) {
+    osre_assert(renderBackendSrv != nullptr);
+
+    return true;
+}
+
+} // namespace Animation
+} // namespace OSRE

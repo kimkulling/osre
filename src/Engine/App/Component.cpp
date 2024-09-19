@@ -109,7 +109,6 @@ bool LightComponent::onUpdate(Time) {
         return true;
     }
 
-    
     return true;
 }
 
