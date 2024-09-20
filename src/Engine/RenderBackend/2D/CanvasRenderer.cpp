@@ -56,8 +56,9 @@ struct DrawCmd {
 
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
-    xOut = (static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
-    yOut = (static_cast<f32>(y) / static_cast<f32>(resolution.height)) - 1.0f;
+    xOut = (2.0f * static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
+    yOut = (2.0f * static_cast<f32>(y) / static_cast<f32>(resolution.height)) - 1.0f;
+    yOut = -1.0f * yOut;
 }
 
 inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out) {
@@ -349,12 +350,12 @@ static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const R
     drawCmd->NumIndices = 6;
     drawCmd->Indices = new ui16[drawCmd->NumIndices];
     drawCmd->Indices[0] = 0;
-    drawCmd->Indices[1] = 1;
-    drawCmd->Indices[2] = 2;
+    drawCmd->Indices[1] = 2;
+    drawCmd->Indices[2] = 1;
 
     drawCmd->Indices[3] = 3;
-    drawCmd->Indices[4] = 4;
-    drawCmd->Indices[5] = 5;
+    drawCmd->Indices[4] = 5;
+    drawCmd->Indices[5] = 4;
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {

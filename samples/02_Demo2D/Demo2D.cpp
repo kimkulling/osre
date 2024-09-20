@@ -83,6 +83,10 @@ protected:
         mCanvasRenderer->drawRect(10, 10, 500, 40, true);
         
         Color4 green(0, 1, 0, 1);
+        
+        mCanvasRenderer->setColor(Red);
+        mCanvasRenderer->drawRect(1, 1, 1000, 760, false);
+
         mCanvasRenderer->setColor(green);
         mCanvasRenderer->drawRect(100, 100, 100, 40, true);
 
