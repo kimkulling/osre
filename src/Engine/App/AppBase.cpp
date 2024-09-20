@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/ResourceCacheService.h"
 #include "App/ServiceProvider.h"
 #include "App/World.h"
-#include "App/Stage.h"
 #include "App/TransformController.h"
 #include "Common/Environment.h"
 #include "Common/TObjPtr.h"
@@ -59,6 +58,17 @@ using namespace ::OSRE::IO;
 
 static constexpr c8 Tag[] = "AppBase";
 
+static void attachMouseEventPtrs(EventPtrArray &eventArray) {
+    eventArray.add(&MouseButtonDownEvent);
+    eventArray.add(&MouseButtonUpEvent);
+    eventArray.add(&MouseMoveEvent);
+}
+
+static void attachKeyboardEventPtrs(EventPtrArray &eventArray) {
+    eventArray.add(&KeyboardButtonDownEvent);
+    eventArray.add(&KeyboardButtonUpEvent);
+}
+
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
         mLastTime(0l),
@@ -73,6 +83,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr),
+        mStageMode(StageMode::Stage3D),
         mShutdownRequested(false) {
     mSettings->setString(Properties::Settings::RenderAPI, "opengl");
     mSettings->setBool(Properties::Settings::PollingMode, true);
@@ -224,17 +235,6 @@ void AppBase::setWindowsTitle(const String &title) {
     }
 }
 
-static void attachMouseEventPtrs(EventPtrArray &eventArray) {
-    eventArray.add(&MouseButtonDownEvent);
-    eventArray.add(&MouseButtonUpEvent);
-    eventArray.add(&MouseMoveEvent);
-}
-
-static void attachKeyboardEventPtrs(EventPtrArray &eventArray) {
-    eventArray.add(&KeyboardButtonDownEvent);
-    eventArray.add(&KeyboardButtonUpEvent);
-}
-
 bool AppBase::onCreate() {
     if (mAppState != State::Uninited) {
         osre_debug(Tag, "AppBase::State not in expected state: Uninited.");
@@ -280,7 +280,7 @@ bool AppBase::onCreate() {
     }
 
     // Create our world
-    mStage = new Stage("stage");
+    mStage = new Stage("stage", mStageMode);
     mStage->createWorld("world");
 
     const String &api = mRbService->getSettings()->getString(Properties::Settings::RenderAPI);
