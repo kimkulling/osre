@@ -30,6 +30,7 @@ SET ( unittest_app_src
     src/App/AssetBundleTest.cpp
     src/App/AssetRegistryTest.cpp
     src/App/AssetWrapperTest.cpp
+    src/App/StageTest.cpp
 )
 
 SET ( unittest_common_src

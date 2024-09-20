@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "App/AppCommon.h"
 #include "App/TAbstractCtrlBase.h"
+#include "App/Stage.h"
 #include "Platform/AbstractWindow.h"
 #include "Platform/PlatformCommon.h"
 #include "Platform/PlatformInterface.h"
@@ -289,6 +290,7 @@ private:
     MouseEventListener *mMouseEvListener;
     KeyboardEventListener *mKeyboardEvListener;
     Common::Ids *mIds;
+    StageMode mStageMode;
     bool mShutdownRequested;
 };
 

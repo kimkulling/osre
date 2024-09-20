@@ -49,12 +49,12 @@ struct AnimationTrack {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief Describes the base class for all components.
+///	@brief 
 //-------------------------------------------------------------------------------------------------
 class AnimatorComponent : public App::Component {
 public:
     AnimatorComponent(App::Entity *owner, App::ComponentType type);
-    ~AnimatorComponent();
+    ~AnimatorComponent() override;
     void addTrack(AnimationTrack *track);
     AnimationTrack *getTrackAt(size_t index) const;
     bool selectTrack(size_t index);
