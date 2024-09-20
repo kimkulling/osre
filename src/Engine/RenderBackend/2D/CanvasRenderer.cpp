@@ -56,8 +56,9 @@ struct DrawCmd {
 
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
-    xOut = (static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
-    yOut = (static_cast<f32>(y) / static_cast<f32>(resolution.height)) - 1.0f;
+    xOut = (2.0f * static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
+    yOut = (2.0f * static_cast<f32>(y) / static_cast<f32>(resolution.height)) - 1.0f;
+    //yOut = -1.0f * yOut;
 }
 
 inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out) {
