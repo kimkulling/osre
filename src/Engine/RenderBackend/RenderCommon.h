@@ -948,7 +948,9 @@ private:
     Shader *mShader;
 };
 
-inline IRenderPath::IRenderPath() : mShader(nullptr) {}
+inline IRenderPath::IRenderPath() : mShader(nullptr) {
+    // empty
+}
 
 enum class GLSLVersion {
     Invalid = -1,
