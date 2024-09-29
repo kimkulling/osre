@@ -26,6 +26,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Animation/AnimatorBase.h"
 #include "App/Component.h"
 
+#include <vector>
+#include <tuple>
+
 namespace OSRE {
 namespace Animation {
 
@@ -33,18 +36,20 @@ struct AnimationTrack {
     f32 Duration;
     f32 mTicksPerSecond;
     size_t NumVectorChannels;
-    VectorChannel *VectorChannels;
+    AnimationChannel *AnimationChannels;
 
     AnimationTrack() :
-            Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), VectorChannels(nullptr) {
+            Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), AnimationChannels(nullptr) {
         // empty
     }
 
     ~AnimationTrack() {
-        delete [] VectorChannels;
-        VectorChannels = nullptr;
+        delete [] AnimationChannels;
+        AnimationChannels = nullptr;
     }
 };
+
+using AnimationTrackArray = cppcore::TArray<AnimationTrack *>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -53,8 +58,9 @@ struct AnimationTrack {
 //-------------------------------------------------------------------------------------------------
 class AnimatorComponent : public App::Component {
 public:
-    AnimatorComponent(App::Entity *owner, App::ComponentType type);
+    AnimatorComponent(App::Entity *owner);
     ~AnimatorComponent() override;
+    void setAnimationTrackArray(AnimationTrackArray &animationTrackArray);
     void addTrack(AnimationTrack *track);
     AnimationTrack *getTrackAt(size_t index) const;
     bool selectTrack(size_t index);
@@ -63,11 +69,15 @@ public:
 protected:
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
+    void initTransforms();
 
 private:
-    using AnimationTrackArray = cppcore::TArray<AnimationTrack*>;
     AnimationTrackArray mAnimationTrackArray;
     size_t mActiveTrack;
+    using TransformArray = cppcore::TArray<glm::mat4>;
+    TransformArray mTransformArray;
+    std::vector<std::tuple<size_t, size_t, size_t>> mLastPositions;
+    double mLastTime;
 };
 
 } // namespace Animation

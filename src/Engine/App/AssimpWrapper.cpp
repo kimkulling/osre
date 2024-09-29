@@ -377,8 +377,8 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                         for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
                             aiVertexWeight &aiVW = currentBone->mWeights[l];
                             VertexWeight &w = wArray[weightIdx];
-                            w.m_vertexIdx = aiVW.mVertexId;
-                            w.m_vertexWeight = aiVW.mWeight;
+                            w.VertexIndex = aiVW.mVertexId;
+                            w.Weight = aiVW.mWeight;
                         }
                         bone.m_vertexWeights.add(wArray, currentBone->mNumWeights);
                         const aiNode *node = mAssetContext.mScene->mRootNode->FindNode(bone.mName.c_str());

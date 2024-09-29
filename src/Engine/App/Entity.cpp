@@ -25,12 +25,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Component.h"
 #include "App/CameraComponent.h"
 #include "App/World.h"
+#include "Animation/AnimatorBase.h"
+#include "Animation/AnimatorComponent.h"
 #include "RenderBackend/MeshProcessor.h"
 
 namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 
 Entity::Entity(const String &name, Common::Ids &ids, World *world) :
@@ -112,6 +115,9 @@ Component *Entity::createComponent(ComponentType type) {
             break;
         case OSRE::App::ComponentType::CameraComponentType:
             component = new CameraComponent(this);
+            break;
+        case OSRE::App::ComponentType::AnimationComponentType:
+            component = new AnimatorComponent(this);
             break;
         case OSRE::App::ComponentType::Invalid:
         case OSRE::App::ComponentType::Count:

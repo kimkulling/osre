@@ -167,7 +167,7 @@ void AppBase::requestNextFrame() {
 }
 
 bool AppBase::handleEvents() {
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_debug(Tag, "AppBase::PlatforInterface not in proper state: not nullptr.");
         return false;
     }
@@ -252,13 +252,14 @@ bool AppBase::onCreate() {
 
     // create the asset registry
     AssetRegistry *registry = AssetRegistry::create();
-    if (registry != nullptr) {
+    if (registry == nullptr) {
         osre_debug(Tag, "Cannot create asset registry.");
+        return false;
     }
 
     //Create the platform interface instance
     mPlatformInterface = Platform::PlatformInterface::create(mSettings);
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
         return false;
     }
