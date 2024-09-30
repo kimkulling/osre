@@ -8,9 +8,6 @@ This is just another open-source render engine / game engine made by Kim Kulling
 Don't expect too much, I will not invest too much time into it. But If you are interested in playing around with 3D stuff feel free to discuss 
 these things on Reggit or in the Discussion Forum.
 
-# Join out community
-We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
-
 # The Features:
 - CMake base build environment
 - Multithreaded Renderer 
@@ -27,11 +24,14 @@ We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
 - Virtual file system for reading zip-archives
 - Instancing
 
-# Build instructions
-- See [Build instruction in the Wiki](https://github.com/kimkulling/osre/wiki/Build)
-
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
+
+# Join out community
+We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
+
+# Build instructions
+- See [Build instruction in the Wiki](https://github.com/kimkulling/osre/wiki/Build)
 
 # Questions
 - Take a look into our [OSRE-Forum](https://github.com/kimkulling/osre/discussions)
