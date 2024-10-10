@@ -537,6 +537,30 @@ void AssimpWrapper::importAnimations(const aiScene *scene) {
             mAssetContext.mBone2NodeMap[bone->mName.data] = scene->mRootNode->FindNode(bone->mName);
         }
     }
+
+    for (ui32 animIndex = 0; animIndex < scene->mNumAnimations; ++animIndex) {
+        aiAnimation *currentAnim = scene->mAnimations[animIndex];
+        if (currentAnim == nullptr) {
+            continue;
+        }
+
+        if (currentAnim->mNumChannels > 0) {
+            AnimationChannel *channels = new AnimationChannel[currentAnim->mNumChannels];
+            for (ui32 channdelIndex = 0; channdelIndex < currentAnim->mNumChannels; ++channdelIndex) {
+                AnimationChannel &channel = channels[channdelIndex];
+                aiNodeAnim *nodeAnim = currentAnim->mChannels[channdelIndex];
+                if (nodeAnim == nullptr) {
+                    continue;
+                }
+                channel.PositionKeys.resize(nodeAnim->mNumPositionKeys);
+                
+                channel.RotationKeys.resize(nodeAnim->mNumRotationKeys);
+                
+                channel.RotationKeys.resize(nodeAnim->mNumScalingKeys);
+             
+            }
+        }
+    }
 }
 
 } // namespace App
