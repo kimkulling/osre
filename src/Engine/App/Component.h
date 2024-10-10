@@ -49,7 +49,7 @@ enum class ComponentType {
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     CameraComponentType,        ///< For camera components.
-    AnimationComponentType,     ///< Aor animation support
+    AnimationComponentType,     ///< For animation support.
     Count                       ///< The number of components.
 };
 
