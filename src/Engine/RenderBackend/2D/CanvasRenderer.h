@@ -57,6 +57,8 @@ public:
     void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
     void drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled);
     void drawRect(i32 x, i32 y, i32 w, i32 h, bool filled);
+    void selectFont();
+    void drawText();
     void setDirty();
     void setClean();
     bool isDirty() const;

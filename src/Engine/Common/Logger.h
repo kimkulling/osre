@@ -113,7 +113,7 @@ public:
     ///	@param[in] sev   The new severity of the logger.
     ///	@see	Severity
     void setVerboseMode(VerboseMode sev);
-    
+
     ///	@brief	Returns	the current severity of the logger.
     ///	@return	The current severity.
     VerboseMode getVerboseMode() const;
@@ -136,7 +136,7 @@ public:
     ///	@brief	Logs a print message.
     ///	@param[in] message  The message to log.
     /// @param[in] mode     Logging mode
-    void print( const String &message, PrintMode mode = PrintMode::WithDateTime );
+    void print( const String &message, PrintMode mode = PrintMode::WhithoutDateTime );
 
     ///	@brief	Logs a warn message.
     /// @param[in] domain  The domain.

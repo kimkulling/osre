@@ -59,7 +59,7 @@ public:
     ///	@brief  Will return true, if the middle mouse-button was pressed,
     /// @return true if the middle mouse button was pressed.
     bool middleButttonPressed() const;
-    
+
     ///	@brief  Will return true, if the right mouse-button was pressed,
     /// @return true if the right mouse button was pressed.
     bool rightButttonPressed() const;

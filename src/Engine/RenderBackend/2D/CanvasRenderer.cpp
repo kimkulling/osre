@@ -40,17 +40,17 @@ static constexpr c8 Tag[] = "CanvasRenderer";
 
 /// This struct is used to store all 2d draw commands.
 struct DrawCmd {
-    PrimitiveType PrimType;    // The primitive type
-    size_t NumVertices;        // The number of vertices
-    RenderVert *Vertices;      // The vertex buffer
-    size_t NumIndices;         // Number of indices
-    ui16 *Indices;             // The number of indices
+    PrimitiveType PrimType;    ///< The primitive type
+    size_t NumVertices;        ///< The number of vertices
+    RenderVert *Vertices;      ///< The vertex buffer
+    size_t NumIndices;         ///< Number of indices
+    ui16 *Indices;             ///< The number of indices
 
-    // The class constructor.
+    /// The class constructor.
     DrawCmd() :
             PrimType(PrimitiveType::Invalid), NumVertices(0u), Vertices(nullptr), NumIndices(0u), Indices(nullptr) {}
 
-    // The class descructor.
+    /// The class descructor.
     ~DrawCmd() = default;
 };
 
@@ -153,7 +153,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             osre_debug(Tag, "Invalid draw command detecetd.");
             continue;
         }
-        
+
         const ui32 lastIndex = mMesh->getLastIndex();
         if (numVertices > 0) {
             for (size_t j = 0; j < dc.NumIndices; ++j) {
@@ -170,7 +170,6 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         numIndices += dc.NumIndices;
     }
     mMesh->addPrimitiveGroup(numIndices, prim, 0);
-    //Debugging::MeshDiagnostic::dumpIndices((ui16 *)mMesh->getIndexBuffer()->getData(), numIndices);
 
     rbSrv->addMesh(mMesh, 0);
     mDrawCmdArray.resize(0);
@@ -359,31 +358,31 @@ static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const R
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
+    setDirty();
     DrawCmd *drawCmd = nullptr;
     if (filled) {
         drawCmd = alloc();
         createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, h, mActiveLayer);
         mDrawCmdArray.add(drawCmd);
-    } else {
-        const ui32 thickness = 2;
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, thickness, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y + h, w, thickness, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y, thickness, h, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-        
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x+w, y, thickness, h, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
+        return;
     }
 
-    setDirty();
+    const ui32 thickness = 2;
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, thickness, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y + h, w, thickness, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y, thickness, h, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+        
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x+w, y, thickness, h, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
 }
 
 } // namespace RenderBackend

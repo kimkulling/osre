@@ -33,7 +33,7 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to generate any kind of lines in 3d-space.
+///	@brief  This class is used to generate any kind of lines in 3d-Space.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT LineBuilder {
 public:
@@ -44,9 +44,9 @@ public:
     ~LineBuilder() = default;
 
     ///	@brief  Will add a new line element to the active mesh.
-    /// 
+    ///
     /// The form p0 --- p1 will be used.
-    /// 
+    ///
     /// @param[in] pos0     Edge 0
     /// @param[in] pos1     Edge 1
     /// @return The line builder reference.

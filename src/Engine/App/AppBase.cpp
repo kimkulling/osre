@@ -122,7 +122,7 @@ void AppBase::update() {
     if (mAppState == State::Created) {
         mAppState = State::Running;
     }
-    
+
     onUpdate();
 }
 
