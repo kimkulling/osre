@@ -54,10 +54,11 @@ int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
     OsreEdApp osreApp(argc, argv);
-    if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed", 
-            WindowMode::Windowed, 
-            WindowType::Child, 
+    if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed",
+            WindowMode::Windowed,
+            WindowType::Child,
             RenderBackendType::OpenGLRenderBackend)) {
+        osre_error(Tag, "Cannot open the window.");
         return AppError;
     }
 

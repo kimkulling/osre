@@ -192,18 +192,18 @@ enum class VertexAttribute : int {
     TexCoord0,               ///< "texcoord0"
     TexCoord1,               ///< "texcoord1"
     TexCoord2,               ///< "texcoord2"
-    TexCoord3, ///< "texcoord3"
-    Tangent, ///< "tangent
-    Binormal, ///< "binormal"
-    Weights, ///< "weights" (skin weights)
-    Indices, ///< "indices" (skin indices)
-    Color0, ///< "color0"
-    Color1, ///< "color1"
-    Instance0, ///< "instance0"
-    Instance1, ///< "instance1"
-    Instance2, ///< "instance2"
-    Instance3, ///< "instance3"
-    NumVertexAttrs ///< Number of enums.
+    TexCoord3,               ///< "texcoord3"
+    Tangent,                 ///< "tangent
+    Binormal,                ///< "binormal"
+    Weights,                 ///< "weights" (skin weights)
+    Indices,                 ///< "indices" (skin indices)
+    Color0,                  ///< "color0"
+    Color1,                  ///< "color1"
+    Instance0,               ///< "instance0"
+    Instance1,               ///< "instance1"
+    Instance2,               ///< "instance2"
+    Instance3,               ///< "instance3"
+    NumVertexAttrs           ///< Number of enums.
 };
 
 /// @brief  This enum describes the vertex data format.
@@ -222,11 +222,11 @@ enum class VertexFormat : int {
 
 /// @brief This enum describes the light type.
 enum class LightType {
-    InvalidLightType = -1, ///< Enum for invalid enum.
-    Directional = 0,
-    Point,
-    Spot,
-    NumLightTypes
+    InvalidLightType = -1,    ///< Enum for invalid enum.
+    Directional = 0,          ///< Directional light
+    Point,                    ///< Point light.
+    Spot,                     ///< Spotlight
+    NumLightTypes             ///<
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.

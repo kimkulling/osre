@@ -50,14 +50,14 @@ public:
     /// @brief  Will create the build-in material for the given type of vertex.
     /// @param  type    The vertex type.
     /// @return The build-in material instance will be returned.
-    static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
+    static Material *createBuildinMaterial( RenderBackend::VertexType type );
         
     /// @brief  Will create the texture material instance.
     /// @param  matName      The name for the material.
     /// @param  texResArray  The array with all textures to use.
     /// @param  type         The vertex type.
     /// @return The created instance will be returned.
-    static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
+    static Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         RenderBackend::VertexType type );
     
     /// @brief  Will create the texture material instance with your own shader code.
@@ -66,7 +66,7 @@ public:
     /// @param  VsSrc        The vertex shader source.
     /// @param  FsSrc        The fragment shader source.
     /// @return The created instance will be returned.
-    static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
+    static Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         const String& VsSrc, const String& FsSrc);
 
     /// @brief  Will create the debug render text material.
