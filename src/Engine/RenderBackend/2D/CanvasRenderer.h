@@ -36,13 +36,14 @@ struct DrawCmd;
 
 /// @brief The 2D point structure.
 struct Point2Di {
-    i32 x, y;
+    i32 x, y;    /// Coordinate components
 };
 
+/// @brief The font structure.
 struct Font {
-    String Name;
-    i32 Size;
-    i32 Style;
+    String Name;    ///< Font name
+    i32 Size;       ///< Font size
+    i32 Style;      ///< Font style
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -112,7 +113,7 @@ public:
     /// @param y2    The y position of the end point.
     void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
     
-    /// @brief Will draw a 2D-triangle.
+    /// @brief Will draw a 2D-line.
     /// @param p1      The first point.
     /// @param p2      The second point.
     void drawline(const Point2Di &p1, const Point2Di &p2);
