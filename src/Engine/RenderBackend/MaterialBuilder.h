@@ -30,7 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -47,9 +46,9 @@ public:
     /// @brief Will destroy the material builder instance.
     static void destroy();
     
-    /// @brief  Will create the build-in material for the given type of vertex.
+    /// @brief  Will create the built-in material for the given type of vertex.
     /// @param  type    The vertex type.
-    /// @return The build-in material instance will be returned.
+    /// @return The built-in material instance will be returned.
     static Material *createBuildinMaterial( RenderBackend::VertexType type );
         
     /// @brief  Will create the texture material instance.
