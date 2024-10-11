@@ -36,7 +36,7 @@ struct DrawCmd;
 
 /// @brief The 2D point structure.
 struct Point2Di {
-    i32 x, y;    /// Coordinate components
+    i32 X, Y;    /// Coordinate components
 };
 
 /// @brief The font structure.
