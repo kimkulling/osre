@@ -254,7 +254,7 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
 }
 
 void CanvasRenderer::drawline(const Point2Di &p1, const Point2Di &p2) {
-    drawline(p1.x, p1.y, p2.x, p2.y);
+    drawline(p1.X, p1.Y, p2.X, p2.Y);
 }
 
 void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled) {
@@ -307,7 +307,7 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
 }
 
 void CanvasRenderer::drawTriangle(const Point2Di &p1, const Point2Di &p2, const Point2Di &p3, bool filled) {
-    drawTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, filled);
+    drawTriangle(p1.X, p1.Y, p2.X, p2.Y, p3.X, p3.Y, filled);
 }
 
 static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
