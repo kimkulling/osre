@@ -109,6 +109,8 @@ protected:
         
         mCanvasRenderer->drawRect(100, 1000, 110, 124, true);
 
+        mCanvasRenderer->drawText(300, 100, "Test");
+
         return true;
     }
 

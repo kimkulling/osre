@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/Mesh/MeshUtilities.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Mesh.h"
 #include "Common/Logger.h"
@@ -337,7 +338,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
     return *this;
 }
 
-static constexpr size_t NumQuadVert = 4;
+/*static constexpr size_t NumQuadVert = 4;
 
 static size_t getNumTextVerts( const String &text ) {
     const size_t NumTextVerts = NumQuadVert * text.size();
@@ -439,7 +440,7 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
         (*textIndices)[5 + IndexOffset] = 3 + VertexOffset;
         ++textCol;
     }
-}
+}*/
 
 MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access) {
 	if ( text.empty() ) {
@@ -448,14 +449,15 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
 
     Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
 
-    glm::vec3 *textPos(nullptr), *colors(nullptr);
-    glm::vec2 *tex0(nullptr);
+    Vec3Array positions;
+    Vec3Array colors;
+    Vec2Array tex0;
     ui16 *textIndices(nullptr);
-    generateTextBoxVerticesAndIndices(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
+    MeshUtilities::generateTextBoxVerticesAndIndices(x, y, textSize, text, positions, colors, tex0, &textIndices);
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
-    allocVertices(mesh, mesh->getVertexType(), text.size() * NumQuadVert, textPos, colors, tex0, access);
+    allocVertices(mesh, mesh->getVertexType(), text.size() * MeshUtilities::NumQuadVert, &positions[0], &colors[0], &tex0[0], access);
 
     // setup triangle indices
     size_t size = sizeof(ui16) * 6 * text.size();
@@ -480,17 +482,17 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
         return;
     }
 
-    const size_t numTextVerts( getNumTextVerts( text ) );
+    const size_t numTextVerts( MeshUtilities::getNumTextVerts( text ) );
     glm::vec2 *tex0 = new glm::vec2[ numTextVerts ];
 
     // setup triangle vertices    
-    glm::vec3 col[NumQuadVert] = {};
+    glm::vec3 col[ MeshUtilities::NumQuadVert] = {};
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
     col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    glm::vec3 pos[NumQuadVert] = {};
+    glm::vec3 pos[MeshUtilities::NumQuadVert] = {};
     pos[ 0 ] = glm::vec3( 0, 0, 0 );
     pos[ 1 ] = glm::vec3( 0, textSize, 0 );
     pos[ 2 ] = glm::vec3( textSize, 0, 0 );
@@ -504,7 +506,7 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
             continue;
         }
 
-        const ui32 VertexOffset( i * NumQuadVert );
+        const ui32 VertexOffset( i * MeshUtilities::NumQuadVert );
 
         const i32 column = ( ch ) % 16;
         const i32 row = ( ch ) / 16;

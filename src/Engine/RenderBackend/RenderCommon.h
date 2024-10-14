@@ -927,15 +927,18 @@ struct FrameBuffer {
     FrameBuffer &operator=(const FrameBuffer &) = delete;
 };
 
+/// @brief The render pass type.
 enum class RenderPassType : ui32 {
     StaticRenderPass,
     UiRenderPass
 };
 
+/// @brief The render target structure.
 struct RenderTarget {
     // empty
 };
 
+/// @brief The render path interface.
 struct OSRE_EXPORT IRenderPath {
     IRenderPath();
     virtual ~IRenderPath() = default;
@@ -970,6 +973,9 @@ enum class GLSLVersion {
     Count
 };
 
+/// @brief Will return the GLSL version from a given string.
+/// @param versionString    [in] The version string.
+/// @return The GLSL version.
 GLSLVersion getGlslVersionFromeString(const c8 *versionString);
 
 } // Namespace RenderBackend

@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
+#include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
 
 #include "Debugging/MeshDiagnostic.h"
@@ -405,6 +406,45 @@ void CanvasRenderer::selectFont(Font *font) {
 }
 
 void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
+    if (text.empty()) {
+        return;
+    }
+
+    if (mFont == nullptr) {
+        osre_debug(Tag, "No font selected.");
+        return;
+    }
+    f32 x_model, y_model, fontSize = static_cast<f32>(mFont->Size)/static_cast<f32>(mResolution.getWidth());
+    mapCoordinates(mResolution, x, y, x_model, y_model);
+    Vec3Array positions;
+    Vec3Array colors;
+    Vec2Array tex0;
+    ui16 *indices = nullptr;
+    MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, &indices);
+
+    DrawCmd *drawCmd = alloc();
+    i32 x_clipped, y_clipped;
+
+    drawCmd->PrimType = PrimitiveType::TriangleList;
+    drawCmd->NumVertices = positions.size();
+    drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
+    const size_t numIndices = MeshUtilities::getNumTextIndices(text);
+    drawCmd->NumIndices = numIndices;
+    drawCmd->Indices = new ui16[drawCmd->NumIndices];
+
+    for (size_t posIndex = 0; posIndex < positions.size(); ++posIndex) {
+        drawCmd->Vertices[posIndex].color0 = mPenColor.toVec4();
+        drawCmd->Vertices[posIndex].position.x = positions[posIndex].x;
+        drawCmd->Vertices[posIndex].position.y = positions[posIndex].y;
+        drawCmd->Vertices[posIndex].position.z = static_cast<f32>(-mActiveLayer);
+    }
+    
+    for (size_t idxIndex = 0; idxIndex < numIndices; ++idxIndex) {
+        drawCmd->Indices[idxIndex] = indices[idxIndex];
+    }
+
+    mDrawCmdArray.add(drawCmd);
+
     setDirty();
 }
 

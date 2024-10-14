@@ -34,9 +34,14 @@ class Mesh;
 
 struct DrawCmd;
 
-/// @brief The 2D point structure.
+/// @brief The 2D point structure for int32.
 struct Point2Di {
     i32 X, Y;    /// Coordinate components
+};
+
+/// @brief The 2D point structure for floats.
+struct Point2Df {
+    f32 X, Y;    /// Coordinate components
 };
 
 /// @brief The font structure.
