@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/osre_debugging.h"
 #include "Common/Tokenizer.h"
 
-namespace OSRE{
+namespace OSRE {
 namespace RenderBackend {
     
 ///-----------------------------------------------------------------
@@ -41,7 +41,6 @@ public:
     static constexpr size_t NumQuadVert = 4;
     static constexpr ui32 NumQuadIndices = 6;
 
-    
     static size_t getNumTextVerts( const String &text ) {
         const size_t NumTextVerts = NumQuadVert * text.size();
         return NumTextVerts;
@@ -73,9 +72,6 @@ public:
         positions.resize(NumTextVerts);
         colors.resize(NumTextVerts);
         tex0.resize(NumTextVerts);
-        //*textPos = new glm::vec3[NumTextVerts];
-        //*colors = new glm::vec3[NumTextVerts];
-        //*tex0 = new glm::vec2[NumTextVerts];
         *textIndices = new ui16[getNumTextIndices(text)];
 
         const f32 invCol = 1.f / 16.f;
