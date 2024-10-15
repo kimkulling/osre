@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
+#include "RenderBackend/FontService.h"
 #include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
 
@@ -46,10 +47,18 @@ struct DrawCmd {
     RenderVert *Vertices;      ///< The vertex buffer
     size_t NumIndices;         ///< Number of indices
     ui16 *Indices;             ///< The number of indices
-
+    Font *UseFont;             ///< The used font
+    
     /// The class constructor.
     DrawCmd() :
-            PrimType(PrimitiveType::Invalid), NumVertices(0u), Vertices(nullptr), NumIndices(0u), Indices(nullptr) {}
+            PrimType(PrimitiveType::Invalid), 
+            NumVertices(0u), 
+            Vertices(nullptr), 
+            NumIndices(0u), 
+            Indices(nullptr),
+            UseFont(nullptr) {
+        // empty
+    }
 
     /// The class descructor.
     ~DrawCmd() = default;
@@ -109,7 +118,8 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mActiveLayer(0), 
         mNumLayers(numLayers), 
         mFont(nullptr), 
-        mMesh(nullptr) {
+        mMesh(nullptr),
+        mTexts(nullptr) {
     setResolution(x, y, w, h);
 }
 
@@ -122,7 +132,6 @@ CanvasRenderer::~CanvasRenderer() {
 
 void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 
@@ -134,7 +143,6 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
 
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 
@@ -168,7 +176,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             }
         }
 
-        Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
+        //Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
         prim = dc.PrimType;
@@ -442,6 +450,11 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
     for (size_t idxIndex = 0; idxIndex < numIndices; ++idxIndex) {
         drawCmd->Indices[idxIndex] = indices[idxIndex];
     }
+
+    if (mFont == nullptr) {
+        mFont = FontService::getDefaultFont();
+    }
+    drawCmd->UseFont = mFont;
 
     mDrawCmdArray.add(drawCmd);
 

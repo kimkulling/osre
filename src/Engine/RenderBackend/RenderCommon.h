@@ -978,5 +978,12 @@ enum class GLSLVersion {
 /// @return The GLSL version.
 GLSLVersion getGlslVersionFromeString(const c8 *versionString);
 
+/// @brief The font structure.
+struct Font {
+    String Name; ///< Font name
+    i32 Size; ///< Font size
+    i32 Style; ///< Font style
+};
+
 } // Namespace RenderBackend
 } // Namespace OSRE

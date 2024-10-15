@@ -44,13 +44,6 @@ struct Point2Df {
     f32 X, Y;    /// Coordinate components
 };
 
-/// @brief The font structure.
-struct Font {
-    String Name;    ///< Font name
-    i32 Size;       ///< Font size
-    i32 Style;      ///< Font style
-};
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -177,6 +170,7 @@ private:
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
+    Mesh *mTexts;
 };
 
 inline void CanvasRenderer::setDirty() {

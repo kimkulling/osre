@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MeshBuilder.h"
 #include "RenderBackend/Mesh/MeshUtilities.h"
 #include "RenderBackend/MaterialBuilder.h"
+#include "RenderBackend/FontService.h"
 #include "RenderBackend/Mesh.h"
 #include "Common/Logger.h"
 #include "Common/Tokenizer.h"
@@ -338,6 +339,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
     return *this;
 }
 
+
 MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access) {
 	if ( text.empty() ) {
 		return *this;
@@ -363,10 +365,16 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
     mesh->addPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
 
     // setup material
-    cppcore::TArray<TextureResource*> texResArray;;
+    Font defaultFont;
+    defaultFont.Name = "buildin_arial";
+    defaultFont.Size = 10;
+    defaultFont.Style = 0;
+    Material *mat = FontService::getFont(defaultFont);
+    /* cppcore::TArray<TextureResource *> texResArray;
     TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
-    mesh->setMaterial(MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex));
+    mesh->setMaterial(MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex));*/
+    mesh->setMaterial(mat);
     mActiveMesh = mesh;
 
     return *this;
