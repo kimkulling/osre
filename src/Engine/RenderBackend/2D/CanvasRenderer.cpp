@@ -431,8 +431,6 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
     MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, &indices);
 
     DrawCmd *drawCmd = alloc();
-    i32 x_clipped, y_clipped;
-
     drawCmd->PrimType = PrimitiveType::TriangleList;
     drawCmd->NumVertices = positions.size();
     drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
