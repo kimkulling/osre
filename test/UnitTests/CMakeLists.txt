@@ -1,10 +1,4 @@
-SET ( GMOCK_PATH ../../contrib/gmock-1.7.0/ )
-SET ( GTEST_PATH ${GMOCK_PATH}gtest/ )
-
-if (MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
-    add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-endif()
+find_package(GTest CONFIG REQUIRED)
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     find_package(Threads)
@@ -17,9 +11,6 @@ INCLUDE_DIRECTORIES(
     ../../contrib/glew/include
     ../../contrib/glm/
     ../../contrib/soil/src
-    ${GMOCK_PATH}
-    ${GTEST_PATH}
-    ${GTEST_PATH}/include
     .././
     src
 )
@@ -93,18 +84,6 @@ SET ( unittest_scene_src
     src/Scene/TAABBTest.cpp
 )
 
-SET ( gtest_src
-    ${GTEST_PATH}/src/gtest-death-test.cc
-    ${GTEST_PATH}/src/gtest-filepath.cc
-    ${GTEST_PATH}/src/gtest-internal-inl.h
-    ${GTEST_PATH}/src/gtest-port.cc
-    ${GTEST_PATH}/src/gtest-printers.cc
-    ${GTEST_PATH}/src/gtest-test-part.cc
-    ${GTEST_PATH}/src/gtest-typed-test.cc
-    ${GTEST_PATH}/src/gtest.cc
-    ${GTEST_PATH}/src/gtest_main.cc
-)
-
 SOURCE_GROUP( src\\App                        FILES ${unittest_app_src} )
 SOURCE_GROUP( src\\Common                     FILES ${unittest_common_src} )
 SOURCE_GROUP( src\\Collision                  FILES ${unittest_collision_src})
@@ -116,7 +95,6 @@ SOURCE_GROUP( src\\RenderBackend              FILES ${unittest_rb_src} )
 SOURCE_GROUP( src\\RenderBackend\\2D          FILES ${unittest_rb_2d_src} )
 SOURCE_GROUP( src\\RenderBackend\\OGLRenderer FILES ${unittest_rb_oglrenderer_src} )
 SOURCE_GROUP( src\\Scene                      FILES ${unittest_scene_src} )
-SOURCE_GROUP( src\\GTest                      FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     src/osre_testcommon.h
@@ -133,7 +111,6 @@ ADD_EXECUTABLE( osre_unittest
     ${unittest_rb_2d_src}
     ${unittest_ui_src}
     ${unittest_scene_src}
-    ${gtest_src}
 )
 
 link_directories( 
@@ -147,5 +124,5 @@ ELSE( WIN32 )
     SET( platform_libs pthread )
 ENDIF( WIN32 )
 
-target_link_libraries ( osre_unittest osre ${platform_libs} ) 
+target_link_libraries ( osre_unittest osre ${platform_libs} GTest::gtest GTest::gtest_main) 
 set_target_properties(  osre_unittest PROPERTIES FOLDER Tests )
