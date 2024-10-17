@@ -81,11 +81,14 @@ const c8 *DbgRenderer::getDebugRenderBatchName() {
 }
 
 void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
-    osre_assert(mRbSrv != nullptr);
-    
+    if (mRbSrv == nullptr) {
+        return;
+    }
+
     if (text.empty()) {
         return;
     }
+
     DebugText *foundDebugText = getInstance()->getDebugText(id);
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());

@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
+#include "RenderBackend/FontService.h"
+#include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
 
 #include "Debugging/MeshDiagnostic.h"
@@ -40,17 +42,25 @@ static constexpr c8 Tag[] = "CanvasRenderer";
 
 /// This struct is used to store all 2d draw commands.
 struct DrawCmd {
-    PrimitiveType PrimType;    // The primitive type
-    size_t NumVertices;        // The number of vertices
-    RenderVert *Vertices;      // The vertex buffer
-    size_t NumIndices;         // Number of indices
-    ui16 *Indices;             // The number of indices
-
-    // The class constructor.
+    PrimitiveType PrimType;    ///< The primitive type
+    size_t NumVertices;        ///< The number of vertices
+    RenderVert *Vertices;      ///< The vertex buffer
+    size_t NumIndices;         ///< Number of indices
+    ui16 *Indices;             ///< The number of indices
+    Font *UseFont;             ///< The used font
+    
+    /// The class constructor.
     DrawCmd() :
-            PrimType(PrimitiveType::Invalid), NumVertices(0u), Vertices(nullptr), NumIndices(0u), Indices(nullptr) {}
+            PrimType(PrimitiveType::Invalid), 
+            NumVertices(0u), 
+            Vertices(nullptr), 
+            NumIndices(0u), 
+            Indices(nullptr),
+            UseFont(nullptr) {
+        // empty
+    }
 
-    // The class descructor.
+    /// The class descructor.
     ~DrawCmd() = default;
 };
 
@@ -102,7 +112,14 @@ void dealloc(DrawCmd *cmd) {
 }
 
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
-        mDirty(true), mPenColor(1, 1, 1, 0), mResolution(), mActiveLayer(0), mNumLayers(numLayers), mMesh(nullptr) {
+        mDirty(true), 
+        mPenColor(1, 1, 1, 0), 
+        mResolution(), 
+        mActiveLayer(0), 
+        mNumLayers(numLayers), 
+        mFont(nullptr), 
+        mMesh(nullptr),
+        mFont2MeshMap() {
     setResolution(x, y, w, h);
 }
 
@@ -115,7 +132,6 @@ CanvasRenderer::~CanvasRenderer() {
 
 void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 
@@ -125,9 +141,30 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     rbSrv->setMatrix(MatrixType::Projection, m);
 }
 
+static void renumberIndices(const DrawCmd &dc, ui16 offset) {
+    if (offset > 0) {
+        for (size_t j = 0; j < dc.NumIndices; ++j) {
+            dc.Indices[j] += static_cast<ui16>(offset);
+        }
+    }
+}
+
+static bool hasTexts(const DrawCmdArray &drawCmdArray) {
+    if (drawCmdArray.isEmpty()) {
+        return true;
+    }
+    
+    for (size_t i = 0; i < drawCmdArray.size(); ++i) {
+        if (drawCmdArray[i]->UseFont != nullptr) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 
@@ -135,6 +172,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         return;
     }
 
+    // Create not textured geometry
     if (mMesh == nullptr) {
         mMesh = new Mesh("2d", VertexType::RenderVertex, IndexType::UnsignedShort);
         Material *mat2D = MaterialBuilder::create2DMaterial();
@@ -145,6 +183,19 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->setMaterial(mat2D);
     }
 
+    // Load all font-meshes
+    if (mFont2MeshMap.isEmpty()) {
+        if (hasTexts(mDrawCmdArray)) {
+            for (size_t i = 0; i < mDrawCmdArray.size(); ++i) {
+                const auto &dc = mDrawCmdArray[i];
+                const String &keyName = dc->UseFont->Name;
+                const String meshName = "text." + keyName;
+                Material *matFont = MaterialBuilder::createTextMaterial(keyName);
+
+            }
+        }    
+    }
+
     PrimitiveType prim = PrimitiveType::TriangleList;
     size_t numVertices = 0l, numIndices = 0l;
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
@@ -153,15 +204,20 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             osre_debug(Tag, "Invalid draw command detecetd.");
             continue;
         }
-        
-        const ui32 lastIndex = mMesh->getLastIndex();
-        if (numVertices > 0) {
-            for (size_t j = 0; j < dc.NumIndices; ++j) {
-                dc.Indices[j] += static_cast<ui16>(numVertices);
+
+        if (dc.UseFont != nullptr) {
+            const String &fontKey = dc.UseFont->Name;
+            Mesh *text = nullptr;
+            if (mFont2MeshMap.hasKey(fontKey)) {
+                mFont2MeshMap.getValue(fontKey, text);
             }
+        } else {
         }
 
-        Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
+        const ui32 lastIndex = mMesh->getLastIndex();
+        renumberIndices(dc, numVertices);
+
+        //Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
         prim = dc.PrimType;
@@ -170,7 +226,6 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         numIndices += dc.NumIndices;
     }
     mMesh->addPrimitiveGroup(numIndices, prim, 0);
-    //Debugging::MeshDiagnostic::dumpIndices((ui16 *)mMesh->getIndexBuffer()->getData(), numIndices);
 
     rbSrv->addMesh(mMesh, 0);
     mDrawCmdArray.resize(0);
@@ -248,6 +303,10 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
     setDirty();
 }
 
+void CanvasRenderer::drawline(const Point2Di &p1, const Point2Di &p2) {
+    drawline(p1.X, p1.Y, p2.X, p2.Y);
+}
+
 void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled) {
     DrawCmd *dc = alloc();
 
@@ -295,6 +354,10 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
     mDrawCmdArray.add(dc);
 
     setDirty();
+}
+
+void CanvasRenderer::drawTriangle(const Point2Di &p1, const Point2Di &p2, const Point2Di &p3, bool filled) {
+    drawTriangle(p1.X, p1.Y, p2.X, p2.Y, p3.X, p3.Y, filled);
 }
 
 static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
@@ -359,29 +422,80 @@ static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const R
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
+    setDirty();
     DrawCmd *drawCmd = nullptr;
     if (filled) {
         drawCmd = alloc();
         createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, h, mActiveLayer);
         mDrawCmdArray.add(drawCmd);
-    } else {
-        const ui32 thickness = 2;
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, thickness, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y + h, w, thickness, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y, thickness, h, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-        
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x+w, y, thickness, h, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
+        return;
     }
+
+    const ui32 thickness = 2;
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, thickness, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y + h, w, thickness, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y, thickness, h, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+        
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x+w, y, thickness, h, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+}
+
+void CanvasRenderer::selectFont(Font *font) {
+    mFont = font;
+    setDirty();
+}
+
+void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
+    if (text.empty()) {
+        return;
+    }
+
+    if (mFont == nullptr) {
+        osre_debug(Tag, "No font selected.");
+        return;
+    }
+    f32 x_model, y_model, fontSize = static_cast<f32>(mFont->Size)/static_cast<f32>(mResolution.getWidth());
+    mapCoordinates(mResolution, x, y, x_model, y_model);
+    Vec3Array positions;
+    Vec3Array colors;
+    Vec2Array tex0;
+    ui16 *indices = nullptr;
+    MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, &indices);
+
+    DrawCmd *drawCmd = alloc();
+    drawCmd->PrimType = PrimitiveType::TriangleList;
+    drawCmd->NumVertices = positions.size();
+    drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
+    const size_t numIndices = MeshUtilities::getNumTextIndices(text);
+    drawCmd->NumIndices = numIndices;
+    drawCmd->Indices = new ui16[drawCmd->NumIndices];
+
+    for (size_t posIndex = 0; posIndex < positions.size(); ++posIndex) {
+        drawCmd->Vertices[posIndex].color0 = mPenColor.toVec4();
+        drawCmd->Vertices[posIndex].position.x = positions[posIndex].x;
+        drawCmd->Vertices[posIndex].position.y = positions[posIndex].y;
+        drawCmd->Vertices[posIndex].position.z = static_cast<f32>(-mActiveLayer);
+    }
+    
+    for (size_t idxIndex = 0; idxIndex < numIndices; ++idxIndex) {
+        drawCmd->Indices[idxIndex] = indices[idxIndex];
+    }
+
+    if (mFont == nullptr) {
+        mFont = FontService::getDefaultFont();
+    }
+    drawCmd->UseFont = mFont;
+
+    mDrawCmdArray.add(drawCmd);
 
     setDirty();
 }
