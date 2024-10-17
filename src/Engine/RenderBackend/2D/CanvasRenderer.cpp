@@ -119,7 +119,7 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mNumLayers(numLayers), 
         mFont(nullptr), 
         mMesh(nullptr),
-        mTexts(nullptr) {
+        mFont2MeshMap() {
     setResolution(x, y, w, h);
 }
 
@@ -141,6 +141,28 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     rbSrv->setMatrix(MatrixType::Projection, m);
 }
 
+static void renumberIndices(const DrawCmd &dc, ui16 offset) {
+    if (offset > 0) {
+        for (size_t j = 0; j < dc.NumIndices; ++j) {
+            dc.Indices[j] += static_cast<ui16>(offset);
+        }
+    }
+}
+
+static bool hasTexts(const DrawCmdArray &drawCmdArray) {
+    if (drawCmdArray.isEmpty()) {
+        return true;
+    }
+    
+    for (size_t i = 0; i < drawCmdArray.size(); ++i) {
+        if (drawCmdArray[i]->UseFont != nullptr) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
         return;
@@ -150,6 +172,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         return;
     }
 
+    // Create not textured geometry
     if (mMesh == nullptr) {
         mMesh = new Mesh("2d", VertexType::RenderVertex, IndexType::UnsignedShort);
         Material *mat2D = MaterialBuilder::create2DMaterial();
@@ -158,6 +181,19 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             return;
         }
         mMesh->setMaterial(mat2D);
+    }
+
+    // Load all font-meshes
+    if (mFont2MeshMap.isEmpty()) {
+        if (hasTexts(mDrawCmdArray)) {
+            for (size_t i = 0; i < mDrawCmdArray.size(); ++i) {
+                const auto &dc = mDrawCmdArray[i];
+                const String &keyName = dc->UseFont->Name;
+                const String meshName = "text." + keyName;
+                Material *matFont = MaterialBuilder::createTextMaterial(keyName);
+
+            }
+        }    
     }
 
     PrimitiveType prim = PrimitiveType::TriangleList;
@@ -169,12 +205,17 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             continue;
         }
 
-        const ui32 lastIndex = mMesh->getLastIndex();
-        if (numVertices > 0) {
-            for (size_t j = 0; j < dc.NumIndices; ++j) {
-                dc.Indices[j] += static_cast<ui16>(numVertices);
+        if (dc.UseFont != nullptr) {
+            const String &fontKey = dc.UseFont->Name;
+            Mesh *text = nullptr;
+            if (mFont2MeshMap.hasKey(fontKey)) {
+                mFont2MeshMap.getValue(fontKey, text);
             }
+        } else {
         }
+
+        const ui32 lastIndex = mMesh->getLastIndex();
+        renumberIndices(dc, numVertices);
 
         //Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));

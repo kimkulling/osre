@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 #include "RenderBackend/RenderCommon.h"
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -44,15 +45,15 @@ struct Point2Df {
     f32 X, Y;    /// Coordinate components
 };
 
+using DrawCmdArray = cppcore::TArray<DrawCmd *>;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief This class implements a canvas renderer.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT CanvasRenderer : IRenderPath {
-public:
-    using DrawCmdArray = cppcore::TArray<DrawCmd*>;
-    
+public:    
     /// @brief The class constructor.
     /// @param numLayers    The number of layers.
     /// @param x            The x position. 
@@ -170,7 +171,8 @@ private:
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
-    Mesh *mTexts;
+    using Font2MeshMap = cppcore::THashMap<String, Mesh*>;
+    Font2MeshMap mFont2MeshMap;
 };
 
 inline void CanvasRenderer::setDirty() {

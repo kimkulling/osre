@@ -73,6 +73,7 @@ public:
     static RenderBackend::Material *createDebugRenderTextMaterial();
 
     static Material *create2DMaterial();
+    static Material *createTextMaterial(const String &fontName);
 
 private:
     /// @brief The default class constructor.
