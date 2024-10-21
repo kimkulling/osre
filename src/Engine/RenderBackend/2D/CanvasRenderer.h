@@ -151,7 +151,7 @@ public:
     /// @param y    The y position.
     /// @param text The text to draw.
     void drawText(i32 x, i32 y, const String &text);
-    
+
     /// @brief Will set the dirty flag.
     void setDirty();
 
@@ -171,7 +171,7 @@ private:
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
-    using Font2MeshMap = cppcore::THashMap<String, Mesh*>;
+    using Font2MeshMap = cppcore::THashMap<HashId, Mesh*>;
     Font2MeshMap mFont2MeshMap;
 };
 

@@ -193,7 +193,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
                 Material *matFont = MaterialBuilder::createTextMaterial(keyName);
 
             }
-        }    
+        }
     }
 
     PrimitiveType prim = PrimitiveType::TriangleList;
@@ -208,8 +208,9 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         if (dc.UseFont != nullptr) {
             const String &fontKey = dc.UseFont->Name;
             Mesh *text = nullptr;
-            if (mFont2MeshMap.hasKey(fontKey)) {
-                mFont2MeshMap.getValue(fontKey, text);
+            const HashId id = Hash::toHash(fontKey.c_str(), 10);
+            if (mFont2MeshMap.hasKey(id)) {
+                mFont2MeshMap.getValue(id, text);
             }
         } else {
         }
