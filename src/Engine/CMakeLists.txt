@@ -315,6 +315,9 @@ SET( renderbackend_src
     RenderBackend/Shader.cpp
 )
 
+SET( renderbackend_mesh_src
+    RenderBackend/Mesh/MeshUtilities.h
+)
 SET( renderbackend_2d_src
     RenderBackend/2D/RenderPass2D.h
     RenderBackend/2D/CanvasRenderer.h
@@ -400,6 +403,7 @@ SOURCE_GROUP( Profiling                   FILES ${profiling_src} )
 SOURCE_GROUP( Properties                  FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend               FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\2D           FILES ${renderbackend_2d_src})
+SOURCE_GROUP( RenderBackend\\Mesh         FILES ${renderbackend_mesh_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer  FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Vulkan       FILES ${renderbackend_vulkanrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
@@ -441,6 +445,7 @@ ADD_LIBRARY( osre SHARED
         ${renderbackend_oglrenderer_src}
 	    ${renderbackend_volkanrenderer_src}
         ${renderbackend_2d_src}
+        ${renderbackend_mesh_src}
         ${renderbackend_shader_src}
     ${scene_src}
         ${scene_shader_src}

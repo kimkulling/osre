@@ -61,7 +61,7 @@ class OSRE_EXPORT TransformComponent : public Common::Object, public Component {
 public:
     /// @brief The node pointer type.
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::TransformComponent>;
-    /// @brief The node array type-
+    /// @brief The node array type.
     using NodeArray = cppcore::TArray<TransformComponent *>;
     /// @brief Used to declare mesh-array instances.
     using MeshReferenceArray = ::cppcore::TArray<size_t>;
