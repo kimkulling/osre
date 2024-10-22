@@ -29,11 +29,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace RenderBackend {
-    
+
 ///-----------------------------------------------------------------
-/// @class classname
+/// @class MeshUtilities
 ///
-/// @brief 
+/// @brief This class provides common utilities to generate different
+///        kind of mesh topology and spatial data.
 ///-----------------------------------------------------------------
 class MeshUtilities {
 public:
@@ -41,18 +42,33 @@ public:
     static constexpr size_t NumQuadVert = 4;
     static constexpr ui32 NumQuadIndices = 6;
 
+    /// @brief Will calculate the numbr of vertices needed for the given string glyphes.
+    /// @param text     The text for checking.
+    /// @return The number of vertives for the glyphes.
     static size_t getNumTextVerts( const String &text ) {
         const size_t NumTextVerts = NumQuadVert * text.size();
         return NumTextVerts;
     }
 
-
+    /// @brief Will calculate the number of indices needed for the given text glyphes.
+    /// @param text     The text for checking.
+    /// @return The number of indices
     static size_t getNumTextIndices(const String &text) {
         const size_t numIndices = NumQuadIndices * text.size();
         return numIndices;
     }
 
-    static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, Vec3Array &positions, Vec3Array &colors, Vec2Array &tex0, ui16 **textIndices) {
+    /// @brief Will generate the vertices and indices for the text box and all glyphes in it.
+    /// @param x            The upper left coordinate component in x.
+    /// @param y            The upper left coordinate component in y.
+    /// @param textSize     The requested text size.
+    /// @param text         The text itself to render.
+    /// @param positions    The positios for all glyphes.
+    /// @param colors       The vertex colors for all glyphes.
+    /// @param tex0         The diffuse texture coordinates for all glyphes.
+    /// @param textIndices  The index array for all glyphes.
+    static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text,
+             Vec3Array &positions, Vec3Array &colors, Vec2Array &tex0, ui16 **textIndices) {
         osre_assert(nullptr != textIndices);
 
         using namespace ::OSRE::Common;

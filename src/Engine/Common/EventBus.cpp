@@ -46,7 +46,7 @@ bool EventBus::create() {
 
     mCreated = true;
     QueueEntryAlloctor.reserve(1000);
-    
+
     return mCreated;
 }
 
@@ -58,7 +58,7 @@ bool EventBus::destroy() {
     if (!mCreated) {
         return false;
     }
-    
+
     QueueEntryAlloctor.clear();
     mCreated = false;
 
