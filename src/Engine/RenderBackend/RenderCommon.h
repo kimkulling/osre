@@ -59,47 +59,47 @@ static constexpr ui32 MaxEntNameLen = 256;
 ///
 /// Buffer objects are used to store vertex-, index- or image data on the GPU-memory
 enum class BufferType {
-    InvalidType = -1,   ///< Enum for invalid enum.
+    Invalid = -1,       ///< Enum for invalid enum.
     EmptyBuffer = 0,    ///< Empty buffer, no special use.
     VertexBuffer,       ///< Vertex buffer, stores vertex data inside.
     IndexBuffer,        ///< Index buffer, stores indices inside.
     InstanceBuffer,     ///< Instance buffer, will store instance-specific data.
     UniformBuffer,      ///< Uniform buffer, used for structured uniform data.
-    NumBufferTypes      ///< Number of enums.
+    Count               ///< Number of enums.
 };
 
 /// @brief  This enum describes the supported access types for render buffers.
 enum class BufferAccessType {
-    InvalidType = -1,       ///< Enum for invalid enum.
-    ReadOnly = 0,           ///< Read only access.
-    WriteOnly,              ///< Write only access.
-    ReadWrite,              ///< Read and write access.
-    NumBufferAccessTypes    ///< Number of enum's.
+    Invalid = -1,       ///< Enum for invalid enum.
+    ReadOnly = 0,       ///< Read only access.
+    WriteOnly,          ///< Write only access.
+    ReadWrite,          ///< Read and write access.
+    Count               ///< Number of enum's.
 };
 
 /// @brief The enum is used to describe the different pixel formats
 enum class PixelFormatType {
-    InvaliTextureType=-1,   ///< Marker for an invalid texture.
-    R8G8B8 = 0,             ///< 24 bit data, r, g, b
-    R8G8B8A8,               ///< 32 bit data, r, g, b, a
-    NumPixelFormatTypes     ///< The number of formats
+    Invalid=-1,     ///< Marker for an invalid texture.
+    R8G8B8 = 0,     ///< 24 bit data, r, g, b
+    R8G8B8A8,       ///< 32 bit data, r, g, b, a
+    Count           ///< The number of formats
 };
 
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
-    InvalidVetexType = -1,  ///< Marker for an invalid data type.
-    ColorVertex = 0,        ///< A simple vertex consisting of position and color.
-    RenderVertex,           ///< A render vertex with position, color, normals and texture coordinates.
-    NumVertexTypes          ///< Number of enums.
+    Invalid = -1,       ///< Marker for an invalid data type.
+    ColorVertex = 0,    ///< A simple vertex consisting of position and color.
+    RenderVertex,       ///< A render vertex with position, color, normals and texture coordinates.
+    Count               ///< Number of enums.
 };
 
 ///	@brief  This enum describes the supported texture target types.
 enum class TextureTargetType {
-    InvalidTextureTargetType = -1,  ///< Enum for invalid enum.
-    Texture1D = 0,                  ///< 1D-textures, used for simple arrays in shaders.
-    Texture2D,                      ///< 2D-textures, used for images and render targets.
-    Texture3D,                      ///< 3D-textures, used for volume rendering.
-    NumTextureTargetTypes           ///< Number of enums.
+    Invalid = -1,   ///< Enum for invalid enum.
+    Texture1D = 0,  ///< 1D-textures, used for simple arrays in shaders.
+    Texture2D,      ///< 2D-textures, used for images and render targets.
+    Texture3D,      ///< 3D-textures, used for volume rendering.
+    Count           ///< Number of enums.
 };
 
 ///	@brief  This enum describes the supported texture stages. 
@@ -107,42 +107,42 @@ enum class TextureTargetType {
 /// A texture stage describes one layer of a texture composition like a diffuse texture at 
 /// stage0 and a lighting information at statge1.
 enum class TextureStageType {
-    InvalidTextureStageType = -1,   ///< Enum for invalid enum.
-    TextureStage0 = 0,              ///< Texture state level 0
-    TextureStage1,                  ///< Texture state level 1
-    TextureStage2,                  ///< Texture state level 2
-    TextureStage3,                  ///< Texture state level 3
-    NumTextureStageTypes            ///< Number of enums.
+    Invalid = -1,       ///< Enum for invalid enum.
+    TextureStage0 = 0,  ///< Texture state level 0
+    TextureStage1,      ///< Texture state level 1
+    TextureStage2,      ///< Texture state level 2
+    TextureStage3,      ///< Texture state level 3
+    Count               ///< Number of enums.
 };
 
 /// @brief  This enum describes different texture parameter names.
 enum class TextureParameterName {
-    InvalidTextureParameterName = -1,   ///< Enum for invalid enum.
-    TextureParamMinFilter = 0,          ///< The min filter name.
-    TextureParamMagFilter,              ///< The mag filter name.
-    TextureParamWrapS,                  ///< The wrap name for s
-    TextureParamWrapT,                  ///< The warp name for t.
-    NumTextureParameterNames            ///< Number of enums.
+    Invalid = -1,               ///< Enum for invalid enum.
+    TextureParamMinFilter = 0,  ///< The min filter name.
+    TextureParamMagFilter,      ///< The mag filter name.
+    TextureParamWrapS,          ///< The wrap name for s
+    TextureParamWrapT,          ///< The warp name for t.
+    Count                       ///< Number of enums.
 };
 
 /// @brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
 enum class TextureParameterType {
-    InvalidTextureParameterType = -1, ///< Enum for invalid enum.
-    TexturePTNearest = 0,             ///< Use nearest filter mode.
-    TexturePTLinear,                  ///< Use linear interpolation mode.
-    TexturePTClamp,                   ///< Use clamp mode, texture data will be clamped.
-    TexturePTMirroredRepeat,          ///< Use mirror repeat mode, texture will be repeated mirrored.
-    TexturePTRepeat,                  ///< Use repeat mode, texture will be repeated mirrored.
-    NumTextureParameterTypes          ///< Number of enums.
+    Invalid = -1,               ///< Enum for invalid enum.
+    TexturePTNearest = 0,       ///< Use nearest filter mode.
+    TexturePTLinear,            ///< Use linear interpolation mode.
+    TexturePTClamp,             ///< Use clamp mode, texture data will be clamped.
+    TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeated mirrored.
+    TexturePTRepeat,            ///< Use repeat mode, texture will be repeated mirrored.
+    Count                       ///< Number of enums.
 };
 
 /// @brief  This enum describes the index data type.
 enum class IndexType {
-    InvalidIndexType = -1, ///< Enum for invalid enum.
-    UnsignedByte = 0,      ///< Bytes are used for the index data.
-    UnsignedShort,         ///< Unsigned short for the index data.
-    UnsignedInt,           ///< Unsigned int for the index data.
-    NumIndexTypes          ///< Number of enums.
+    Invalid = -1,       ///< Enum for invalid enum.
+    UnsignedByte = 0,   ///< Bytes are used for the index data.
+    UnsignedShort,      ///< Unsigned short for the index data.
+    UnsignedInt,        ///< Unsigned int for the index data.
+    Count               ///< Number of enums.
 };
 
 /// @brief  This enum describes the primitive types for rendering vertex information.
@@ -159,17 +159,17 @@ enum class PrimitiveType {
 
 /// @brief  This enum is used to describe the type of build-in matrices.
 enum class MatrixType {
-    InvalidMatrixType = -1, ///< Enum for invalid values.
-    Model = 0,              ///< The model matrix type
-    View,                   ///< The view matrix type
-    Projection,             ///< The projection matrix type
-    Normal,                 ///< The normal matrix type
-    NumMatrixTypes,         ///< Number of matrix types.
+    Invalid = -1,   ///< Enum for invalid values.
+    Model = 0,      ///< The model matrix type
+    View,           ///< The view matrix type
+    Projection,     ///< The projection matrix type
+    Normal,         ///< The normal matrix type
+    Count,          ///< Number of matrix types.
 };
 
 /// @brief  This enum is used to describe the data-type of a parameter.
 enum class ParameterType {
-    InvalidParameterType = -1,  ///<
+    Invalid = -1,  ///<
     PT_None,
     PT_Int,
     PT_IntArray,
@@ -181,52 +181,52 @@ enum class ParameterType {
     PT_Float3Array,
     PT_Mat4,
     PT_Mat4Array,
-    NumParameterTypes
+    Count
 };
 
 /// @brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
-    InvalidVertexAttr = -1,  ///< Enum for invalid enum.
-    Position = 0,            ///< "position"
-    Normal,                  ///< "normal"
-    TexCoord0,               ///< "texcoord0"
-    TexCoord1,               ///< "texcoord1"
-    TexCoord2,               ///< "texcoord2"
-    TexCoord3,               ///< "texcoord3"
-    Tangent,                 ///< "tangent
-    Binormal,                ///< "binormal"
-    Weights,                 ///< "weights" (skin weights)
-    Indices,                 ///< "indices" (skin indices)
-    Color0,                  ///< "color0"
-    Color1,                  ///< "color1"
-    Instance0,               ///< "instance0"
-    Instance1,               ///< "instance1"
-    Instance2,               ///< "instance2"
-    Instance3,               ///< "instance3"
-    NumVertexAttrs           ///< Number of enums.
+    Invalid = -1,   ///< Enum for invalid enum.
+    Position = 0,   ///< "position"
+    Normal,         ///< "normal"
+    TexCoord0,      ///< "texcoord0"
+    TexCoord1,      ///< "texcoord1"
+    TexCoord2,      ///< "texcoord2"
+    TexCoord3,      ///< "texcoord3"
+    Tangent,        ///< "tangent
+    Binormal,       ///< "binormal"
+    Weights,        ///< "weights" (skin weights)
+    Indices,        ///< "indices" (skin indices)
+    Color0,         ///< "color0"
+    Color1,         ///< "color1"
+    Instance0,      ///< "instance0"
+    Instance1,      ///< "instance1"
+    Instance2,      ///< "instance2"
+    Instance3,      ///< "instance3"
+    Count           ///< Number of enums.
 };
 
 /// @brief  This enum describes the vertex data format.
 enum class VertexFormat : int {
-    InvalidVertexFormat = -1, ///< Enum for invalid enum.
-    Float,                    ///< single component float, expanded to (x, 0, 0, 1)
-    Float2,                   ///< 2-component float, expanded to (x, y, 0, 1)
-    Float3,                   ///< 3-component float, expanded to (x, y, z, 1)
-    Float4,                   ///< 4-component float
-    Byte4,                    ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
-    UByte4,                   ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
-    Short2,                   ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    Short4,                   ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    NumVertexFormats          ///< Number of enums.
+    Invalid = -1,   ///< Enum for invalid enum.
+    Float,          ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,         ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,         ///< 4-component float
+    Byte4,          ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,         ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,         ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,         ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Count           ///< Number of enums.
 };
 
 /// @brief This enum describes the light type.
 enum class LightType {
-    InvalidLightType = -1,    ///< Enum for invalid enum.
-    Directional = 0,          ///< Directional light
-    Point,                    ///< Point light.
-    Spot,                     ///< Spotlight
-    NumLightTypes             ///<
+    Invalid = -1,       ///< Enum for invalid enum.
+    Directional = 0,    ///< Directional light
+    Point,              ///< Point light.
+    Spot,               ///< Spotlight
+    Count               ///< Number of enums
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
@@ -235,8 +235,8 @@ struct OSRE_EXPORT ColorVert {
     glm::vec3 normal;   ///< The normal vector ( x|y|z )
     glm::vec3 color0;   ///< The diffuse color ( r|g|b )
 
+    /// @brief The class constructor.
     ColorVert();
-    ~ColorVert() = default;
 
     /// @brief  Returns the number of attributes.
     static size_t getNumAttributes();
@@ -251,8 +251,8 @@ struct OSRE_EXPORT RenderVert {
     glm::vec3 color0;   ///< The diffuse color ( r|g|b )
     glm::vec2 tex0;     ///< The texture color ( r|g|b )
 
+    /// @brief The class constructor
     RenderVert();
-    ~RenderVert() = default;
     bool operator==(const RenderVert &rhs) const;
     bool operator!=(const RenderVert &rhs) const;
 
@@ -269,8 +269,8 @@ struct OSRE_EXPORT UIVert {
     glm::vec2 position; ///< The position ( x|y )
     glm::vec4 color0; ///< The diffuse color ( r|g|b|a )
 
+    /// @brief The class constructor
     UIVert() = default;
-    ~UIVert() = default;
 
     /// @brief  Returns the number of attributes.
     static size_t getNumAttributes();
@@ -307,8 +307,8 @@ inline size_t getVertexFormatSize(VertexFormat format) {
         case VertexFormat::Short4:
             size = sizeof(ui16) * 4;
             break;
-        case VertexFormat::NumVertexFormats:
-        case VertexFormat::InvalidVertexFormat:
+        case VertexFormat::Count:
+        case VertexFormat::Invalid:
             break;
 
         default:
@@ -323,11 +323,10 @@ struct ExtensionProperty {
     c8 m_extensionName[MaxEntNameLen];
     ui32 m_version;
 
+    /// @brief The class constructor
     ExtensionProperty() : m_version(0) {
         ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
     }
-    
-    ~ExtensionProperty() = default;
 };
 
 /// @brief
@@ -335,9 +334,9 @@ struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
     VertexFormat m_format;
 
+    /// @brief The class constructor
     VertComponent();
     VertComponent(VertexAttribute attrib, VertexFormat format);
-    ~VertComponent() = default;
 
     OSRE_NON_COPYABLE(VertComponent)
 };
@@ -383,8 +382,8 @@ struct OSRE_EXPORT BufferData {
     c8 *getData();
 
 private:
+    /// @brief The class constructor
     BufferData();
-    ~BufferData() = default;
 
     OSRE_NON_COPYABLE(BufferData)
 };
@@ -404,6 +403,7 @@ struct OSRE_EXPORT PrimitiveGroup {
     size_t m_numIndices;
     IndexType m_indexType;
 
+    /// @brief The class constructor
     PrimitiveGroup();
     ~PrimitiveGroup() = default;
     void init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx);
@@ -424,13 +424,16 @@ struct OSRE_EXPORT Texture {
     ui32 Channels;
     Handle TexHandle;
 
+    /// @brief The class constructor.
     Texture();
+
+    /// @brief The class destructor.
     ~Texture();
     void clear();
     OSRE_NON_COPYABLE(Texture)
 };
 
-///	@brief
+///	@brief This class implements the texture loader.
 class OSRE_EXPORT TextureLoader {
 public:
     TextureLoader() = default;

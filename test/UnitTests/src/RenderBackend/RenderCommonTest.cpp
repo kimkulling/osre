@@ -104,7 +104,7 @@ TEST_F( RenderCommonTest, getVertCompNameTest ) {
     name = getVertCompName(VertexAttribute::Position);
     EXPECT_NE(static_cast<ui32>(0), name.size());
 
-    name = getVertCompName(VertexAttribute::InvalidVertexAttr);
+    name = getVertCompName(VertexAttribute::Invalid);
     EXPECT_NE(static_cast<ui32>(0), name.size());
     EXPECT_EQ("Error", name );
 }

@@ -269,7 +269,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         if (dc.UseFont != nullptr) {
             const String &fontKey = dc.UseFont->Name;
             Mesh *text = nullptr;
-            const HashId id = Hash::toHash(fontKey.c_str(), 10);
+            const HashId id = THash<HashId>::toHash(fontKey.c_str(), 10);
             if (mFont2MeshMap.hasKey(id)) {
                 mFont2MeshMap.getValue(id, text);
             }

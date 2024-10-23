@@ -73,8 +73,8 @@ OGLRenderBackend::OGLRenderBackend() :
         mOglCapabilities(),
         mFrameFuffers(),
         mOGLDriverInfo() {
-    mBindedTextures.resize((size_t)TextureStageType::NumTextureStageTypes);
-    for (size_t i = 0; i < (size_t)TextureStageType::NumTextureStageTypes; ++i) {
+    mBindedTextures.resize((size_t)TextureStageType::Count);
+    for (size_t i = 0; i < (size_t)TextureStageType::Count; ++i) {
         mBindedTextures[i] = nullptr;
     }
 }
