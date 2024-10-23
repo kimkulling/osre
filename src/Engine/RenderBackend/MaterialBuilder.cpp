@@ -62,7 +62,7 @@ Material *MaterialBuilder::create2DMaterial() {
 
     mat = materialCache->create(Render2DMat);
 
-     const String vertex_2d =
+    const String vertex_2d =
             getGLSLVersionString_400() +
             getGLSLRenderVertexLayout() +
             "out vec3 v_color0;\n"
@@ -76,16 +76,19 @@ Material *MaterialBuilder::create2DMaterial() {
             "    gl_Position = u_mvp * vec4(position, 1.0);\n"
             "    v_texindex = texcoord0;\n"
             "}\n";
-    const String fragment_2d = "#version 330 core\n"
-                               "in vec2 v_texindex;\n"
-                               "in vec3 v_color0;\n"
-                               "out vec4 f_color;\n"
-                               "uniform sampler2D u_texture;\n"
-                               "void main() {\n"
-                               "    f_color = texture(u_texture, v_texindex);\n"
-                               "    if (f_color.r==0.0 || f_color.g ==0.0 || f_color.b==0.0)\n"
-                               "         f_color = vec4(v_color0,1);\n"
-                               "}\n";
+
+    const String fragment_2d = 
+            "#version 330 core\n"
+            "in vec2 v_texindex;\n"
+            "in vec3 v_color0;\n"
+            "out vec4 f_color;\n"
+            "uniform sampler2D u_texture;\n"
+            "void main() {\n"
+            "    f_color = texture(u_texture, v_texindex);\n"
+            "    if (f_color.r == 0.0 || f_color.g == 0.0 || f_color.b == 0.0) {\n"
+            "         f_color = vec4(v_color0,1);\n"
+            "    }\n"
+            "}\n";
 
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;

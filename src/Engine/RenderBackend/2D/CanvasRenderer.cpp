@@ -252,7 +252,9 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
                 const String &keyName = dc->UseFont->Name;
                 const String meshName = "text." + keyName;
                 Material *matFont = MaterialBuilder::createTextMaterial(keyName);
-
+                Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
+                fontMesh->setMaterial(matFont);
+                mFont2MeshMap.insert(THash<HashId>::toHash(meshName.c_str(), 10), fontMesh);
             }
         }
     }
