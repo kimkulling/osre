@@ -45,8 +45,6 @@ struct Point2Df {
     f32 X, Y;    /// Coordinate components
 };
 
-using DrawCmdArray = cppcore::TArray<DrawCmd *>;
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -54,6 +52,9 @@ using DrawCmdArray = cppcore::TArray<DrawCmd *>;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT CanvasRenderer : IRenderPath {
 public:    
+    using Font2MeshMap = cppcore::THashMap<HashId, Mesh *>;
+    using DrawCmdArray = cppcore::TArray<DrawCmd *>;
+
     /// @brief The class constructor.
     /// @param numLayers    The number of layers.
     /// @param x            The x position. 
@@ -171,7 +172,6 @@ private:
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
-    using Font2MeshMap = cppcore::THashMap<HashId, Mesh*>;
     Font2MeshMap mFont2MeshMap;
 };
 

@@ -28,7 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/FontService.h"
 #include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
-
 #include "Debugging/MeshDiagnostic.h"
 
 #include <cppcore/Memory/TPoolAllocator.h>
@@ -59,9 +58,6 @@ struct DrawCmd {
             UseFont(nullptr) {
         // empty
     }
-
-    /// The class descructor.
-    ~DrawCmd() = default;
 };
 
 // will rescale coordinates from absolute coordinates into model space coordinates
@@ -210,7 +206,7 @@ static void renumberIndices(const DrawCmd &dc, ui16 offset) {
     }
 }
 
-static bool hasTexts(const DrawCmdArray &drawCmdArray) {
+static bool hasTexts(const CanvasRenderer::DrawCmdArray &drawCmdArray) {
     if (drawCmdArray.isEmpty()) {
         return true;
     }
@@ -222,6 +218,20 @@ static bool hasTexts(const DrawCmdArray &drawCmdArray) {
     }
     
     return false;
+}
+
+static void createFontMeshes(CanvasRenderer::DrawCmdArray &drawCmdArray, CanvasRenderer::Font2MeshMap &font2MeshMap) {
+    if (hasTexts(drawCmdArray)) {
+        for (size_t i = 0; i < drawCmdArray.size(); ++i) {
+            const auto &dc = drawCmdArray[i];
+            const String &keyName = dc->UseFont->Name;
+            const String meshName = "text." + keyName;
+            Material *matFont = MaterialBuilder::createTextMaterial(keyName);
+            Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
+            fontMesh->setMaterial(matFont);
+            font2MeshMap.insert(THash<HashId>::toHash(meshName.c_str(), 10), fontMesh);
+        }
+    }
 }
 
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
@@ -246,17 +256,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
 
     // Load all font-meshes
     if (mFont2MeshMap.isEmpty()) {
-        if (hasTexts(mDrawCmdArray)) {
-            for (size_t i = 0; i < mDrawCmdArray.size(); ++i) {
-                const auto &dc = mDrawCmdArray[i];
-                const String &keyName = dc->UseFont->Name;
-                const String meshName = "text." + keyName;
-                Material *matFont = MaterialBuilder::createTextMaterial(keyName);
-                Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
-                fontMesh->setMaterial(matFont);
-                mFont2MeshMap.insert(THash<HashId>::toHash(meshName.c_str(), 10), fontMesh);
-            }
-        }
+        createFontMeshes(mDrawCmdArray, mFont2MeshMap);
     }
 
     PrimitiveType prim = PrimitiveType::TriangleList;
@@ -292,6 +292,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     mMesh->addPrimitiveGroup(numIndices, prim, 0);
 
     rbSrv->addMesh(mMesh, 0);
+    
     mDrawCmdArray.resize(0);
     setClean();
 }

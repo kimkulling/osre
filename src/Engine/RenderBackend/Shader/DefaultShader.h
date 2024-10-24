@@ -29,7 +29,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 String getGLSLVersionString_330();
-String  getGLSLVersionString_400();
+String getGLSLVersionString_400();
 String getNewLine();
 String getGLSLRenderVertexLayout();
 String getGLSLColorVertexLayout();
