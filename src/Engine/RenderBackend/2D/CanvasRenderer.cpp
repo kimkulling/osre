@@ -484,7 +484,7 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
     drawCmd->Indices = new ui16[drawCmd->NumIndices];
 
     for (size_t posIndex = 0; posIndex < positions.size(); ++posIndex) {
-        drawCmd->Vertices[posIndex].color0 = mPenColor.toVec4();
+        drawCmd->Vertices[posIndex].color0 = mPenColor.toVec3();
         drawCmd->Vertices[posIndex].position.x = positions[posIndex].x;
         drawCmd->Vertices[posIndex].position.y = positions[posIndex].y;
         drawCmd->Vertices[posIndex].position.z = static_cast<f32>(-mActiveLayer);
