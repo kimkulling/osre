@@ -49,6 +49,7 @@ namespace Properties {
 
 namespace RenderBackend {
     struct TransformMatrixBlock;
+    class CanvasRenderer;
 }
 
 namespace App {
@@ -258,6 +259,8 @@ public:
     /// @return The keyboard listener.
     virtual KeyboardEventListener *getKeyboardEventListener() const;
 
+    virtual RenderBackend::CanvasRenderer *getCanvasRenderer() const;
+    
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -299,6 +302,7 @@ private:
     KeyboardEventListener *mKeyboardEvListener;
     Common::Ids *mIds;
     bool mShutdownRequested;
+    RenderBackend::IRenderPath *mCanvasRenderer;
 };
 
 inline Stage *AppBase::getStage() const {

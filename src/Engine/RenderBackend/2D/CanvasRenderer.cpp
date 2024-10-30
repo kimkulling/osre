@@ -169,6 +169,7 @@ void dealloc(DrawCmd *cmd) {
 }
 
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
+        IRenderPath(),
         mDirty(true),
         mPenColor(1, 1, 1, 0),
         mResolution(),
@@ -502,6 +503,12 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
     mDrawCmdArray.add(drawCmd);
 
     setDirty();
+}
+
+bool CanvasRenderer::onCreate() {
+    mFont = FontService::getDefaultFont();
+
+    return (mFont != nullptr);
 }
 
 } // namespace RenderBackend

@@ -581,6 +581,16 @@ public:
     static void showStatistics();
 };
 
+enum class LifetimeState {
+    Invalid = -1,
+    Inited,
+    Created,
+    Running,
+    Detroyed,
+    Error,
+    Count
+};
+
 } // Namespace OSRE
 
 void *operator new(size_t size);

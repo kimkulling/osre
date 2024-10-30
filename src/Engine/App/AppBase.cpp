@@ -41,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Pipeline.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 #include "App/CameraComponent.h"
 #include "RenderBackend/MaterialBuilder.h"
 
@@ -73,7 +74,8 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr),
-        mShutdownRequested(false) {
+        mShutdownRequested(false),
+        mCanvasRenderer(nullptr) {
     mSettings->setString(Properties::Settings::RenderAPI, "opengl");
     mSettings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -224,6 +226,10 @@ void AppBase::setWindowsTitle(const String &title) {
     }
 }
 
+RenderBackend::CanvasRenderer* AppBase::getCanvasRenderer() const {
+    return (CanvasRenderer*) mCanvasRenderer;
+}
+
 static void attachMouseEventPtrs(EventPtrArray &eventArray) {
     eventArray.add(&MouseButtonDownEvent);
     eventArray.add(&MouseButtonUpEvent);
@@ -318,6 +324,8 @@ bool AppBase::onCreate() {
 
     App::AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
+    mCanvasRenderer = new CanvasRenderer;
+
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
 
@@ -355,6 +363,9 @@ bool AppBase::onDestroy() {
 
     delete mIds;
     mIds = nullptr;
+
+    delete mCanvasRenderer;
+    mCanvasRenderer = nullptr;
 
     delete mMouseEvListener;
     mMouseEvListener = nullptr;

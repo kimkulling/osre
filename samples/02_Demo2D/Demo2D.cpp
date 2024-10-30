@@ -45,7 +45,7 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 //-------------------------------------------------------------------------------------------------
 class Demo2DApp : public App::AppBase {
     TransformMatrixBlock  mTransformMatrix;
-    CanvasRenderer       *mCanvasRenderer;
+    CanvasRenderer *mCanvasRenderer;
 
 public:
     Demo2DApp(int argc, char *argv[]) :
@@ -77,6 +77,7 @@ protected:
         }
 
         mCanvasRenderer = new CanvasRenderer(2, 0, 0, 1024, 768);
+        mCanvasRenderer->create();
         mCanvasRenderer->selectLayer(0);
         const Color4 Red(1, 0, 0, 0);
         mCanvasRenderer->setColor(Red);

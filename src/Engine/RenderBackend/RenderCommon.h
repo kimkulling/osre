@@ -943,21 +943,68 @@ struct RenderTarget {
 
 /// @brief The render path interface.
 struct OSRE_EXPORT IRenderPath {
-    IRenderPath();
     virtual ~IRenderPath() = default;
+    virtual bool create();
+    virtual bool destroy();
     virtual void preRender(RenderBackendService *rbSrv) = 0;
     virtual void render(RenderBackendService *rbSrv) = 0;
     virtual void postRender(RenderBackendService *rbSrv) = 0;
     void setShader(Shader *shader);
 
+protected:
+    IRenderPath();
+    virtual bool onCreate();
+    virtual bool onDestroy();
+
 private:
+    LifetimeState mLifetimeState;
     Shader *mShader;
 };
 
-inline IRenderPath::IRenderPath() : mShader(nullptr) {
+inline IRenderPath::IRenderPath() :
+        mLifetimeState(LifetimeState::Inited), mShader(nullptr) {
     // empty
 }
 
+inline bool IRenderPath::create() {
+    if (mLifetimeState != LifetimeState::Inited) {
+        return false;
+    }
+    
+    const bool result = onCreate();
+    if (result) {
+        mLifetimeState = LifetimeState::Created;
+    } else {
+        mLifetimeState = LifetimeState::Error;
+    }
+
+    return result;
+}
+
+inline bool IRenderPath::destroy() {
+    if (mLifetimeState != LifetimeState::Running) {
+        return false;
+    }
+
+    const bool result = onDestroy();
+    if (result) {
+        mLifetimeState = LifetimeState::Detroyed;
+    } else {
+        mLifetimeState = LifetimeState::Error;
+    }
+
+    return result;
+}
+
+inline bool IRenderPath::onCreate() {
+    return true;
+}
+
+inline bool IRenderPath::onDestroy() {
+    return true;
+}
+
+/// @brief
 enum class GLSLVersion {
     Invalid = -1,
     GLSL_110,
@@ -983,9 +1030,9 @@ GLSLVersion getGlslVersionFromeString(const c8 *versionString);
 
 /// @brief The font structure.
 struct Font {
-    String Name; ///< Font name
-    i32 Size; ///< Font size
-    i32 Style; ///< Font style
+    String Name;    ///< Font name
+    i32 Size;       ///< Font size
+    i32 Style;      ///< Font style
 };
 
 } // Namespace RenderBackend

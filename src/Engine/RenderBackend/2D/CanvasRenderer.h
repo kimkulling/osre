@@ -50,7 +50,7 @@ struct Point2Df {
 ///
 ///	@brief This class implements a canvas renderer.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT CanvasRenderer : IRenderPath {
+class OSRE_EXPORT CanvasRenderer : public IRenderPath {
 public:    
     using Font2MeshMap = cppcore::THashMap<HashId, Mesh *>;
     using DrawCmdArray = cppcore::TArray<DrawCmd *>;
@@ -162,6 +162,9 @@ public:
     /// @brief Will return true, if recreation of the render context needs to be done.
     /// @return The flag.
     bool isDirty() const;
+
+protected:
+    bool onCreate() override;
 
 private:
     bool mDirty;
