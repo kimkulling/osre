@@ -49,6 +49,8 @@ namespace Properties {
 
 namespace RenderBackend {
     struct TransformMatrixBlock;
+    struct IRenderPath;
+
     class CanvasRenderer;
 }
 

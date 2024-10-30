@@ -75,8 +75,9 @@ protected:
         if (!AppBase::onCreate()) {
             return false;
         }
-
-        mCanvasRenderer = new CanvasRenderer(2, 0, 0, 1024, 768);
+        
+        mCanvasRenderer = AppBase::getCanvasRenderer();
+        
         mCanvasRenderer->create();
         mCanvasRenderer->selectLayer(0);
         const Color4 Red(1, 0, 0, 0);
