@@ -119,8 +119,6 @@ public:
             positions[VertexOffset + 3].y = pos[3].y + rowHeight;
             positions[VertexOffset + 3].z = 0;
 
-            //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
-
             const i32 column = (ch) % 16;
             const i32 row = (ch) / 16;
             const f32 s = column * invCol;
@@ -138,7 +136,6 @@ public:
             tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
             tex0[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
 
-            //GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
             colors[VertexOffset + 0] = col[0];
             colors[VertexOffset + 1] = col[1];
             colors[VertexOffset + 2] = col[2];
