@@ -8,7 +8,7 @@ This is just another open-source render engine / game engine made by Kim Kulling
 Don't expect too much, I will not invest too much time into it. But If you are interested in playing around with 3D stuff feel free to discuss 
 these things on Reggit or in the Discussion Forum.
 
-# The Features:
+# The Features: #
 - CMake base build environment
 - Multithreaded Renderer 
   - OpenGL
@@ -24,8 +24,11 @@ these things on Reggit or in the Discussion Forum.
 - Virtual file system for reading zip-archives
 - Instancing
 
-# Documentation
+# Documentation #
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
+
+# Project activities #
+![Alt](https://repobeats.axiom.co/api/embed/71f422c76a23d1da904af0e5c23de54df6c0d0b2.svg "Repobeats analytics image")
 
 # Join out community
 We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
