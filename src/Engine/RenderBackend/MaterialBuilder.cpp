@@ -40,7 +40,7 @@ static void addMaterialParameter(Material *mat) {
         return;
     }
 
-    Shader *shader = mat->m_shader;
+    Shader *shader = mat->mShader;
     if (shader == nullptr) {
         osre_assert(false);
         return;
@@ -96,8 +96,8 @@ Material *MaterialBuilder::create2DMaterial() {
     mat->createShader(shArray);
 
         // Setup shader attributes and variables
-    if (nullptr != mat->m_shader) {
-        mat->m_shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+    if (nullptr != mat->mShader) {
+        mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         addMaterialParameter(mat);
     }
 
@@ -291,12 +291,12 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     mat->createShader(arr);
 
     // Setup shader attributes and variables
-    Shader *shader = mat->m_shader;
+    Shader *shader = mat->mShader;
     if (shader != nullptr) {
         if (type == VertexType::ColorVertex) {
-            mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+            mat->mShader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->m_shader->addVertexAttributes(RenderVert::getAttributes(),RenderVert::getNumAttributes());
+            mat->mShader->addVertexAttributes(RenderVert::getAttributes(),RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
@@ -321,8 +321,8 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         return nullptr;
     }
 
-    mat->m_numTextures = texResArray.size();
-    mat->m_textures = new Texture *[texResArray.size()];
+    mat->mNumTextures = texResArray.size();
+    mat->mTextures = new Texture *[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
         TextureResource *texRes = texResArray[i];
         if (texRes == nullptr) {
@@ -330,7 +330,7 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         }
         TextureLoader loader;
         texRes->load(loader);
-        mat->m_textures[i] = texRes->get();
+        mat->mTextures[i] = texRes->get();
     }
 
     String vs, fs;
@@ -353,11 +353,11 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     mat->createShader(arr);
 
     // Setup shader attributes and variables
-    if (nullptr != mat->m_shader) {
+    if (nullptr != mat->mShader) {
         if (type == VertexType::ColorVertex) {
-            mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+            mat->mShader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->m_shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+            mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
@@ -383,14 +383,14 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     }
 
     mat = materialCache->create(matName);
-    mat->m_numTextures = texResArray.size();
-    mat->m_textures = new Texture *[texResArray.size()];
+    mat->mNumTextures = texResArray.size();
+    mat->mTextures = new Texture *[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
         TextureResource *texRes = texResArray[i];
         IO::Uri uri = texRes->getUri();
         TextureLoader loader;
         texRes->load(loader);
-        mat->m_textures[i] = texRes->get();
+        mat->mTextures[i] = texRes->get();
     }
 
     ShaderSourceArray shArray;

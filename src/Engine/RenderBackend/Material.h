@@ -17,39 +17,38 @@ struct UniformVar;
 
 ///	@brief  This enum describes the kind of build-in material.
 enum class MaterialType {
-    InvalidMaterialType = -1, ///< Enum for invalid enum.
-    ShaderMaterial = 0,       ///< Material using a build-in shader assigned to its type of vertex.
-    NumMaterialTypes          ///< Number of enums.
+    Invalid = -1,           ///< Enum for invalid enum.
+    ShaderMaterial = 0,     ///< Material using a build-in shader assigned to its type of vertex.
+    Count                   ///< Number of enums.
 };
 
 ///	@brief  This enum describes the color type for the material.
-enum class MaterialColorType : ui32 {
-    Mat_Diffuse = 0, ///<
-    Mat_Specular, ///<
-    Mat_Ambient, ///<
-    Mat_Emission, ///<
-    NumMaterialColorTypes, ///< Number of enums.
-
-    InvalidMaterialColorType ///< Enum for invalid enum.
+enum class MaterialColorType : i32 {
+    Invalid = -1,       ///< Init value
+    Mat_Diffuse = 0,    ///< Diffuse color
+    Mat_Specular,       ///< Specular color
+    Mat_Ambient,        ///< Ambient color
+    Mat_Emission,       ///< Emission color
+    Count               ///< Number of enums.
 };
 
 using TextureResourceArray = cppcore::TArray<RenderBackend::TextureResource *>;
 
-static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::NumMaterialColorTypes);
+static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::Count);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This class implements the materila description.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Material {
 public:
-    String m_name;
-    MaterialType m_type;
-    size_t m_numTextures;
-    Texture **m_textures;
-    Shader *m_shader;
-    ui32 m_numParameters;
+    String mName;
+    MaterialType mType;
+    size_t mNumTextures;
+    Texture **mTextures;
+    Shader *mShader;
+    ui32 mNumParameters;
     UniformVar *m_parameters;
     Color4 m_color[MaxMatColorType];
     f32 mShineness;
@@ -61,13 +60,18 @@ public:
     void setMaterialType(MaterialType matType);
     MaterialType getMaterialType() const;
     void createShader(ShaderSourceArray &shaders);
+    void setShader(Shader *shader);
     Shader *getShader() const;
 
     OSRE_NON_COPYABLE(Material)
 };
 
+inline void Material::setShader(Shader *shader) {
+    mShader = shader;
+}
+
 inline Shader *Material::getShader() const {
-    return m_shader;
+    return mShader;
 }
 
 } // namespace RenderBackend
