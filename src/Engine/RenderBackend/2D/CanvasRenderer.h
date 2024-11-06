@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderCommon.h"
 #include <cppcore/Container/THashMap.h>
 
+#include <map>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -52,7 +54,7 @@ struct Point2Df {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT CanvasRenderer : public IRenderPath {
 public:    
-    using Font2MeshMap = cppcore::THashMap<HashId, Mesh *>;
+    using Font2MeshMap = std::map<String, Mesh*>;
     using DrawCmdArray = cppcore::TArray<DrawCmd *>;
 
     /// @brief The class constructor.

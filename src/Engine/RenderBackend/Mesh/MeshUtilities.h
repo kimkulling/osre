@@ -101,8 +101,8 @@ public:
                 continue;
             }
 
-            const ui16 VertexOffset(static_cast<ui16>(i) * static_cast<ui16>(NumQuadVert));
-            const f32  rowHeight(-1.0f * textRow * textSize);
+            const ui16 VertexOffset = static_cast<ui16>(i) * static_cast<ui16>(NumQuadVert);
+            const f32 rowHeight = -1.0f * textRow * textSize;
             positions[VertexOffset + 0].x = pos[0].x + (textCol * textSize);
             positions[VertexOffset + 0].y = pos[0].y + rowHeight;
             positions[VertexOffset + 0].z = 0;

@@ -234,13 +234,17 @@ static void createFontMeshes(CanvasRenderer::DrawCmdArray &drawCmdArray, CanvasR
     if (hasTexts(drawCmdArray)) {
         for (size_t i = 0; i < drawCmdArray.size(); ++i) {
             const auto &dc = drawCmdArray[i];
+            if (dc->UseFont == nullptr) {
+                continue;
+            }
+
             const String &keyName = dc->UseFont->Name;
             const String meshName = "text." + keyName;
             Material *matFont = MaterialBuilder::createTextMaterial(keyName);
             Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
             meshInfoArray.add({fontMesh, PrimitiveType::TriangleList, 0, 0});
             fontMesh->setMaterial(matFont);
-            font2MeshMap.insert(THash<HashId>::toHash(meshName.c_str(), 10), fontMesh);
+            font2MeshMap[meshName] = fontMesh;
         }
     }
 }
@@ -264,9 +268,10 @@ void renderFontMesh(const DrawCmd &dc, CanvasRenderer::Font2MeshMap &font2MeshMa
     MeshInfo info;
     const String &fontKey = dc.UseFont->Name;
     Mesh *textMesh = nullptr;
-    const HashId id = THash<HashId>::toHash(fontKey.c_str(), 10);
-    if (font2MeshMap.hasKey(id)) {
-        if (!font2MeshMap.getValue(id, textMesh)) {
+    CanvasRenderer::Font2MeshMap::const_iterator it = font2MeshMap.find(fontKey);
+    if (it != font2MeshMap.end()) {
+        textMesh = it->second;
+        if (textMesh == nullptr) {
             osre_debug(Tag, "Invalid font mesh detected.");
             return;
         } else { 
@@ -317,7 +322,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     }
 
     // Load all font-meshes
-    if (mFont2MeshMap.isEmpty()) {
+    if (mFont2MeshMap.empty()) {
         createFontMeshes(mDrawCmdArray, mFont2MeshMap, meshInfoArray);
     }
 
