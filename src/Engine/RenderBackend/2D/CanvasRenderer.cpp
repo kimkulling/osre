@@ -244,7 +244,7 @@ static void createFontMeshes(CanvasRenderer::DrawCmdArray &drawCmdArray, CanvasR
             Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
             meshInfoArray.add({fontMesh, PrimitiveType::TriangleList, 0, 0});
             fontMesh->setMaterial(matFont);
-            font2MeshMap[meshName] = fontMesh;
+            font2MeshMap[keyName] = fontMesh;
         }
     }
 }
