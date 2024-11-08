@@ -89,31 +89,31 @@ private:
 };
 
 inline bool MouseEventListener::leftButttonPressed() const {
-    return mMouseInputState.mMouseButtonState.getBit(LeftButton);
+    return mMouseInputState.MouseButtonState.getBit(LeftButton);
 }
 
 inline bool MouseEventListener::middleButttonPressed() const {
-    return mMouseInputState.mMouseButtonState.getBit(MiddleButton);
+    return mMouseInputState.MouseButtonState.getBit(MiddleButton);
 }
 
 inline bool MouseEventListener::rightButttonPressed() const {
-    return mMouseInputState.mMouseButtonState.getBit(RightButton);
+    return mMouseInputState.MouseButtonState.getBit(RightButton);
 }
 
 inline i32 MouseEventListener::getRelativeX() const {
-    return mMouseInputState.mRelX;
+    return mMouseInputState.RelX;
 }
 
 inline i32 MouseEventListener::getRelativeY() const {
-    return mMouseInputState.mRelY;
+    return mMouseInputState.RelY;
 }
 
 inline i32 MouseEventListener::getAbsoluteX() const {
-    return mMouseInputState.mAbsX;
+    return mMouseInputState.AbsX;
 }
 
 inline i32 MouseEventListener::getAbsoluteY() const {
-    return mMouseInputState.mAbsY;
+    return mMouseInputState.AbsY;
 }
 
 inline const MouseInputState &MouseEventListener::getMouseInputState() const {

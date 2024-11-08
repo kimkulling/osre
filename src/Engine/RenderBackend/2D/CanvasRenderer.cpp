@@ -39,27 +39,6 @@ using namespace cppcore;
 
 static constexpr c8 Tag[] = "CanvasRenderer";
 
-/// This struct is used to store all 2d draw commands.
-struct DrawCmd {
-    PrimitiveType PrimType;    ///< The primitive type
-    size_t NumVertices;        ///< The number of vertices
-    RenderVert *Vertices;      ///< The vertex buffer
-    size_t NumIndices;         ///< Number of indices
-    ui16 *Indices;             ///< The number of indices
-    Font *UseFont;             ///< The used font
-    
-    /// The class constructor.
-    DrawCmd() :
-            PrimType(PrimitiveType::Invalid), 
-            NumVertices(0u), 
-            Vertices(nullptr), 
-            NumIndices(0u), 
-            Indices(nullptr),
-            UseFont(nullptr) {
-        // empty
-    }
-};
-
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
     xOut = (2.0f * static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
@@ -168,6 +147,7 @@ void dealloc(DrawCmd *cmd) {
     delete cmd;
 }
 
+
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         IRenderPath(),
         mDirty(true),
@@ -176,8 +156,8 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mActiveLayer(0),
         mNumLayers(numLayers),
         mFont(nullptr),
-        mMesh(nullptr),
-        mFont2MeshMap() {
+        mMesh(nullptr)
+        /* mFont2MeshMap()*/ {
     setResolution(x, y, w, h);
 }
 
@@ -199,15 +179,8 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     rbSrv->setMatrix(MatrixType::Projection, m);
 }
 
-static void renumberIndices(const DrawCmd &dc, ui16 offset) {
-    if (offset > 0) {
-        for (size_t j = 0; j < dc.NumIndices; ++j) {
-            dc.Indices[j] += static_cast<ui16>(offset);
-        }
-    }
-}
 
-static bool hasTexts(const CanvasRenderer::DrawCmdArray &drawCmdArray) {
+/* static bool hasTexts(const CanvasRenderer::DrawCmdArray &drawCmdArray) {
     if (drawCmdArray.isEmpty()) {
         return true;
     }
@@ -219,21 +192,49 @@ static bool hasTexts(const CanvasRenderer::DrawCmdArray &drawCmdArray) {
     }
     
     return false;
-}
+}*/
 
-static void createFontMeshes(CanvasRenderer::DrawCmdArray &drawCmdArray, CanvasRenderer::Font2MeshMap &font2MeshMap) {
+/* static void createFontMeshes(CanvasRenderer::DrawCmdArray &drawCmdArray, CanvasRenderer::Font2MeshMap &font2MeshMap, MeshInfoArray &meshInfoArray) {
     if (hasTexts(drawCmdArray)) {
         for (size_t i = 0; i < drawCmdArray.size(); ++i) {
             const auto &dc = drawCmdArray[i];
+            if (dc->UseFont == nullptr) {
+                continue;
+            }
+
             const String &keyName = dc->UseFont->Name;
             const String meshName = "text." + keyName;
             Material *matFont = MaterialBuilder::createTextMaterial(keyName);
             Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
+            meshInfoArray.add({fontMesh, PrimitiveType::TriangleList, 0, 0});
             fontMesh->setMaterial(matFont);
-            font2MeshMap.insert(THash<HashId>::toHash(meshName.c_str(), 10), fontMesh);
+            font2MeshMap[keyName] = fontMesh;
         }
     }
 }
+
+bool getMeshInfo(Mesh *mesh, MeshInfoArray &meshInfoArray, MeshInfo &info) {
+    if (nullptr == mesh) {
+        return false;
+    }
+
+    for (size_t i = 0; i < meshInfoArray.size(); ++i) {
+        if (meshInfoArray[i].mMesh == mesh) {
+            info = meshInfoArray[i];
+            return true;
+        }
+    }
+
+    return false;
+}*/
+
+/*void addFontMeshes(CanvasRenderer::Font2MeshMap &font2MeshMap, MeshInfoArray &meshInfoArray, RenderBackendService *rbSrv) {
+    for (size_t i = 0; i < meshInfoArray.size(); ++i) {
+        MeshInfo &info = meshInfoArray[i];
+        rbSrv->addMesh(info.mMesh, 0);
+        info.mMesh->addPrimitiveGroup(info.mNumIndices, info.mPrim, 0);
+    }
+}*/
 
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
@@ -244,9 +245,12 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         return;
     }
 
+    //MeshInfoArray meshInfoArray;
+    
     // Create not textured geometry
     if (mMesh == nullptr) {
         mMesh = new Mesh("2d", VertexType::RenderVertex, IndexType::UnsignedShort);
+        //meshInfoArray.add({mMesh, PrimitiveType::TriangleList, 0, 0});    
         Material *mat2D = MaterialBuilder::create2DMaterial();
         if (mat2D == nullptr) {
             osre_debug(Tag, "Invalid material instance detected.");
@@ -256,9 +260,9 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     }
 
     // Load all font-meshes
-    if (mFont2MeshMap.isEmpty()) {
-        createFontMeshes(mDrawCmdArray, mFont2MeshMap);
-    }
+    /* if (mFont2MeshMap.empty()) {
+        createFontMeshes(mDrawCmdArray, mFont2MeshMap, meshInfoArray);
+    }*/
 
     PrimitiveType prim = PrimitiveType::TriangleList;
     size_t numVertices = 0l, numIndices = 0l;
@@ -269,15 +273,10 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             continue;
         }
 
-        if (dc.UseFont != nullptr) {
-            const String &fontKey = dc.UseFont->Name;
-            Mesh *text = nullptr;
-            const HashId id = THash<HashId>::toHash(fontKey.c_str(), 10);
-            if (mFont2MeshMap.hasKey(id)) {
-                mFont2MeshMap.getValue(id, text);
-            }
-        } else {
-        }
+       /* if (dc.UseFont != nullptr) {
+            renderFontMesh(dc, mFont2MeshMap, meshInfoArray);
+            continue;
+        }*/
 
         const ui32 lastIndex = mMesh->getLastIndex();
         renumberIndices(dc, numVertices);
@@ -294,6 +293,8 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
 
     rbSrv->addMesh(mMesh, 0);
     
+    //addFontMeshes(mFont2MeshMap, meshInfoArray, rbSrv);
+
     mDrawCmdArray.resize(0);
     setClean();
 }

@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderCommon.h"
 #include <cppcore/Container/THashMap.h>
 
+#include <map>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -35,15 +37,6 @@ class Mesh;
 
 struct DrawCmd;
 
-/// @brief The 2D point structure for int32.
-struct Point2Di {
-    i32 X, Y;    /// Coordinate components
-};
-
-/// @brief The 2D point structure for floats.
-struct Point2Df {
-    f32 X, Y;    /// Coordinate components
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -52,8 +45,6 @@ struct Point2Df {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT CanvasRenderer : public IRenderPath {
 public:    
-    using Font2MeshMap = cppcore::THashMap<HashId, Mesh *>;
-    using DrawCmdArray = cppcore::TArray<DrawCmd *>;
 
     /// @brief The class constructor.
     /// @param numLayers    The number of layers.
@@ -175,7 +166,7 @@ private:
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
-    Font2MeshMap mFont2MeshMap;
+    //Font2MeshMap mFont2MeshMap;
 };
 
 inline void CanvasRenderer::setDirty() {

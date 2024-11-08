@@ -1028,12 +1028,53 @@ enum class GLSLVersion {
 /// @return The GLSL version.
 GLSLVersion getGlslVersionFromeString(const c8 *versionString);
 
+/// @brief The 2D point structure for int32.
+struct Point2Di {
+    i32 X, Y; /// Coordinate components
+};
+
+/// @brief The 2D point structure for floats.
+struct Point2Df {
+    f32 X, Y; /// Coordinate components
+};
+
 /// @brief The font structure.
 struct Font {
     String Name;    ///< Font name
     i32 Size;       ///< Font size
     i32 Style;      ///< Font style
 };
+
+/// This struct is used to store all 2d draw commands.
+struct DrawCmd {
+    PrimitiveType PrimType; ///< The primitive type
+    size_t NumVertices;     ///< The number of vertices
+    RenderVert *Vertices;   ///< The vertex buffer
+    size_t NumIndices;      ///< Number of indices
+    ui16 *Indices;          ///< The number of indices
+    Font *UseFont;          ///< The used font
+
+    /// The class constructor.
+    DrawCmd() :
+            PrimType(PrimitiveType::Invalid),
+            NumVertices(0u),
+            Vertices(nullptr),
+            NumIndices(0u),
+            Indices(nullptr),
+            UseFont(nullptr) {
+        // empty
+    }
+};
+
+using DrawCmdArray = cppcore::TArray<DrawCmd *>;
+
+inline void renumberIndices(const DrawCmd &dc, ui16 offset) {
+    if (offset > 0) {
+        for (size_t j = 0; j < dc.NumIndices; ++j) {
+            dc.Indices[j] += static_cast<ui16>(offset);
+        }
+    }
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

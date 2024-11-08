@@ -327,6 +327,10 @@ bool AppBase::onCreate() {
     Rect2ui rect;
     mPlatformInterface->getRootWindow()->getWindowsRect(rect);
     mCanvasRenderer = new CanvasRenderer(2, (i32)rect.getX1(), (i32)rect.getY1(), (i32)rect.getWidth(), (i32)rect.getHeight());
+    if (!mCanvasRenderer->create()) {
+        osre_error(Tag, "Error while creating the canvas renderer.");
+        return false;
+    }
 
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");

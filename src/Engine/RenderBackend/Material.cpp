@@ -27,12 +27,12 @@ namespace OSRE {
 namespace RenderBackend {
 
 Material::Material(const String &name, const IO::Uri &uri) :
-        m_name(name),
-        m_type(MaterialType::ShaderMaterial),
-        m_numTextures(0),
-        m_textures(nullptr),
-        m_shader(nullptr),
-        m_numParameters(0),
+        mName(name),
+        mType(MaterialType::ShaderMaterial),
+        mNumTextures(0),
+        mTextures(nullptr),
+        mShader(nullptr),
+        mNumParameters(0),
         m_parameters(nullptr),
         mShineness(0.0f),
         mShinenessStrength(0.0f),
@@ -41,23 +41,23 @@ Material::Material(const String &name, const IO::Uri &uri) :
 }
 
 void Material::setMaterialType(MaterialType matType) {
-    m_type = matType;
+    mType = matType;
 }
 
 Material::~Material() {
-    delete m_shader;
-    delete[] m_textures;
+    delete mShader;
+    delete[] mTextures;
 }
 
 MaterialType Material::getMaterialType() const {
-    return m_type;
+    return mType;
 }
 
 void Material::createShader(ShaderSourceArray &shaders) {
-    m_shader = new Shader;
+    mShader = new Shader;
     for (ui32 i = 0; i < MaxShaderTypes; ++i) {
         if (!shaders[i].empty()) {
-            m_shader->setSource(static_cast<ShaderType>(i), shaders[i]);
+            mShader->setSource(static_cast<ShaderType>(i), shaders[i]);
         }
     }
 }

@@ -36,42 +36,42 @@ MouseEventListener::MouseEventListener() :
 }
 
 void MouseEventListener::onOSEvent(const Event &ev, const EventData *data) {
-    mMouseInputState.mLastX = mMouseInputState.mAbsX;
-    mMouseInputState.mLastY = mMouseInputState.mAbsY;
+    mMouseInputState.LastX = mMouseInputState.AbsX;
+    mMouseInputState.LastY = mMouseInputState.AbsY;
     if (!(ev == MouseButtonDownEvent) && !(ev == MouseButtonUpEvent)) {
         MouseMoveEventData *evData = (MouseMoveEventData *)data;
-        mMouseInputState.mAbsX = evData->m_absX;
-        mMouseInputState.mAbsY = evData->m_absY;
+        mMouseInputState.AbsX = evData->m_absX;
+        mMouseInputState.AbsY = evData->m_absY;
     } else {
         MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
-        mMouseInputState.mAbsX = mouseEventData->m_AbsX;
-        mMouseInputState.mAbsY = mouseEventData->m_AbsY;
+        mMouseInputState.AbsX = mouseEventData->m_AbsX;
+        mMouseInputState.AbsY = mouseEventData->m_AbsY;
         if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {
             if (mouseEventData->m_Pressed) {
-                mMouseInputState.mMouseButtonState.setBit(LeftButton);
+                mMouseInputState.MouseButtonState.setBit(LeftButton);
             } else {
-                mMouseInputState.mMouseButtonState.clearBit(LeftButton);
+                mMouseInputState.MouseButtonState.clearBit(LeftButton);
             }
         }
 
         if (mouseEventData->m_Button == MouseButtonEventData::MiddleButton) {
             if (mouseEventData->m_Pressed) {
-                mMouseInputState.mMouseButtonState.setBit(MiddleButton);
+                mMouseInputState.MouseButtonState.setBit(MiddleButton);
             } else {
-                mMouseInputState.mMouseButtonState.clearBit(MiddleButton);
+                mMouseInputState.MouseButtonState.clearBit(MiddleButton);
             }
         }
 
         if (mouseEventData->m_Button == MouseButtonEventData::RightButton) {
             if (mouseEventData->m_Pressed) {
-                mMouseInputState.mMouseButtonState.setBit(RightButton);
+                mMouseInputState.MouseButtonState.setBit(RightButton);
             } else {
-                mMouseInputState.mMouseButtonState.clearBit(RightButton);
+                mMouseInputState.MouseButtonState.clearBit(RightButton);
             }
         }
     }
-    mMouseInputState.mRelX = mMouseInputState.mLastX - mMouseInputState.mAbsX;
-    mMouseInputState.mRelY = mMouseInputState.mLastY - mMouseInputState.mAbsY;
+    mMouseInputState.RelX = mMouseInputState.LastX - mMouseInputState.AbsX;
+    mMouseInputState.RelY = mMouseInputState.LastY - mMouseInputState.AbsY;
 }
 
 } // Namespace App

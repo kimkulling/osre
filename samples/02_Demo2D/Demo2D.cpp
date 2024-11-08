@@ -66,7 +66,7 @@ public:
 
 protected:
     bool onCreate() override {
-        Properties::Settings *baseSettings(AppBase::getSettings());
+        Properties::Settings *baseSettings  = AppBase::getSettings();
         if (baseSettings == nullptr) {
             return false;
         }
@@ -78,7 +78,6 @@ protected:
         
         mCanvasRenderer = AppBase::getCanvasRenderer();
         
-        mCanvasRenderer->create();
         mCanvasRenderer->selectLayer(0);
         const Color4 Red(1, 0, 0, 0);
         mCanvasRenderer->setColor(Red);
