@@ -184,7 +184,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     return *this;
 }
 
-MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+/*MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
     const f32 x = static_cast<f32>(dim.getX1());
     const f32 y = static_cast<f32>(dim.getY1());
     const f32 w = static_cast<f32>(dim.getWidth());
@@ -234,7 +234,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
     }
 
     return *this;
-}
+}*/
 
 MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
     clear();

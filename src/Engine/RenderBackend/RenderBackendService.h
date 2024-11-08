@@ -79,9 +79,10 @@ DECL_EVENT(OnResizeEvent);
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT ScreenshotEventData : public Common::EventData {
     ScreenshotEventData(String filename, ui32 w, ui32 h) : EventData(OnScreenshotEvent, nullptr), 
-            mFilename(filename), mWidth(w), mHeight(h) {}
-    String mFilename;
-    ui32 mWidth, mHeight;
+            Filename(filename), Width(w), Height(h) {}
+    
+    String Filename;
+    ui32 Width, Height;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -91,13 +92,13 @@ struct OSRE_EXPORT ScreenshotEventData : public Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
     CreateRendererEventData(Platform::AbstractWindow *pSurface) :
-            EventData(OnCreateRendererEvent, nullptr), m_activeSurface(pSurface), m_defaultFont(""), m_pipeline(nullptr) {
+            EventData(OnCreateRendererEvent, nullptr), m_activeSurface(pSurface), DefaultFont(""), Pipeline(nullptr) {
         // empty
     }
 
     Platform::AbstractWindow *m_activeSurface;
-    String m_defaultFont;
-    Pipeline *m_pipeline;
+    String DefaultFont;
+    Pipeline *Pipeline;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -120,11 +121,11 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 struct OSRE_EXPORT InitPassesEventData : Common::EventData {
     InitPassesEventData() :
             EventData(OnInitPassesEvent, nullptr), 
-            m_frame(nullptr) {
+            NextFrame(nullptr) {
         // empty
     }
 
-    Frame *m_frame;
+    Frame *NextFrame;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -135,18 +136,16 @@ struct OSRE_EXPORT InitPassesEventData : Common::EventData {
 struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     CommitFrameEventData() :
             EventData(OnCommitFrameEvent, nullptr), 
-            m_frame(nullptr) {
+            NextFrame(nullptr) {
         // empty
     }
-
-    ~CommitFrameEventData() = default;
 
     static CommitFrameEventData *create() {
         CommitFrameEventData *data = new CommitFrameEventData;
         return data;
     }
 
-    Frame *m_frame;
+    Frame *NextFrame;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -156,14 +155,10 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT ResizeEventData : Common::EventData {
     ResizeEventData(ui32 x, ui32 y, ui32 w, ui32 h) :
-            EventData(OnResizeEvent, nullptr), 
-            m_x(x), 
-            m_y(y), 
-            m_w(w), 
-            m_h(h) {
+            EventData(OnResizeEvent, nullptr),  X(x), Y(y), W(w), H(h) {
         // empty
     }
-    ui32 m_x, m_y, m_w, m_h;
+    ui32 X, Y, W, H;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -181,7 +176,7 @@ public:
     RenderBackendService();
 
     /// @brief  The class destructor, virtual.
-    virtual ~RenderBackendService();
+    ~RenderBackendService() override;
 
     /// @brief  Set the configuration for the render service.
     /// @param  config          [in] The render configuration.
@@ -201,19 +196,41 @@ public:
     /// @return Pointer showing to the default render pipeline.
     Pipeline *createDefault3DPipeline();
 
+    ///	@brief
+    ///	@return 
     Pipeline *createDefault2DPipeline();
+
+    ///	@brief
+    /// @param
     void setActivePipeline(Pipeline *pipeline);
 
+    ///	@brief
+    /// @param
+    ///	@return
     PassData *getPassById(const c8 *id) const;
 
+    ///	@brief
+    /// @param
+    ///	@return
     PassData *beginPass(const c8 *id);
 
+    ///	@brief
+    /// @param
+    ///	@return
     RenderBatchData *beginRenderBatch(const c8 *id);
 
+    ///	@brief
+    /// @param
     void setRenderTarget(FrameBuffer *fb);
 
+    ///	@brief
+    /// @param
+    /// @param
     void setMatrix(MatrixType type, const glm::mat4 &m);
 
+    ///	@brief
+    /// @param
+    /// @param
     void setMatrix(const String &name, const glm::mat4 &matrix);
 
     void setUniform(UniformVar *var);

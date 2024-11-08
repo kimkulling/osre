@@ -296,7 +296,7 @@ bool AppBase::onCreate() {
 
     // enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
-    data->m_pipeline = mRbService->createDefault3DPipeline();
+    data->Pipeline = mRbService->createDefault3DPipeline();
     mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
     mTimer = Platform::PlatformInterface::getInstance()->getTimer();
