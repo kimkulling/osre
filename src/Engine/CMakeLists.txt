@@ -449,10 +449,11 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-	    ${renderbackend_volkanrenderer_src}
+        ${renderbackend_volkanrenderer_src}
         ${renderbackend_2d_src}
         ${renderbackend_mesh_src}
         ${renderbackend_shader_src}
+	${renderbackend_text_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}
