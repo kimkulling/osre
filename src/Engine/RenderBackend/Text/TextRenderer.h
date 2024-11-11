@@ -46,6 +46,7 @@ protected:
 private:
     Font2MeshMap mFont2MeshMap;
     Font *mDefaultFont;
+    MeshInfoArray mMeshInfoArray;
 };
 
 } // namespace RenderBackend

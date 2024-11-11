@@ -1,4 +1,5 @@
 #include "RenderBackend/Text/TextRenderer.h"
+#include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/FontService.h"
 
 namespace OSRE {
@@ -6,24 +7,6 @@ namespace RenderBackend {
 
 static constexpr c8 Tag[] = "TextRenderer";
 
-/* static void createFontMeshes(DrawCmdArray &drawCmdArray, Font2MeshMap &font2MeshMap, MeshInfoArray &meshInfoArray) {
-    if (hasTexts(drawCmdArray)) {
-        for (size_t i = 0; i < drawCmdArray.size(); ++i) {
-            const auto &dc = drawCmdArray[i];
-            if (dc->UseFont == nullptr) {
-                continue;
-            }
-
-            const String &keyName = dc->UseFont->Name;
-            const String meshName = "text." + keyName;
-            Material *matFont = MaterialBuilder::createTextMaterial(keyName);
-            Mesh *fontMesh = new Mesh(meshName, VertexType::RenderVertex, IndexType::UnsignedShort);
-            meshInfoArray.add({ fontMesh, PrimitiveType::TriangleList, 0, 0 });
-            fontMesh->setMaterial(matFont);
-            font2MeshMap[keyName] = fontMesh;
-        }
-    }
-}*/
 bool getMeshInfo(Mesh *mesh, MeshInfoArray &meshInfoArray, MeshInfo &info) {
     if (nullptr == mesh) {
         return false;
@@ -40,7 +23,7 @@ bool getMeshInfo(Mesh *mesh, MeshInfoArray &meshInfoArray, MeshInfo &info) {
 }
 
 
-        void renderFontMesh(const DrawCmd &dc, Font2MeshMap &font2MeshMap, MeshInfoArray &meshInfoArray) {
+void renderFontMesh(const DrawCmd &dc, Font2MeshMap &font2MeshMap, MeshInfoArray &meshInfoArray) {
     MeshInfo info;
     const String &fontKey = dc.UseFont->Name;
     Mesh *textMesh = nullptr;
@@ -89,16 +72,29 @@ void TextRenderer::addText(i32 x, i32 y, Font *font, const String &text) {
     } else {
         textMesh = it->second;
     }
-
-
 }
 
 void TextRenderer::preRender(RenderBackendService* rbSrv) {
+    if (rbSrv == nullptr) {
+        return;
+    }
 
+    glm::mat4 m(1);
+    rbSrv->setMatrix(MatrixType::Model, m);
+    rbSrv->setMatrix(MatrixType::View, m);
+    rbSrv->setMatrix(MatrixType::Projection, m);
 }
 
 void TextRenderer::render(RenderBackendService* rbSrv) {
+    if (rbSrv == nullptr) {
+        return;
+    }
 
+    for (auto &it : mFont2MeshMap) {
+        if (it.second != nullptr) {
+            rbSrv-
+        }
+    }
 }
 
 void TextRenderer::postRender(RenderBackendService* rbSrv) {
@@ -110,7 +106,6 @@ bool TextRenderer::onCreate() {
     
     return (mDefaultFont != nullptr);
 }
-
 
 } // namespace RenderBackend
 } // namespace OSRE
