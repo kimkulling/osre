@@ -21,71 +21,44 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-
-#include "App/Project.h"
-#include "Common/osre_common.h"
-#include "IO/Directory.h"
+#include "App/Stage.h"
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::App;
-using namespace ::OSRE::Common;
-using namespace ::OSRE::IO;
+using namespace OSRE::App;
 
-class ProjectTest : public ::testing::Test {
+class StageTest : public ::testing::Test {
     // empty
 };
 
-TEST_F(ProjectTest, createTest) {
-    bool ok(true);
+TEST_F(StageTest, createTest) {
+    bool ok = true;
     try {
-        Project myProject;
-    }
-    catch (...) {
+        Stage theStage("test", StageMode::Stage2D);
+    } catch(...) {
         ok = false;
     }
     EXPECT_TRUE(ok);
 }
 
-TEST_F( ProjectTest, accessAssetTests ) {
-    Project myProject;
-    EXPECT_EQ(0u, myProject.getNumAssets());
-    
-    myProject.addAsset("model1");
-    EXPECT_EQ(1u, myProject.getNumAssets());
-    myProject.addAsset("model1");
-    EXPECT_EQ(1u, myProject.getNumAssets());
+TEST_F(StageTest, clearTest) {
+    Stage theStage("test", StageMode::Stage2D);
+    static_cast<void>(theStage.createWorld("stageTest"));
+    EXPECT_EQ(1u, theStage.getNumberOfWorlds());
 
-    myProject.addAsset("model2");
-    EXPECT_EQ(2u, myProject.getNumAssets());
-
-    for (size_t i = 0; i < myProject.getNumAssets(); i++) {
-        String name = myProject.getAssetAt(i);
-        EXPECT_FALSE(name.empty());
-    }
-
-    bool ok = myProject.removeAsset("model2");
-    EXPECT_TRUE(ok);
-
-    ok = myProject.removeAsset("model2");
-    EXPECT_FALSE(ok);
-    EXPECT_EQ(1u, myProject.getNumAssets());
+    theStage.clear();
+    EXPECT_EQ(0u, theStage.getNumberOfWorlds());
+    EXPECT_TRUE(theStage.isEmpty());
 }
 
-TEST_F( ProjectTest, accessStageTest ) {
-    Stage stage("test", StageMode::Stage3D);
-    Project myProject;
-    EXPECT_EQ(nullptr, myProject.getStage());
+TEST_F(StageTest, accessStageModeTest) {
+    Stage theStage1("test", StageMode::Stage2D);
+    EXPECT_EQ(StageMode::Stage2D, theStage1.getStageMode());
 
-    myProject.setStage(&stage);
-    EXPECT_NE(nullptr, myProject.getStage());
+    Stage theStage2("test", StageMode::Stage3D);
+    EXPECT_EQ(StageMode::Stage3D, theStage2.getStageMode());
 }
 
-TEST_F(ProjectTest, loadsaveTest) {
-    Project myProject;
-
-}
-
-} // namespace App
+} // namespace UnitTest
 } // namespace OSRE

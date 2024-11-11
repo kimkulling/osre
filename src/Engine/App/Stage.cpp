@@ -29,19 +29,28 @@ namespace App {
 
 static constexpr c8 Tag[] = "Stage";
 
-Stage::Stage(const String &stageName) :
+Stage::Stage(const String &stageName, StageMode mode) :
         Object(stageName),
+        mStageMode(mode),
         mWorlds(),
         mRenderWorlds() {
     // empty
 }
 
 Stage::~Stage() {
+    clear();
+}
+
+void Stage::clear() {
     for (ui32 i = 0; i < mWorlds.size(); ++i) {
         mWorlds[i]->release();
     }
     mWorlds.clear();
-    mRenderWorlds.clear();
+    mRenderWorlds.clear();    
+}
+
+StageMode Stage::getStageMode() const {
+    return mStageMode;
 }
 
 World *Stage::createWorld(const String &name) {

@@ -36,6 +36,13 @@ namespace App {
 
 class World;
 
+enum class StageMode {
+    Invalid = -1,
+    Stage2D,
+    Stage3D,
+    Count
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -49,11 +56,18 @@ public:
     using WorldArray = cppcore::TArray<World*>;
 
     /// @brief  The class constructor.
-    /// @param stageName  The stage name.
-    Stage(const String &stageName);
+    /// @param[in] stageName  The stage name.
+    Stage(const String &stageName, StageMode mode);
 
     /// @brief  The class destructor.
     ~Stage() override;
+
+    /// @brief Will clear the stage.
+    void clear();
+
+    /// @brief Will return the stage mode.
+    /// @return The stage mode.
+    StageMode getStageMode() const;
 
     /// @brief Will create a new world instance within the stage.
     /// @param[in] name   The name of the stage.
@@ -82,6 +96,9 @@ public:
     /// @return The active worlds.
     const WorldArray &getActiveWorlds() const;
 
+    /// @brief Will return the active world of the stage.
+    /// @param[in] index    The world index.
+    /// @return  The active world or nullptr, if no world is active.
     World *getActiveWorld(size_t index) const;
 
     /// @brief Will add a new created world.
@@ -91,9 +108,7 @@ public:
 
     /// @brief  Returns true if the stage is empty.
     /// @return true, if the stage is empty, false if not.
-    bool isEmpty() const {
-        return mRenderWorlds.isEmpty();
-    }
+    bool isEmpty() const;
 
     /// @brief  Will update the world.
     /// @param[in] dt The current delta time-tick.
@@ -104,9 +119,14 @@ public:
     void render(RenderBackend::RenderBackendService *rbService);
 
 private:
+    StageMode mStageMode;
     WorldArray mWorlds;
     WorldArray mRenderWorlds;
 };
+
+inline bool Stage::isEmpty() const {
+    return mRenderWorlds.isEmpty();
+}
 
 } // namespace App
 } // namespace OSRE

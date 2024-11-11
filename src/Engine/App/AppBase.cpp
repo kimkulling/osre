@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/ResourceCacheService.h"
 #include "App/ServiceProvider.h"
 #include "App/World.h"
-#include "App/Stage.h"
 #include "App/TransformController.h"
 #include "Common/Environment.h"
 #include "Common/TObjPtr.h"
@@ -60,6 +59,17 @@ using namespace ::OSRE::IO;
 
 static constexpr c8 Tag[] = "AppBase";
 
+static void attachMouseEventPtrs(EventPtrArray &eventArray) {
+    eventArray.add(&MouseButtonDownEvent);
+    eventArray.add(&MouseButtonUpEvent);
+    eventArray.add(&MouseMoveEvent);
+}
+
+static void attachKeyboardEventPtrs(EventPtrArray &eventArray) {
+    eventArray.add(&KeyboardButtonDownEvent);
+    eventArray.add(&KeyboardButtonUpEvent);
+}
+
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
         mLastTime(0l),
@@ -74,8 +84,9 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr),
-        mShutdownRequested(false),
         mCanvasRenderer(nullptr) {
+        mStageMode(StageMode::Stage3D),
+        mShutdownRequested(false) {
     mSettings->setString(Properties::Settings::RenderAPI, "opengl");
     mSettings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -105,7 +116,7 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
 }
 
 bool AppBase::create(Properties::Settings *config) {
-    if (nullptr != config && config != mSettings) {
+    if (config != nullptr && config != mSettings) {
         delete mSettings;
         mSettings = config;
     }
@@ -129,12 +140,14 @@ void AppBase::update() {
 }
 
 void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
-    if (nullptr == mPlatformInterface) {
+    if (mPlatformInterface != nullptr) {
+        osre_debug(Tag, "Invalid platform interface.");
         return;
     }
 
     AbstractWindow *rootWindow = mPlatformInterface->getRootWindow();
-    if (nullptr == rootWindow) {
+    if (rootWindow != nullptr) {
+        osre_debug(Tag, "Root window is nullptr.");
         return;
     }
 
@@ -145,9 +158,9 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 }
 
 void AppBase::requestNextFrame() {
-    osre_assert(nullptr != mRbService);
-
+    osre_assert(mRbService != nullptr);
     if (mStage == nullptr) {
+        osre_debug(Tag, "Invalid stage.");
         return;
     }
 
@@ -156,7 +169,7 @@ void AppBase::requestNextFrame() {
 }
 
 bool AppBase::handleEvents() {
-    if (nullptr == mPlatformInterface) {
+    if (mPlatformInterface != nullptr) {
         osre_debug(Tag, "AppBase::PlatforInterface not in proper state: not nullptr.");
         return false;
     }
@@ -174,13 +187,14 @@ Properties::Settings *AppBase::getSettings() const {
 }
 
 CameraComponent *AppBase::setActiveCamera(CameraComponent *camera) {
-    if (nullptr == mStage) {
+    if (mStage != nullptr) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
     }
 
     const Stage::WorldArray &worlds = mStage->getActiveWorlds();
     if (worlds.isEmpty()) {
+        osre_debug(Tag, "No worlds attached to this stage.");
         return nullptr;
     }
 
@@ -208,7 +222,8 @@ AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &t
 }
 
 Platform::AbstractWindow *AppBase::getRootWindow() const {
-    if (nullptr == mPlatformInterface) {
+    if (mPlatformInterface != nullptr) {
+        osre_debug(Tag, "Platform interface instance is nullptr.");
         return nullptr;
     }
 
@@ -216,12 +231,13 @@ Platform::AbstractWindow *AppBase::getRootWindow() const {
 }
 
 void AppBase::setWindowsTitle(const String &title) {
-    if (nullptr == mPlatformInterface) {
+    if (mPlatformInterface == nullptr) {
+        osre_debug(Tag, "Platform interface instance is nullptr.");
         return;
     }
 
     AbstractWindow *rs = mPlatformInterface->getRootWindow();
-    if (nullptr != rs) {
+    if (rs != nullptr) {
         rs->setWindowsTitle(title);
     }
 }
@@ -253,13 +269,13 @@ bool AppBase::onCreate() {
 
     // create the asset registry
     AssetRegistry *registry = AssetRegistry::create();
-    if (nullptr == registry) {
+    if (registry != nullptr) {
         osre_debug(Tag, "Cannot create asset registry.");
     }
 
-    // create the platform interface instance
+    //Create the platform interface instance
     mPlatformInterface = Platform::PlatformInterface::create(mSettings);
-    if (nullptr == mPlatformInterface) {
+    if (mPlatformInterface != nullptr) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
         return false;
     }
@@ -269,13 +285,13 @@ bool AppBase::onCreate() {
         return false;
     }
 
-    // register any available platform-specific log streams
+    //Register any available platform-specific log streams
     Common::AbstractLogStream *stream = Platform::PlatformPluginFactory::createPlatformLogStream();
     if (stream != nullptr) {
         Logger::getInstance()->registerLogStream(stream);
     }
 
-    // create the render back-end
+    //Create the render back-end
     mRbService = new RenderBackendService();
     ServiceProvider::setService(ServiceType::RenderService, mRbService);
     mRbService->setSettings(mSettings, false);
@@ -286,7 +302,7 @@ bool AppBase::onCreate() {
     }
 
     // Create our world
-    mStage = new Stage("stage");
+    mStage = new Stage("stage", mStageMode);
     mStage->createWorld("world");
 
     const String &api = mRbService->getSettings()->getString(Properties::Settings::RenderAPI);
@@ -353,7 +369,7 @@ bool AppBase::onDestroy() {
 
     ServiceProvider::destroy();
 
-    if (mPlatformInterface) {
+    if (mPlatformInterface != nullptr) {
         Platform::PlatformInterface::destroy();
         mPlatformInterface = nullptr;
     }
@@ -392,7 +408,7 @@ void AppBase::onUpdate() {
 }
 
 void AppBase::onRender() {
-    if (nullptr != mStage) {
+    if (mStage != nullptr) {
         mStage->render(mRbService);
     }
 }
@@ -409,7 +425,7 @@ void AppBase::getResolution(ui32 &width, ui32 &height) {
     width = height = 0;
     Rect2ui windowsRect;
     Platform::AbstractWindow *rootWindow = getRootWindow();
-    if (nullptr == rootWindow) {
+    if (rootWindow == nullptr) {
         return;
     }
 
@@ -420,3 +436,4 @@ void AppBase::getResolution(ui32 &width, ui32 &height) {
 
 } // Namespace App
 } // Namespace OSRE
+
