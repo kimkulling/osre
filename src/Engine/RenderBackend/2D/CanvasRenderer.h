@@ -24,9 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 #include "RenderBackend/RenderCommon.h"
-#include <cppcore/Container/THashMap.h>
-
-#include <map>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -166,7 +163,6 @@ private:
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
-    //Font2MeshMap mFont2MeshMap;
 };
 
 inline void CanvasRenderer::setDirty() {
