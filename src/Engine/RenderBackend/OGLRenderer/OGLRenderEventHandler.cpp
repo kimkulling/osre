@@ -194,7 +194,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
-    mActivePipeline = createRendererEvData->m_pipeline;
+    mActivePipeline = createRendererEvData->Pipeline;
     Profiling::PerformanceCounterRegistry::registerCounter("fps");
 
     return true;
@@ -487,7 +487,7 @@ bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
     bool result = false;
     ScreenshotEventData *data = (ScreenshotEventData*) eventData;
     if (data != nullptr){
-        result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
+        result = makeScreenShot(data->Filename.c_str(), data->Width, data->Height);
     }
 
     return result;

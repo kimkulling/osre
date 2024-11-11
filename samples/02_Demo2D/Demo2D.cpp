@@ -66,7 +66,7 @@ public:
 
 protected:
     bool onCreate() override {
-        Properties::Settings *baseSettings(AppBase::getSettings());
+        Properties::Settings *baseSettings  = AppBase::getSettings();
         if (baseSettings == nullptr) {
             return false;
         }

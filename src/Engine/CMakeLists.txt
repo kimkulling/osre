@@ -324,6 +324,11 @@ SET( renderbackend_2d_src
     RenderBackend/2D/CanvasRenderer.cpp
 )
 
+SET( renderbackend_text_src
+    RenderBackend/Text/TextRenderer.h
+    RenderBackend/Text/TextRenderer.cpp
+)
+
 SET( renderbackend_vulkan_src
     RenderBackend/VulkanRenderer/VulkanRenderEventHandler.cpp
     RenderBackend/VulkanRenderer/VulkanRenderEventHandler.h
@@ -407,6 +412,7 @@ SOURCE_GROUP( RenderBackend\\Mesh         FILES ${renderbackend_mesh_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer  FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Vulkan       FILES ${renderbackend_vulkanrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
+SOURCE_GROUP( RenderBackend\\Text         FILES ${renderbackend_text_src})
 SOURCE_GROUP( Resources                   FILES ${resources_src} )
 SOURCE_GROUP( Scene                       FILES ${scene_src} )
 SOURCE_GROUP( Threading                   FILES ${threading_src} )
@@ -443,10 +449,11 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-	    ${renderbackend_volkanrenderer_src}
+        ${renderbackend_volkanrenderer_src}
         ${renderbackend_2d_src}
         ${renderbackend_mesh_src}
         ${renderbackend_shader_src}
+	${renderbackend_text_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}

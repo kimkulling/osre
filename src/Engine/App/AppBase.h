@@ -262,6 +262,7 @@ public:
     /// @return The keyboard listener.
     virtual KeyboardEventListener *getKeyboardEventListener() const;
 
+    /// @brief
     virtual RenderBackend::CanvasRenderer *getCanvasRenderer() const;
     
  protected:

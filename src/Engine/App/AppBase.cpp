@@ -312,7 +312,7 @@ bool AppBase::onCreate() {
 
     // enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
-    data->m_pipeline = mRbService->createDefault3DPipeline();
+    data->Pipeline = mRbService->createDefault3DPipeline();
     mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
     mTimer = Platform::PlatformInterface::getInstance()->getTimer();
@@ -343,6 +343,10 @@ bool AppBase::onCreate() {
     Rect2ui rect;
     mPlatformInterface->getRootWindow()->getWindowsRect(rect);
     mCanvasRenderer = new CanvasRenderer(2, (i32)rect.getX1(), (i32)rect.getY1(), (i32)rect.getWidth(), (i32)rect.getHeight());
+    if (!mCanvasRenderer->create()) {
+        osre_error(Tag, "Error while creating the canvas renderer.");
+        return false;
+    }
 
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
