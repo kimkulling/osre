@@ -37,8 +37,6 @@ public:
     RenderPass2D();
     ~RenderPass2D();
     static RenderPass *build(guid id);
-    //static const String &getVertexShader();
-    //static const String &getFragmentShader();
 };
 
 inline RenderPass2D::RenderPass2D() {}
