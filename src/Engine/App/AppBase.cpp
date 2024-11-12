@@ -84,7 +84,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr),
-        mCanvasRenderer(nullptr) {
+        mCanvasRenderer(nullptr),
         mStageMode(StageMode::Stage3D),
         mShutdownRequested(false) {
     mSettings->setString(Properties::Settings::RenderAPI, "opengl");
@@ -169,7 +169,7 @@ void AppBase::requestNextFrame() {
 }
 
 bool AppBase::handleEvents() {
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_debug(Tag, "AppBase::PlatforInterface not in proper state: not nullptr.");
         return false;
     }
@@ -246,17 +246,6 @@ RenderBackend::CanvasRenderer* AppBase::getCanvasRenderer() const {
     return (CanvasRenderer*) mCanvasRenderer;
 }
 
-static void attachMouseEventPtrs(EventPtrArray &eventArray) {
-    eventArray.add(&MouseButtonDownEvent);
-    eventArray.add(&MouseButtonUpEvent);
-    eventArray.add(&MouseMoveEvent);
-}
-
-static void attachKeyboardEventPtrs(EventPtrArray &eventArray) {
-    eventArray.add(&KeyboardButtonDownEvent);
-    eventArray.add(&KeyboardButtonUpEvent);
-}
-
 bool AppBase::onCreate() {
     if (mAppState != State::Uninited) {
         osre_debug(Tag, "AppBase::State not in expected state: Uninited.");
@@ -269,13 +258,14 @@ bool AppBase::onCreate() {
 
     // create the asset registry
     AssetRegistry *registry = AssetRegistry::create();
-    if (registry != nullptr) {
+    if (registry == nullptr) {
         osre_debug(Tag, "Cannot create asset registry.");
+        return false;
     }
 
     //Create the platform interface instance
     mPlatformInterface = Platform::PlatformInterface::create(mSettings);
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
         return false;
     }
@@ -312,7 +302,7 @@ bool AppBase::onCreate() {
 
     // enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
-    data->Pipeline = mRbService->createDefault3DPipeline();
+    data->RequestedPipeline = mRbService->createDefault3DPipeline();
     mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
     mTimer = Platform::PlatformInterface::getInstance()->getTimer();

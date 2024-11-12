@@ -423,11 +423,6 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
         drawCmd->Indices[idxIndex] = indices[idxIndex];
     }
 
-    if (mFont == nullptr) {
-        mFont = FontService::getDefaultFont();
-    }
-    drawCmd->UseFont = mFont;
-
     mDrawCmdArray.add(drawCmd);
 
     setDirty();

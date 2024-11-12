@@ -1068,10 +1068,11 @@ struct DrawCmd {
 
 using DrawCmdArray = cppcore::TArray<DrawCmd *>;
 
-inline void renumberIndices(const DrawCmd &dc, ui16 offset) {
+template<class T>
+inline void renumberIndices(const DrawCmd &dc, T offset) {
     if (offset > 0) {
         for (size_t j = 0; j < dc.NumIndices; ++j) {
-            dc.Indices[j] += static_cast<ui16>(offset);
+            dc.Indices[j] += static_cast<T>(offset);
         }
     }
 }

@@ -90,9 +90,15 @@ void TextRenderer::render(RenderBackendService* rbSrv) {
         return;
     }
 
+    MeshInfo info;
     for (auto &it : mFont2MeshMap) {
-        if (it.second != nullptr) {
-            rbSrv-
+        Mesh *mesh = it.second;
+        if (mesh != nullptr) {
+            if (getMeshInfo(mesh, mMeshInfoArray, info)) {
+                mesh->addPrimitiveGroup(info.mNumIndices, info.mPrim, 0);
+
+                rbSrv->addMesh(mesh, 0);
+            }
         }
     }
 }
