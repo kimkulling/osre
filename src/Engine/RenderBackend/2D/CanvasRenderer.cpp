@@ -67,8 +67,8 @@ inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out)
 }
 
 static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
-    i32 x_clipped, y_clipped;
-    f32 x_model, y_model;
+    i32 x_clipped{0}, y_clipped{0};
+    f32 x_model{0.f}, y_model{0.f};
 
     drawCmd->PrimType = PrimitiveType::TriangleList;
     drawCmd->NumVertices = 6;
@@ -156,8 +156,7 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mActiveLayer(0),
         mNumLayers(numLayers),
         mFont(nullptr),
-        mMesh(nullptr)
-        /* mFont2MeshMap()*/ {
+        mMesh(nullptr) {
     setResolution(x, y, w, h);
 }
 
@@ -298,7 +297,7 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
 }
 
 void CanvasRenderer::drawline(const Point2Di &p1, const Point2Di &p2) {
-    drawline(p1.X, p1.Y, p2.X, p2.Y);
+    drawline(p1.x, p1.y, p2.x, p2.y);
 }
 
 void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled) {
@@ -351,7 +350,7 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
 }
 
 void CanvasRenderer::drawTriangle(const Point2Di &p1, const Point2Di &p2, const Point2Di &p3, bool filled) {
-    drawTriangle(p1.X, p1.Y, p2.X, p2.Y, p3.X, p3.Y, filled);
+    drawTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, filled);
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {

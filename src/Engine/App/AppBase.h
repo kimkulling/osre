@@ -305,9 +305,9 @@ private:
     MouseEventListener *mMouseEvListener;
     KeyboardEventListener *mKeyboardEvListener;
     Common::Ids *mIds;
-    StageMode mStageMode;
-    bool mShutdownRequested;
-    RenderBackend::IRenderPath *mCanvasRenderer;
+    StageMode mStageMode = StageMode::Stage3D;
+    bool mShutdownRequested = false;
+    RenderBackend::IRenderPath *mCanvasRenderer = nullptr;
 };
 
 inline Stage *AppBase::getStage() const {

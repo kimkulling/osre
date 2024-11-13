@@ -83,10 +83,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mStage(nullptr),
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
-        mIds(nullptr),
-        mCanvasRenderer(nullptr),
-        mStageMode(StageMode::Stage3D),
-        mShutdownRequested(false) {
+        mIds(nullptr) {
     mSettings->setString(Properties::Settings::RenderAPI, "opengl");
     mSettings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -257,13 +254,12 @@ bool AppBase::onCreate() {
     mEnvironment = new Common::Environment;
 
     // create the asset registry
-    AssetRegistry *registry = AssetRegistry::create();
-    if (registry == nullptr) {
+    if (AssetRegistry::create() == nullptr) {
         osre_debug(Tag, "Cannot create asset registry.");
         return false;
     }
 
-    //Create the platform interface instance
+    // Create the platform interface instance
     mPlatformInterface = Platform::PlatformInterface::create(mSettings);
     if (mPlatformInterface == nullptr) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
@@ -275,13 +271,13 @@ bool AppBase::onCreate() {
         return false;
     }
 
-    //Register any available platform-specific log streams
+    // Register any available platform-specific log streams
     Common::AbstractLogStream *stream = Platform::PlatformPluginFactory::createPlatformLogStream();
     if (stream != nullptr) {
         Logger::getInstance()->registerLogStream(stream);
     }
 
-    //Create the render back-end
+    // Create the render back-end
     mRbService = new RenderBackendService();
     ServiceProvider::setService(ServiceType::RenderService, mRbService);
     mRbService->setSettings(mSettings, false);
@@ -300,7 +296,7 @@ bool AppBase::onCreate() {
 
     mPlatformInterface->getPlatformEventHandler()->setRenderBackendService(mRbService);
 
-    // enable render-back-end
+    // Enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
     data->RequestedPipeline = mRbService->createDefault3DPipeline();
     mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
