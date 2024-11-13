@@ -288,6 +288,7 @@ SET ( properties_src
 SET( renderbackend_src
     RenderBackend/RenderCommon.h
     RenderBackend/DbgRenderer.h
+    RenderBackend/FontService.h
     RenderBackend/Material.h
     RenderBackend/Mesh.h
     RenderBackend/LineBuilder.h
@@ -315,10 +316,18 @@ SET( renderbackend_src
     RenderBackend/Shader.cpp
 )
 
+SET( renderbackend_mesh_src
+    RenderBackend/Mesh/MeshUtilities.h
+)
 SET( renderbackend_2d_src
     RenderBackend/2D/RenderPass2D.h
     RenderBackend/2D/CanvasRenderer.h
     RenderBackend/2D/CanvasRenderer.cpp
+)
+
+SET( renderbackend_text_src
+    RenderBackend/Text/TextRenderer.h
+    RenderBackend/Text/TextRenderer.cpp
 )
 
 SET( renderbackend_vulkan_src
@@ -400,9 +409,11 @@ SOURCE_GROUP( Profiling                   FILES ${profiling_src} )
 SOURCE_GROUP( Properties                  FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend               FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\2D           FILES ${renderbackend_2d_src})
+SOURCE_GROUP( RenderBackend\\Mesh         FILES ${renderbackend_mesh_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer  FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Vulkan       FILES ${renderbackend_vulkanrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
+SOURCE_GROUP( RenderBackend\\Text         FILES ${renderbackend_text_src})
 SOURCE_GROUP( Resources                   FILES ${resources_src} )
 SOURCE_GROUP( Scene                       FILES ${scene_src} )
 SOURCE_GROUP( Threading                   FILES ${threading_src} )
@@ -439,9 +450,11 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-	    ${renderbackend_volkanrenderer_src}
+        ${renderbackend_volkanrenderer_src}
         ${renderbackend_2d_src}
+        ${renderbackend_mesh_src}
         ${renderbackend_shader_src}
+	${renderbackend_text_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}

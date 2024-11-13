@@ -45,7 +45,7 @@ inline RenderPass2D::~RenderPass2D() {}
 
 inline RenderPass *RenderPass2D::build(guid id) {
     RenderPass *pass = new RenderPass(id, nullptr);
-    
+
     return pass;
 }
 

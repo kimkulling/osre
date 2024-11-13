@@ -104,7 +104,7 @@ TEST_F( RenderCommonTest, getVertCompNameTest ) {
     name = getVertCompName(VertexAttribute::Position);
     EXPECT_NE(static_cast<ui32>(0), name.size());
 
-    name = getVertCompName(VertexAttribute::InvalidVertexAttr);
+    name = getVertCompName(VertexAttribute::Invalid);
     EXPECT_NE(static_cast<ui32>(0), name.size());
     EXPECT_EQ("Error", name );
 }
@@ -172,9 +172,9 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
     bool ok = true;
     try {
         Material *mat( new Material( "test", IO::Uri() ) );
-        EXPECT_EQ( MaterialType::ShaderMaterial, mat->m_type );
+        EXPECT_EQ( MaterialType::ShaderMaterial, mat->mType );
         EXPECT_EQ( mat->m_parameters, nullptr );
-        EXPECT_EQ( mat->m_numParameters, 0u );
+        EXPECT_EQ( mat->mNumParameters, 0u );
     } catch ( ... ) {
         ok = false;
     }
@@ -183,10 +183,10 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
     Material *mat( new Material( "test", IO::Uri() ) );
-    mat->m_shader = new Shader;
-    mat->m_shader->addUniformBuffer("MVP");
+    mat->mShader = new Shader;
+    mat->mShader->addUniformBuffer("MVP");
 
-    EXPECT_EQ(1u, mat->m_shader->getNumUniformBuffer());
+    EXPECT_EQ(1u, mat->mShader->getNumUniformBuffer());
     delete mat;
 }
 

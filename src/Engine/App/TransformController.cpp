@@ -73,21 +73,21 @@ void mapToSphere(const glm::vec2 &newPt, glm::vec3 *newVector, f32 w, f32 h, f32
 
 void TransformController::getMouseUpdate(const MouseInputState &mis) {
     f32 dirX = 0.0f, dirY = 0.0f;
-    if (mis.mRelX != 0 || mis.mRelY != 0) {
-        dirX = (f32)mis.mRelX;
-        dirY = (f32)mis.mRelY;
+    if (mis.RelX != 0 || mis.RelY != 0) {
+        dirX = (f32)mis.RelX;
+        dirY = (f32)mis.RelY;
         f32 len = sqrt(dirX * dirX + dirY * dirY);
-        if (mis.mMouseButtonState.getBit(MouseEventListener::LeftButton)) {
+        if (mis.MouseButtonState.getBit(MouseEventListener::LeftButton)) {
             glm::vec3 res;
             mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
             mTransform.mModel = glm::rotate(mTransform.mModel, 0.005f * len, res);
         }
-        if (mis.mMouseButtonState.getBit(MouseEventListener::MiddleButton)) {
+        if (mis.MouseButtonState.getBit(MouseEventListener::MiddleButton)) {
             glm::vec3 res;
             mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
             mTransform.mModel = glm::translate(mTransform.mModel, res);
         }
-        if (mis.mMouseButtonState.getBit(MouseEventListener::RightButton)) {
+        if (mis.MouseButtonState.getBit(MouseEventListener::RightButton)) {
             f32 factor = 0.005f * len;
             if (dirY > 0) {
                 mTransform.mModel = glm::scale(mTransform.mModel, glm::vec3(1.01 + factor, 1.01 + factor, 1.01 + factor));

@@ -25,8 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
+#include "RenderBackend/FontService.h"
+#include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
-
 #include "Debugging/MeshDiagnostic.h"
 
 #include <cppcore/Memory/TPoolAllocator.h>
@@ -37,22 +38,6 @@ namespace RenderBackend {
 using namespace cppcore;
 
 static constexpr c8 Tag[] = "CanvasRenderer";
-
-/// This struct is used to store all 2d draw commands.
-struct DrawCmd {
-    PrimitiveType PrimType;    // The primitive type
-    size_t NumVertices;        // The number of vertices
-    RenderVert *Vertices;      // The vertex buffer
-    size_t NumIndices;         // Number of indices
-    ui16 *Indices;             // The number of indices
-
-    // The class constructor.
-    DrawCmd() :
-            PrimType(PrimitiveType::Invalid), NumVertices(0u), Vertices(nullptr), NumIndices(0u), Indices(nullptr) {}
-
-    // The class descructor.
-    ~DrawCmd() = default;
-};
 
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
@@ -81,6 +66,67 @@ inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out)
     }
 }
 
+static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
+    i32 x_clipped{0}, y_clipped{0};
+    f32 x_model{0.f}, y_model{0.f};
+
+    drawCmd->PrimType = PrimitiveType::TriangleList;
+    drawCmd->NumVertices = 6;
+    drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
+
+    clip(resolution, x, y, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[0].color0 = penColor.toVec4();
+    drawCmd->Vertices[0].position.x = x_model;
+    drawCmd->Vertices[0].position.y = y_model;
+    drawCmd->Vertices[0].position.z = static_cast<f32>(-layer);
+
+    clip(resolution, x+w, y, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[1].color0 = penColor.toVec4();
+    drawCmd->Vertices[1].position.x = x_model;
+    drawCmd->Vertices[1].position.y = y_model;
+    drawCmd->Vertices[1].position.z = static_cast<f32>(-layer);
+
+    clip(resolution, x+w, y+h, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[2].color0 = penColor.toVec4();
+    drawCmd->Vertices[2].position.x = x_model;
+    drawCmd->Vertices[2].position.y = y_model;
+    drawCmd->Vertices[2].position.z = static_cast<f32>(-layer);
+
+    clip(resolution, x+w, y+h, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[3].color0 = penColor.toVec4();
+    drawCmd->Vertices[3].position.x = x_model;
+    drawCmd->Vertices[3].position.y = y_model;
+    drawCmd->Vertices[3].position.z = static_cast<f32>(-layer);
+
+    clip(resolution, x, y+h, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[4].color0 = penColor.toVec4();
+    drawCmd->Vertices[4].position.x = x_model;
+    drawCmd->Vertices[4].position.y = y_model;
+    drawCmd->Vertices[4].position.z = static_cast<f32>(-layer);
+
+    clip(resolution, x, y, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[5].color0 = penColor.toVec4();
+    drawCmd->Vertices[5].position.x = x_model;
+    drawCmd->Vertices[5].position.y = y_model;
+    drawCmd->Vertices[5].position.z = static_cast<f32>(-layer);
+
+    drawCmd->NumIndices = 6;
+    drawCmd->Indices = new ui16[drawCmd->NumIndices];
+    drawCmd->Indices[0] = 0;
+    drawCmd->Indices[1] = 2;
+    drawCmd->Indices[2] = 1;
+
+    drawCmd->Indices[3] = 3;
+    drawCmd->Indices[4] = 5;
+    drawCmd->Indices[5] = 4;
+}
+
 static TPoolAllocator<DrawCmd> sAllocator;
 
 DrawCmd *alloc() {
@@ -101,8 +147,16 @@ void dealloc(DrawCmd *cmd) {
     delete cmd;
 }
 
+
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
-        mDirty(true), mPenColor(1, 1, 1, 0), mResolution(), mActiveLayer(0), mNumLayers(numLayers), mMesh(nullptr) {
+        IRenderPath(),
+        mDirty(true),
+        mPenColor(1, 1, 1, 0),
+        mResolution(),
+        mActiveLayer(0),
+        mNumLayers(numLayers),
+        mFont(nullptr),
+        mMesh(nullptr) {
     setResolution(x, y, w, h);
 }
 
@@ -115,7 +169,6 @@ CanvasRenderer::~CanvasRenderer() {
 
 void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 
@@ -127,14 +180,14 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
 
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 
     if (!isDirty()) {
         return;
     }
-
+    
+    // Create not textured geometry
     if (mMesh == nullptr) {
         mMesh = new Mesh("2d", VertexType::RenderVertex, IndexType::UnsignedShort);
         Material *mat2D = MaterialBuilder::create2DMaterial();
@@ -153,15 +206,10 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
             osre_debug(Tag, "Invalid draw command detecetd.");
             continue;
         }
-        
-        const ui32 lastIndex = mMesh->getLastIndex();
-        if (numVertices > 0) {
-            for (size_t j = 0; j < dc.NumIndices; ++j) {
-                dc.Indices[j] += static_cast<ui16>(numVertices);
-            }
-        }
 
-        Debugging::MeshDiagnostic::dumpVertices(dc.Vertices, dc.NumVertices);
+        const ui32 lastIndex = mMesh->getLastIndex();
+        renumberIndices(dc, numVertices);
+
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
         prim = dc.PrimType;
@@ -170,9 +218,9 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         numIndices += dc.NumIndices;
     }
     mMesh->addPrimitiveGroup(numIndices, prim, 0);
-    //Debugging::MeshDiagnostic::dumpIndices((ui16 *)mMesh->getIndexBuffer()->getData(), numIndices);
 
     rbSrv->addMesh(mMesh, 0);
+    
     mDrawCmdArray.resize(0);
     setClean();
 }
@@ -248,6 +296,10 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
     setDirty();
 }
 
+void CanvasRenderer::drawline(const Point2Di &p1, const Point2Di &p2) {
+    drawline(p1.x, p1.y, p2.x, p2.y);
+}
+
 void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled) {
     DrawCmd *dc = alloc();
 
@@ -297,93 +349,88 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
     setDirty();
 }
 
-static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
-    i32 x_clipped, y_clipped;
-    f32 x_model, y_model;
-
-    drawCmd->PrimType = PrimitiveType::TriangleList;
-    drawCmd->NumVertices = 6;
-    drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
-    
-    clip(resolution, x, y, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[0].color0 = penColor.toVec4();
-    drawCmd->Vertices[0].position.x = x_model;
-    drawCmd->Vertices[0].position.y = y_model;
-    drawCmd->Vertices[0].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x+w, y, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[1].color0 = penColor.toVec4();
-    drawCmd->Vertices[1].position.x = x_model;
-    drawCmd->Vertices[1].position.y = y_model;
-    drawCmd->Vertices[1].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x+w, y+h, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[2].color0 = penColor.toVec4();
-    drawCmd->Vertices[2].position.x = x_model;
-    drawCmd->Vertices[2].position.y = y_model;
-    drawCmd->Vertices[2].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x+w, y+h, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[3].color0 = penColor.toVec4();
-    drawCmd->Vertices[3].position.x = x_model;
-    drawCmd->Vertices[3].position.y = y_model;
-    drawCmd->Vertices[3].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x, y+h, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[4].color0 = penColor.toVec4();
-    drawCmd->Vertices[4].position.x = x_model;
-    drawCmd->Vertices[4].position.y = y_model;
-    drawCmd->Vertices[4].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x, y, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[5].color0 = penColor.toVec4();
-    drawCmd->Vertices[5].position.x = x_model;
-    drawCmd->Vertices[5].position.y = y_model;
-    drawCmd->Vertices[5].position.z = static_cast<f32>(-layer);
-
-    drawCmd->NumIndices = 6;
-    drawCmd->Indices = new ui16[drawCmd->NumIndices];
-    drawCmd->Indices[0] = 0;
-    drawCmd->Indices[1] = 2;
-    drawCmd->Indices[2] = 1;
-
-    drawCmd->Indices[3] = 3;
-    drawCmd->Indices[4] = 5;
-    drawCmd->Indices[5] = 4;
+void CanvasRenderer::drawTriangle(const Point2Di &p1, const Point2Di &p2, const Point2Di &p3, bool filled) {
+    drawTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, filled);
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
+    setDirty();
     DrawCmd *drawCmd = nullptr;
     if (filled) {
         drawCmd = alloc();
         createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, h, mActiveLayer);
         mDrawCmdArray.add(drawCmd);
-    } else {
-        const ui32 thickness = 2;
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, thickness, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y + h, w, thickness, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x, y, thickness, h, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
-        
-        drawCmd = alloc();
-        createRectVertices(drawCmd, mPenColor, mResolution, x+w, y, thickness, h, mActiveLayer);
-        mDrawCmdArray.add(drawCmd);
+        return;
     }
 
+    const ui32 thickness = 2;
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y, w, thickness, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y + h, w, thickness, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x, y, thickness, h, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+
+    drawCmd = alloc();
+    createRectVertices(drawCmd, mPenColor, mResolution, x+w, y, thickness, h, mActiveLayer);
+    mDrawCmdArray.add(drawCmd);
+}
+
+void CanvasRenderer::selectFont(Font *font) {
+    mFont = font;
     setDirty();
+}
+
+void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
+    if (text.empty()) {
+        return;
+    }
+
+    if (mFont == nullptr) {
+        osre_debug(Tag, "No font selected.");
+        return;
+    }
+    f32 x_model, y_model, fontSize = static_cast<f32>(mFont->Size)/static_cast<f32>(mResolution.getWidth());
+    mapCoordinates(mResolution, x, y, x_model, y_model);
+    Vec3Array positions;
+    Vec3Array colors;
+    Vec2Array tex0;
+    ui16 *indices = nullptr;
+    MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, &indices);
+
+    DrawCmd *drawCmd = alloc();
+    drawCmd->PrimType = PrimitiveType::TriangleList;
+    drawCmd->NumVertices = positions.size();
+    drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
+    const size_t numIndices = MeshUtilities::getNumTextIndices(text);
+    drawCmd->NumIndices = numIndices;
+    drawCmd->Indices = new ui16[drawCmd->NumIndices];
+
+    for (size_t posIndex = 0; posIndex < positions.size(); ++posIndex) {
+        drawCmd->Vertices[posIndex].color0 = mPenColor.toVec3();
+        drawCmd->Vertices[posIndex].position.x = positions[posIndex].x;
+        drawCmd->Vertices[posIndex].position.y = positions[posIndex].y;
+        drawCmd->Vertices[posIndex].position.z = static_cast<f32>(-mActiveLayer);
+    }
+
+    for (size_t idxIndex = 0; idxIndex < numIndices; ++idxIndex) {
+        drawCmd->Indices[idxIndex] = indices[idxIndex];
+    }
+
+    mDrawCmdArray.add(drawCmd);
+
+    setDirty();
+}
+
+bool CanvasRenderer::onCreate() {
+    mFont = FontService::getDefaultFont();
+
+    return (mFont != nullptr);
 }
 
 } // namespace RenderBackend

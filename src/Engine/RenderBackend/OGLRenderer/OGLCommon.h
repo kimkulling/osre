@@ -66,7 +66,7 @@ struct OGLBuffer {
     size_t m_size;      ///< The buffer size.
 
     /// @brief The default class constructor.
-    OGLBuffer() : m_handle(0), m_type(BufferType::InvalidType), m_oglId(OGLNotSetId), m_geoId(0), m_size(0){}
+    OGLBuffer() : m_handle(0), m_type(BufferType::Invalid), m_oglId(OGLNotSetId), m_geoId(0), m_size(0){}
 
     /// @brief  The class destructor, default implementation.
     ~OGLBuffer() = default;
