@@ -97,7 +97,7 @@ bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
     return true;
 }
 
-LightComponent::LightComponent(Entity *owner) : Component(owner, ComponentType::LightComponentType), mLight(nullptr) {
+LightComponent::LightComponent(Entity *owner) : Component(owner, ComponentType::LightComponentType) {
     // empty
 }
 

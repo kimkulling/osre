@@ -185,7 +185,7 @@ protected:
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
 
 private:
-    RenderBackend::Light *mLight;
+    RenderBackend::Light *mLight = nullptr;
 };
 
 } // namespace App
