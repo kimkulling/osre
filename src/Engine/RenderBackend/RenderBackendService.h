@@ -92,13 +92,13 @@ struct OSRE_EXPORT ScreenshotEventData : public Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
     CreateRendererEventData(Platform::AbstractWindow *pSurface) :
-            EventData(OnCreateRendererEvent, nullptr), m_activeSurface(pSurface), DefaultFont(""), Pipeline(nullptr) {
+            EventData(OnCreateRendererEvent, nullptr), ActiveSurface(pSurface), DefaultFont(""), RequestedPipeline(nullptr) {
         // empty
     }
 
-    Platform::AbstractWindow *m_activeSurface;
+    Platform::AbstractWindow *ActiveSurface;
     String DefaultFont;
-    Pipeline *Pipeline;
+    Pipeline *RequestedPipeline;
 };
 
 //-------------------------------------------------------------------------------------------------

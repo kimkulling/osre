@@ -288,6 +288,7 @@ SET ( properties_src
 SET( renderbackend_src
     RenderBackend/RenderCommon.h
     RenderBackend/DbgRenderer.h
+    RenderBackend/FontService.h
     RenderBackend/Material.h
     RenderBackend/Mesh.h
     RenderBackend/LineBuilder.h

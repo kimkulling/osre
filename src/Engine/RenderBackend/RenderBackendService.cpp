@@ -205,7 +205,7 @@ void RenderBackendService::initPasses() {
 
     InitPassesEventData *data = new InitPassesEventData;
     mSubmitFrame->init(mPasses);
-    data->m_frame = mSubmitFrame;
+    data->NextFrame = mSubmitFrame;
 
     mRenderTaskPtr->sendEvent(&OnInitPassesEvent, data);
 }
@@ -216,7 +216,7 @@ void RenderBackendService::commitNextFrame() {
     }
 
     CommitFrameEventData *data = CommitFrameEventData::create();
-    data->m_frame = mSubmitFrame;
+    data->NextFrame = mSubmitFrame;
     for (ui32 i = 0; i < mPasses.size(); ++i) {
         PassData *currentPass = mPasses[i];
         if (currentPass == nullptr) {
@@ -242,7 +242,7 @@ void RenderBackendService::commitNextFrame() {
             }
 
             if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
-                UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
+                UniformBuffer &uniformBuffer = data->NextFrame->m_uniforBuffers[i];
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
                     assert(cmd->m_batchId != nullptr);
@@ -290,7 +290,7 @@ void RenderBackendService::commitNextFrame() {
         }
     }
 
-    data->m_frame = mSubmitFrame;
+    data->NextFrame = mSubmitFrame;
     std::swap(mSubmitFrame, mRenderFrame);
     osre_assert(mSubmitFrame != mRenderFrame);
 

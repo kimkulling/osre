@@ -106,7 +106,7 @@ void EventBus::subscribeEventHandler(AbstractEventHandler *handler, const Event 
         mSuscribedHandler.insert(id, ehArray);
     }
     osre_assert(nullptr != ehArray);
-    ehArray->add(handler);
+     ehArray->add(handler);
 }
 
 void EventBus::unsubscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {

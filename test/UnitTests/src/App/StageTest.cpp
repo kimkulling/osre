@@ -20,34 +20,45 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include "RenderBackend/RenderPass.h"
+#include <gtest/gtest.h>
+#include "App/Stage.h"
 
 namespace OSRE {
-namespace RenderBackend {
+namespace UnitTest {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class RenderPass2D {
-public:
-    RenderPass2D();
-    ~RenderPass2D();
-    static RenderPass *build(guid id);
+using namespace OSRE::App;
+
+class StageTest : public ::testing::Test {
+    // empty
 };
 
-inline RenderPass2D::RenderPass2D() {}
-
-inline RenderPass2D::~RenderPass2D() {}
-
-inline RenderPass *RenderPass2D::build(guid id) {
-    RenderPass *pass = new RenderPass(id, nullptr);
-
-    return pass;
+TEST_F(StageTest, createTest) {
+    bool ok = true;
+    try {
+        Stage theStage("test", StageMode::Stage2D);
+    } catch(...) {
+        ok = false;
+    }
+    EXPECT_TRUE(ok);
 }
 
-} // namespace RenderBackend
+TEST_F(StageTest, clearTest) {
+    Stage theStage("test", StageMode::Stage2D);
+    static_cast<void>(theStage.createWorld("stageTest"));
+    EXPECT_EQ(1u, theStage.getNumberOfWorlds());
+
+    theStage.clear();
+    EXPECT_EQ(0u, theStage.getNumberOfWorlds());
+    EXPECT_TRUE(theStage.isEmpty());
+}
+
+TEST_F(StageTest, accessStageModeTest) {
+    Stage theStage1("test", StageMode::Stage2D);
+    EXPECT_EQ(StageMode::Stage2D, theStage1.getStageMode());
+
+    Stage theStage2("test", StageMode::Stage3D);
+    EXPECT_EQ(StageMode::Stage3D, theStage2.getStageMode());
+}
+
+} // namespace UnitTest
 } // namespace OSRE

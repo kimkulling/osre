@@ -156,7 +156,7 @@ public:
     ///	@brief	Registers a new log stream.
     ///	@param[in] pLogStream    A pointer showing to the log stream.
     void registerLogStream(AbstractLogStream *pLogStream);
-    
+
     ///	@brief	Unregisters a registered log stream.
     ///	@param[in] pLogStream    A pointer showing to the log stream.
     void unregisterLogStream(AbstractLogStream *pLogStream);

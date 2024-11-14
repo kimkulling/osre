@@ -74,7 +74,7 @@ TEST_F( ProjectTest, accessAssetTests ) {
 }
 
 TEST_F( ProjectTest, accessStageTest ) {
-    Stage stage("test");
+    Stage stage("test", StageMode::Stage3D);
     Project myProject;
     EXPECT_EQ(nullptr, myProject.getStage());
 

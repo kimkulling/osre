@@ -137,4 +137,17 @@ protected:
     }
 };
 
-OSRE_MAIN(Demo2DApp)
+int main(int argc, char *argv[]) {
+    Demo2DApp myApp(argc, argv);
+    if (!myApp.create()) {
+        return 1;
+    }
+
+    while (myApp.handleEvents()) {
+        myApp.update();
+        myApp.requestNextFrame();
+    }
+    myApp.destroy();
+
+    return 0;
+}
