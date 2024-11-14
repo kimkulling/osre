@@ -78,9 +78,15 @@ void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType ac
 
 void Mesh::resizeVertexBuffer(size_t vbSize) {
     if (mVertexBuffer == nullptr) {
+        osre_debug(Tag, "Vertex buffer is nullptr.");
         return;
     }
-
+    
+    if (vbSize == 0) {
+        osre_debug(Tag, "Invalid buffer size");
+        return false;
+    }
+        
     mVertexBuffer->m_buffer.resize(vbSize);
 }
 
