@@ -206,7 +206,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_trace(domain, msg) ::OSRE::Common::tracePrint(domain, __FILE__, __LINE__, msg);
+#define osre_trace(domain, msg) ::OSRE::Common::tracePrint(domain, __FILE__, __LINE__, msg)
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_debug
@@ -214,7 +214,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_debug(domain, msg) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, msg );
+#define osre_debug(domain, msg) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, msg)
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_log
@@ -222,7 +222,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_info(domain, msg)  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg );
+#define osre_info(domain, msg)  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg)
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_warn
@@ -230,7 +230,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_warn(domain, message)  ::OSRE::Common::warnPrint(  domain, __FILE__, __LINE__, message );
+#define osre_warn(domain, message)  ::OSRE::Common::warnPrint(  domain, __FILE__, __LINE__, message)
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_error
@@ -238,7 +238,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_error(domain, message) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message );
+#define osre_error(domain, message) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message)
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_fatal
@@ -246,6 +246,6 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_fatal( domain, message ) ::OSRE::Common::fatalPrint( domain,__FILE__, __LINE__, message );
+#define osre_fatal( domain, message ) ::OSRE::Common::fatalPrint( domain,__FILE__, __LINE__, message)
 
 } // Namespace OSRE
