@@ -79,7 +79,7 @@ private:
     bool mIsOpen;
 };
 
-inline AbstractService::AbstractService( const String &serverName ) : Object( serverName ), mIsOpen( false ) {
+inline AbstractService::AbstractService( const String &serverName ) : Object(serverName), mIsOpen(false) {
     // empty
 }
 
@@ -88,7 +88,7 @@ inline AbstractService::~AbstractService() {
 }
 
 inline bool AbstractService::open() {
-    if ( mIsOpen ) {
+    if (mIsOpen) {
         osre_debug( getName(), "Cannot open, service already opened." );
         return false;
     }
@@ -98,13 +98,13 @@ inline bool AbstractService::open() {
 }
 
 inline bool AbstractService::close() {
-    if ( mIsOpen )	{
+    if (!mIsOpen) {
         osre_debug( getName(), "Cannot close, service not open." );
-        mIsOpen = false;
-        return onClose();
+        return false;
     }
 
-    return false;
+    mIsOpen = false;
+    return onClose();
 }
 
 inline bool AbstractService::isOpen() {

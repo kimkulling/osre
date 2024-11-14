@@ -41,7 +41,7 @@ static constexpr c8 Tag[] = "CanvasRenderer";
 
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
-    xOut = (2.0f * static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
+    xOut = (2.0f * static_cast<f32>(x) / static_cast<f32>(resolution.width)) - 1.0f;
     yOut = (2.0f * static_cast<f32>(y) / static_cast<f32>(resolution.height)) - 1.0f;
     yOut = -1.0f * yOut;
 }
@@ -198,7 +198,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->setMaterial(mat2D);
     }
 
-    PrimitiveType prim = PrimitiveType::TriangleList;
+    PrimitiveType prim{ PrimitiveType::Invalid };
     size_t numVertices = 0l, numIndices = 0l;
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto &dc = *mDrawCmdArray[i];
@@ -227,7 +227,6 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
 
 void CanvasRenderer::postRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
-        osre_assert(rbSrv != nullptr);
         return;
     }
 }

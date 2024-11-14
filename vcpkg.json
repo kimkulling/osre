@@ -2,7 +2,8 @@
   "dependencies": [
     "glew",
     "glm",
+    "gtest",
     "sdl2",
-    "gtest"
+    "freetype"
   ]
 }
