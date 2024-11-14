@@ -77,7 +77,11 @@ void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType ac
 }
 
 void Mesh::resizeVertexBuffer(size_t vbSize) {
-    //todo!
+    if (mVertexBuffer == nullptr) {
+        return;
+    }
+
+    mVertexBuffer->m_buffer.resize(vbSize);
 }
 
 
