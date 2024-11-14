@@ -84,7 +84,7 @@ void Mesh::resizeVertexBuffer(size_t vbSize) {
     
     if (vbSize == 0) {
         osre_debug(Tag, "Invalid buffer size");
-        return false;
+        return;
     }
         
     mVertexBuffer->m_buffer.resize(vbSize);
