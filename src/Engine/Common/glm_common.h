@@ -41,6 +41,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtx/quaternion.hpp>
 #include <glm/common.hpp>
 
+#include <cppcore/Container/TArray.h>
+
+using Vec3Array = cppcore::TArray<glm::vec3>;
+using Vec2Array = cppcore::TArray<glm::vec2>;
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif // _MSC_VER

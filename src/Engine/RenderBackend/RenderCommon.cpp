@@ -46,7 +46,7 @@ static const c8 *Tag = "RenderCommon";
 
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String
-        VertCompName[static_cast<ui32>(VertexAttribute::NumVertexAttrs)] = {
+        VertCompName[static_cast<ui32>(VertexAttribute::Count)] = {
             "position",  ///< Position
             "normal",    ///< Normal
             "texcoord0", ///< TexCoord0
@@ -122,7 +122,7 @@ const String *RenderVert::getAttributes() {
 }
 
 const String &getVertCompName(VertexAttribute attrib) {
-    if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::InvalidVertexAttr) {
+    if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::Invalid) {
         return ErrorCmpName;
     }
     return VertCompName[static_cast<size_t>(attrib)];
@@ -143,8 +143,8 @@ const String *UIVert::getAttributes() {
 }
 
 VertComponent::VertComponent() :
-        m_attrib(VertexAttribute::InvalidVertexAttr),
-        m_format(VertexFormat::InvalidVertexFormat) {
+        m_attrib(VertexAttribute::Invalid),
+        m_format(VertexFormat::Invalid) {
     // empty
 }
 
@@ -538,7 +538,7 @@ Light::Light() :
         Direction(0.0f, 0.0f, 1.0f, 1.0f),
         SpecularExp(1.0f),
         Radius(1.0f),
-        Type(LightType::InvalidLightType) {
+        Type(LightType::Invalid) {
     // empty
 }
 

@@ -45,8 +45,8 @@ struct OSRE_EXPORT Resolution {
         Res1920x1080
     };
 
-    ui32 m_width; ///< The resolution in x.
-    ui32 m_height; ///< The resolution in y.
+    ui32 m_width;   ///< The resolution in x.
+    ui32 m_height;  ///< The resolution in y.
 
     explicit Resolution(ResRequest req);
     Resolution();
@@ -73,7 +73,7 @@ struct WindowsProperties {
     /// @param[out] rect  The window rect.
     void getDimension(Rect2ui &rect);
 
-    /// @brief WIll set the new rectangle geometry.
+    /// @brief Will set the new rectangle geometry.
     /// @param[in] rect   The new rectangle.
     void setRect(const Rect2ui &rect);
 };
@@ -129,8 +129,14 @@ public:
     /// @brief  The class destructor, virtual.
     virtual ~AbstractWindow();
 
+    /// @brief  Will set the parent window. Use nullptr for beeing the root window.
+    /// @param  parent Pointer ot the paretn window.
     virtual void setParent(AbstractWindow *parent);
+
+    /// @brief Will return the parent window or nullptr, if this windows is the root window.
+    /// @return Pointer to the parent window, nullptr for none.
     virtual AbstractWindow *getParent() const;
+
     /// @brief  Will create the surface.
     /// @return true will be returned, when creation was successful.
     virtual bool create();

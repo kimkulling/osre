@@ -49,7 +49,7 @@ enum class ComponentType {
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     CameraComponentType,        ///< For camera components.
-    AnimationComponentType,     ///<
+    AnimationComponentType,     ///< For animation support.
     Count                       ///< The number of components.
 };
 
@@ -127,33 +127,35 @@ public:
     /// @brief The class constructor.
     /// @param owner    The owning entity.
     RenderComponent(Entity *owner);
-    
+
     /// @brief The class destructor.
     ~RenderComponent() override = default;
-    
+
     /// @brief  Returns the number of meshes
     /// @return The number of stored meshes.
     size_t getNumMeshes() const;
-    
+
     /// @brief  Returns the mesh at a given index.
     /// @param[in] idx   The requested index.
     /// @return The mesh os a nullptr if the index in invalid.
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
-    
+
     /// @brief  Returns the mesh array.
-    /// @param[inout] array 
+    /// @param[inout] array The mesh array managed by the component.
     void getMeshArray(RenderBackend::MeshArray &array);
-    
-    /// @brief 
-    /// @param geo 
-    void addStaticMesh(RenderBackend::Mesh *geo);
-    
-    /// @brief 
-    /// @param array 
+
+    /// @brief Will add a new mesh.
+    /// @param mesh     Thew mesh to add.
+    void addStaticMesh(RenderBackend::Mesh *mesh);
+
+    /// @brief Will add an array of new meshes.
+    /// @param array    The array with enw meshes.
     void addStaticMeshArray(const RenderBackend::MeshArray &array);
 
 protected:
+    /// The update callback.
     bool onUpdate(Time dt) override;
+    /// The render callback.
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
 
 private:
@@ -163,19 +165,19 @@ private:
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-/// @brief
+/// @brief  This component class implements a light.
 //-------------------------------------------------------------------------------------------------
 class LightComponent final : public Component {
 public:
-    /// @brief 
-    /// @param owner 
+    /// @brief The class constructor.
+    /// @param owner    The owning entity.
     LightComponent(Entity *owner);
-    
-    /// @brief 
+
+    /// @brief The class destructor.
     ~LightComponent() override = default;
-    
-    /// @brief 
-    /// @param light 
+
+    /// @brief Will set a new light instance.
+    /// @param light    Thew new light.
     void setLight(RenderBackend::Light *light);
 
 protected:
@@ -183,7 +185,7 @@ protected:
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
 
 private:
-    RenderBackend::Light *mLight;
+    RenderBackend::Light *mLight = nullptr;
 };
 
 } // namespace App

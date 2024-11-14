@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Pipeline.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 #include "App/CameraComponent.h"
 #include "RenderBackend/MaterialBuilder.h"
 
@@ -82,9 +83,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mStage(nullptr),
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
-        mIds(nullptr),
-        mStageMode(StageMode::Stage3D),
-        mShutdownRequested(false) {
+        mIds(nullptr) {
     mSettings->setString(Properties::Settings::RenderAPI, "opengl");
     mSettings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -133,7 +132,7 @@ void AppBase::update() {
     if (mAppState == State::Created) {
         mAppState = State::Running;
     }
-    
+
     onUpdate();
 }
 
@@ -167,7 +166,7 @@ void AppBase::requestNextFrame() {
 }
 
 bool AppBase::handleEvents() {
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_debug(Tag, "AppBase::PlatforInterface not in proper state: not nullptr.");
         return false;
     }
@@ -240,6 +239,10 @@ void AppBase::setWindowsTitle(const String &title) {
     }
 }
 
+RenderBackend::CanvasRenderer* AppBase::getCanvasRenderer() const {
+    return (CanvasRenderer*) mCanvasRenderer;
+}
+
 bool AppBase::onCreate() {
     if (mAppState != State::Uninited) {
         osre_debug(Tag, "AppBase::State not in expected state: Uninited.");
@@ -251,14 +254,14 @@ bool AppBase::onCreate() {
     mEnvironment = new Common::Environment;
 
     // create the asset registry
-    AssetRegistry *registry = AssetRegistry::create();
-    if (registry != nullptr) {
+    if (AssetRegistry::create() == nullptr) {
         osre_debug(Tag, "Cannot create asset registry.");
+        return false;
     }
 
-    //Create the platform interface instance
+    // Create the platform interface instance
     mPlatformInterface = Platform::PlatformInterface::create(mSettings);
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
         return false;
     }
@@ -268,13 +271,13 @@ bool AppBase::onCreate() {
         return false;
     }
 
-    //Register any available platform-specific log streams
+    // Register any available platform-specific log streams
     Common::AbstractLogStream *stream = Platform::PlatformPluginFactory::createPlatformLogStream();
     if (stream != nullptr) {
         Logger::getInstance()->registerLogStream(stream);
     }
 
-    //Create the render back-end
+    // Create the render back-end
     mRbService = new RenderBackendService();
     ServiceProvider::setService(ServiceType::RenderService, mRbService);
     mRbService->setSettings(mSettings, false);
@@ -293,9 +296,9 @@ bool AppBase::onCreate() {
 
     mPlatformInterface->getPlatformEventHandler()->setRenderBackendService(mRbService);
 
-    // enable render-back-end
+    // Enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
-    data->m_pipeline = mRbService->createDefault3DPipeline();
+    data->RequestedPipeline = mRbService->createDefault3DPipeline();
     mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
     mTimer = Platform::PlatformInterface::getInstance()->getTimer();
@@ -322,6 +325,14 @@ bool AppBase::onCreate() {
     ServiceProvider::setService(ServiceType::IOService, ioSrv);
 
     App::AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
+
+    Rect2ui rect;
+    mPlatformInterface->getRootWindow()->getWindowsRect(rect);
+    mCanvasRenderer = new CanvasRenderer(2, (i32)rect.getX1(), (i32)rect.getY1(), (i32)rect.getWidth(), (i32)rect.getHeight());
+    if (!mCanvasRenderer->create()) {
+        osre_error(Tag, "Error while creating the canvas renderer.");
+        return false;
+    }
 
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
@@ -360,6 +371,9 @@ bool AppBase::onDestroy() {
 
     delete mIds;
     mIds = nullptr;
+
+    delete mCanvasRenderer;
+    mCanvasRenderer = nullptr;
 
     delete mMouseEvListener;
     mMouseEvListener = nullptr;
@@ -412,3 +426,4 @@ void AppBase::getResolution(ui32 &width, ui32 &height) {
 
 } // Namespace App
 } // Namespace OSRE
+

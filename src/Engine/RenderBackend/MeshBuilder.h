@@ -67,7 +67,7 @@ public:
     /// @param vc 
     /// @param ic 
     /// @return 
-    MeshBuilder& allocUiQuad(const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
+    //MeshBuilder& allocUiQuad(const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
     
     /// @brief 
     /// @param type 

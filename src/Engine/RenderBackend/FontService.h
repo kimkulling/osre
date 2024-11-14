@@ -20,47 +20,48 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "RenderBackend/Material.h"
+#pragma once
+
 #include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/Material.h"
+#include "RenderBackend/MaterialBuilder.h"
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
-Material::Material(const String &name, const IO::Uri &uri) :
-        mName(name),
-        mType(MaterialType::ShaderMaterial),
-        mNumTextures(0),
-        mTextures(nullptr),
-        mShader(nullptr),
-        mNumParameters(0),
-        m_parameters(nullptr),
-        mShineness(0.0f),
-        mShinenessStrength(0.0f),
-        mUri(uri) {
-    // empty
-}
+//-------------------------------------------------------------------------------------------------
+/// @brief Provides access to the fonts.
+//-------------------------------------------------------------------------------------------------
+struct FontService {
+    /// @brief  Will return the default font-
+    /// @return The default font.
+    static Font *getDefaultFont() {
+        static Font defaultFont;
+        defaultFont.Name = "buildin_arial";
+        defaultFont.Size = 10;
+        defaultFont.Style = 0;
 
-void Material::setMaterialType(MaterialType matType) {
-    mType = matType;
-}
-
-Material::~Material() {
-    delete mShader;
-    delete[] mTextures;
-}
-
-MaterialType Material::getMaterialType() const {
-    return mType;
-}
-
-void Material::createShader(ShaderSourceArray &shaders) {
-    mShader = new Shader;
-    for (ui32 i = 0; i < MaxShaderTypes; ++i) {
-        if (!shaders[i].empty()) {
-            mShader->setSource(static_cast<ShaderType>(i), shaders[i]);
-        }
+        return &defaultFont;
     }
-}
+
+    /// @brief  Will look for the material for a givens font.
+    /// @param      The font description
+    /// @return The correspondit material.
+    static Material *getFont(const Font &font) {
+        if (font.Name.empty()) {
+            return nullptr;
+        }
+
+        cppcore::TArray<TextureResource *> texResArray;
+        const IO::Uri uri("file://assets/Textures/Fonts/" + font.Name);
+        TextureResource *texRes = new TextureResource(font.Name, uri);
+        texResArray.add(texRes);
+        Material *fontMaterial = MaterialBuilder::createTexturedMaterial(font.Name + ".mat", texResArray, VertexType::RenderVertex);
+
+        return fontMaterial;
+    }
+};
 
 } // namespace RenderBackend
 } // namespace OSRE

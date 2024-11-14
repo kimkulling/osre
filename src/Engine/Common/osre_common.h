@@ -279,6 +279,14 @@ struct Color4 {
         return col;
     }
 
+    glm::vec3 toVec3() const {
+        glm::vec3 col = {};
+        col.r = m_r;
+        col.g = m_g;
+        col.b = m_b;
+        return col;
+    }
+
     f32 operator[](ui32 index) const {
         switch (index) {
             case 0: return m_r;
@@ -571,6 +579,16 @@ public:
     static void addAllocated(size_t allocSize);
     static void releaseAlloc();
     static void showStatistics();
+};
+
+enum class LifetimeState {
+    Invalid = -1,
+    Inited,
+    Created,
+    Running,
+    Detroyed,
+    Error,
+    Count
 };
 
 } // Namespace OSRE
