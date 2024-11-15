@@ -138,7 +138,7 @@ GLenum  OGLEnum::getGLTextureFormat(PixelFormatType texFormat) {
             return GL_RGB;
         case PixelFormatType::R8G8B8A8:
             return GL_RGBA;
-        case PixelFormatType::InvaliTextureType:
+        case PixelFormatType::Invalid:
         default:
             osre_assert2( false, "Unknown enum for TextureParameterName." );
             break;
@@ -179,8 +179,8 @@ GLenum OGLEnum::getOGLTypeForFormat( VertexFormat format ) {
         case VertexFormat::Short2:
         case VertexFormat::Short4:
             return GL_SHORT;
-        case VertexFormat::NumVertexFormats:
-        case VertexFormat::InvalidVertexFormat:
+        case VertexFormat::Count:
+        case VertexFormat::Invalid:
         default:
             osre_assert2( false, "Unknown enum for VertexFormat." );
             break;
@@ -203,8 +203,8 @@ ui32 OGLEnum::getOGLSizeForFormat( VertexFormat format ) {
         case VertexFormat::Float4:
         case VertexFormat::Short4:
             return 4;
-        case VertexFormat::NumVertexFormats:
-        case VertexFormat::InvalidVertexFormat:
+        case VertexFormat::Count:
+        case VertexFormat::Invalid:
             return 0;
         default:
             osre_assert2( false, "Unknown enum for VertexFormat." );

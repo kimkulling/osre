@@ -40,7 +40,10 @@ bool UIElementsWin32::init() {
 
     // needed for the RichEdit control in the about/help dialog
     lib = LoadLibrary("riched20.dll");
-    osre_assert(lib != nullptr);
+    if (lib == nullptr) {
+        osre_assert(lib != nullptr);
+        return false;
+    }
 
     // load windows common controls library to get XP style
     InitCommonControls();

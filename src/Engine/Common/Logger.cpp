@@ -119,7 +119,7 @@ void Logger::trace(const String &domain, const String &msg) {
         logMsg += msg;
         appendDomain(domain, logMsg);
 
-        print(logMsg);        
+        print(logMsg);
     }
 }
 

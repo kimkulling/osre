@@ -21,7 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/Mesh/MeshUtilities.h"
 #include "RenderBackend/MaterialBuilder.h"
+#include "RenderBackend/FontService.h"
 #include "RenderBackend/Mesh.h"
 #include "Common/Logger.h"
 #include "Common/Tokenizer.h"
@@ -182,7 +184,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     return *this;
 }
 
-MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+/*MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
     const f32 x = static_cast<f32>(dim.getX1());
     const f32 y = static_cast<f32>(dim.getY1());
     const f32 w = static_cast<f32>(dim.getWidth());
@@ -232,7 +234,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
     }
 
     return *this;
-}
+}*/
 
 MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
     clear();
@@ -337,109 +339,6 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
     return *this;
 }
 
-static constexpr size_t NumQuadVert = 4;
-
-static size_t getNumTextVerts( const String &text ) {
-    const size_t NumTextVerts = NumQuadVert * text.size();
-    return NumTextVerts;
-}
-
-static const ui32 NumQuadIndices = 6;
-
-static size_t getNumTextIndices(const String &text) {
-    const size_t numIndices = NumQuadIndices * text.size();
-    return numIndices;
-}
-
-static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, 
-        glm::vec3 **textPos, glm::vec3 **colors, glm::vec2 **tex0, ui16 **textIndices) {
-    osre_assert(nullptr != textPos);
-    osre_assert(nullptr != colors);
-    osre_assert(nullptr != tex0);
-    osre_assert(nullptr != textIndices);
-
-    glm::vec3 col[NumQuadVert] = {};
-    col[0] = glm::vec3(0, 0, 0);
-    col[1] = glm::vec3(0, 0, 0);
-    col[2] = glm::vec3(0, 0, 0);
-    col[3] = glm::vec3(0, 0, 0);
-
-    glm::vec3 pos[NumQuadVert] = {};
-    pos[0] = glm::vec3(x, y, 0);
-    pos[1] = glm::vec3(x, y + textSize, 0);
-    pos[2] = glm::vec3(x + textSize, y, 0);
-    pos[3] = glm::vec3(x + textSize, y + textSize, 0);
-
-    const size_t NumTextVerts = getNumTextVerts(text);
-    *textPos = new glm::vec3[NumTextVerts];
-    *colors = new glm::vec3[NumTextVerts];
-    *tex0 = new glm::vec2[NumTextVerts];
-    *textIndices = new ui16[getNumTextIndices(text)];
-
-    const f32 invCol = 1.f / 16.f;
-    const f32 invRow = 1.f / 16.f;
-    ui32 textCol(0), textRow(0);
-    for (ui32 i = 0; i < text.size(); i++) {
-        const c8 ch = text[i];
-        if (Tokenizer::isLineBreak(ch)) {
-            textCol = 0;
-            ++textRow;
-            continue;
-        }
-
-        const ui16 VertexOffset(static_cast<ui16>(i) * static_cast<ui16>(NumQuadVert));
-        const f32  rowHeight(-1.0f * textRow * textSize);
-        (*textPos)[VertexOffset + 0].x = pos[0].x + (textCol*textSize);
-        (*textPos)[VertexOffset + 0].y = pos[0].y + rowHeight;
-        (*textPos)[VertexOffset + 0].z = 0;
-
-        (*textPos)[VertexOffset + 1].x = pos[1].x + (textCol*textSize);
-        (*textPos)[VertexOffset + 1].y = pos[1].y + rowHeight;
-        (*textPos)[VertexOffset + 1].z = 0;
-
-        (*textPos)[VertexOffset + 2].x = pos[2].x + (textCol*textSize);
-        (*textPos)[VertexOffset + 2].y = pos[2].y + rowHeight;
-        (*textPos)[VertexOffset + 2].z = 0;
-
-        (*textPos)[VertexOffset + 3].x = pos[3].x + (textCol*textSize);
-        (*textPos)[VertexOffset + 3].y = pos[3].y + rowHeight;
-        (*textPos)[VertexOffset + 3].z = 0;
-
-        //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
-
-        const i32 column = (ch) % 16;
-        const i32 row = (ch) / 16;
-        const f32 s = column * invCol;
-        const f32 t = (row + 1) * invRow;
-
-        (*tex0)[VertexOffset + 0].x = s;
-        (*tex0)[VertexOffset + 0].y = 1.0f - t;
-
-        (*tex0)[VertexOffset + 1].x = s;
-        (*tex0)[VertexOffset + 1].y = 1.0f - t + 1.0f / 16.0f;
-
-        (*tex0)[VertexOffset + 2].x = s + 1.0f / 16.0f;
-        (*tex0)[VertexOffset + 2].y = 1.0f - t;
-
-        (*tex0)[VertexOffset + 3].x = s + 1.0f / 16.0f;
-        (*tex0)[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
-
-        //GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
-        (*colors)[VertexOffset + 0] = col[0];
-        (*colors)[VertexOffset + 1] = col[1];
-        (*colors)[VertexOffset + 2] = col[2];
-        (*colors)[VertexOffset + 3] = col[3];
-        const ui32 IndexOffset(i * NumQuadIndices);
-        (*textIndices)[0 + IndexOffset] = 0 + VertexOffset;
-        (*textIndices)[1 + IndexOffset] = 2 + VertexOffset;
-        (*textIndices)[2 + IndexOffset] = 1 + VertexOffset;
-
-        (*textIndices)[3 + IndexOffset] = 1 + VertexOffset;
-        (*textIndices)[4 + IndexOffset] = 2 + VertexOffset;
-        (*textIndices)[5 + IndexOffset] = 3 + VertexOffset;
-        ++textCol;
-    }
-}
 
 MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access) {
 	if ( text.empty() ) {
@@ -448,14 +347,15 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
 
     Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
 
-    glm::vec3 *textPos(nullptr), *colors(nullptr);
-    glm::vec2 *tex0(nullptr);
+    Vec3Array positions;
+    Vec3Array colors;
+    Vec2Array tex0;
     ui16 *textIndices(nullptr);
-    generateTextBoxVerticesAndIndices(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
+    MeshUtilities::generateTextBoxVerticesAndIndices(x, y, textSize, text, positions, colors, tex0, &textIndices);
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
-    allocVertices(mesh, mesh->getVertexType(), text.size() * NumQuadVert, textPos, colors, tex0, access);
+    allocVertices(mesh, mesh->getVertexType(), text.size() * MeshUtilities::NumQuadVert, &positions[0], &colors[0], &tex0[0], access);
 
     // setup triangle indices
     size_t size = sizeof(ui16) * 6 * text.size();
@@ -465,10 +365,16 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
     mesh->addPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
 
     // setup material
-    cppcore::TArray<TextureResource*> texResArray;;
+    Font defaultFont;
+    defaultFont.Name = "buildin_arial";
+    defaultFont.Size = 10;
+    defaultFont.Style = 0;
+    Material *mat = FontService::getFont(defaultFont);
+    /* cppcore::TArray<TextureResource *> texResArray;
     TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
-    mesh->setMaterial(MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex));
+    mesh->setMaterial(MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex));*/
+    mesh->setMaterial(mat);
     mActiveMesh = mesh;
 
     return *this;
@@ -480,17 +386,17 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
         return;
     }
 
-    const size_t numTextVerts( getNumTextVerts( text ) );
+    const size_t numTextVerts( MeshUtilities::getNumTextVerts( text ) );
     glm::vec2 *tex0 = new glm::vec2[ numTextVerts ];
 
     // setup triangle vertices    
-    glm::vec3 col[NumQuadVert] = {};
+    glm::vec3 col[ MeshUtilities::NumQuadVert] = {};
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
     col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    glm::vec3 pos[NumQuadVert] = {};
+    glm::vec3 pos[MeshUtilities::NumQuadVert] = {};
     pos[ 0 ] = glm::vec3( 0, 0, 0 );
     pos[ 1 ] = glm::vec3( 0, textSize, 0 );
     pos[ 2 ] = glm::vec3( textSize, 0, 0 );
@@ -504,7 +410,7 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
             continue;
         }
 
-        const ui32 VertexOffset( i * NumQuadVert );
+        const ui32 VertexOffset( i * MeshUtilities::NumQuadVert );
 
         const i32 column = ( ch ) % 16;
         const i32 row = ( ch ) / 16;

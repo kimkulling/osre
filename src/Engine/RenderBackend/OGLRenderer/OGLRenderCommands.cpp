@@ -82,13 +82,13 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
         return false;
     }
 
-    const size_t numTextures(mat->m_numTextures);
+    const size_t numTextures(mat->mNumTextures);
     if (0 == numTextures) {
         return true;
     }
 
     for (ui32 i = 0; i < numTextures; ++i) {
-        Texture *tex(mat->m_textures[i]);
+        Texture *tex(mat->mTextures[i]);
         if (!tex->TextureName.empty()) {
             OGLTexture *oglTexture = rb->createTexture(tex->TextureName, tex);
             if (nullptr != oglTexture) {
@@ -112,7 +112,7 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
     }
     
     auto *matData = new SetMaterialStageCmdData;
-    switch (material->m_type) {
+    switch (material->mType) {
         case MaterialType::ShaderMaterial: {
             TArray<OGLTexture *> textures;
             setupTextures(material, rb, textures);
@@ -121,16 +121,16 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
                 matData->m_textures = textures;
             }
             String name = "mat";
-            name += material->m_name;
-            OGLShader *shader = rb->createShader(name, material->m_shader);
+            name += material->mName;
+            OGLShader *shader = rb->createShader(name, material->mShader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
-                for (size_t i = 0; i < material->m_shader->getNumVertexAttributes(); ++i) {
-                    shader->addAttribute(material->m_shader->getVertexAttributeAt(i));
+                for (size_t i = 0; i < material->mShader->getNumVertexAttributes(); ++i) {
+                    shader->addAttribute(material->mShader->getVertexAttributeAt(i));
                 }
 
-                for (size_t i = 0; i < material->m_shader->getNumUniformBuffer(); ++i) {
-                    shader->addUniform(material->m_shader->getUniformBufferAt(i));
+                for (size_t i = 0; i < material->mShader->getNumUniformBuffer(); ++i) {
+                    shader->addUniform(material->mShader->getUniformBufferAt(i));
                 }
 
                 // for setting up all buffer objects

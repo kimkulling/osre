@@ -45,7 +45,7 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 //-------------------------------------------------------------------------------------------------
 class Demo2DApp : public App::AppBase {
     TransformMatrixBlock  mTransformMatrix;
-    CanvasRenderer       *mCanvasRenderer;
+    CanvasRenderer *mCanvasRenderer;
 
 public:
     Demo2DApp(int argc, char *argv[]) :
@@ -66,7 +66,7 @@ public:
 
 protected:
     bool onCreate() override {
-        Properties::Settings *baseSettings(AppBase::getSettings());
+        Properties::Settings *baseSettings  = AppBase::getSettings();
         if (baseSettings == nullptr) {
             return false;
         }
@@ -75,8 +75,9 @@ protected:
         if (!AppBase::onCreate()) {
             return false;
         }
-
-        mCanvasRenderer = new CanvasRenderer(2, 0, 0, 1024, 768);
+        
+        mCanvasRenderer = AppBase::getCanvasRenderer();
+        
         mCanvasRenderer->selectLayer(0);
         const Color4 Red(1, 0, 0, 0);
         mCanvasRenderer->setColor(Red);
@@ -109,6 +110,8 @@ protected:
         
         mCanvasRenderer->drawRect(100, 1000, 110, 124, true);
 
+        mCanvasRenderer->drawText(300, 100, "Test");
+
         return true;
     }
 
@@ -139,6 +142,7 @@ int main(int argc, char *argv[]) {
     if (!myApp.create()) {
         return 1;
     }
+
     while (myApp.handleEvents()) {
         myApp.update();
         myApp.requestNextFrame();

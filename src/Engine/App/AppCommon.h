@@ -53,20 +53,22 @@ template<class T> class TAbstractCtrlBase;
 
 /// @brief  Describes the requested render API for the backend.
 enum class RenderBackendType {
+    Invalid = -1,               ///< Invalid render API.
     OpenGLRenderBackend = 0,    ///< OpenGL render API.
-    VulkanRenderBackend         ///< Vulkan render API.
+    VulkanRenderBackend,        ///< Vulkan render API.
+    Count                       ///< Number of render APIs.
 };
 
 struct MouseInputState {
-    i32 mRelX, mRelY, mAbsX, mAbsY;
-    ui32 mLastX, mLastY;
-    cppcore::TBitField<ui32> mMouseButtonState;
+    i32 RelX, RelY, AbsX, AbsY;
+    ui32 LastX, LastY;
+    cppcore::TBitField<ui32> MouseButtonState;
 
     MouseInputState();
 };
 
 inline MouseInputState::MouseInputState() :
-        mRelX(0), mRelY(0), mAbsX(0), mAbsY(0), mLastX(0), mLastY(0), mMouseButtonState() {
+        RelX(0), RelY(0), AbsX(0), AbsY(0), LastX(0), LastY(0), MouseButtonState() {
     // empty
 }
 

@@ -46,7 +46,7 @@ bool EventBus::create() {
 
     mCreated = true;
     QueueEntryAlloctor.reserve(1000);
-    
+
     return mCreated;
 }
 
@@ -58,7 +58,7 @@ bool EventBus::destroy() {
     if (!mCreated) {
         return false;
     }
-    
+
     QueueEntryAlloctor.clear();
     mCreated = false;
 
@@ -106,7 +106,7 @@ void EventBus::subscribeEventHandler(AbstractEventHandler *handler, const Event 
         mSuscribedHandler.insert(id, ehArray);
     }
     osre_assert(nullptr != ehArray);
-    ehArray->add(handler);
+     ehArray->add(handler);
 }
 
 void EventBus::unsubscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {

@@ -121,7 +121,7 @@ void CameraComponent::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane,
 }
 
 void CameraComponent::setCameraModel(CameraModel cm) {
-    osre_trace(Tag, "Set camera model to " + CameraModelName[static_cast<size_t>(cm)])
+    osre_trace(Tag, "Set camera model to " + CameraModelName[static_cast<size_t>(cm)]);
 
     mCameraModel = cm;
 }

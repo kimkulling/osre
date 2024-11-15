@@ -145,7 +145,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
     CreateRendererEventData *createRendererEvData = (CreateRendererEventData *)eventData;
-    AbstractWindow *activeSurface = createRendererEvData->m_activeSurface;
+    AbstractWindow *activeSurface = createRendererEvData->ActiveSurface;
     if (nullptr == activeSurface) {
         osre_debug(Tag, "No active surface, pointer is nullptr.");
         return false;
@@ -194,7 +194,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
-    mActivePipeline = createRendererEvData->m_pipeline;
+    mActivePipeline = createRendererEvData->RequestedPipeline;
     Profiling::PerformanceCounterRegistry::registerCounter("fps");
 
     return true;
@@ -311,7 +311,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
     }
 
     cppcore::TArray<size_t> primGroups;
-    Frame *frame = frameToCommitData->m_frame;
+    Frame *frame = frameToCommitData->NextFrame;
     for (PassData *currentPass : frame->m_newPasses) {
         if (nullptr == currentPass) {
             osre_assert(nullptr != currentPass);
@@ -453,7 +453,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         return false;
     }
 
-    for (FrameSubmitCmd *cmd : data->m_frame->m_submitCmds) {
+    for (FrameSubmitCmd *cmd : data->NextFrame->m_submitCmds) {
         if (cmd == nullptr) {
             continue;
         }
@@ -462,8 +462,8 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         cmd->m_updateFlags = 0u;
     }
 
-    data->m_frame->m_submitCmds.resize(0);
-    data->m_frame->m_submitCmdAllocator.release();
+    data->NextFrame->m_submitCmds.resize(0);
+    data->NextFrame->m_submitCmdAllocator.release();
 
     return true;
 }
@@ -477,7 +477,7 @@ bool OGLRenderEventHandler::onShutdownRequest(const EventData*) {
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
     ResizeEventData *data = (ResizeEventData*) eventData;
     if (data != nullptr) {
-        m_oglBackend->setViewport(data->m_x, data->m_y, data->m_w, data->m_h);
+        m_oglBackend->setViewport(data->X, data->Y, data->W, data->H);
     }
 
     return true;
@@ -487,7 +487,7 @@ bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
     bool result = false;
     ScreenshotEventData *data = (ScreenshotEventData*) eventData;
     if (data != nullptr){
-        result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
+        result = makeScreenShot(data->Filename.c_str(), data->Width, data->Height);
     }
 
     return result;

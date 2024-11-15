@@ -51,7 +51,7 @@ void Win32Window::showWindow(ShowState showState) {
         int ws = SW_HIDE;
         if (showState == ShowState::Visible) {
             ws = SW_SHOW;
-        }    
+        }
         ::ShowWindow(mWnd, ws);
     }
 }
@@ -356,7 +356,7 @@ void Win32Window::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
 
     ::MoveWindow(mWnd, x, y, w, h, NULL);
     WindowsProperties *props = AbstractWindow::getProperties();
-    if (nullptr != props) {
+    if (props != nullptr) {
         props->mRect.x1 = x;
         props->mRect.y1 = y;
         props->mRect.width = w;

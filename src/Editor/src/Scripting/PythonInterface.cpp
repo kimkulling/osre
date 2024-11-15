@@ -49,7 +49,7 @@ typedef struct Osre_Project {
     Stage *mStage;
     Project *mProject;
 } Osre_Project;
-        
+
 Osre_Project *gActiceProject = nullptr;
 PyTypeObject Osre_project_Type;
 
@@ -67,7 +67,7 @@ static PyObject *osre_project_new(PyObject*, PyObject *args, PyObject *keywds) {
     }
 
     gActiceProject->mProject = new Project();
-    
+
     gActiceProject->mProject->setProjectName(projectName);
 
     Py_RETURN_NONE;
@@ -80,7 +80,7 @@ static PyObject *osre_project_load(PyObject*, PyObject *args, PyObject *keywds) 
     if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
         return nullptr;
     }
-    
+
     if (gActiceProject == nullptr) {
         gActiceProject = PyObject_New(Osre_Project, &Osre_project_Type);
         if (gActiceProject == nullptr) {
@@ -193,7 +193,7 @@ PythonInterface::PythonInterface() :
 
 bool PythonInterface::create(App::AppBase *app) {
     if (mCreated) {
-        osre_error(Tag, "Error while create, Python interface is already created.")
+        osre_error(Tag, "Error while create, Python interface is already created.");
         return false;
     }
 
@@ -204,11 +204,11 @@ bool PythonInterface::create(App::AppBase *app) {
     PyObject *mod = nullptr;
     mod = PyInit_osre_project();
     if (mod == nullptr) {
-        osre_error(Tag, "Error while creating project-module.")
+        osre_error(Tag, "Error while creating project-module.");
     }
     mod = PyInit_osre_io();
     if (mod == nullptr) {
-        osre_error(Tag, "Error while creating io-module.")
+        osre_error(Tag, "Error while creating io-module.");
     }
 
     mApp = app;
@@ -219,10 +219,10 @@ bool PythonInterface::create(App::AppBase *app) {
 
 bool PythonInterface::destroy() {
     if (!mCreated) {
-        osre_error(Tag, "Error while destoy, Python interface is not created.")
-
+        osre_error(Tag, "Error while destoy, Python interface is not created.");
         return false;
     }
+
     if (Py_FinalizeEx() < 0) {
         exit(120);
     }
@@ -236,18 +236,18 @@ void PythonInterface::addPath(const String &path) {
     if (path.empty()) {
         return;
     }
-    
+
     mPaths.add(path);
 }
 
 bool PythonInterface::runScript(const String &src) {
     if (!mCreated) {
-        osre_error(Tag, "Error while calling scrpt, Python interface is not created.")
+        osre_error(Tag, "Error while calling scrpt, Python interface is not created.");
         return false;
     }
 
     if (src.empty()) {
-        osre_error(Tag, "Source is empty, cannot execute python script.")
+        osre_error(Tag, "Source is empty, cannot execute python script.");
         return false;
     }
 

@@ -137,10 +137,11 @@ using VectorChannelArray = ::cppcore::TArray<AnimationChannel>;
 template <class T>
 struct AnimatorBase {
     void operator () ( T &out, const T &a, const T &b, f32 d ) const {
-        out = a + ( b - a ) * d;
+        out = a + (b - a) * d;
     }
 };
 
+/// @brief 
 enum class TransformCommandType {
     Invalid = -1,
     RotateXCommandPositive = 0,
@@ -186,5 +187,6 @@ protected:
     AnimationControllerBase() = default;
 };
 
-} // namespace 
-}
+} // namespace Animation
+} // namespace OSRE
+  
