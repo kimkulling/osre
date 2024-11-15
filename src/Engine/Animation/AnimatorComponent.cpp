@@ -35,6 +35,9 @@ AnimatorComponent::AnimatorComponent(Entity *owner) :
         mAnimationTrackArray(),
         mActiveTrack(),
         mTransformArray(),
+        mLastPositions(),
+        mLastRotations(),
+        mLastScales(),
         mLastTime(0.0) {
     // empty
 }
@@ -134,6 +137,57 @@ bool AnimatorComponent::onUpdate(Time dt) {
         }
 
         if (!animChannel.RotationKeys.isEmpty()) {
+            for (size_t keyIndex = 0; keyIndex < animChannel.RotationKeys.size(); ++keyIndex) {
+                glm::quat q(0, 0, 0, 1);
+                size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastRotations[keyIndex]) : 0;
+                while (animFrameIndex < animChannel.RotationKeys.size() - 1) {
+                    if (time < animChannel.RotationKeys[animFrameIndex + 1].Time) {
+                        break;
+                    }
+                    ++animFrameIndex;
+                }
+                size_t nextFrame = (animFrameIndex + 1) % animChannel.RotationKeys.size();
+                RotationKey &key = animChannel.RotationKeys[keyIndex];
+                RotationKey &nextKey = animChannel.RotationKeys[nextFrame];
+                double diffTime = nextKey.Time - key.Time;
+                if (diffTime < 0.0) {
+                    diffTime += track->Duration;
+                }
+                if (diffTime > 0) {
+                    float factor = float((time - key.Time) / diffTime);
+                    q = key.Quad + (nextKey.Quad - key.Quad) * factor;
+                } else {
+                    q = key.Quad;
+                }
+                std::get<0>(mLastPositions[keyIndex]) = animFrameIndex;
+            }
+        }
+
+        if (!animChannel.ScalingKeys.isEmpty()) {
+            for (size_t keyIndex = 0; keyIndex < animChannel.ScalingKeys.size(); ++keyIndex) {
+                glm::vec3 presenceScale(1, 1, 1);
+                size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastPositions[keyIndex]) : 0;
+                while (animFrameIndex < animChannel.ScalingKeys.size() - 1) {
+                    if (time < animChannel.ScalingKeys[animFrameIndex + 1].Time) {
+                        break;
+                    }
+                    ++animFrameIndex;
+                }
+                size_t nextFrame = (animFrameIndex + 1) % animChannel.RotationKeys.size();
+                ScalingKey &key = animChannel.ScalingKeys[keyIndex];
+                ScalingKey &nextKey = animChannel.ScalingKeys[nextFrame];
+                double diffTime = nextKey.Time - key.Time;
+                if (diffTime < 0.0) {
+                    diffTime += track->Duration;
+                }
+                if (diffTime > 0) {
+                    float factor = float((time - key.Time) / diffTime);
+                    presenceScale = key.Scale + (nextKey.Scale - key.Scale) * factor;
+                } else {
+                    presenceScale = key.Scale;
+                }
+                std::get<0>(mLastPositions[keyIndex]) = animFrameIndex;
+            }
         }
     }
 

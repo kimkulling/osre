@@ -47,7 +47,7 @@ using namespace ::OSRE::App;
 static constexpr c8 Tag[] = "TerrainRenderingApp";
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+///	@ingroup    Samples
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ protected:
         size_t index = 0;
         RenderVert *v = new RenderVert[numVertices];
         std::vector<float> vertices;
-        float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
+        float yScale = 128.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
         for (int i = 0; i<height; i=i+mPixelPerSample) {
             for (int j = 0; j<width; j=j+mPixelPerSample) {
                 // retrieve texel for (i,j) tex coord

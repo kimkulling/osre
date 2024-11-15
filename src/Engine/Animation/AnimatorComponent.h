@@ -56,7 +56,7 @@ using AnimationTrackArray = cppcore::TArray<AnimationTrack *>;
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class AnimatorComponent : public App::Component {
+class OSRE_EXPORT AnimatorComponent : public App::Component {
 public:
     AnimatorComponent(App::Entity *owner);
     ~AnimatorComponent() override;
@@ -77,6 +77,8 @@ private:
     using TransformArray = cppcore::TArray<glm::mat4>;
     TransformArray mTransformArray;
     std::vector<std::tuple<size_t, size_t, size_t>> mLastPositions;
+    std::vector<std::tuple<size_t, size_t, size_t>> mLastRotations;
+    std::vector<std::tuple<size_t, size_t, size_t>> mLastScales;
     double mLastTime;
 };
 

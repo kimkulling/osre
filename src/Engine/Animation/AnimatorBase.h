@@ -96,7 +96,7 @@ using VectorKeyArray = ::cppcore::TArray<VectorKey>;
 
 struct RotationKey {
     d32 Time;
-    glm::vec4 Quad;
+    glm::quat Quad;
 
     RotationKey() : Time(0.0), Quad() {
         // empty
@@ -118,7 +118,7 @@ struct ScalingKey {
     ~ScalingKey() = default;
 };
 
-using ScalingKeyArray = ::cppcore::TArray<RotationKey>;
+using ScalingKeyArray = ::cppcore::TArray<ScalingKey>;
 
 struct AnimationChannel {
     VectorKeyArray PositionKeys;
