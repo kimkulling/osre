@@ -219,7 +219,7 @@ AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &t
 }
 
 Platform::AbstractWindow *AppBase::getRootWindow() const {
-    if (mPlatformInterface != nullptr) {
+    if (mPlatformInterface == nullptr) {
         osre_debug(Tag, "Platform interface instance is nullptr.");
         return nullptr;
     }
