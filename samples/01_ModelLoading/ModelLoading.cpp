@@ -50,7 +50,7 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 class ModelLoadingApp : public App::AppBase {
     String mAssetFolder;                    ///< The asset folder, here we will locate our assets.
     App::CameraComponent *mCamera;          ///< The camera component.
-    TransformMatrixBlock mTransformMatrix;  ///< The tansform block.
+    TransformMatrixBlock mTransformMatrix;  ///< The transform block.
     TransformComponent::NodePtr mModelNode; ///< The mode node.
     int mIntention;
 
@@ -101,7 +101,7 @@ public:
     }
 
     void showStatistics(const aiScene &scene) {
-        std::cout << "Modelname: " << scene.mName.C_Str() << "\n";
+        std::cout << "Model name: " << scene.mName.C_Str() << "\n";
         std::cout << "=============================================================\n";
 
         if (scene.mRootNode != nullptr) {
@@ -121,10 +121,12 @@ protected:
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
+            osre_error(Tag, "RenderBackendService not available.");
             return;
         }
         Platform::AbstractWindow *rootWindow = getRootWindow();
         if (nullptr == rootWindow) {
+            osre_error(Tag, "Root window not available.");
             return;
         }
 
@@ -185,7 +187,9 @@ protected:
 
 int main(int argc, char *argv[]) {
     ModelLoadingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", WindowMode::Windowed, WindowType::Root, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", 
+            WindowMode::Windowed, WindowType::Root, RenderBackendType::OpenGLRenderBackend)) {
+        osre_error(Tag, "Error while creating window.");
         return 1;
     }
 
