@@ -36,6 +36,9 @@ void renderFontMesh(const DrawCmd &dc, Font2MeshMap &font2MeshMap, MeshInfoArray
         } else {
             getMeshInfo(textMesh, meshInfoArray, info);
         }
+    } else {
+        osre_error(Tag, "Mesh instance is nullprt, stop rendering.");
+        return;
     }
 
     const ui32 lastIndex = textMesh->getLastIndex();
