@@ -37,7 +37,7 @@ void renderFontMesh(const DrawCmd &dc, Font2MeshMap &font2MeshMap, MeshInfoArray
             getMeshInfo(textMesh, meshInfoArray, info);
         }
     } else {
-        osre_error(Tag, "Mesh instance is nullprt, stop rendering.");
+        osre_error(Tag, "Font key not found in font2MeshMap, stopping render.");
         return;
     }
 
