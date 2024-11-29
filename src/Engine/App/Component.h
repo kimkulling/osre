@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/BaseMath.h"
 #include "IO/Stream.h"
 #include "RenderBackend/RenderCommon.h"
-#include "App/SceneCommon.h"
 
 #include <cppcore/Container/TArray.h>
 

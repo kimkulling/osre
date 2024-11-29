@@ -29,8 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Properties/Settings.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/MeshBuilder.h"
 #include "App/CameraComponent.h"
-#include "App/Scene.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;

@@ -233,7 +233,9 @@ public:
     /// @param
     void setMatrix(const String &name, const glm::mat4 &matrix);
 
-    void setUniform(UniformVar *var);
+    ///	@brief Will add a new uniform variable
+    /// @param[in] uniformVar   The uniform variable.
+    void addUniform(UniformVar *uniformVar);
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray);
 

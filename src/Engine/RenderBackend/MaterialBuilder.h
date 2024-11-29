@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "App/SceneCommon.h"
 #include "RenderBackend/Material.h"
 #include "RenderBackend/RenderCommon.h"
 #include "Common/TResourceCache.h"

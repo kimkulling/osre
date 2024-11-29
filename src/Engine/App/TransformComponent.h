@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Object.h"
 #include "Common/TObjPtr.h"
 #include "RenderBackend/RenderCommon.h"
-#include "App/SceneCommon.h"
 #include "Common/TAABB.h"
 
 #include <cppcore/Container/TArray.h>

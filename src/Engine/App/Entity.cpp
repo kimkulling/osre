@@ -145,13 +145,5 @@ const AABB &Entity::getAABB() const {
     return mAabb;
 }
 
-void Entity::serialize( IO::Stream *stream ) {
-    osre_assert(stream != nullptr);
-}
-
-void Entity::deserialize( IO::Stream *stream ) {
-    osre_assert(stream != nullptr);
-}
-
 } // Namespace App
 } // Namespace OSRE

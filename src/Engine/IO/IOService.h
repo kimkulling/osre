@@ -101,7 +101,7 @@ public:
 
 private:
     using MountedMap = std::map<String, AbstractFileSystem*> ;
-    MountedMap m_mountedMap;
+    MountedMap mMountedMap;
 };
 
 } // Namespace IO

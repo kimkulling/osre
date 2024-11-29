@@ -27,10 +27,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
+//--------------------------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief	File tools provided by the engine.
+//--------------------------------------------------------------------------------------------------------------------
 class OSRE_EXPORT File {
 public:
+    /// @brief  The class constructor.
     File() = default;
+
+    /// @brief The class destructor.
     ~File() = default;
+
+    /// @brief Utility to check if a file exists.
+    /// @param[in] filename     The filename.
+    /// @return true, ig the file exists.
     static bool exists(const String &filename);
 };
 

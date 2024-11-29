@@ -28,7 +28,7 @@ namespace OSRE {
 namespace IO {
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements the basic file operations like reading and writing data,
 ///	positioning the file pointer in an already opened file. You can also get some basic infos about

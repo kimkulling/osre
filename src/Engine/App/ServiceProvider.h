@@ -35,13 +35,11 @@ namespace App {
 
 /// @brief 
 enum class ServiceType {
-    InvalidService = -1,
-    
+    Invalid = -1,
     RenderService = 0,
     IOService,
     ResourceService,
-    
-    NumServices,
+    Count,
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -56,7 +54,7 @@ public:
     static void setService(ServiceType type, Common::AbstractService *service);
     template<class T>
     static T *getService(ServiceType type) {
-        if (type == ServiceType::InvalidService || type == ServiceType::NumServices) {
+        if (type == ServiceType::Invalid || type == ServiceType::Count) {
             return nullptr;
         }
         return (T *) s_instance->mServiceArray[static_cast<size_t>(type)];

@@ -55,7 +55,7 @@ void ServiceProvider::setService(ServiceType type, Common::AbstractService *serv
 
 ServiceProvider::ServiceProvider() :
         mServiceArray() {
-    mServiceArray.resize(static_cast<size_t>(ServiceType::NumServices));
+    mServiceArray.resize(static_cast<size_t>(ServiceType::Count));
     mServiceArray.set(nullptr);
 }
 

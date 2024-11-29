@@ -439,16 +439,19 @@ void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
-void RenderBackendService::setUniform(UniformVar *var) {
-    if (nullptr == var) {
+void RenderBackendService::addUniform(UniformVar *uniformVar) {
+    if (nullptr == uniformVar) {
         osre_error(Tag, "No active batch.");
         return;
     }
 
-    if (nullptr != mCurrentBatch) {
-        mCurrentBatch->m_uniforms.add(var);
-        mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
+    if (nullptr == mCurrentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
     }
+
+    mCurrentBatch->m_uniforms.add(uniformVar);
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {

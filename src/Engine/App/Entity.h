@@ -68,8 +68,6 @@ public:
     Component *getComponent(ComponentType type) const;
     void setAABB( const Common::AABB &aabb );
     const Common::AABB &getAABB() const;
-    void serialize(IO::Stream *stream);
-    void deserialize(IO::Stream *stream);
 
 private:
     AbstractBehaviour *mBehavior;

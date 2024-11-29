@@ -43,11 +43,11 @@ class Stream;
 //--------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractFileSystem {
 public:
-    typedef std::map<String, Stream*> StreamMap;
+    /// The file map type.
+    using StreamMap = std::map<String, Stream*>;
 
-public:
     ///	@brief	The class destructor, virtual.
-    virtual ~AbstractFileSystem();
+    virtual ~AbstractFileSystem() = default;
 
     ///	@brief	Opens a new file instance.
     ///	@param	filename    [in] Filename to open.
@@ -79,7 +79,6 @@ public:
     /// @return The working directory.
     virtual String getWorkingDirectory() = 0;
 
-public:
     ///	@brief	Adds an ownership.
     void get();
     
@@ -98,24 +97,16 @@ private:
     ui32 m_numberOfRefs;
 };
 
-inline
-AbstractFileSystem::AbstractFileSystem() 
-: m_numberOfRefs( 1 ) {
+inline AbstractFileSystem::AbstractFileSystem() : m_numberOfRefs( 1 ) {
     // empty
 }
 
-inline
-AbstractFileSystem::~AbstractFileSystem() {
-    // empty
-}
 
-inline
-void AbstractFileSystem::get() {
+inline void AbstractFileSystem::get() {
     ++m_numberOfRefs;
 }
 
-inline
-void AbstractFileSystem::release() {
+inline void AbstractFileSystem::release() {
     if ( m_numberOfRefs ) {
         --m_numberOfRefs;
         if ( !m_numberOfRefs ) {
@@ -124,8 +115,7 @@ void AbstractFileSystem::release() {
     }
 }
 
-inline
-void AbstractFileSystem::normalizeFilename( String &name ) {
+inline void AbstractFileSystem::normalizeFilename( String &name ) {
     if ( name.empty() ) {
         return;
     }

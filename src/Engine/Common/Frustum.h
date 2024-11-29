@@ -28,21 +28,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief This class implemnets the view frustum of a camera model.
+//-------------------------------------------------------------------------------------------------
 class Frustum {
 public:
     enum {
+        Invalid,
         Top = 0,
         Bottom, 
         Left,
         Right,
         NearP, 
-        FarP
+        FarP,
+        Count
     };
 
+    
+    ///	@brief The default class constructor.
     Frustum();
+
+    ///	@brief The class destructor.
     ~Frustum() = default;
+
+    ///	@brief  Will check if the point is in the frustum.
+    /// @param[in] vp       The point to check.
+    /// @return true if in.
     bool isIn(glm::vec3 &point);
+
+    ///	@brief  
     void extractFrom(const glm::mat4 &vp);
+    
+    ///	@brief  WIll clear the frustum.
     void clear();
 
 private:
