@@ -34,8 +34,9 @@ using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
+static constexpr c8 Tag[] = "TransformController";
+
 TransformController::TransformController(TransformMatrixBlock &tmb) :
-        mInputMap(),
         mTransform(tmb) {
     mInputMap.setDefault();
 }
@@ -136,6 +137,15 @@ void TransformController::update(TransformCommandType cmdType) {
             break;
         case TransformCommandType::TransformCommandYNegative:
             mTransform.mModel = glm::translate(mTransform.mModel, glm::vec3(0, -mTransformConfig.mTranslateFactor, 0));
+            break;
+
+        case TransformCommandType::TransformCommandZPositive:
+        case TransformCommandType::TransformCommandZNegative:
+            // ignored
+            break;  
+
+        default:
+            osre_warn(Tag, "Inválid tag");
             break;
     }
 }

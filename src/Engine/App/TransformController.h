@@ -138,7 +138,8 @@ private:
         f32 mScaleFactorMinus = 0.99f;
         f32 mRotateFactor = 0.01f;
         f32 mTranslateFactor = 0.15f;
-    } mTransformConfig;
+    };
+    TransformConfig mTransformConfig;
     InputMap mInputMap;
     RenderBackend::TransformMatrixBlock &mTransform;
 };

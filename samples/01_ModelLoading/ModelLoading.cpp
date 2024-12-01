@@ -43,17 +43,20 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
 ///
-/// @brief
+/// @brief  This sample shows how to load a model using the Assimp wrapper.
+///  
+/// It will also show some statistics about the loaded model. The model will get loaded, the
+/// camera will be placed to get an optimal view onto the model. The model will be rendered.
 //-------------------------------------------------------------------------------------------------
 
 /// @brief The example application, will create the renderer and loads a model.
 class ModelLoadingApp : public App::AppBase {
-    String mAssetFolder;                    ///< The asset folder, here we will locate our assets.
-    App::CameraComponent *mCamera;          ///< The camera component.
-    TransformMatrixBlock mTransformMatrix;  ///< The transform block.
-    TransformComponent::NodePtr mModelNode; ///< The mode node.
-    int mIntention;
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
+    String mAssetFolder;                                                ///< The asset folder, here we will locate our assets.
+    App::CameraComponent *mCamera;                                      ///< The camera component.
+    TransformMatrixBlock mTransformMatrix;                              ///< The transform block.
+    TransformComponent::NodePtr mModelNode;                             ///< The mode node.
+    int mIntention = 0;                                                 ///< The intention. 
+    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;   ///< The controller for the keyboard.
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
@@ -61,9 +64,7 @@ public:
             mAssetFolder(),
             mCamera(nullptr),
             mTransformMatrix(),
-            mModelNode(),
-            mIntention(0),
-            mKeyboardTransCtrl(nullptr) {
+            mModelNode() {
         // empty
     }
 
@@ -166,8 +167,7 @@ protected:
             }
         }
 
-        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-        if (key != Platform::KEY_UNKNOWN) {
+        if (Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey(); key != Platform::KEY_UNKNOWN) {
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
