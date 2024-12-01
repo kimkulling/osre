@@ -41,7 +41,7 @@ using namespace ::OSRE::RenderBackend;
 static constexpr c8 Tag[] = "ModelLoadingApp";
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+///	@ingroup    Samples
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
@@ -53,6 +53,7 @@ class ModelLoadingApp : public App::AppBase {
     TransformMatrixBlock mTransformMatrix;  ///< The transform block.
     TransformComponent::NodePtr mModelNode; ///< The mode node.
     int mIntention;
+    Animation::AnimationControllerBase *mKeyboardTransCtrl;
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
@@ -61,7 +62,8 @@ public:
             mCamera(nullptr),
             mTransformMatrix(),
             mModelNode(),
-            mIntention(0)  {
+            mIntention(0),
+            mKeyboardTransCtrl(nullptr) {
         // empty
     }
 
@@ -113,6 +115,15 @@ public:
     }
 
 protected:
+    bool onCreate() override {
+        if (!AppBase::onCreate()) {
+            return false;
+        }
+        mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
+
+        return true;
+    }
+
     void loadAsset(const IO::Uri &modelLoc) {
         AssimpWrapper assimpWrapper(*getIdContainer(), getStage()->getActiveWorld(0));
         if (!assimpWrapper.importAsset(modelLoc, 0)) {
@@ -155,23 +166,16 @@ protected:
             }
         }
 
-        glm::mat4 rot(1.0);
-        if (AppBase::isKeyPressed(Platform::KEY_A)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
-
-        }
-        if (AppBase::isKeyPressed(Platform::KEY_S)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
+        if (key != Platform::KEY_UNKNOWN) {
+            mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
-        if (AppBase::isKeyPressed(Platform::KEY_W)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
-        }
-
-        if (AppBase::isKeyPressed(Platform::KEY_D)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
-        }
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        if (nullptr == rbSrv) {
+            osre_error(Tag, "RenderBackendService not available.");
+            return;
+        }
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
