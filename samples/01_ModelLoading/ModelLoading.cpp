@@ -120,7 +120,12 @@ protected:
         if (!AppBase::onCreate()) {
             return false;
         }
+
         mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
+        if(mKeyboardTransCtrl == nullptr) {
+            osre_error(Tag, "Failed to initialize keyboard transform controller.");
+            return false;
+        }
 
         return true;
     }
