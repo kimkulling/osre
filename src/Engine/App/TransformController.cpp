@@ -145,7 +145,7 @@ void TransformController::update(TransformCommandType cmdType) {
             break;  
 
         default:
-            osre_warn(Tag, "Inválid tag");
+            osre_warn(Tag, "Invalid tag");
             break;
     }
 }
