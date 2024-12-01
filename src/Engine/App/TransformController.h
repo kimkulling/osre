@@ -37,16 +37,16 @@ namespace RenderBackend {
 namespace App {
 
 /// @brief The class to manage the keyboard mappings for transform commands.
-struct KeyboardMap {
+struct InputMap {
     cppcore::TStaticArray<Animation::TransformCommandType, Platform::KEY_LAST> KeyArray;
 
     /// @brief The class constructor.
-    KeyboardMap() {
+    InputMap() {
         init();
     }
 
     /// @brief The class destructor.
-    ~KeyboardMap() = default;
+    ~InputMap() = default;
 
     /// @brief Will initialize the array, no mapping is stored.
     void init() {
@@ -57,20 +57,31 @@ struct KeyboardMap {
 
     /// @brief Enables the default mapping.
     void setDefault() {
-        KeyArray[Platform::KEY_A] = Animation::TransformCommandType::RotateXCommandPositive;
-        KeyArray[Platform::KEY_a] = Animation::TransformCommandType::RotateXCommandPositive;
-        KeyArray[Platform::KEY_D] = Animation::TransformCommandType::RotateXCommandNegative;
-        KeyArray[Platform::KEY_d] = Animation::TransformCommandType::RotateXCommandNegative;
-        KeyArray[Platform::KEY_W] = Animation::TransformCommandType::RotateYCommandPositive;
-        KeyArray[Platform::KEY_w] = Animation::TransformCommandType::RotateYCommandPositive;
-        KeyArray[Platform::KEY_S] = Animation::TransformCommandType::RotateYCommandNegative;
-        KeyArray[Platform::KEY_s] = Animation::TransformCommandType::RotateYCommandNegative;
-        KeyArray[Platform::KEY_Q] = Animation::TransformCommandType::RotateZCommandPositive;
-        KeyArray[Platform::KEY_q] = Animation::TransformCommandType::RotateZCommandPositive;
-        KeyArray[Platform::KEY_E] = Animation::TransformCommandType::RotateZCommandNegative;
-        KeyArray[Platform::KEY_e] = Animation::TransformCommandType::RotateZCommandNegative;
+        KeyArray[Platform::KEY_Q] = Animation::TransformCommandType::RotateXCommandPositive;
+        KeyArray[Platform::KEY_q] = Animation::TransformCommandType::RotateXCommandPositive;
+        KeyArray[Platform::KEY_E] = Animation::TransformCommandType::RotateXCommandNegative;
+        KeyArray[Platform::KEY_e] = Animation::TransformCommandType::RotateXCommandNegative;        
+        KeyArray[Platform::KEY_y] = Animation::TransformCommandType::RotateYCommandPositive;
+        KeyArray[Platform::KEY_Y] = Animation::TransformCommandType::RotateYCommandPositive;
+        KeyArray[Platform::KEY_c] = Animation::TransformCommandType::RotateYCommandNegative;
+        KeyArray[Platform::KEY_C] = Animation::TransformCommandType::RotateYCommandNegative;
+        KeyArray[Platform::KEY_s] = Animation::TransformCommandType::RotateZCommandPositive;
+        KeyArray[Platform::KEY_S] = Animation::TransformCommandType::RotateZCommandPositive;
+        KeyArray[Platform::KEY_f] = Animation::TransformCommandType::RotateZCommandNegative;
+        KeyArray[Platform::KEY_F] = Animation::TransformCommandType::RotateZCommandNegative;
         KeyArray[Platform::KEY_PLUS] = Animation::TransformCommandType::ScaleInCommand;
         KeyArray[Platform::KEY_MINUS] = Animation::TransformCommandType::ScaleOutCommand;
+
+        KeyArray[Platform::KEY_w] = Animation::TransformCommandType::TransformCommandXPositive;
+        KeyArray[Platform::KEY_W] = Animation::TransformCommandType::TransformCommandXPositive;
+        KeyArray[Platform::KEY_s] = Animation::TransformCommandType::TransformCommandXNegative;
+        KeyArray[Platform::KEY_S] = Animation::TransformCommandType::TransformCommandXNegative;
+
+        KeyArray[Platform::KEY_a] = Animation::TransformCommandType::TransformCommandYNegative;
+        KeyArray[Platform::KEY_A] = Animation::TransformCommandType::TransformCommandYNegative;
+
+        KeyArray[Platform::KEY_d] = Animation::TransformCommandType::TransformCommandYPositive;
+        KeyArray[Platform::KEY_D] = Animation::TransformCommandType::TransformCommandYPositive;
     }
 
     /// @brief Set a new mapping.
@@ -122,7 +133,14 @@ public:
     void update(Animation::TransformCommandType cmdType) override;
 
 private:
-    KeyboardMap mKeyboardMap;
+    struct TransformConfig {
+        f32 mScaleFactorPlus = 1.01f;
+        f32 mScaleFactorMinus = 0.99f;
+        f32 mRotateFactor = 0.01f;
+        f32 mTranslateFactor = 0.15f;
+    };
+    TransformConfig mTransformConfig;
+    InputMap mInputMap;
     RenderBackend::TransformMatrixBlock &mTransform;
 };
 

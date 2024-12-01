@@ -41,18 +41,22 @@ using namespace ::OSRE::RenderBackend;
 static constexpr c8 Tag[] = "ModelLoadingApp";
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+///	@ingroup    Samples
 ///
-/// @brief
+/// @brief  This sample shows how to load a model using the Assimp wrapper.
+///  
+/// It will also show some statistics about the loaded model. The model will get loaded, the
+/// camera will be placed to get an optimal view onto the model. The model will be rendered.
 //-------------------------------------------------------------------------------------------------
 
 /// @brief The example application, will create the renderer and loads a model.
 class ModelLoadingApp : public App::AppBase {
-    String mAssetFolder;                    ///< The asset folder, here we will locate our assets.
-    App::CameraComponent *mCamera;          ///< The camera component.
-    TransformMatrixBlock mTransformMatrix;  ///< The transform block.
-    TransformComponent::NodePtr mModelNode; ///< The mode node.
-    int mIntention;
+    String mAssetFolder;                                                ///< The asset folder, here we will locate our assets.
+    App::CameraComponent *mCamera;                                      ///< The camera component.
+    TransformMatrixBlock mTransformMatrix;                              ///< The transform block.
+    TransformComponent::NodePtr mModelNode;                             ///< The mode node.
+    int mIntention = 0;                                                 ///< The intention. 
+    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;   ///< The controller for the keyboard.
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
@@ -60,8 +64,7 @@ public:
             mAssetFolder(),
             mCamera(nullptr),
             mTransformMatrix(),
-            mModelNode(),
-            mIntention(0)  {
+            mModelNode() {
         // empty
     }
 
@@ -113,6 +116,20 @@ public:
     }
 
 protected:
+    bool onCreate() override {
+        if (!AppBase::onCreate()) {
+            return false;
+        }
+
+        mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
+        if(mKeyboardTransCtrl == nullptr) {
+            osre_error(Tag, "Failed to initialize keyboard transform controller.");
+            return false;
+        }
+
+        return true;
+    }
+
     void loadAsset(const IO::Uri &modelLoc) {
         AssimpWrapper assimpWrapper(*getIdContainer(), getStage()->getActiveWorld(0));
         if (!assimpWrapper.importAsset(modelLoc, 0)) {
@@ -155,23 +172,15 @@ protected:
             }
         }
 
-        glm::mat4 rot(1.0);
-        if (AppBase::isKeyPressed(Platform::KEY_A)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
-
-        }
-        if (AppBase::isKeyPressed(Platform::KEY_S)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+        if (Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey(); key != Platform::KEY_UNKNOWN) {
+            mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
-        if (AppBase::isKeyPressed(Platform::KEY_W)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
-        }
-
-        if (AppBase::isKeyPressed(Platform::KEY_D)) {
-            mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
-        }
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        if (nullptr == rbSrv) {
+            osre_error(Tag, "RenderBackendService not available.");
+            return;
+        }
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

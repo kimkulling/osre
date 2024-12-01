@@ -160,7 +160,9 @@ bool CameraComponent::onUpdate(Time) {
 }
 
 bool CameraComponent::onRender(RenderBackendService *rbSrv) {
-    osre_assert(nullptr != rbSrv);
+    if (nullptr == rbSrv) {
+        return false;
+    }
 
     rbSrv->setMatrix(MatrixType::View, mView);
     rbSrv->setMatrix(MatrixType::Projection, mProjection);
