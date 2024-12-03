@@ -59,7 +59,7 @@ using AnimationTrackArray = cppcore::TArray<AnimationTrack *>;
 class OSRE_EXPORT AnimatorComponent : public App::Component {
 public:
     AnimatorComponent(App::Entity *owner);
-    ~AnimatorComponent() override;
+    ~AnimatorComponent() override = default;
     void setAnimationTrackArray(AnimationTrackArray &animationTrackArray);
     void addTrack(AnimationTrack *track);
     AnimationTrack *getTrackAt(size_t index) const;
@@ -69,7 +69,7 @@ public:
 protected:
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
-    void initTransforms();
+    void initAnimations();
 
 private:
     AnimationTrackArray mAnimationTrackArray;

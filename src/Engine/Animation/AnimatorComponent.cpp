@@ -42,21 +42,6 @@ AnimatorComponent::AnimatorComponent(Entity *owner) :
     // empty
 }
 
-AnimatorComponent::~AnimatorComponent() {
-    // empty
-}
-
-void AnimatorComponent::setAnimationTrackArray(AnimationTrackArray& animationTrackArray) {
-    if (animationTrackArray.isEmpty()) {
-        mAnimationTrackArray.clear();
-        return;
-    }
-
-    mAnimationTrackArray = animationTrackArray;
-    mTransformArray.resize(mTransformArray.size() + mAnimationTrackArray.size());
-    initTransforms();
-}
-
 void AnimatorComponent::addTrack(AnimationTrack *track) {
     if (track == nullptr) {
         return;
@@ -107,9 +92,15 @@ bool AnimatorComponent::onUpdate(Time dt) {
 
     for (size_t trackIndex = 0; trackIndex < track->NumVectorChannels; ++trackIndex) {
         AnimationChannel &animChannel = track->AnimationChannels[trackIndex];
+        glm::vec3 presentPosition(0, 0, 0);
+        glm::quat q(0, 0, 0, 1);
+        glm::vec3 presenceScale(1, 1, 1);
         if (!animChannel.PositionKeys.isEmpty()) {
+            if (mLastPositions.empty()) {
+                mLastPositions.resize(animChannel.PositionKeys.size());
+            }
+
             for (size_t keyIndex = 0; keyIndex < animChannel.PositionKeys.size(); ++keyIndex) {
-                glm::vec3 presentPosition(0, 0, 0);
                 
                 size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastPositions[keyIndex]) : 0;
                 while (animFrameIndex < animChannel.PositionKeys.size() - 1) {
@@ -137,8 +128,11 @@ bool AnimatorComponent::onUpdate(Time dt) {
         }
 
         if (!animChannel.RotationKeys.isEmpty()) {
+            if (mLastRotations.empty()) {
+                mLastRotations.resize(animChannel.RotationKeys.size());
+            }
+
             for (size_t keyIndex = 0; keyIndex < animChannel.RotationKeys.size(); ++keyIndex) {
-                glm::quat q(0, 0, 0, 1);
                 size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastRotations[keyIndex]) : 0;
                 while (animFrameIndex < animChannel.RotationKeys.size() - 1) {
                     if (time < animChannel.RotationKeys[animFrameIndex + 1].Time) {
@@ -154,19 +148,22 @@ bool AnimatorComponent::onUpdate(Time dt) {
                     diffTime += track->Duration;
                 }
                 if (diffTime > 0) {
-                    float factor = float((time - key.Time) / diffTime);
+                    f32 factor = f32((time - key.Time) / diffTime);
                     q = key.Quad + (nextKey.Quad - key.Quad) * factor;
                 } else {
                     q = key.Quad;
                 }
-                std::get<0>(mLastPositions[keyIndex]) = animFrameIndex;
+                std::get<0>(mLastRotations[keyIndex]) = animFrameIndex;
             }
         }
 
         if (!animChannel.ScalingKeys.isEmpty()) {
+            if (mLastScales.empty()) {
+                mLastScales.resize(animChannel.ScalingKeys.size());
+            }
+
             for (size_t keyIndex = 0; keyIndex < animChannel.ScalingKeys.size(); ++keyIndex) {
-                glm::vec3 presenceScale(1, 1, 1);
-                size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastPositions[keyIndex]) : 0;
+                size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastScales[keyIndex]) : 0;
                 while (animFrameIndex < animChannel.ScalingKeys.size() - 1) {
                     if (time < animChannel.ScalingKeys[animFrameIndex + 1].Time) {
                         break;
@@ -181,14 +178,19 @@ bool AnimatorComponent::onUpdate(Time dt) {
                     diffTime += track->Duration;
                 }
                 if (diffTime > 0) {
-                    float factor = float((time - key.Time) / diffTime);
+                    f32 factor = f32((time - key.Time) / diffTime);
                     presenceScale = key.Scale + (nextKey.Scale - key.Scale) * factor;
                 } else {
                     presenceScale = key.Scale;
                 }
-                std::get<0>(mLastPositions[keyIndex]) = animFrameIndex;
+                std::get<0>(mLastScales[keyIndex]) = animFrameIndex;
             }
         }
+
+        glm::mat4 &transform = mTransformArray[trackIndex];
+        transform = glm::toMat4(q);
+        transform = glm::scale(transform, presenceScale);
+        transform = glm::translate(transform, presentPosition);
     }
 
     return true;
@@ -200,7 +202,7 @@ bool AnimatorComponent::onRender(RenderBackend::RenderBackendService *renderBack
     return true;
 }
 
-void AnimatorComponent::initTransforms() {
+void AnimatorComponent::initAnimations() {
     for (size_t index = 0; index < mAnimationTrackArray.size(); ++index) {
         mTransformArray[index] = glm::mat4(1.0f);
     }

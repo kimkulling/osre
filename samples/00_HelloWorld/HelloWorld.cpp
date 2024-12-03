@@ -84,6 +84,7 @@ protected:
         rot.Time = 1.0f;
         mTrack.AnimationChannels[0].RotationKeys.add(rot);
         animator->addTrack(&mTrack);
+        
         ui32 w, h;
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
