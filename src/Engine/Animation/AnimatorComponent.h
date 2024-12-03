@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Animation {
 
+/// @brief  
 struct AnimationTrack {
     f32 Duration;
     f32 mTicksPerSecond;
@@ -54,14 +55,19 @@ using AnimationTrackArray = cppcore::TArray<AnimationTrack *>;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief 
+///	@brief This class implements the animation component. 
+/// 
+/// As a user you can add single animation tracks to the component. When applying an animation you
+/// first need to choose the track. This active animation track will be selected and updated.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AnimatorComponent : public App::Component {
+    using TransformArray = cppcore::TArray<glm::mat4>;
+
 public:
     AnimatorComponent(App::Entity *owner);
     ~AnimatorComponent() override = default;
-    void setAnimationTrackArray(AnimationTrackArray &animationTrackArray);
     void addTrack(AnimationTrack *track);
+    AnimationTrack *createAnimation();
     AnimationTrack *getTrackAt(size_t index) const;
     bool selectTrack(size_t index);
     size_t getActiveTrack() const;
@@ -74,7 +80,6 @@ protected:
 private:
     AnimationTrackArray mAnimationTrackArray;
     size_t mActiveTrack;
-    using TransformArray = cppcore::TArray<glm::mat4>;
     TransformArray mTransformArray;
     std::vector<std::tuple<size_t, size_t, size_t>> mLastPositions;
     std::vector<std::tuple<size_t, size_t, size_t>> mLastRotations;
