@@ -41,6 +41,12 @@ struct Plane {
     }
 };
 
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+/// @brief	This classs implements a view frustum.
+//-------------------------------------------------------------------------------------------------
 class Frustum {
 public:
     enum {
@@ -54,7 +60,7 @@ public:
         Count
     };
 
-    Frustum(Plane *planes);
+    explicit Frustum(const Plane *planes);
     Frustum();
     ~Frustum() = default;
     bool isIn(const glm::vec3 &point);
@@ -65,11 +71,14 @@ private:
     cppcore::TStaticArray<Plane, 6> mPlanes;
 };
 
-inline Frustum::Frustum(Plane *planes) {
-    for (ui32 i = 0; i < Count; ++i) {
-        mPlanes[i] = planes[i];
+inline Frustum::Frustum(const Plane *planes) {
+    if (planes != nullptr) {
+        for (ui32 i = 0; i < Count; ++i) {
+            mPlanes[i] = planes[i];
+        }
     }
 }
+
 inline Frustum::Frustum() {
     clear();
 }

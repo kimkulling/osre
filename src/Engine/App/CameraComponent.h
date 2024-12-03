@@ -161,8 +161,12 @@ private:
     f32 mNear, mFar;
     f32 mAspectRatio;
     f32 mLeft, mRight, mTop, mBottom;
-    glm::vec3 mEye, mCenter, mUp;
-    glm::mat4 mView, mProjection, mViewProjection;
+    glm::vec3 mEye;
+    glm::vec3 mCenter;
+    glm::vec3 mUp;
+    glm::mat4 mView;
+    glm::mat4 mProjection;
+    glm::mat4 mViewProjection;
     Common::Frustum mFrustum;
 };
 
