@@ -53,7 +53,6 @@ void AssetRegistry::destroy() {
     sInstance = nullptr;
 }
 
-
 bool AssetRegistry::registerAssetPath(const String &mount, const String &path) {
     if (nullptr == sInstance) {
         return false;

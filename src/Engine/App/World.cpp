@@ -48,10 +48,6 @@ World::World(const String &worldName) :
     // empty
 }
 
-World::~World() {
-    // empty
-}
-
 void World::addEntity(Entity *entity) {
     if (nullptr == entity) {
         osre_debug(Tag, "Pointer to entity are nullptr");

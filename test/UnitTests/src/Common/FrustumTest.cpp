@@ -32,7 +32,7 @@ class FrustumTest : public ::testing::Test {
     // empty
 };
 
-TEST_F( FrustumTest, createTest ) {
+TEST_F(FrustumTest, createTest) {
     bool ok = true;
     try {
         Frustum f;
@@ -42,7 +42,22 @@ TEST_F( FrustumTest, createTest ) {
     EXPECT_TRUE(ok);
 }
 
-TEST_F( FrustumTest, extractFromTest ) {
+TEST_F(FrustumTest, isInTest) {
+    Frustum f;
+    glm::mat4 p = glm::perspective(1.2f, 1.f, 0.1f, 100.0f);
+    glm::mat4 v = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 20), glm::vec3(0, 1, 0));
+    glm::mat4 vp = p * v;
+    f.extractFrom(vp);
+    glm::vec3 pt1(0, 0, 10.5);
+    bool in = f.isIn(pt1);
+    EXPECT_TRUE(in);
+
+    glm::vec3 pt2(0, 0, -10.5);
+    bool out = f.isIn(pt2);
+    EXPECT_FALSE(out);
+}
+ 
+TEST_F(FrustumTest, extractFromTest) {
     glm::vec3 pos(-10, 10, 0), center(0, 0, 0), up(0, 0, 1);
     glm::mat4 v = glm::lookAt(pos, center, up);
     glm::mat4 p = glm::perspective(1.2f, 1.f, 0.1f, 100.0f);
