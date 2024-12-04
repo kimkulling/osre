@@ -115,12 +115,12 @@ inline void Frustum::extractFrom(const glm::mat4 &vp) {
     glm::vec4 rowZ = glm::row(vp, 2);
     glm::vec4 rowW = glm::row(vp, 3);
 
-    mPlanes[0].param = normalize(rowW + rowX);
-    mPlanes[1].param = normalize(rowW - rowX);
-    mPlanes[2].param = normalize(rowW + rowY);
-    mPlanes[3].param = normalize(rowW - rowY);
-    mPlanes[4].param = normalize(rowW + rowZ);
-    mPlanes[5].param = normalize(rowW - rowZ);
+    mPlanes[0].param = glm::normalize(rowW + rowX);
+    mPlanes[1].param = glm::normalize(rowW - rowX);
+    mPlanes[2].param = glm::normalize(rowW + rowY);
+    mPlanes[3].param = glm::normalize(rowW - rowY);
+    mPlanes[4].param = glm::normalize(rowW + rowZ);
+    mPlanes[5].param = glm::normalize(rowW - rowZ);
 }
 
 inline void Frustum::clear() {
