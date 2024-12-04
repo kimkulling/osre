@@ -24,14 +24,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 #include "Common/glm_common.h"
+
 #include <cppcore/Container/TStaticArray.h>
 
 namespace OSRE {
 namespace Common {
 
+/// @brief Plane representation 
+/// Will use the form 0 = a*x + b*y + c*z + d where a, b, c are the norma components
+/// and d is the distance to zero.
 struct Plane {
     glm::vec4 param;
 
+    f32 a() const {return param.x;}
+    f32 b() const {return param.y;}
+    f32 c() const {return param.z;}
+    f32 d() const {return param.w;}
+    
     bool operator==(const Plane &rhs) const {
         return (param == rhs.param);
     }
@@ -41,7 +50,6 @@ struct Plane {
     }
 };
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
@@ -49,6 +57,7 @@ struct Plane {
 //-------------------------------------------------------------------------------------------------
 class Frustum {
 public:
+    /// The frustum planes.
     enum {
         Invalid = -1,
         Top = 0,
@@ -59,25 +68,28 @@ public:
         FarP,
         Count
     };
-
-    explicit Frustum(const Plane *planes);
+    
+    /// @brief The default class constructor.
     Frustum();
+
+    /// @brief The class destructor.
     ~Frustum() = default;
+
+    /// @brief Will check if the point is in the frustum.
+    /// @param[in] point   The point to check.
+    /// @return true if the point is in, false if not.
     bool isIn(const glm::vec3 &point);
+
+    /// @brief Will generate the view frustum out of the view-projection matrix from the camera.
+    /// @param[in] vp   The view-projection matrix from the camera model.
     void extractFrom(const glm::mat4 &vp);
+
+    /// @brief Will clear the frustum.
     void clear();
 
 private:
     cppcore::TStaticArray<Plane, 6> mPlanes;
 };
-
-inline Frustum::Frustum(const Plane *planes) {
-    if (planes != nullptr) {
-        for (ui32 i = 0; i < Count; ++i) {
-            mPlanes[i] = planes[i];
-        }
-    }
-}
 
 inline Frustum::Frustum() {
     clear();
