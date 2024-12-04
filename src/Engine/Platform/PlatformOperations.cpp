@@ -37,7 +37,7 @@ namespace Platform {
 static constexpr c8 Tag[] = "PlatformOperations";
 
 void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location) {
-#ifndef OSRE_WINDOWS
+#ifdef OSRE_WINDOWS
     // Init data
     c8 szFile[PlatformOperations::BufferSize] = { '\0' };
     OPENFILENAME ofn;
