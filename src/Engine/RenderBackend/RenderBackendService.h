@@ -241,7 +241,7 @@ public:
 
     void addMesh(Mesh *geo, ui32 numInstances);
 
-    void addMesh(const cppcore::TArray<Mesh *> &geoArray, ui32 numInstances);
+    void addMesh(const MeshArray &meshArray, ui32 numInstances);
 
     void updateMesh(Mesh *mesh);
 
