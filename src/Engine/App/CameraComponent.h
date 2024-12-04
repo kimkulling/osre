@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/TransformComponent.h"
 #include "App/SceneCommon.h"
 #include "Common/TAABB.h"
+#include "Common/Frustum.h"
 
 namespace OSRE {
 namespace App {
@@ -160,8 +161,13 @@ private:
     f32 mNear, mFar;
     f32 mAspectRatio;
     f32 mLeft, mRight, mTop, mBottom;
-    glm::vec3 mEye, mCenter, mUp;
-    glm::mat4 mView, mProjection;
+    glm::vec3 mEye;
+    glm::vec3 mCenter;
+    glm::vec3 mUp;
+    glm::mat4 mView;
+    glm::mat4 mProjection;
+    glm::mat4 mViewProjection;
+    Common::Frustum mFrustum;
 };
 
 inline CameraModel CameraComponent::getCameraModel() const {

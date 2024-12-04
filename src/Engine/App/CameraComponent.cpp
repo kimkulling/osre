@@ -155,7 +155,9 @@ bool CameraComponent::onUpdate(Time) {
         mProjection = glm::ortho(mLeft, mRight, mBottom, mTop, mNear, mFar);
     }
     mView = glm::lookAt(mEye, mCenter, mUp);
-
+    mViewProjection = mProjection * mView;
+    mFrustum.extractFrom(mViewProjection);
+     
     return true;
 }
 
