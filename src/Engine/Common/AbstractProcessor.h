@@ -55,15 +55,11 @@ public:
 
 protected:
     /// @brief  The default constructor.
-    AbstractProcessor();
+    AbstractProcessor() = default;
 
 private:
     ProcessorArray mPreconditions;
 };
-
-inline AbstractProcessor::AbstractProcessor() : mPreconditions() {
-    // empty
-}
 
 inline void AbstractProcessor::addDependency( AbstractProcessor *precondition ) {
     if ( nullptr != precondition ) {

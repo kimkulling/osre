@@ -44,6 +44,7 @@ AnimatorComponent::AnimatorComponent(Entity *owner) :
 
 void AnimatorComponent::addTrack(AnimationTrack *track) {
     if (track == nullptr) {
+        osre_error(Tag, "Invalid animation track instance.");
         return;
     }
 
@@ -62,6 +63,7 @@ AnimationTrack *AnimatorComponent::createAnimation() {
 
 AnimationTrack *AnimatorComponent::getTrackAt(size_t index) const {
     if (index >= mAnimationTrackArray.size()) {
+        osre_error(Tag, "Invalid animation track index.");
         return nullptr;
     }
 
@@ -70,6 +72,7 @@ AnimationTrack *AnimatorComponent::getTrackAt(size_t index) const {
 
 bool AnimatorComponent::selectTrack(size_t index) {
     if (index >= mAnimationTrackArray.size()) {
+        osre_error(Tag, "Invalid animation track index.");
         return false;
     }
 
@@ -87,6 +90,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
     if (track == nullptr) {
         return true;
     }
+
     // calculate the time
     double time = static_cast<d32>(dt.asMilliSeconds()) / 1000.0f;
     const double ticksPerSecond = track->mTicksPerSecond != 0.0 ? track->mTicksPerSecond : 25.0;

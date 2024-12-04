@@ -38,6 +38,7 @@ class Ray {
 public:
     /// @brief The default class constructor.
     Ray();
+
     /// @brief The class constructor with the parameters.
     /// @param origin       The origin of the ray.
     /// @param direction    The direction of the ray.

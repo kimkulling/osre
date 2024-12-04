@@ -40,7 +40,7 @@ public:
 
     AABB();
     AABB(const glm::vec3 &min, const glm::vec3 &max);
-    ~AABB();
+    ~AABB() = default;
     void reset();
     void set(const glm::vec3 &min, const glm::vec3 &max);
     const glm::vec3 &getMin() const;
@@ -55,41 +55,37 @@ public:
     bool operator!=(const AABB &rhs) const;
 
 private:
-    glm::vec3 m_min;
-    glm::vec3 m_max;
-    f32 m_diameter;
+    glm::vec3 mMin;
+    glm::vec3 mMax;
+    f32 mDiameter = 0.0f;
 };
 
 inline AABB::AABB() :
-        m_min(Invalid, Invalid, Invalid), m_max(-Invalid, -Invalid, -Invalid), m_diameter(0) {
+        mMin(Invalid, Invalid, Invalid), mMax(-Invalid, -Invalid, -Invalid) {
     // empty
 }
 
 inline AABB::AABB(const glm::vec3 &min, const glm::vec3 &max) :
-        m_min(min), m_max(max), m_diameter(0) {
-    // empty
-}
-
-inline AABB::~AABB() {
+        mMin(min), mMax(max) {
     // empty
 }
 
 inline void AABB::reset() {
-    m_min.x = m_min.y = m_min.z = Invalid;
-    m_max.x = m_max.y = m_max.z = -Invalid;
+    mMin.x = mMin.y = mMin.z = Invalid;
+    mMax.x = mMax.y = mMax.z = -Invalid;
 }
 
 inline void AABB::set(const glm::vec3 &min, const glm::vec3 &max) {
-    m_min = min;
-    m_max = max;
+    mMin = min;
+    mMax = max;
 }
 
 inline const glm::vec3 &AABB::getMin() const {
-    return m_min;
+    return mMin;
 }
 
 inline const glm::vec3 &AABB::getMax() const {
-    return m_max;
+    return mMax;
 }
 
 inline void AABB::merge(const glm::vec3 &vec) {
@@ -98,25 +94,25 @@ inline void AABB::merge(const glm::vec3 &vec) {
 
 inline void AABB::merge(f32 x, f32 y, f32 z) {
     // set min values
-    if (x < m_min.x) {
-        m_min.x = x;
+    if (x < mMin.x) {
+        mMin.x = x;
     }
-    if (y < m_min.y) {
-        m_min.y = y;
+    if (y < mMin.y) {
+        mMin.y = y;
     }
-    if (z < m_min.z) {
-        m_min.z = z;
+    if (z < mMin.z) {
+        mMin.z = z;
     }
 
     // set max values
-    if (x > m_max.x) {
-        m_max.x = x;
+    if (x > mMax.x) {
+        mMax.x = x;
     }
-    if (y > m_max.y) {
-        m_max.y = y;
+    if (y > mMax.y) {
+        mMax.y = y;
     }
-    if (z > m_max.z) {
-        m_max.z =z;
+    if (z > mMax.z) {
+        mMax.z = z;
     }
 }
 
@@ -132,27 +128,27 @@ inline void AABB::updateFromVector3Array(glm::vec3 *vecArray, ui32 numVectors) {
 }
 
 inline f32 AABB::getDiameter() const {
-    if (0 != m_diameter) {
-        return m_diameter;
+    if (0 != mDiameter) {
+        return mDiameter;
     }
-    const glm::vec3 diff = (m_max - m_min);
+    const glm::vec3 diff = (mMax - mMin);
     const f32 len = glm::length(diff);
 
     return len;
 }
 
 inline glm::vec3 AABB::getCenter() const {
-    const glm::vec3 center = (m_min + m_max) * 0.5f;
+    const glm::vec3 center = (mMin + mMax) * 0.5f;
 
     return center;
 }
 
 inline bool AABB::isIn(const glm::vec3 &pt) const {
-    if (pt.x < m_min.x || pt.y < m_min.y || pt.z < m_min.z) {
+    if (pt.x < mMin.x || pt.y < mMin.y || pt.z < mMin.z) {
         return false;
     }
 
-    if (pt.x > m_max.x || pt.y > m_max.y || pt.z > m_max.z) {
+    if (pt.x > mMax.x || pt.y > mMax.y || pt.z > mMax.z) {
         return false;
     }
 
@@ -160,7 +156,7 @@ inline bool AABB::isIn(const glm::vec3 &pt) const {
 }
 
 inline bool AABB::operator == (const AABB &rhs) const {
-    return (m_max == rhs.m_max && m_min == rhs.m_min);
+    return (mMax == rhs.mMax && mMin == rhs.mMin);
 }
 
 inline bool AABB::operator != (const AABB &rhs) const {
