@@ -802,6 +802,7 @@ struct FrameSubmitCmd {
     ::cppcore::TArray<MeshEntry*> m_newMeshes;
     ::cppcore::TArray<PassData*> m_updatedPasses;
 
+    /// @brief The class constructor.
     FrameSubmitCmd() :
             m_meshId(999999),
             m_passId(nullptr),
@@ -812,8 +813,8 @@ struct FrameSubmitCmd {
             m_newMeshes() {
         // empty
     }
-    ~FrameSubmitCmd() = default;
     
+    // No copying    
     FrameSubmitCmd(const FrameSubmitCmd &) = delete;
 };
 
