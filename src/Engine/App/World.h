@@ -54,7 +54,7 @@ public:
     explicit World(const String &worldName);
 
     /// @brief  The class destructor.
-    ~World() override;
+    ~World() override = default;
 
     /// @brief Will add a new entity.
     /// @param entity   The entity to add.

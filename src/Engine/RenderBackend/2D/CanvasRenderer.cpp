@@ -147,7 +147,6 @@ void dealloc(DrawCmd *cmd) {
     delete cmd;
 }
 
-
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         IRenderPath(),
         mDirty(true),

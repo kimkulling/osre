@@ -155,12 +155,16 @@ bool CameraComponent::onUpdate(Time) {
         mProjection = glm::ortho(mLeft, mRight, mBottom, mTop, mNear, mFar);
     }
     mView = glm::lookAt(mEye, mCenter, mUp);
-
+    mViewProjection = mProjection * mView;
+    mFrustum.extractFrom(mViewProjection);
+     
     return true;
 }
 
 bool CameraComponent::onRender(RenderBackendService *rbSrv) {
-    osre_assert(nullptr != rbSrv);
+    if (nullptr == rbSrv) {
+        return false;
+    }
 
     rbSrv->setMatrix(MatrixType::View, mView);
     rbSrv->setMatrix(MatrixType::Projection, mProjection);

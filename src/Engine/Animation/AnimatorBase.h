@@ -152,7 +152,12 @@ enum class TransformCommandType {
     RotateZCommandNegative,
     ScaleInCommand,
     ScaleOutCommand,
-    TransformCommand,
+    TransformCommandXPositive,
+    TransformCommandXNegative,
+    TransformCommandYPositive,
+    TransformCommandYNegative,
+    TransformCommandZPositive,
+    TransformCommandZNegative,
     Count
 };
 

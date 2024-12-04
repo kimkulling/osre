@@ -123,5 +123,5 @@ inline bool TransformComponent::isActive() const {
     return mIsActive;
 }
 
-} // Namespace App
+} // namespace App
 } // namespace OSRE

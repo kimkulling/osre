@@ -24,6 +24,11 @@ these things on Reggit or in the Discussion Forum.
 - Virtual file system for reading zip-archives
 - Instancing
 
+# Build Status
+[![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kimkulling_osre&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kimkulling_osre)
+[![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
+
 # Documentation #
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
@@ -39,11 +44,6 @@ We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
 # Questions
 - Take a look into our [OSRE-Forum](https://github.com/kimkulling/osre/discussions)
 - Please check our [Reddit-Community](https://www.reddit.com/r/osre/)
-
-# Build Status
-[![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
-[![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
 
 # Supported compilers
 - Windows:

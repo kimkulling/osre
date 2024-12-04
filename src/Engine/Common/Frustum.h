@@ -25,18 +25,41 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "Common/glm_common.h"
 
+#include <cppcore/Container/TStaticArray.h>
+
 namespace OSRE {
 namespace Common {
+
+/// @brief Plane representation 
+/// Will use the form 0 = a*x + b*y + c*z + d where a, b, c are the norma components
+/// and d is the distance to zero.
+struct Plane {
+    glm::vec4 param;
+
+    f32 a() const {return param.x;}
+    f32 b() const {return param.y;}
+    f32 c() const {return param.z;}
+    f32 d() const {return param.w;}
+    
+    bool operator==(const Plane &rhs) const {
+        return (param == rhs.param);
+    }
+
+    bool operator!=(const Plane &rhs) const {
+        return (param != rhs.param);
+    }
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-///	@brief This class implemnets the view frustum of a camera model.
+/// @brief	This classs implements a view frustum.
 //-------------------------------------------------------------------------------------------------
 class Frustum {
 public:
+    /// The frustum planes.
     enum {
-        Invalid,
+        Invalid = -1,
         Top = 0,
         Bottom, 
         Left,
@@ -53,29 +76,31 @@ public:
     ///	@brief The class destructor.
     ~Frustum() = default;
 
-    ///	@brief  Will check if the point is in the frustum.
-    /// @param[in] vp       The point to check.
-    /// @return true if in.
-    bool isIn(glm::vec3 &point);
+    /// @brief Will check if the point is in the frustum.
+    /// @param[in] point   The point to check.
+    /// @return true if the point is in, false if not.
+    bool isIn(const glm::vec3 &point);
 
-    ///	@brief  
+    /// @brief Will generate the view frustum out of the view-projection matrix from the camera.
+    /// @param[in] vp   The view-projection matrix from the camera model.
     void extractFrom(const glm::mat4 &vp);
-    
-    ///	@brief  WIll clear the frustum.
+
+    /// @brief Will clear the frustum.
     void clear();
 
 private:
-    glm::vec4 mPlanes[6];
+    cppcore::TStaticArray<Plane, 6> mPlanes;
 };
 
 inline Frustum::Frustum() {
     clear();
 }
 
-inline bool Frustum::isIn( glm::vec3 &point ) {
+inline bool Frustum::isIn(const glm::vec3 &point ) {
     bool in = true;
-    for (auto & plane : mPlanes) {
-        const f32 d = plane.x * point.x + plane.y * point.y + plane.z * point.z + plane.w;
+    for (size_t i = 0; i < mPlanes.size(); ++i) {
+        const Plane &plane = mPlanes[i];
+        const f32 d = plane.param.x * point.x + plane.param.y * point.y + plane.param.z * point.z + plane.param.w;
         if (d < 0.0f) {
             in = false;
             break;
@@ -91,19 +116,21 @@ inline void Frustum::extractFrom(const glm::mat4 &vp) {
     glm::vec4 rowZ = glm::row(vp, 2);
     glm::vec4 rowW = glm::row(vp, 3);
 
-    mPlanes[0] = normalize(rowW + rowX);
-    mPlanes[1] = normalize(rowW - rowX);
-    mPlanes[2] = normalize(rowW + rowY);
-    mPlanes[3] = normalize(rowW - rowY);
-    mPlanes[4] = normalize(rowW + rowZ);
-    mPlanes[5] = normalize(rowW - rowZ);
+    mPlanes[0].param = glm::normalize(rowW + rowX);
+    mPlanes[1].param = glm::normalize(rowW - rowX);
+    mPlanes[2].param = glm::normalize(rowW + rowY);
+    mPlanes[3].param = glm::normalize(rowW - rowY);
+    mPlanes[4].param = glm::normalize(rowW + rowZ);
+    mPlanes[5].param = glm::normalize(rowW - rowZ);
 }
 
 inline void Frustum::clear() {
-    for (auto &plane : mPlanes) {
-        plane.x = plane.y = plane.z = plane.w = 0.0f;
+    for (size_t i = 0; i < mPlanes.size(); ++i) {
+        Plane &plane = mPlanes[i];
+        plane.param.x = plane.param.y = plane.param.z = plane.param.w = 0.0f;
     }
 }
 
 } // namespace Common
 } // namespace OSRE
+  //
