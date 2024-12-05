@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Object.h"
 #include "Common/glm_common.h"
 #include "App/TransformComponent.h"
-#include "App/SceneCommon.h"
 #include "Common/TAABB.h"
 #include "Common/Frustum.h"
 

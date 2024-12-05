@@ -40,11 +40,11 @@ namespace App {
 namespace Animation {
 
 struct OSRE_EXPORT VertexWeight {
-    ui32 m_vertexIdx;
-    f32 m_vertexWeight;
+    ui32 VertexIndex;
+    f32 Weight;
 
     bool operator==(const VertexWeight &rhs) {
-        return (m_vertexIdx == rhs.m_vertexIdx && m_vertexWeight == rhs.m_vertexWeight);
+        return (VertexIndex == rhs.VertexIndex && Weight == rhs.Weight);
     }
 
     bool operator!=(const VertexWeight &rhs) {
@@ -95,24 +95,44 @@ struct VectorKey {
 using VectorKeyArray = ::cppcore::TArray<VectorKey>;
 
 struct RotationKey {
-    glm::vec4 mQuad;
-    d32 mTime;
+    d32 Time;
+    glm::quat Quad;
+
+    RotationKey() : Time(0.0), Quad() {
+        // empty
+    }
+
+    ~RotationKey() = default;
 };
 
 using RotationKeyArray = ::cppcore::TArray<RotationKey>;
 
-struct VectorChannel {
-    size_t NumVectorKeys;
-    VectorKeyArray VectorKeys;
+struct ScalingKey {
+    d32 Time;
+    glm::vec3 Scale;
 
-    VectorChannel() : NumVectorKeys(0), VectorKeys() {
+    ScalingKey() : Time(0.0), Scale() {
         // empty
     }
 
-    ~VectorChannel() = default;
+    ~ScalingKey() = default;
 };
 
-using VectorChannelArray = ::cppcore::TArray<VectorChannel>;
+using ScalingKeyArray = ::cppcore::TArray<ScalingKey>;
+
+struct AnimationChannel {
+    VectorKeyArray PositionKeys;
+    RotationKeyArray RotationKeys;
+    ScalingKeyArray ScalingKeys;
+    
+    AnimationChannel() : PositionKeys(), RotationKeys(), ScalingKeys() {
+        // empty
+    }
+
+    ~AnimationChannel() = default;
+};
+
+using VectorChannelArray = ::cppcore::TArray<AnimationChannel>;
 
 template <class T>
 struct AnimatorBase {
@@ -174,3 +194,4 @@ protected:
 
 } // namespace Animation
 } // namespace OSRE
+  

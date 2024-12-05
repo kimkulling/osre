@@ -419,6 +419,7 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
             mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         default:
+            osre_warn(Tag, "Unknown matrix type.");
             break;
     }
 }
@@ -439,16 +440,19 @@ void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
-void RenderBackendService::setUniform(UniformVar *var) {
-    if (nullptr == var) {
+void RenderBackendService::addUniform(UniformVar *uniformVar) {
+    if (nullptr == uniformVar) {
+        osre_error(Tag, "Invalid uniform.");
+        return;
+    }
+
+    if (nullptr == mCurrentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
 
-    if (nullptr != mCurrentBatch) {
-        mCurrentBatch->m_uniforms.add(var);
-        mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
-    }
+    mCurrentBatch->m_uniforms.add(uniformVar);
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
@@ -469,7 +473,7 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
 
 void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     if (mesh == nullptr) {
-        osre_debug(Tag, "Pointer to geometry is nullptr.");
+        osre_error(Tag, "Pointer to geometry is nullptr.");
         return;
     }
 
@@ -485,7 +489,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
-void RenderBackendService::addMesh(const cppcore::TArray<Mesh *> &meshArray, ui32 numInstances) {
+void RenderBackendService::addMesh(const MeshArray &meshArray, ui32 numInstances) {
     if (mCurrentBatch == nullptr) {
         osre_error(Tag, "No active batch.");
         return;

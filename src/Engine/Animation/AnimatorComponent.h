@@ -26,36 +26,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Animation/AnimatorBase.h"
 #include "App/Component.h"
 
+#include <vector>
+#include <tuple>
+
 namespace OSRE {
 namespace Animation {
 
+/// @brief  
 struct AnimationTrack {
     f32 Duration;
     f32 mTicksPerSecond;
     size_t NumVectorChannels;
-    VectorChannel *VectorChannels;
+    AnimationChannel *AnimationChannels;
 
     AnimationTrack() :
-            Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), VectorChannels(nullptr) {
+            Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), AnimationChannels(nullptr) {
         // empty
     }
 
     ~AnimationTrack() {
-        delete [] VectorChannels;
-        VectorChannels = nullptr;
+        delete [] AnimationChannels;
+        AnimationChannels = nullptr;
     }
 };
+
+using AnimationTrackArray = cppcore::TArray<AnimationTrack *>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief 
+///	@brief This class implements the animation component. 
+/// 
+/// As a user you can add single animation tracks to the component. When applying an animation you
+/// first need to choose the track. This active animation track will be selected and updated.
 //-------------------------------------------------------------------------------------------------
-class AnimatorComponent : public App::Component {
+class OSRE_EXPORT AnimatorComponent : public App::Component {
+    using TransformArray = cppcore::TArray<glm::mat4>;
+
 public:
-    AnimatorComponent(App::Entity *owner, App::ComponentType type);
-    ~AnimatorComponent() override;
+    AnimatorComponent(App::Entity *owner);
+    ~AnimatorComponent() override = default;
     void addTrack(AnimationTrack *track);
+    AnimationTrack *createAnimation();
     AnimationTrack *getTrackAt(size_t index) const;
     bool selectTrack(size_t index);
     size_t getActiveTrack() const;
@@ -63,11 +75,16 @@ public:
 protected:
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
+    void initAnimations();
 
 private:
-    using AnimationTrackArray = cppcore::TArray<AnimationTrack*>;
     AnimationTrackArray mAnimationTrackArray;
     size_t mActiveTrack;
+    TransformArray mTransformArray;
+    std::vector<std::tuple<size_t, size_t, size_t>> mLastPositions;
+    std::vector<std::tuple<size_t, size_t, size_t>> mLastRotations;
+    std::vector<std::tuple<size_t, size_t, size_t>> mLastScales;
+    double mLastTime;
 };
 
 } // namespace Animation

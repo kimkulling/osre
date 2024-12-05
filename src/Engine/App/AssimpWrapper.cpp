@@ -377,8 +377,8 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                         for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
                             aiVertexWeight &aiVW = currentBone->mWeights[l];
                             VertexWeight &w = wArray[weightIdx];
-                            w.m_vertexIdx = aiVW.mVertexId;
-                            w.m_vertexWeight = aiVW.mWeight;
+                            w.VertexIndex = aiVW.mVertexId;
+                            w.Weight = aiVW.mWeight;
                         }
                         bone.m_vertexWeights.add(wArray, currentBone->mNumWeights);
                         const aiNode *node = mAssetContext.mScene->mRootNode->FindNode(bone.mName.c_str());
@@ -535,6 +535,30 @@ void AssimpWrapper::importAnimations(const aiScene *scene) {
         for (unsigned int n = 0; n < mesh->mNumBones; ++n) {
             const aiBone *bone = mesh->mBones[n];
             mAssetContext.mBone2NodeMap[bone->mName.data] = scene->mRootNode->FindNode(bone->mName);
+        }
+    }
+
+    for (ui32 animIndex = 0; animIndex < scene->mNumAnimations; ++animIndex) {
+        aiAnimation *currentAnim = scene->mAnimations[animIndex];
+        if (currentAnim == nullptr) {
+            continue;
+        }
+
+        if (currentAnim->mNumChannels > 0) {
+            AnimationChannel *channels = new AnimationChannel[currentAnim->mNumChannels];
+            for (ui32 channdelIndex = 0; channdelIndex < currentAnim->mNumChannels; ++channdelIndex) {
+                AnimationChannel &channel = channels[channdelIndex];
+                aiNodeAnim *nodeAnim = currentAnim->mChannels[channdelIndex];
+                if (nodeAnim == nullptr) {
+                    continue;
+                }
+                channel.PositionKeys.resize(nodeAnim->mNumPositionKeys);
+                
+                channel.RotationKeys.resize(nodeAnim->mNumRotationKeys);
+                
+                channel.RotationKeys.resize(nodeAnim->mNumScalingKeys);
+             
+            }
         }
     }
 }

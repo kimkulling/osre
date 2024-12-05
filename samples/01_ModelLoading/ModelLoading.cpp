@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "App/App.h"
-#include "App/Scene.h"
 #include "IO/Uri.h"
 #include "Common/BaseMath.h"
 #include "Platform/AbstractWindow.h"
@@ -29,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Properties/Settings.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
 
 #include <assimp/scene.h>
 
@@ -37,7 +37,6 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-/// @brief The log-tag
 static constexpr c8 Tag[] = "ModelLoadingApp";
 
 //-------------------------------------------------------------------------------------------------
@@ -48,8 +47,6 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 /// It will also show some statistics about the loaded model. The model will get loaded, the
 /// camera will be placed to get an optimal view onto the model. The model will be rendered.
 //-------------------------------------------------------------------------------------------------
-
-/// @brief The example application, will create the renderer and loads a model.
 class ModelLoadingApp : public App::AppBase {
     String mAssetFolder;                                                ///< The asset folder, here we will locate our assets.
     App::CameraComponent *mCamera;                                      ///< The camera component.

@@ -68,11 +68,12 @@ public:
         FarP,
         Count
     };
+
     
-    /// @brief The default class constructor.
+    ///	@brief The default class constructor.
     Frustum();
 
-    /// @brief The class destructor.
+    ///	@brief The class destructor.
     ~Frustum() = default;
 
     /// @brief Will check if the point is in the frustum.
@@ -132,3 +133,4 @@ inline void Frustum::clear() {
 
 } // namespace Common
 } // namespace OSRE
+  //

@@ -676,28 +676,31 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    cppcore::TArray<Mesh*> mMeshArray;
+    MeshArray mMeshArray;
 
     MeshEntry() = default;
     ~MeshEntry() = default;
 };
 
-/// @brief 
+/// @brief The render batch data.
 struct RenderBatchData {
+    /// @brief The dirty mode.
     enum DirtyMode {
-        MatrixBufferDirty = 1,
-        UniformBufferDirty = 2,
-        MeshDirty = 4,
-        MeshUpdateDirty = 8
+        MatrixBufferDirty = 1,  ///< The matrix buffer is dirty.
+        UniformBufferDirty = 2, ///< The uniform buffer is dirty.
+        MeshDirty = 4,          ///< The mesh is dirty.
+        MeshUpdateDirty = 8     ///< The mesh is updated.
     };
 
     const c8 *m_id;
     MatrixBuffer m_matrixBuffer;
     cppcore::TArray<UniformVar *> m_uniforms;
     cppcore::TArray<MeshEntry *> m_meshArray;
-    cppcore::TArray<Mesh *> m_updateMeshArray;
+    MeshArray m_updateMeshArray;
     ui32 m_dirtyFlag;
 
+    /// @brief  The class constructor
+    /// @param id  The batch name as a shortcut id.
     RenderBatchData(const c8 *id) :
             m_id(id),
             m_matrixBuffer(),
@@ -707,11 +710,18 @@ struct RenderBatchData {
             m_dirtyFlag(0) {
         osre_assert(id != nullptr);
     }
-
+    
+    /// @brief The class destructor.
     ~RenderBatchData() = default;
 
+    /// @brief Will look for an entry by its name.
+    /// @param name     The name to look for.
+    /// @return The mesh entry or nullptr if not found
     MeshEntry *getMeshEntryByName(const c8 *name);
     
+    /// @brief Will look for an uniform var by its name.
+    /// @param name     The name to look for.
+    /// @return The uniform var or nullptr if not found.
     UniformVar *getVarByName(const c8 *name);
 };
 
@@ -792,6 +802,7 @@ struct FrameSubmitCmd {
     ::cppcore::TArray<MeshEntry*> m_newMeshes;
     ::cppcore::TArray<PassData*> m_updatedPasses;
 
+    /// @brief The class constructor.
     FrameSubmitCmd() :
             m_meshId(999999),
             m_passId(nullptr),
@@ -802,8 +813,8 @@ struct FrameSubmitCmd {
             m_newMeshes() {
         // empty
     }
-    ~FrameSubmitCmd() = default;
     
+    // No copying    
     FrameSubmitCmd(const FrameSubmitCmd &) = delete;
 };
 
@@ -932,8 +943,8 @@ struct FrameBuffer {
 
 /// @brief The render pass type.
 enum class RenderPassType : ui32 {
-    StaticRenderPass,
-    UiRenderPass
+    StaticRenderPass,   ///< The static render pass
+    UiRenderPass        ///< The UI render pass
 };
 
 /// @brief The render target structure.
@@ -1004,7 +1015,7 @@ inline bool IRenderPath::onDestroy() {
     return true;
 }
 
-/// @brief
+/// @brief The OpenGL profile.
 enum class GLSLVersion {
     Invalid = -1,
     GLSL_110,
@@ -1035,7 +1046,7 @@ struct Point2Di {
 
 /// @brief The 2D point structure for floats.
 struct Point2Df {
-    f32 x, y; /// Coordinate components
+    f32 x, y; ///< Coordinate components
 };
 
 /// @brief The font structure.
@@ -1054,7 +1065,7 @@ struct DrawCmd {
     ui16 *Indices;          ///< The number of indices
     Font *UseFont;          ///< The used font
 
-    /// The class constructor.
+    /// @brief The class constructor.
     DrawCmd() :
             PrimType(PrimitiveType::Invalid),
             NumVertices(0u),
@@ -1066,8 +1077,13 @@ struct DrawCmd {
     }
 };
 
+/// @brief The draw command array.
 using DrawCmdArray = cppcore::TArray<DrawCmd *>;
 
+/// @brief Will renumber the indices.
+/// @tparam T Index type
+/// @param dc       The draw command container
+/// @param offset   Offset as renumbering parameter
 template<class T>
 inline void renumberIndices(const DrawCmd &dc, T offset) {
     if (offset > 0) {

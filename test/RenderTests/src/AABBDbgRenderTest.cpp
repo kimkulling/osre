@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
+#include "App/App.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/DbgRenderer.h"
 #include "RenderBackend/MeshBuilder.h"

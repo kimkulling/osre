@@ -62,7 +62,7 @@ public:
 
 protected:
     ///	@brief	The default class constructor.
-    AbstractEventHandler();
+    AbstractEventHandler() = default;
 
     /// @brief  Will be called when event handler is attached to a task.
     ///	@param[in] eventData    A pointer showing to the event data.
@@ -74,10 +74,6 @@ protected:
     ///	@return	Will return true, if the event was handled, false if not.
     virtual bool onDetached( const EventData *eventData ) = 0;
 };
-
-inline AbstractEventHandler::AbstractEventHandler() {
-    // empty
-}
 
 inline bool AbstractEventHandler::attach(const EventData *eventData) {
     return onAttached( eventData );

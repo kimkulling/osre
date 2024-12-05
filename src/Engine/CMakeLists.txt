@@ -77,12 +77,9 @@ SET( app_src
     App/MouseEventListener.cpp
     App/MouseEventListener.h
     App/TAbstractCtrlBase.h
-    App/TQuadTree.h
     App/TransformController.h
     App/TransformController.cpp
     App/ResourceCacheService.h
-    App/Scene.h
-    App/SceneCommon.h
 )
 
 #==============================================================================
@@ -168,7 +165,6 @@ SET( io_src
     IO/IOService.cpp
     IO/LocaleFileSystem.cpp
     IO/LocaleFileSystem.h
-    IO/MemoryStream.h
     IO/Stream.cpp
     IO/Uri.cpp
     IO/ZipFileSystem.cpp

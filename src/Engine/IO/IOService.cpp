@@ -49,10 +49,10 @@ static AbstractFileSystem *createFS( const Uri &file ) {
     return nullptr;
 }
 
-IOService::IOService() : AbstractService( "io/ioserver" ), m_mountedMap() {
+IOService::IOService() : AbstractService( "io/ioserver" ), mMountedMap() {
     CREATE_SINGLETON( IOService );
 
-    m_mountedMap["file"] = new LocaleFileSystem();
+    mMountedMap["file"] = new LocaleFileSystem();
 }
 
 IOService::~IOService() {
@@ -69,7 +69,7 @@ bool IOService::onOpen() {
 }
 
 bool IOService::onClose() {
-    for (MountedMap::iterator it = m_mountedMap.begin(); it != m_mountedMap.end(); ++it) {
+    for (MountedMap::iterator it = mMountedMap.begin(); it != mMountedMap.end(); ++it) {
         delete it->second;
     }
     return true;
@@ -88,7 +88,7 @@ AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &fil
     if( fileExists( file ) ) {
         fs = createFS( file );
         if( fs ) {
-            m_mountedMap[ name ] = fs;
+            mMountedMap[ name ] = fs;
         } else {
             osre_debug( Tag, "Cannot create file system " + file.getResource() );
         }
@@ -100,18 +100,18 @@ AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &fil
 void IOService::mountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
     assert( nullptr != pFileSystem );
 
-    m_mountedMap[ schema ] = pFileSystem;
+    mMountedMap[ schema ] = pFileSystem;
 }
 
 void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
     assert( nullptr != pFileSystem );
 
-    MountedMap::iterator it = m_mountedMap.find( schema );
-    if ( m_mountedMap.end() == it ) {
+    MountedMap::iterator it = mMountedMap.find( schema );
+    if ( mMountedMap.end() == it ) {
         return;
     }
     if (it->second == pFileSystem) {
-        m_mountedMap.erase(it);
+        mMountedMap.erase(it);
     }
 }
 
@@ -138,12 +138,12 @@ void IOService::closeStream( Stream **ppStream ) {
 }
 
 AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
-    if ( m_mountedMap.empty() ) {
+    if ( mMountedMap.empty() ) {
         return nullptr;
     }
 
-    MountedMap::const_iterator it = m_mountedMap.find( schema );
-    if ( m_mountedMap.end() != it ) {
+    MountedMap::const_iterator it = mMountedMap.find( schema );
+    if ( mMountedMap.end() != it ) {
         return it->second;
     } 
 

@@ -37,10 +37,9 @@ namespace Platform {
 static constexpr c8 Tag[] = "PlatformOperations";
 
 void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location) {
-    c8 szFile[PlatformOperations::BufferSize] = { '\0' };
-
 #ifdef OSRE_WINDOWS
-    // Initialize OPENFILENAME
+    // Init data
+    c8 szFile[PlatformOperations::BufferSize] = { '\0' };
     OPENFILENAME ofn;
     cppcore::MemUtils::clearMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);

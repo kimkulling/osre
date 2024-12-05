@@ -61,10 +61,15 @@ public:
     /// @return The current working directory.
     static String getCurrentDirectory();
     
-    /// 
+    /// @brief Will create a new directory.
+    /// @param[in] name   The name for the new directory.
+    /// @return true if successful.
     static bool createDirectory( const c8 *name );
 
-    ///
+    /// @brief Will return the list of files from a given path.
+    /// @param[in] absPath  The absolue path.
+    /// @param[out] files   The list of files.
+    /// @return true if successful.
     static bool getFileList(const String &absPath, FileList &files);
 };
 

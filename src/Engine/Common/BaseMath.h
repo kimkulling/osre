@@ -31,7 +31,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Math::BaseMath
 ///	@ingroup	Engine
 ///
 ///	@brief	This class offer base informations about the mathematical subsystem like precisions.

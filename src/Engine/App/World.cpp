@@ -140,7 +140,7 @@ void World::update(Time dt) {
     }
 
     for (Entity *entity : mEntities) {
-        if (nullptr == entity) {
+        if (nullptr != entity) {
             entity->update(dt);
         }
     }

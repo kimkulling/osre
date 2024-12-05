@@ -29,8 +29,7 @@ namespace OSRE {
 namespace IO {
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::ZipFileStream
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	File instance for files stored in a zip archive. 
 ///

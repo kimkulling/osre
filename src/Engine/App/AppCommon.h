@@ -48,6 +48,8 @@ namespace App {
 
 class MouseEventListener;
 class KeyboardEventListener;
+class CameraComponent;
+class TransformComponent;
 
 template<class T> class TAbstractCtrlBase;
 

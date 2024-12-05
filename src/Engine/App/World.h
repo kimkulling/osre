@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "App/AppCommon.h"
-#include "App/SceneCommon.h"
+
 #include "Common/Object.h"
 #include "Common/Ids.h"
 

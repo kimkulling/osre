@@ -25,12 +25,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Component.h"
 #include "App/CameraComponent.h"
 #include "App/World.h"
+#include "Animation/AnimatorBase.h"
+#include "Animation/AnimatorComponent.h"
 #include "RenderBackend/MeshProcessor.h"
 
 namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 
 Entity::Entity(const String &name, Common::Ids &ids, World *world) :
@@ -51,7 +54,10 @@ Entity::Entity(const String &name, Common::Ids &ids, World *world) :
 }
 
 Entity::~Entity() {
-    delete mRenderComponent;
+    for (size_t i=0; i<mComponentArray.size(); ++i) {
+        delete mComponentArray[i];
+    }
+    mRenderComponent = nullptr;
     if (nullptr != mOwner) {
         mOwner->removeEntity(this);
     }
@@ -113,6 +119,9 @@ Component *Entity::createComponent(ComponentType type) {
         case OSRE::App::ComponentType::CameraComponentType:
             component = new CameraComponent(this);
             break;
+        case OSRE::App::ComponentType::AnimationComponentType:
+            component = new AnimatorComponent(this);
+            break;
         case OSRE::App::ComponentType::Invalid:
         case OSRE::App::ComponentType::Count:
         default:
@@ -137,14 +146,6 @@ void Entity::setAABB(const AABB &aabb) {
 
 const AABB &Entity::getAABB() const {
     return mAabb;
-}
-
-void Entity::serialize( IO::Stream *stream ) {
-    osre_assert(stream != nullptr);
-}
-
-void Entity::deserialize( IO::Stream *stream ) {
-    osre_assert(stream != nullptr);
 }
 
 } // Namespace App
