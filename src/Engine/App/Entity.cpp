@@ -54,7 +54,10 @@ Entity::Entity(const String &name, Common::Ids &ids, World *world) :
 }
 
 Entity::~Entity() {
-    delete mRenderComponent;
+    for (size_t i=0; i<mComponentArray.size(); ++i) {
+        delete mComponentArray[i];
+    }
+    mRenderComponent = nullptr;
     if (nullptr != mOwner) {
         mOwner->removeEntity(this);
     }
