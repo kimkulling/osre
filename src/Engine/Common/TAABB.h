@@ -36,21 +36,64 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class AABB {
 public:
+    /// Init value to mark not calculated bounds.
     static constexpr f32 Invalid = 999999;
 
+    /// @brief The default class constructor.
     AABB();
+
+    /// @brief The class constructor with initial bounds.
+    /// @param[in] min    The minimum bound.
+    /// @param[in] max    The maximum bound.
     AABB(const glm::vec3 &min, const glm::vec3 &max);
+
+    /// @brief The class destructor.
     ~AABB() = default;
+
+    /// @brief Will reset the bv to default again.
     void reset();
+
+    /// @brief Will set the new bounds.
+    /// @param[in] min    The minimum bound.
+    /// @param[in] max    The maximum bound.
     void set(const glm::vec3 &min, const glm::vec3 &max);
+
+    /// @brief Will return the minimum bound.
+    /// @return The minimum bound.
     const glm::vec3 &getMin() const;
+
+    /// @brief Will return the maximum bound.
+    /// @return The maximum bound.
     const glm::vec3 &getMax() const;
+
+    /// @brief Will merge a new position to the bounding volume and update the bounds if necessary.
+    /// @param[in] vec   The vector to merge.
     void merge(const glm::vec3 &vec);
+
+    /// @brief Will merge a new position to the bounding volume and update the bounds if necessary.
+    /// @param[in] x   The x-component of the vector to merge.
+    /// @param[in] y   The y-component of the vector to merge.
+    /// @param[in] z   The z-component of the vector to merge.
     void merge(f32 x, f32 y, f32 z);
-    void updateFromVector3Array(glm::vec3 *vecArray, ui32 numVectors);
+
+    /// @brief Will update the bounding volume by an array of positions.
+    /// @param[in] vecArray   The position array.
+    /// @param[in] numVectors The number of positions.
+    void updateFromVector3Array(glm::vec3 *vecArray, size_t numVectors);
+
+    /// @brief Will return the diameter.
+    /// @return The diameter.
     f32 getDiameter() const;
+
+    /// @brief Will return the center.
+    /// @return The center.
     glm::vec3 getCenter() const;
+
+    /// @brief Checks if the point is in the bounding volume.
+    /// @return true if it is in.
     bool isIn(const glm::vec3 &pt) const;
+
+    /// Compare operators.
     bool operator==(const AABB &rhs) const;
     bool operator!=(const AABB &rhs) const;
 
@@ -61,12 +104,12 @@ private:
 };
 
 inline AABB::AABB() :
-        mMin(Invalid, Invalid, Invalid), mMax(-Invalid, -Invalid, -Invalid) {
+        mMin(Invalid, Invalid, Invalid), mMax(-Invalid, -Invalid, -Invalid), mDiameter(0.0f) {
     // empty
 }
 
 inline AABB::AABB(const glm::vec3 &min, const glm::vec3 &max) :
-        mMin(min), mMax(max) {
+        mMin(min), mMax(max), mDiameter(0.0f) {
     // empty
 }
 
@@ -76,6 +119,7 @@ inline void AABB::reset() {
 }
 
 inline void AABB::set(const glm::vec3 &min, const glm::vec3 &max) {
+    reset();
     mMin = min;
     mMax = max;
 }
@@ -93,6 +137,8 @@ inline void AABB::merge(const glm::vec3 &vec) {
 }
 
 inline void AABB::merge(f32 x, f32 y, f32 z) {
+    reset();
+    
     // set min values
     if (x < mMin.x) {
         mMin.x = x;
@@ -116,12 +162,12 @@ inline void AABB::merge(f32 x, f32 y, f32 z) {
     }
 }
 
-inline void AABB::updateFromVector3Array(glm::vec3 *vecArray, ui32 numVectors) {
+inline void AABB::updateFromVector3Array(glm::vec3 *vecArray, size_t numVectors) {
     if (nullptr == vecArray || 0 == numVectors) {
         return;
     }
 
-    for (ui32 i = 0; i < numVectors; ++i) {
+    for (size_t i = 0; i < numVectors; ++i) {
         glm::vec3 &v(vecArray[i]);
         merge(v);
     }
@@ -132,9 +178,7 @@ inline f32 AABB::getDiameter() const {
         return mDiameter;
     }
     const glm::vec3 diff = (mMax - mMin);
-    const f32 len = glm::length(diff);
-
-    return len;
+    return glm::length(diff);
 }
 
 inline glm::vec3 AABB::getCenter() const {
