@@ -40,10 +40,9 @@ static constexpr c8 Tag[] = "HelloWorldApp";
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
 ///
-/// @brief This is
+/// @brief The example application, will create the render environment and render a 
+/// simple triangle onto it.
 //-------------------------------------------------------------------------------------------------
-
-/// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;
@@ -51,7 +50,7 @@ class HelloWorldApp : public App::AppBase {
     Entity *mEntity;
     /// The keyboard controller instance.
     Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    Animation::AnimationTrack mTrack;
+    /// The current angle on rotation
     f32 mAngle;
 
 public:
@@ -69,21 +68,25 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
+    void setupAnimation() {
+        Animation::AnimatorComponent *animator = (Animation::AnimatorComponent *) mEntity->createComponent(ComponentType::AnimationComponentType);
+        Animation::AnimationTrack *track = animator->createAnimation();
+        track->NumVectorChannels = 1;
+        track->AnimationChannels = new Animation::AnimationChannel[track->NumVectorChannels];
+        track->Duration = 1.0f;
+        Animation::AnimationChannel channel;
+        Animation::RotationKey rot;
+        rot.Quad = glm::angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
+        rot.Time = 1.0f;
+        track->AnimationChannels[0].RotationKeys.add(rot);
+        animator->selectTrack(0);
+    }
+
     CameraComponent *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
         CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
-        Animation::AnimatorComponent *animator = (Animation::AnimatorComponent *)camEntity->createComponent(ComponentType::AnimationComponentType);
-        mTrack.NumVectorChannels = 1;
-        mTrack.AnimationChannels = new Animation::AnimationChannel[mTrack.NumVectorChannels];
-        mTrack.Duration = 1.0f;
-        Animation::AnimationChannel channel;
-        Animation::RotationKey rot;
-        rot.Quad = glm::angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
-        rot.Time = 1.0f;
-        mTrack.AnimationChannels[0].RotationKeys.add(rot);
-        animator->addTrack(&mTrack);
         
         ui32 w, h;
         AppBase::getResolution(w, h);
@@ -108,6 +111,7 @@ protected:
             rc->addStaticMesh(mesh);
 
             CameraComponent *camera = setupCamera(world);
+            setupAnimation();
             world->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
@@ -124,12 +128,16 @@ protected:
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
+
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        
+        TransformComponent *trCmp = (TransformComponent *)mEntity->getComponent(ComponentType::TransformComponentType);
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
-            rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+            glm::mat m = mTransformMatrix.mModel;
+            if (trCmp != nullptr)
+                m *= trCmp->getTransformationMatrix();
+            rbSrv->setMatrix(MatrixType::Model, m);
 
             rbSrv->endRenderBatch();
         }
@@ -141,14 +149,15 @@ protected:
 
 int main( int argc, char *argv[] )  {
     HelloWorldApp myApp( argc, argv );
-    if ( !myApp.create() ) {
+    if (!myApp.create()) {
         return 1;
     }
-    while ( myApp.handleEvents() ) {
+    
+    while (myApp.handleEvents()) {
         myApp.update();
         myApp.requestNextFrame();
     }
     myApp.destroy();
+    
     return 0;
 }
-

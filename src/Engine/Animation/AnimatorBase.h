@@ -39,6 +39,7 @@ namespace App {
 
 namespace Animation {
 
+/// @brief
 struct OSRE_EXPORT VertexWeight {
     ui32 VertexIndex;
     f32 Weight;
@@ -52,6 +53,7 @@ struct OSRE_EXPORT VertexWeight {
     }
 };
 
+/// @brief
 struct OSRE_EXPORT Bone {
     using VertexWeightArray = cppcore::TArray<VertexWeight>;
 
@@ -67,6 +69,7 @@ struct OSRE_EXPORT Bone {
     ~Bone() = default;
 };
 
+/// @brief
 struct OSRE_EXPORT Skeleton {
     using BoneArray = cppcore::TArray<Bone *>;
 
@@ -81,6 +84,7 @@ struct OSRE_EXPORT Skeleton {
     ~Skeleton() = default;
 };
 
+/// @brief
 struct VectorKey {
     f32 Time;
     glm::vec3 Value;
@@ -92,48 +96,62 @@ struct VectorKey {
     ~VectorKey() = default;
 };
 
+/// @brief  
 using VectorKeyArray = ::cppcore::TArray<VectorKey>;
 
+/// @brief
 struct RotationKey {
     d32 Time;
     glm::quat Quad;
 
-    RotationKey() : Time(0.0), Quad() {
+    /// @brief
+    RotationKey() :
+            Time(0.0), Quad() {
         // empty
     }
 
+    /// @brief
     ~RotationKey() = default;
 };
 
 using RotationKeyArray = ::cppcore::TArray<RotationKey>;
 
+/// @brief
 struct ScalingKey {
     d32 Time;
     glm::vec3 Scale;
 
-    ScalingKey() : Time(0.0), Scale() {
+    /// @brief
+    ScalingKey() :
+            Time(0.0), Scale() {
         // empty
     }
 
+    /// @brief
     ~ScalingKey() = default;
 };
 
 using ScalingKeyArray = ::cppcore::TArray<ScalingKey>;
 
+/// @brief
 struct AnimationChannel {
     VectorKeyArray PositionKeys;
     RotationKeyArray RotationKeys;
     ScalingKeyArray ScalingKeys;
     
-    AnimationChannel() : PositionKeys(), RotationKeys(), ScalingKeys() {
+    /// @brief
+    AnimationChannel() :
+            PositionKeys(), RotationKeys(), ScalingKeys() {
         // empty
     }
 
+    /// @brief
     ~AnimationChannel() = default;
 };
 
 using VectorChannelArray = ::cppcore::TArray<AnimationChannel>;
 
+/// @brief
 template <class T>
 struct AnimatorBase {
     void operator () ( T &out, const T &a, const T &b, f32 d ) const {

@@ -39,11 +39,13 @@ struct AnimationTrack {
     size_t NumVectorChannels;
     AnimationChannel *AnimationChannels;
 
+    /// @brief  The class constructor.
     AnimationTrack() :
             Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), AnimationChannels(nullptr) {
         // empty
     }
 
+    /// @brief The class destructor.
     ~AnimationTrack() {
         delete [] AnimationChannels;
         AnimationChannels = nullptr;
@@ -65,12 +67,15 @@ class OSRE_EXPORT AnimatorComponent : public App::Component {
 
 public:
     AnimatorComponent(App::Entity *owner);
-    ~AnimatorComponent() override = default;
+    ~AnimatorComponent() override;
     void addTrack(AnimationTrack *track);
     AnimationTrack *createAnimation();
     AnimationTrack *getTrackAt(size_t index) const;
     bool selectTrack(size_t index);
     size_t getActiveTrack() const;
+    void clear();
+    const glm::mat4 &getTransform(size_t index) const;
+    const glm::mat4 &getActiveTransform() const;
 
 protected:
     bool onUpdate(Time dt) override;
@@ -84,8 +89,17 @@ private:
     std::vector<std::tuple<size_t, size_t, size_t>> mLastPositions;
     std::vector<std::tuple<size_t, size_t, size_t>> mLastRotations;
     std::vector<std::tuple<size_t, size_t, size_t>> mLastScales;
-    double mLastTime;
+    Time mLastTime;
+    double mLastTimeMs;
 };
+
+inline const glm::mat4 &AnimatorComponent::getTransform(size_t activeTrack) const {
+    return mTransformArray[activeTrack];
+}
+
+inline const glm::mat4 &AnimatorComponent::getActiveTransform() const {
+    return mTransformArray[mActiveTrack];
+}
 
 } // namespace Animation
 } // namespace OSRE

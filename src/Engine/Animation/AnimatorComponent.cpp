@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Animation/AnimatorComponent.h"
+#include "App/Entity.h"
 #include "Common/Logger.h"
 
 namespace OSRE{
@@ -38,10 +39,15 @@ AnimatorComponent::AnimatorComponent(Entity *owner) :
         mLastPositions(),
         mLastRotations(),
         mLastScales(),
-        mLastTime(0.0) {
+        mLastTime(),
+        mLastTimeMs(0.0) {
     // empty
 }
 
+AnimatorComponent::~AnimatorComponent() {
+    clear();
+}
+ 
 void AnimatorComponent::addTrack(AnimationTrack *track) {
     if (track == nullptr) {
         osre_error(Tag, "Invalid animation track instance.");
@@ -85,6 +91,13 @@ size_t AnimatorComponent::getActiveTrack() const {
     return mActiveTrack;
 }
 
+void AnimatorComponent::clear() {
+    for (size_t i = 0; i < mAnimationTrackArray.size(); ++i) {
+        delete mAnimationTrackArray[i];
+    }
+    mAnimationTrackArray.clear();
+}
+
 bool AnimatorComponent::onUpdate(Time dt) {
     AnimationTrack *track = getTrackAt(mActiveTrack);
     if (track == nullptr) {
@@ -115,8 +128,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
         }
 
         for (size_t keyIndex = 0; keyIndex < animChannel.PositionKeys.size(); ++keyIndex) {
-                
-            size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastPositions[keyIndex]) : 0;
+            size_t animFrameIndex = (time > mLastTimeMs) ? std::get<0>(mLastPositions[keyIndex]) : 0;
             while (animFrameIndex < animChannel.PositionKeys.size() - 1) {
                 if (time < animChannel.PositionKeys[animFrameIndex + 1].Time) {
                     break;
@@ -147,7 +159,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
         }
 
         for (size_t keyIndex = 0; keyIndex < animChannel.RotationKeys.size(); ++keyIndex) {
-            size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastRotations[keyIndex]) : 0;
+            size_t animFrameIndex = (time > mLastTimeMs) ? std::get<0>(mLastRotations[keyIndex]) : 0;
             while (animFrameIndex < animChannel.RotationKeys.size() - 1) {
                 if (time < animChannel.RotationKeys[animFrameIndex + 1].Time) {
                     break;
@@ -177,7 +189,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
         }
 
         for (size_t keyIndex = 0; keyIndex < animChannel.ScalingKeys.size(); ++keyIndex) {
-            size_t animFrameIndex = (time > mLastTime) ? std::get<0>(mLastScales[keyIndex]) : 0;
+            size_t animFrameIndex = (time > mLastTimeMs) ? std::get<0>(mLastScales[keyIndex]) : 0;
             while (animFrameIndex < animChannel.ScalingKeys.size() - 1) {
                 if (time < animChannel.ScalingKeys[animFrameIndex + 1].Time) {
                     break;
@@ -201,10 +213,21 @@ bool AnimatorComponent::onUpdate(Time dt) {
         }
     }
 
+    
     glm::mat4 &transform = mTransformArray[currentAnimationTrack];
     transform = glm::toMat4(q);
     transform = glm::scale(transform, presenceScale);
     transform = glm::translate(transform, presentPosition);
+
+    TransformComponent *tc = (TransformComponent *)getOwner()->getComponent(ComponentType::TransformComponentType);
+    if (tc != nullptr) {
+        glm::mat4 mat = tc->getTransformationMatrix();
+        mat *= transform;
+        tc->setTransformationMatrix(mat);
+    }
+
+    mLastTime = dt;
+    mLastTimeMs = time;
 
     return true;
 }
