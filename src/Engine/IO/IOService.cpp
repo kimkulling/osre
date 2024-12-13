@@ -32,9 +32,9 @@ namespace IO {
 
 using namespace OSRE::Common;
 
-static constexpr c8 Tag[]           = "IOService";
+static constexpr c8 Tag[] = "IOService";
 
-IOService::IOService() : AbstractService( "io/ioserver" ), mMountedMap() {
+IOService::IOService() : AbstractService("io/ioserver"), mMountedMap() {
     CREATE_SINGLETON( IOService );
 
     mMountedMap["file"] = new LocaleFileSystem();
@@ -80,7 +80,7 @@ void IOService::umountFileSystem( const String &schema, AbstractFileSystem *file
 
 Stream *IOService::openStream(const Uri &file, Stream::AccessMode mode) {
     Stream *pStream = nullptr;
-    if (AbstractFileSystem *fs = getFileSystem(file.getScheme()); fs == nullptr) {
+    if (AbstractFileSystem *fs = getFileSystem(file.getScheme()); fs != nullptr) {
         return fs->open( file, mode );
     }
 
