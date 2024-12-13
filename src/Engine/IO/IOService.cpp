@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "IO/IOService.h"
 #include "Common/Tokenizer.h"
 #include "Common/Logger.h"
-#include "IO/ZipFileSystem.h"
 #include "IO/LocaleFileSystem.h"
 
 IMPLEMENT_SINGLETON( ::OSRE::IO::IOService )
@@ -33,30 +32,16 @@ namespace IO {
 
 using namespace OSRE::Common;
 
-static constexpr c8 Tag[]           = "IOService";
-static constexpr c8 Zip_Extension[] = "zip";
+static constexpr c8 Tag[] = "IOService";
 
-static AbstractFileSystem *createFS( const Uri &file ) {
-    if ( !file.isValid() ) {
-        return nullptr;
-    }
-
-    const String &schema( file.getScheme() );
-    if( Zip_Extension == schema ) {
-        return new ZipFileSystem( file );
-    }
-
-    return nullptr;
-}
-
-IOService::IOService() : AbstractService( "io/ioserver" ), mMountedMap() {
+IOService::IOService() : AbstractService("io/ioserver"), mMountedMap() {
     CREATE_SINGLETON( IOService );
 
-    mMountedMap["file"] = new LocaleFileSystem();
+//    mMountedMap["file"] = new LocaleFileSystem();
 }
 
 IOService::~IOService() {
-    DESTROY_SINGLETON( IOService );
+    DESTROY_SINGLETON( IOService );    
 }
 
 bool IOService::onOpen() {
@@ -79,66 +64,48 @@ bool IOService::onUpdate() {
     return true;
 }
 
-AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &file ) {
-    if( file.isEmpty() || !file.isValid() ) {
-        return nullptr;
-    }
-
-    AbstractFileSystem *fs( nullptr );
-    if( fileExists( file ) ) {
-        fs = createFS( file );
-        if( fs ) {
-            mMountedMap[ name ] = fs;
-        } else {
-            osre_debug( Tag, "Cannot create file system " + file.getResource() );
-        }
-    }
-
-    return fs;
+void IOService::mountFileSystem( const String &schema, AbstractFileSystem *fileSystem ) {
+    mMountedMap[ schema ] = fileSystem;
 }
 
-void IOService::mountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
-    assert( nullptr != pFileSystem );
-
-    mMountedMap[ schema ] = pFileSystem;
-}
-
-void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
-    assert( nullptr != pFileSystem );
-
-    MountedMap::iterator it = mMountedMap.find( schema );
+void IOService::umountFileSystem( const String &schema, AbstractFileSystem *fileSystem ) {
+    MountedMap::iterator it = mMountedMap.find(schema);
     if ( mMountedMap.end() == it ) {
         return;
     }
-    if (it->second == pFileSystem) {
+    if (it->second == fileSystem) {
         mMountedMap.erase(it);
     }
 }
 
-Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
-    Stream *pStream( nullptr );
-    AbstractFileSystem *pFS = getFileSystem( file.getScheme() );
-    if ( pFS ) {
-        pStream  = pFS->open( file, mode );
+Stream *IOService::openStream(const Uri &file, Stream::AccessMode mode) {
+    if (AbstractFileSystem *fs = getFileSystem(file.getScheme()); fs != nullptr) {
+        return fs->open( file, mode );
     }
 
-    return pStream;
+    return nullptr;
 }
 
 void IOService::closeStream( Stream **ppStream ) {
-    if( nullptr == ppStream ) {
+    if (nullptr == ppStream) {
+        osre_error(Tag, "Invalid pointer to stream.");
+        return;
+    }
+
+    if (nullptr == *ppStream) {
+        osre_error(Tag, "Incalid stream.");
         return;
     }
     
     const String &schema( (*ppStream)->getUri().getScheme() );
     AbstractFileSystem *pFS = getFileSystem( schema );
-    if( pFS ) {
+    if (pFS != nullptr) {
         pFS->close( ppStream );
     }
 }
 
 AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
-    if ( mMountedMap.empty() ) {
+    if (mMountedMap.empty()) {
         return nullptr;
     }
 
@@ -151,10 +118,10 @@ AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
 }
 
 bool IOService::fileExists( const Uri &file ) const {
-    bool exists( false );
+    bool exists = false;
     AbstractFileSystem *fs = this->getFileSystem( file.getScheme() );
-    if ( fs ) {
-        exists = fs->fileExist( file );
+    if (fs != nullptr) {
+        exists = fs->fileExist(file);
     }
 
     return exists;

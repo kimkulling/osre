@@ -143,6 +143,8 @@ void TransformController::update(TransformCommandType cmdType) {
         case TransformCommandType::TransformCommandZNegative:
             // ignored
             break;  
+        case TransformCommandType::Invalid:
+            break;
 
         default:
             osre_warn(Tag, "Invalid tag");

@@ -167,10 +167,6 @@ SET( io_src
     IO/LocaleFileSystem.h
     IO/Stream.cpp
     IO/Uri.cpp
-    IO/ZipFileSystem.cpp
-    IO/ZipFileSystem.h
-    IO/ZipFileStream.cpp
-    IO/ZipFileStream.h
     IO/IOSystemInfo.cpp
 )
 
@@ -458,5 +454,5 @@ ADD_LIBRARY( osre SHARED
     ${winmanager_src}
 )
 
-target_link_libraries ( osre cppcore zlibstatic Unzip GLEW::GLEW ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlibstatic GLEW::GLEW ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
