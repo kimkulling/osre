@@ -64,28 +64,27 @@ bool IOService::onUpdate() {
     return true;
 }
 
-void IOService::mountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
-    mMountedMap[ schema ] = pFileSystem;
+void IOService::mountFileSystem( const String &schema, AbstractFileSystem *fileSystem ) {
+    mMountedMap[ schema ] = fileSystem;
 }
 
-void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
-    MountedMap::iterator it = mMountedMap.find( schema );
+void IOService::umountFileSystem( const String &schema, AbstractFileSystem *fileSystem ) {
+    MountedMap::iterator it = mMountedMap.find(schema);
     if ( mMountedMap.end() == it ) {
         return;
     }
-    if (it->second == pFileSystem) {
+    if (it->second == fileSystem) {
         mMountedMap.erase(it);
     }
 }
 
-Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
+Stream *IOService::openStream(const Uri &file, Stream::AccessMode mode) {
     Stream *pStream = nullptr;
-    AbstractFileSystem *pFS = getFileSystem(file.getScheme());
-    if (pFS != nullptr) {
-        pStream  = pFS->open( file, mode );
+    if (AbstractFileSystem *fs = getFileSystem(file.getScheme()); fs == nullptr) {
+        return fs->open( file, mode );
     }
 
-    return pStream;
+    return nullptr;
 }
 
 void IOService::closeStream( Stream **ppStream ) {
