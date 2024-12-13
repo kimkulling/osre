@@ -148,7 +148,6 @@ void TransformController::update(TransformCommandType cmdType) {
 
         default:
             osre_warn(Tag, "Invalid tag");
-            printf("Tag: %d\n", static_cast<int>(cmdType));
             break;
     }
 }
