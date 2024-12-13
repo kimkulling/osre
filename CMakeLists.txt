@@ -31,7 +31,6 @@ INCLUDE_DIRECTORIES( BEFORE
     contrib/assimp/include
     contrib/stb
     contrib/glew/include
-    contrib/unzip
     contrib/cppcore/include
     contrib/assimp/contrib/zlib
     contrib/cppcore/contrib/gtest-1.7.0/include
@@ -111,7 +110,6 @@ ENDIF(OSRE_BUILD_SAMPLES)
 
 set(cppcore_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
 ADD_SUBDIRECTORY( contrib/cppcore )
-ADD_SUBDIRECTORY( contrib/unzip )
 
 # Config for assimp
 SET(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")

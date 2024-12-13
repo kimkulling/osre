@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "IO/IOService.h"
 #include "Common/Tokenizer.h"
 #include "Common/Logger.h"
-#include "IO/ZipFileSystem.h"
 #include "IO/LocaleFileSystem.h"
 
 IMPLEMENT_SINGLETON( ::OSRE::IO::IOService )
@@ -35,19 +34,6 @@ using namespace OSRE::Common;
 
 static constexpr c8 Tag[]           = "IOService";
 static constexpr c8 Zip_Extension[] = "zip";
-
-static AbstractFileSystem *createFS( const Uri &file ) {
-    if ( !file.isValid() ) {
-        return nullptr;
-    }
-
-    const String &schema( file.getScheme() );
-    if( Zip_Extension == schema ) {
-        return new ZipFileSystem( file );
-    }
-
-    return nullptr;
-}
 
 IOService::IOService() : AbstractService( "io/ioserver" ), mMountedMap() {
     CREATE_SINGLETON( IOService );
@@ -79,24 +65,6 @@ bool IOService::onUpdate() {
     return true;
 }
 
-AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &file ) {
-    if( file.isEmpty() || !file.isValid() ) {
-        return nullptr;
-    }
-
-    AbstractFileSystem *fs( nullptr );
-    if( fileExists( file ) ) {
-        fs = createFS( file );
-        if( fs ) {
-            mMountedMap[ name ] = fs;
-        } else {
-            osre_debug( Tag, "Cannot create file system " + file.getResource() );
-        }
-    }
-
-    return fs;
-}
-
 void IOService::mountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
     assert( nullptr != pFileSystem );
 
@@ -116,9 +84,9 @@ void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFil
 }
 
 Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
-    Stream *pStream( nullptr );
-    AbstractFileSystem *pFS = getFileSystem( file.getScheme() );
-    if ( pFS ) {
+    Stream *pStream = nullptr;
+    AbstractFileSystem *pFS = getFileSystem(file.getScheme());
+    if (pFS != nullptr) {
         pStream  = pFS->open( file, mode );
     }
 
@@ -126,19 +94,19 @@ Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
 }
 
 void IOService::closeStream( Stream **ppStream ) {
-    if( nullptr == ppStream ) {
+    if (nullptr == ppStream) {
         return;
     }
     
     const String &schema( (*ppStream)->getUri().getScheme() );
     AbstractFileSystem *pFS = getFileSystem( schema );
-    if( pFS ) {
+    if (pFS != nullptr) {
         pFS->close( ppStream );
     }
 }
 
 AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
-    if ( mMountedMap.empty() ) {
+    if (mMountedMap.empty()) {
         return nullptr;
     }
 

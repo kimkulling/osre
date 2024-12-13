@@ -58,12 +58,6 @@ public:
     ///	@brief	The update callback, will be called once per frame.
     bool onUpdate() override;
 
-    /// @brief  A new file system will be added.
-    ///	@param	name		[in] The name of the new file system.
-    /// @param  file        [in] The Uri of the new file system.
-    /// @return A pointer showing to the file system will be returned.
-    AbstractFileSystem *addFileSystem( const String &name, const Uri &file );
-
     ///	@brief	A new file system will be mounted using the given schema.
     ///	@param	name		[in] The name of the new file system.
     ///	@param	pFileSystem	[in] A pointer showing to the new file system instance.

@@ -23,19 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/Logger.h"
-#include "Debugging/osre_debugging.h"
 #include "Platform/Threading.h"
-
 #include <cppcore/Container/TQueue.h>
-
-#include <iostream>
-#include <sstream>
 
 namespace OSRE {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This template class implements a thread-save queue.
 //-------------------------------------------------------------------------------------------------
@@ -49,8 +44,8 @@ public:
     ~TAsyncQueue();
 
     ///	@brief	A new item will be enqueued.
-    ///	@param	rItem	The item to enqueue.
-    void enqueue(const T &rItem);
+    ///	@param	item	The item to enqueue.
+    void enqueue(const T &item);
 
     ///	@brief	The new item in the queue will be returned and removed from the list.
     ///	@return	The next item in the queue.
@@ -58,7 +53,8 @@ public:
 
     ///	@brief	All enqueued items will be dequeued and stored in the list. The order of the items in
     ///			the queue will be not reordered.
-    void dequeueAll(cppcore::TList<T> &rData);
+    /// @param[out] data    List containing all items.
+    void dequeueAll(cppcore::TList<T> &data);
 
     ///	@brief	The queue event will be signaled.
     void signalEnqueuedItem();
@@ -82,121 +78,100 @@ public:
     TAsyncQueue &operator=(const TAsyncQueue<T> &) = delete;
 
 private:
-    Platform::CriticalSection *m_criticalSection;
-    Platform::ThreadEvent *m_enqueueEvent;
-    cppcore::TQueue<T> m_ItemQueue;
+    Platform::CriticalSection mCriticalSection;
+    Platform::ThreadEvent mEnqueueEvent;
+    cppcore::TQueue<T> mItemQueue;
 };
 
 template <class T>
 inline TAsyncQueue<T>::TAsyncQueue() :
-        m_criticalSection(nullptr),
-        m_enqueueEvent(nullptr),
-        m_ItemQueue() {
-    m_criticalSection = new Platform::CriticalSection;
-    m_enqueueEvent = new Platform::ThreadEvent;
+        mCriticalSection(),
+        mEnqueueEvent(),
+        mItemQueue() {
+    // empty
 }
 
 template <class T>
 inline TAsyncQueue<T>::~TAsyncQueue() {
     cppcore::TList<T> dummy;
     dequeueAll(dummy);
-
-    delete m_enqueueEvent;
-    delete m_criticalSection;
 }
 
 template <class T>
 inline void TAsyncQueue<T>::enqueue(const T &item) {
-    osre_assert(nullptr != m_criticalSection);
+    mCriticalSection.enter();
 
-    m_criticalSection->enter();
+    mItemQueue.enqueue(item);
 
-    m_ItemQueue.enqueue(item);
-
-    m_criticalSection->leave();
-    m_enqueueEvent->signal();
+    mCriticalSection.leave();
+    mEnqueueEvent.signal();
 }
 
 template <class T>
 inline T TAsyncQueue<T>::dequeue() {
-    osre_assert(nullptr != m_criticalSection);
-
-    m_criticalSection->enter();
-
-    osre_assert(!m_ItemQueue.isEmpty());
     T item;
-    m_ItemQueue.dequeue(item);
+    mCriticalSection.enter();
 
-    m_criticalSection->leave();
+    if (!mItemQueue.isEmpty()) {
+        mItemQueue.dequeue(item);
+    }
+
+    mCriticalSection.leave();
 
     return item;
 }
 
 template <class T>
 inline void TAsyncQueue<T>::dequeueAll(cppcore::TList<T> &data) {
-    osre_assert(nullptr != m_criticalSection);
-
     if (!data.isEmpty()) {
         data.clear();
     }
 
     while (!isEmpty()) {
-        const T &ref(dequeue());
-        m_criticalSection->enter();
+        const T &ref{ dequeue() };
+        mCriticalSection.enter();
         data.addBack(ref);
-        m_criticalSection->leave();
+        mCriticalSection.leave();
     }
 }
 
 template <class T>
 inline void TAsyncQueue<T>::signalEnqueuedItem() {
-    osre_assert(nullptr != m_enqueueEvent);
-
-    m_enqueueEvent->signal();
+    mEnqueueEvent.signal();
 }
 
 template <class T>
 inline size_t TAsyncQueue<T>::size() {
-    osre_assert(nullptr != m_criticalSection);
-
-    m_criticalSection->enter();
-    const size_t size = m_ItemQueue.size();
-    m_criticalSection->leave();
+    mCriticalSection.enter();
+    const size_t size = mItemQueue.size();
+    mCriticalSection.leave();
 
     return size;
 }
 
 template <class T>
 inline void TAsyncQueue<T>::awaitEnqueuedItem() {
-    osre_assert(nullptr != m_enqueueEvent);
-
-    if (m_ItemQueue.isEmpty()) {
-        m_enqueueEvent->waitForOne();
+    if (mItemQueue.isEmpty()) {
+        mEnqueueEvent.waitForOne();
     }
 }
 
 template <class T>
 inline bool TAsyncQueue<T>::isEmpty() {
-    osre_assert(nullptr != m_criticalSection);
-    if (nullptr == m_criticalSection) {
-        return false;
-    }
-    m_criticalSection->enter();
-    bool res = m_ItemQueue.isEmpty();
-    m_criticalSection->leave();
+    mCriticalSection.enter();
+    bool res = mItemQueue.isEmpty();
+    mCriticalSection.leave();
 
     return res;
 }
 
 template <class T>
 inline void TAsyncQueue<T>::clear() {
-    osre_assert(nullptr != m_criticalSection);
+    mCriticalSection.enter();
 
-    m_criticalSection->enter();
+    mItemQueue.clear();
 
-    m_ItemQueue.clear();
-
-    m_criticalSection->leave();
+    mCriticalSection.leave();
 }
 
 } // Namespace Threading
