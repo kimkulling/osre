@@ -38,7 +38,7 @@ template <class T>
 class TAsyncQueue {
 public:
     ///	@brief	The constructor with the thread factory.
-    TAsyncQueue();
+    TAsyncQueue() = default;
 
     ///	@brief	The destructor, not virtual.
     ~TAsyncQueue();
@@ -82,14 +82,6 @@ private:
     Platform::ThreadEvent mEnqueueEvent;
     cppcore::TQueue<T> mItemQueue;
 };
-
-template <class T>
-inline TAsyncQueue<T>::TAsyncQueue() :
-        mCriticalSection(),
-        mEnqueueEvent(),
-        mItemQueue() {
-    // empty
-}
 
 template <class T>
 inline TAsyncQueue<T>::~TAsyncQueue() {
