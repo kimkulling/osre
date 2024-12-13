@@ -127,10 +127,13 @@ inline void TAsyncQueue<T>::dequeueAll(cppcore::TList<T> &data) {
         data.clear();
     }
 
+    mCriticalSection.enter();
     while (!isEmpty()) {
-        const T &ref{ dequeue() };
-        mCriticalSection.enter();
-        data.addBack(ref);
+        if (!mItemQueue.isEmpty()) {
+            T item;
+            mItemQueue.dequeue(item);
+            data.addBack(std::move(item));
+        }
         mCriticalSection.leave();
     }
 }

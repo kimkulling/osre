@@ -97,6 +97,10 @@ void IOService::closeStream( Stream **ppStream ) {
     if (nullptr == ppStream) {
         return;
     }
+
+    if (nullptr == *ppStream) {
+        return;
+    }
     
     const String &schema( (*ppStream)->getUri().getScheme() );
     AbstractFileSystem *pFS = getFileSystem( schema );
