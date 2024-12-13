@@ -33,7 +33,6 @@ namespace IO {
 using namespace OSRE::Common;
 
 static constexpr c8 Tag[]           = "IOService";
-static constexpr c8 Zip_Extension[] = "zip";
 
 IOService::IOService() : AbstractService( "io/ioserver" ), mMountedMap() {
     CREATE_SINGLETON( IOService );
@@ -66,14 +65,10 @@ bool IOService::onUpdate() {
 }
 
 void IOService::mountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
-    assert( nullptr != pFileSystem );
-
     mMountedMap[ schema ] = pFileSystem;
 }
 
 void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
-    assert( nullptr != pFileSystem );
-
     MountedMap::iterator it = mMountedMap.find( schema );
     if ( mMountedMap.end() == it ) {
         return;
@@ -95,10 +90,12 @@ Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
 
 void IOService::closeStream( Stream **ppStream ) {
     if (nullptr == ppStream) {
+        osre_error(Tag, "Invalid pointer to stream.");
         return;
     }
 
     if (nullptr == *ppStream) {
+        osre_error(Tag, "Incalid stream.");
         return;
     }
     
