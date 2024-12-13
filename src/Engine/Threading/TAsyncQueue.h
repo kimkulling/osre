@@ -109,7 +109,7 @@ inline void TAsyncQueue<T>::enqueue(const T &item) {
 
 template <class T>
 inline T TAsyncQueue<T>::dequeue() {
-    T item;
+    T item = {};
     mCriticalSection.enter();
 
     if (!mItemQueue.isEmpty()) {
