@@ -37,11 +37,11 @@ static constexpr c8 Tag[] = "IOService";
 IOService::IOService() : AbstractService("io/ioserver"), mMountedMap() {
     CREATE_SINGLETON( IOService );
 
-    mMountedMap["file"] = new LocaleFileSystem();
+//    mMountedMap["file"] = new LocaleFileSystem();
 }
 
 IOService::~IOService() {
-    DESTROY_SINGLETON( IOService );
+    DESTROY_SINGLETON( IOService );    
 }
 
 bool IOService::onOpen() {
@@ -79,7 +79,6 @@ void IOService::umountFileSystem( const String &schema, AbstractFileSystem *file
 }
 
 Stream *IOService::openStream(const Uri &file, Stream::AccessMode mode) {
-    Stream *pStream = nullptr;
     if (AbstractFileSystem *fs = getFileSystem(file.getScheme()); fs != nullptr) {
         return fs->open( file, mode );
     }
@@ -119,10 +118,10 @@ AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
 }
 
 bool IOService::fileExists( const Uri &file ) const {
-    bool exists( false );
+    bool exists = false;
     AbstractFileSystem *fs = this->getFileSystem( file.getScheme() );
-    if ( fs ) {
-        exists = fs->fileExist( file );
+    if (fs != nullptr) {
+        exists = fs->fileExist(file);
     }
 
     return exists;
