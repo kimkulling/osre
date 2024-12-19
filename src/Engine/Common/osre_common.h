@@ -471,69 +471,15 @@ struct TRectangle {
 using Rect2ui = TRectangle<ui32>;
 using Rect2i = TRectangle<i32>;
 
-/// @brief  a float4 representation type.
-struct float4 {
-    union {
-        __m128 m_val4;
-        f32 m_vals[4];
-    };
-
-    float4();
-    float4(f32 a, f32 b, f32 c, f32 d);
-    float4(const float4 &rhs);
-    const float4 operator+=(const float4 &v);
-    const float4 operator-=(const float4 &v);
-    const float4 operator*=(const float4 &v);
-    const float4 operator/=(const float4 &v);
-};
-
-inline float4::float4() {
-    m_vals[0] = 0.0f;
-    m_vals[1] = 0.0f;
-    m_vals[2] = 0.0f;
-    m_vals[3] = 0.0f;
-}
-
-inline float4::float4(f32 a, f32 b, f32 c, f32 d) :
-        m_val4(_mm_set_ps(d, c, b, a)) {
-    // empty
-}
-
-inline float4::float4(const float4 &rhs) :
-        m_val4(rhs.m_val4) {
-    // empty
-}
-
-inline const float4 float4::operator+=(const float4 &v) {
-    m_val4 = _mm_add_ps(m_val4, v.m_val4);
-    return *this;
-}
-
-inline const float4 float4::operator-=(const float4 &v) {
-    m_val4 = _mm_sub_ps(m_val4, v.m_val4);
-    return *this;
-}
-
-inline const float4 float4::operator*=(const float4 &v) {
-    m_val4 = _mm_mul_ps(m_val4, v.m_val4);
-    return *this;
-}
-
-inline const float4 float4::operator/=(const float4 &v) {
-    m_val4 = _mm_div_ps(m_val4, v.m_val4);
-    return *this;
-}
-
 /// @brief  The resolution type
 template <class T>
 struct TResolution {
-    T Width, Height;
+    T width;
+    T height;
 
-    TResolution(T w, T h) : Width(w), Height(h) {
+    TResolution(T w, T h) : width(w), height(h) {
         // empty
     }
-
-    ~TResolution() = default;
 
     T getArea() const {
         return Width * Height;
@@ -544,15 +490,10 @@ struct TResolution {
 #define OSRE_NON_COPYABLE(NAME)  \
 private:                         \
     NAME(const NAME &) = delete; \
-    NAME &operator=(const NAME &) = delete;
+    NAME(const NAME &&) = delete; \
+    NAME &operator=(const NAME &) = delete; \
+    NAME &operator=(const NAME &&) = delete;
 
-template <class T>
-inline String osre_to_string(T val) {
-    std::stringstream str;
-    str << val;
-
-    return str.str();
-}
 
 // Archive file version
 static constexpr i32 CurrentMajorVersion = 0;
@@ -566,8 +507,6 @@ struct Version {
     Version(i32 major, i32 minor) : mMajor(major), mMinor(minor) {
         // empty
     }
-
-    ~Version() = default;
 };
 
 class OSRE_EXPORT MemoryStatistics {

@@ -114,7 +114,7 @@ void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
             mMatrixBlock.mNormal = mat;
             break;
         default:
-            osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
+            osre_debug(Tag, "Not supported enum " + std::to_string((i32)type));
             break;
     }
     mMatrixBlock.update();
@@ -131,7 +131,7 @@ const glm::mat4 &OGLRenderBackend::getMatrix(MatrixType type) const {
         case MatrixType::Normal:
             return mMatrixBlock.mNormal;
         default:
-            osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
+            osre_debug(Tag, "Not supported enum " + std::to_string((i32)type));
             break;
     }
     return mMatrixBlock.mModel;
