@@ -121,7 +121,6 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
 
-    //setStatusBarText("View", mProject->getProjectName(), action.getNumVertices(), action.getNumTriangles());
     reporter.update(70);
     reporter.stop();
 }
