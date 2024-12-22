@@ -27,7 +27,7 @@ namespace OSRE {
 namespace Common {
 
 Object::Object(const String &objName) :
-        mObjectName(objName, StringUtils::hashName(objName)), 
+        mObjectName(objName), 
         mId(0),
         mRefcount(1) {
     // empty
@@ -51,14 +51,13 @@ ui32 Object::getNumRefs() const {
 }
 
 void Object::setName( const String &objName ) {
-    if( mObjectName.RawString != objName ) {
-        mObjectName.RawString = objName;
-        mObjectName.Id = StringUtils::hashName(objName);
+    if( mObjectName != objName ) {
+        mObjectName = objName;
     }
 }
 
 const String &Object::getName() const {
-    return mObjectName.RawString;
+    return mObjectName;
 }
 
 void Object::setGuid(guid id) {

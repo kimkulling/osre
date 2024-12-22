@@ -78,7 +78,7 @@ protected:
     Object(const String &objectName);
 
 private:
-    OsreString mObjectName;
+    String mObjectName;
     guid mId;
     ui32 mRefcount;
 };
