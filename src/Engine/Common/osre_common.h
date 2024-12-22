@@ -144,34 +144,35 @@ using HashId = ui64;
 struct Handle {
     static constexpr i32 Invalid = -1;
 
-    i32 m_idx;
+    i32 idx;
 
     /// @brief The default class constructor.
-    Handle() : m_idx(Invalid) {
+    Handle() :
+            idx(Invalid) {
         // empty
     }
 
     /// @brief The class constructor with the index.
     /// @param[in] idx   The index.
-    explicit Handle(i32 idx) {
-        init(idx);
+    explicit Handle(i32 idx_) {
+        init(idx_);
     }
 
     /// @brief Inits the handle with a new index.
     /// @param[in] idx   The new index.
-    void init(i32 idx) {
-        m_idx = idx;
+    void init(i32 idx_) {
+        idx = idx_;
     }
 
     /// @brief Will validate the index.
     /// @return true if valid, false if not.
     bool isValid() const {
-        return m_idx != Invalid;
+        return idx != Invalid;
     }
 
     /// @brief Equal operator.
     bool operator == (const Handle &rhs) const {
-        return m_idx == rhs.m_idx;
+        return idx == rhs.idx;
     }
 
     /// @brief Not-equal operator.
@@ -470,7 +471,7 @@ struct TResolution {
     }
 
     T getArea() const {
-        return Width * Height;
+        return width * height;
     }
 };
 

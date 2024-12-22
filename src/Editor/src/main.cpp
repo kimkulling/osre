@@ -65,7 +65,6 @@ int main(int argc, char *argv[]) {
     // Main loop
     bool running = true;
     while (running) {
-        static int counter = 0;
         running = osreApp.handleEvents();
         App::Stage *stage = osreApp.getStage();
         if (stage != nullptr) {
