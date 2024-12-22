@@ -63,10 +63,9 @@ int main(int argc, char *argv[]) {
     }
 
     // Main loop
-    bool done = false;
-    while (!done) {
-        static int counter = 0;
-        done = osreApp.handleEvents();
+    bool running = true;
+    while (running) {
+        running = osreApp.handleEvents();
         App::Stage *stage = osreApp.getStage();
         if (stage != nullptr) {
             World *world = stage->getActiveWorld(0);

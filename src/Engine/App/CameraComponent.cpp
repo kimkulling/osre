@@ -67,8 +67,8 @@ CameraComponent::CameraComponent(Entity *owner) :
 
 void CameraComponent::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     mFOV = glm::radians(fov);
-    mResolution.Width = w;
-    mResolution.Height = h;
+    mResolution.width = w;
+    mResolution.height = h;
     mNear = zNear;
     mFar = zFar;
     mAspectRatio = DefaultAspectRatio;
@@ -127,8 +127,8 @@ void CameraComponent::setCameraModel(CameraModel cm) {
 }
 
 void CameraComponent::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
-    mResolution.Width = right - left;
-    mResolution.Height = bottom - top;
+    mResolution.width = right - left;
+    mResolution.height = bottom - top;
     mLeft = left;
     mRight = right;
     mBottom = bottom;

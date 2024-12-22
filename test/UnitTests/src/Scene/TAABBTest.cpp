@@ -73,6 +73,10 @@ TEST_F( TAABBTest, mergeTest ) {
     glm::vec3 newMax(40, 50, 60);
     aabb.merge( newMax );
     EXPECT_EQ( newMax, aabb.getMax() );
+
+    glm::vec3 isIn(30, 30, 30);
+    aabb.merge(isIn);
+    EXPECT_EQ(newMax, aabb.getMax());
 }
 
 TEST_F( TAABBTest, mergeArrayTest_Success ) {

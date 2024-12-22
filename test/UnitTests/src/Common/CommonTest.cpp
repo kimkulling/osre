@@ -46,11 +46,11 @@ TEST_F(CommonTest, TypesTest) {
 
 TEST_F( CommonTest, HandleTest ) {
     Handle testHandle;
-    EXPECT_EQ( -1, testHandle.m_idx );
+    EXPECT_EQ( -1, testHandle.idx );
 
-    testHandle.m_idx = 1;
+    testHandle.idx = 1;
     testHandle.init( 1);
-    EXPECT_EQ( 1U, testHandle.m_idx );
+    EXPECT_EQ( 1U, testHandle.idx );
 }
 
 TEST_F( CommonTest, HandleEualTest ) {
@@ -126,6 +126,11 @@ TEST_F(CommonTest, TRect2D_setEdges) {
     EXPECT_EQ(rect.getY1(), Y);
     EXPECT_EQ(rect.getWidth(), W);
     EXPECT_EQ(rect.getHeight(), H);
+}
+
+TEST_F(CommonTest, TResolutionTest) {
+    TResolution<ui32> res(100u, 200u);
+    EXPECT_EQ(res.getArea(), 20000);
 }
 
 } // Namespace UnitTest

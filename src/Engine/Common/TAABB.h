@@ -136,9 +136,7 @@ inline void AABB::merge(const glm::vec3 &vec) {
     merge(vec[0], vec[1], vec[2]);
 }
 
-inline void AABB::merge(f32 x, f32 y, f32 z) {
-    reset();
-    
+inline void AABB::merge(f32 x, f32 y, f32 z) {    
     // set min values
     if (x < mMin.x) {
         mMin.x = x;

@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-// clang-format off
 #if defined(_WIN32) || defined(_WIN64)
 #    define OSRE_WINDOWS
 #    define _CRT_SECURE_NO_WARNINGS
@@ -77,7 +76,7 @@ namespace OSRE {
 #    pragma warning(disable : 4127) // Conditional expression is constant
 #    pragma warning(disable : 4201) // No standard extension
 #    pragma warning(disable : 4316) // Object allocated on the heap may not be aligned for this type
-#    pragma warning(disable : 4996) //
+#    pragma warning(disable : 4996) // Force incline does not work
 #endif
 
 // Declares thread-local data
@@ -92,7 +91,6 @@ namespace OSRE {
 #    include <stdio.h>
 typedef int errno_t;
 #endif
-// clang-format on
 
 /// @brief  The data type unsigned char, 1 byte long.
 using uc8 = unsigned char;
@@ -142,48 +140,39 @@ using StringArray = ::cppcore::TArray<String>;
 /// @brief  The data type for hash ids.
 using HashId = ui64;
 
-/// @brief  The OSRE-String, contains its string and it hash id;
-struct OsreString {
-    String RawString;   ///< The pure String.
-    HashId Id;          ///< The hash id.
-
-    OsreString() = default;
-    OsreString(const String &str, HashId id) : RawString(str), Id(id) {}
-    ~OsreString() = default;
-};
-
 /// @brief  A struct to manage a handle.
 struct Handle {
     static constexpr i32 Invalid = -1;
 
-    i32 m_idx;
+    i32 idx;
 
     /// @brief The default class constructor.
-    Handle() : m_idx(Invalid) {
+    Handle() :
+            idx(Invalid) {
         // empty
     }
 
     /// @brief The class constructor with the index.
     /// @param[in] idx   The index.
-    explicit Handle(i32 idx) {
-        init(idx);
+    explicit Handle(i32 idx_) {
+        init(idx_);
     }
 
     /// @brief Inits the handle with a new index.
     /// @param[in] idx   The new index.
-    void init(i32 idx) {
-        m_idx = idx;
+    void init(i32 idx_) {
+        idx = idx_;
     }
 
     /// @brief Will validate the index.
     /// @return true if valid, false if not.
     bool isValid() const {
-        return m_idx != Invalid;
+        return idx != Invalid;
     }
 
     /// @brief Equal operator.
     bool operator == (const Handle &rhs) const {
-        return m_idx == rhs.m_idx;
+        return idx == rhs.idx;
     }
 
     /// @brief Not-equal operator.
@@ -471,72 +460,18 @@ struct TRectangle {
 using Rect2ui = TRectangle<ui32>;
 using Rect2i = TRectangle<i32>;
 
-/// @brief  a float4 representation type.
-struct float4 {
-    union {
-        __m128 m_val4;
-        f32 m_vals[4];
-    };
-
-    float4();
-    float4(f32 a, f32 b, f32 c, f32 d);
-    float4(const float4 &rhs);
-    const float4 operator+=(const float4 &v);
-    const float4 operator-=(const float4 &v);
-    const float4 operator*=(const float4 &v);
-    const float4 operator/=(const float4 &v);
-};
-
-inline float4::float4() {
-    m_vals[0] = 0.0f;
-    m_vals[1] = 0.0f;
-    m_vals[2] = 0.0f;
-    m_vals[3] = 0.0f;
-}
-
-inline float4::float4(f32 a, f32 b, f32 c, f32 d) :
-        m_val4(_mm_set_ps(d, c, b, a)) {
-    // empty
-}
-
-inline float4::float4(const float4 &rhs) :
-        m_val4(rhs.m_val4) {
-    // empty
-}
-
-inline const float4 float4::operator+=(const float4 &v) {
-    m_val4 = _mm_add_ps(m_val4, v.m_val4);
-    return *this;
-}
-
-inline const float4 float4::operator-=(const float4 &v) {
-    m_val4 = _mm_sub_ps(m_val4, v.m_val4);
-    return *this;
-}
-
-inline const float4 float4::operator*=(const float4 &v) {
-    m_val4 = _mm_mul_ps(m_val4, v.m_val4);
-    return *this;
-}
-
-inline const float4 float4::operator/=(const float4 &v) {
-    m_val4 = _mm_div_ps(m_val4, v.m_val4);
-    return *this;
-}
-
 /// @brief  The resolution type
 template <class T>
 struct TResolution {
-    T Width, Height;
+    T width;
+    T height;
 
-    TResolution(T w, T h) : Width(w), Height(h) {
+    TResolution(T w, T h) : width(w), height(h) {
         // empty
     }
 
-    ~TResolution() = default;
-
     T getArea() const {
-        return Width * Height;
+        return width * height;
     }
 };
 
@@ -544,15 +479,10 @@ struct TResolution {
 #define OSRE_NON_COPYABLE(NAME)  \
 private:                         \
     NAME(const NAME &) = delete; \
-    NAME &operator=(const NAME &) = delete;
+    NAME(const NAME &&) = delete; \
+    NAME &operator=(const NAME &) = delete; \
+    NAME &operator=(const NAME &&) = delete;
 
-template <class T>
-inline String osre_to_string(T val) {
-    std::stringstream str;
-    str << val;
-
-    return str.str();
-}
 
 // Archive file version
 static constexpr i32 CurrentMajorVersion = 0;
@@ -566,8 +496,6 @@ struct Version {
     Version(i32 major, i32 minor) : mMajor(major), mMinor(minor) {
         // empty
     }
-
-    ~Version() = default;
 };
 
 class OSRE_EXPORT MemoryStatistics {
