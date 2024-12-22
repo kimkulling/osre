@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-// clang-format off
 #if defined(_WIN32) || defined(_WIN64)
 #    define OSRE_WINDOWS
 #    define _CRT_SECURE_NO_WARNINGS
@@ -77,7 +76,7 @@ namespace OSRE {
 #    pragma warning(disable : 4127) // Conditional expression is constant
 #    pragma warning(disable : 4201) // No standard extension
 #    pragma warning(disable : 4316) // Object allocated on the heap may not be aligned for this type
-#    pragma warning(disable : 4996) //
+#    pragma warning(disable : 4996) // Force incline does not work
 #endif
 
 // Declares thread-local data
@@ -92,7 +91,6 @@ namespace OSRE {
 #    include <stdio.h>
 typedef int errno_t;
 #endif
-// clang-format on
 
 /// @brief  The data type unsigned char, 1 byte long.
 using uc8 = unsigned char;
@@ -141,16 +139,6 @@ using StringArray = ::cppcore::TArray<String>;
 
 /// @brief  The data type for hash ids.
 using HashId = ui64;
-
-/// @brief  The OSRE-String, contains its string and it hash id;
-struct OsreString {
-    String RawString;   ///< The pure String.
-    HashId Id;          ///< The hash id.
-
-    OsreString() = default;
-    OsreString(const String &str, HashId id) : RawString(str), Id(id) {}
-    ~OsreString() = default;
-};
 
 /// @brief  A struct to manage a handle.
 struct Handle {
