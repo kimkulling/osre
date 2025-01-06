@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Platform/AbstractWindow.h"
 #include "Common/glm_common.h"
 
+// We want to use the App component and the render backend, so use these namespaces
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
