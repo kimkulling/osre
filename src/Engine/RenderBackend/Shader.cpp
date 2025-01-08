@@ -32,7 +32,7 @@ using namespace ::OSRE::IO;
 
 Shader::Shader() :
         mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
-    ::memset(mCompileState, 0, sizeof(CompileState) * MaxCompileState);
+    ::memset(mCompileState, 0, sizeof(CompileState) * Count);
 }
 
 void Shader::addVertexAttribute(const String &name) {

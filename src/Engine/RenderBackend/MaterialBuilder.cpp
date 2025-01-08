@@ -95,7 +95,7 @@ Material *MaterialBuilder::create2DMaterial() {
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
     mat->createShader(shArray);
 
-        // Setup shader attributes and variables
+    // Setup shader attributes and variables
     if (nullptr != mat->mShader) {
         mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         addMaterialParameter(mat);
@@ -153,8 +153,6 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
         "    if (f_color.r==0.0 || f_color.g ==0.0 || f_color.b==0.0)\n"
         "         f_color = vec4(v_color0,1);\n"
         "}\n";
-
-    
 
     return mat;
 }

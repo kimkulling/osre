@@ -52,8 +52,6 @@ class HelloWorldApp : public App::AppBase {
     Entity *mEntity;
     /// The keyboard controller instance.
     Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    Animation::AnimationTrack mTrack;
-    f32 mAngle;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
@@ -61,8 +59,7 @@ public:
             AppBase(argc, (const char **)argv),
             mTransformMatrix(),
             mEntity(nullptr),
-            mKeyboardTransCtrl(nullptr),
-            mAngle(1.0f) {
+            mKeyboardTransCtrl(nullptr) {
         // empty
     }
 
@@ -75,16 +72,6 @@ protected:
         world->addEntity(camEntity);
         CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
-        Animation::AnimatorComponent *animator = (Animation::AnimatorComponent *)camEntity->createComponent(ComponentType::AnimationComponentType);
-        mTrack.NumVectorChannels = 1;
-        mTrack.AnimationChannels = new Animation::AnimationChannel[mTrack.NumVectorChannels];
-        mTrack.Duration = 1.0f;
-        Animation::AnimationChannel channel;
-        Animation::RotationKey rot;
-        rot.Quad = glm::angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
-        rot.Time = 1.0f;
-        mTrack.AnimationChannels[0].RotationKeys.add(rot);
-        animator->addTrack(&mTrack);
         
         ui32 w, h;
         AppBase::getResolution(w, h);

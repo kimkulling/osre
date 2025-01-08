@@ -120,16 +120,17 @@ public:
 
 private:
     enum CompileState {
+        Invalid = -1,
         Updated = 0,
         Compiled,
         Error,
-        MaxCompileState
+        Count
     };
 
     StringArray mUniformBuffer;
     StringArray mVertexAttributes;
     String mSrc[MaxShaderTypes];
-    CompileState mCompileState[MaxCompileState];
+    CompileState mCompileState[Count];
 };
 
 inline size_t Shader::getNumVertexAttributes() const {
