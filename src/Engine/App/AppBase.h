@@ -206,11 +206,6 @@ public:
     /// @return The current stage or nullptr.
     virtual Stage *getStage() const;
 
-    /// @brief  Will activate the given view in the active world instance.
-    /// @param  view        [in] A pointer showing to the view.
-    /// @return true, if the view activation was successful, false if not.
-    virtual CameraComponent *setActiveCamera(CameraComponent *view);
-
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
 
@@ -233,10 +228,6 @@ public:
     /// @brief  Will return the id-container of the application
     /// @return The id container.
     virtual Common::Ids *getIdContainer() const;
-
-    /// @brief  Will create the default pipeline for rendering.
-    /// @param  rbService   The renderbackend service instance.
-    /// @return The default pipeline.
 
     /// @brief  Checks if the key was pressed in this frame.
     /// @param  key     [in] The key-code to look for.

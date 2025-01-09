@@ -183,25 +183,6 @@ Properties::Settings *AppBase::getSettings() const {
     return mSettings;
 }
 
-CameraComponent *AppBase::setActiveCamera(CameraComponent *camera) {
-    if (mStage != nullptr) {
-        osre_debug(Tag, "No world to activate state to.");
-        return nullptr;
-    }
-
-    const Stage::WorldArray &worlds = mStage->getActiveWorlds();
-    if (worlds.isEmpty()) {
-        osre_debug(Tag, "No worlds attached to this stage.");
-        return nullptr;
-    }
-
-    for (size_t i=0; i<worlds.size(); ++i) {
-        worlds[i]->setActiveCamera(camera);
-    }
-    
-    return camera;
-}
-
 void AppBase::requestShutdown() {
     mShutdownRequested = true;
 }
