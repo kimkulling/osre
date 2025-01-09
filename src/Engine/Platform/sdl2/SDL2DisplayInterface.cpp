@@ -38,7 +38,7 @@ i32 SDL2DisplayInterface::getNumDisplays() {
     return numDisplays;
 }
 
-bool SDL2DisplayInterface::getDisplayResolution( ui32 displayIndex, ui32 &width, ui32 &height ) {
+bool SDL2DisplayInterface::getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) {
     SDL_Rect rect;
     width = height = 0;
     if (0 != SDL_GetDisplayBounds(static_cast<i32>(displayIndex), &rect)) {
@@ -69,7 +69,6 @@ bool SDL2DisplayInterface::getDisplayDPI( ui32 displayIndex, DisplayDPIInfo *ddp
 
     return true;
 }
-
 
 } // namespace Platform
 } // namespace OSRE

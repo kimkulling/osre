@@ -27,15 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-SDL2DynamicLoader::SDL2DynamicLoader() 
-: AbstractDynamicLoader() {
-    // empty
-}
-
-SDL2DynamicLoader::~SDL2DynamicLoader() {
-    // empty
-}
-
 LibHandle *SDL2DynamicLoader::load( const String &libName ) {
     if ( libName.empty() ) {
         return nullptr;
