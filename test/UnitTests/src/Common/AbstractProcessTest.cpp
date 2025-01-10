@@ -26,9 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UnitTest {
 
-class AbstractProcessorTest : public ::testing::Test {
-    // empty
-};
+class AbstractProcessorTest : public ::testing::Test {};
 
 class TestAbstractProcessor : public Common::AbstractProcessor {
 public:
@@ -37,9 +35,7 @@ public:
         // empty
     }
 
-    virtual ~TestAbstractProcessor() {
-        // empty
-    }
+    virtual ~TestAbstractProcessor() = default;
 
     bool execute() override {
         return true;
