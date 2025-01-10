@@ -37,6 +37,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/AssetBundle.h"
 #include "App/AssimpWrapper.h"
 #include "App/Stage.h"
-#include "App/TrackBall.h"
 #include "App/TAbstractCtrlBase.h"
 #include "App/TransformController.h"

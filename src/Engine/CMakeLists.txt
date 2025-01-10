@@ -51,8 +51,6 @@ SET( app_src
     App/AbstractBehaviour.h
     App/TransformComponent.h
     App/TransformComponent.cpp
-    App/TrackBall.h
-    App/TrackBall.cpp
     App/CameraComponent.h
     App/CameraComponent.cpp
     App/ParticleEmitter.h

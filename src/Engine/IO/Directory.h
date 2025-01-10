@@ -34,6 +34,7 @@ namespace IO {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Directory {
 public:
+    /// @brief  The file list type.
     using FileList = StringArray;
 
     /// @brief  Will return true, when the directory exists.
@@ -64,7 +65,7 @@ public:
     /// @brief Will create a new directory.
     /// @param[in] name   The name for the new directory.
     /// @return true if successful.
-    static bool createDirectory( const c8 *name );
+    static bool createDirectory(const c8 *name);
 
     /// @brief Will return the list of files from a given path.
     /// @param[in] absPath  The absolue path.
