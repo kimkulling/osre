@@ -77,7 +77,7 @@ TEST_F(ComponentTest, createTest) {
     try {
         Common::Ids ids;
         Entity entity("test", ids, nullptr);
-        MockComponent myComp(&entity, ComponentType::LightComponentType);
+        MockComponent myComp(&entity, ComponentType::AnimationComponentType);
     } catch (...) {
         ok = false;
     }
@@ -88,7 +88,7 @@ TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
 
     Entity *entity = new Entity(name, *mIds, nullptr);
-    MockComponent myComp(entity, ComponentType::LightComponentType);
+    MockComponent myComp(entity, ComponentType::AnimationComponentType);
 
     EXPECT_EQ(entity, myComp.getOwner());
 }

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "App/Project.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "App/Entity.h"
 #include "App/TransformComponent.h"
 #include "Common/Logger.h"
@@ -46,8 +46,7 @@ static constexpr c8 Ext[] = "osre";
 Project::Project() :
         Object("App/Project"),
         mProjectDirtyState(0),
-        mProjectName(),
-        mStage(nullptr) {
+        mProjectName() {
     // empty
 }
 
@@ -65,67 +64,12 @@ const String &Project::getProjectName() const {
     return mProjectName;
 }
 
-void Project::addAsset( const String &assetName ) {
-    if (assetName.empty()) {
-        return;
-    }
-    
-    StringArray::Iterator it = mAssetArray.find(assetName);
-    if (it == mAssetArray.end()) {
-        mAssetArray.add(assetName);
-    }
-}
-size_t Project::getNumAssets() const {
-    return mAssetArray.size();
-}
-
-const String &Project::getAssetAt( size_t index ) const {
-    if (index >= mAssetArray.size()) {
-        static String none = "none";
-        return none;
-    }
-    
-    return mAssetArray[index];
-}
-
-bool Project::removeAsset( const String &assetName ) {
-    if (assetName.empty()) {
-        return false;
-    }
-
-    bool found = false;
-    for (size_t i = 0; i < mAssetArray.size(); i++) {
-        if (mAssetArray[i] == assetName) {
-            mAssetArray.remove(i);
-            found = true;
-            break;
-        }
-    }
-    
-    return found;
-}
-
-void Project::setStage( Stage *stage ) {
-    if (stage != mStage) {
-        mStage = stage;
-    }
-}
-
-Stage *Project::getStage() const {
-    return mStage;
-}
-
 void Project::clear() {
 }
 
-bool Project::load(const String &name, Stage *stage) {
+bool Project::load(const String &name) {
     if (name.empty()) {
         osre_warn(Tag, "Project name is empty.");
-        return false;
-    }
-
-    if (stage == nullptr) {
-        osre_fatal(Tag, "Stage container is a nullptr.");
         return false;
     }
 
@@ -185,6 +129,13 @@ static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &in
 
 static void storeMeshes(MeshArray &meshes, MeshData *md) {
     osre_assert(md != nullptr);
+    if (meshes.isEmpty()) {
+        return;
+    }
+    
+    if (md == nullptr) {
+        return;
+    }
 
     for (size_t i = 0; i < meshes.size(); ++i) {
         Mesh *mesh = meshes[i];
@@ -229,7 +180,7 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
     }
 }
 
-static bool saveWorld(World *world, WorldData &wd) {
+static bool saveWorld(const Scene *world, WorldData &wd) {
     setNameChunk(world->getName(), wd.mWorldName);
 
     TransformComponent *root = world->getRootNode();
@@ -242,58 +193,19 @@ static bool saveWorld(World *world, WorldData &wd) {
     wd.mNodes = new NodeData[wd.mNumNodes];
     size_t index = 0;
     storeNodes(root, wd.mNodes, index);
-    cppcore::TArray<Entity *> entities;
-    world->getEntityArray(entities);
+    const cppcore::TArray<Entity *> &entities = world->getEntityArray();
     storeEntities(entities, wd);
 
     return true;
 }
 
-static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
-    String stageName = name;
-    if (name.empty()) {
-        stageName = "Empty Stage";
-    }
-
-    setNameChunk(stageName, sd->mStageName);
-    sd->mMajorVersion = MajorProjectVerion;
-    sd->mMinorVersion = MinorProjectVerion;
-    const Stage::WorldArray &worlds = stage.getActiveWorlds();
-    if (worlds.isEmpty()) {
-        return true;
-    }
-
-    bool result = true;
-    for (size_t i=0; i<worlds.size(); ++i){
-        World *activeWorld = worlds[i];
-        setNameChunk(activeWorld->getName(), sd->mActiveWorld);
-        sd->mNumWorlds = (i32) stage.getNumberOfWorlds();
-        sd->mWorldData = new WorldData[sd->mNumWorlds];
-        for (i32 j = 0; j < sd->mNumWorlds; ++j) {
-            World *world = stage.getWorldAt(j);
-            result |= saveWorld(world, *(sd->mWorldData));
-            if (!result) {
-                osre_error(Tag, "Error while storing world " + world->getName() + ".");
-            }
-        }
-    }
-    
-    return result;
-}
-
-bool Project::save(const String &name, const Stage *stage) {
+bool Project::save(const String &name) {
     if (name.empty()) {
         return false;
     }
 
-    if (stage == nullptr) {
-        return true;
-    }
-    
-    StageData sd;
-    const bool result = saveStage(name, *stage, &sd);
-
-    return result;
+        
+    return true;
 }
 
 } // Namespace App

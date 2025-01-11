@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/AbstractBehaviour.h"
 #include "App/Component.h"
 #include "App/CameraComponent.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "Animation/AnimatorBase.h"
 #include "Animation/AnimatorComponent.h"
 #include "RenderBackend/MeshProcessor.h"
@@ -36,7 +36,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 
-Entity::Entity(const String &name, Common::Ids &ids, World *world) :
+Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
         Object(name),
         mBehavior(nullptr),
         mRenderComponent(nullptr),
@@ -112,9 +112,6 @@ Component *Entity::createComponent(ComponentType type) {
                 const String name = getName() + "_transform";
                 component = new TransformComponent(name, this, mIds, nullptr); 
             }
-            break;
-        case OSRE::App::ComponentType::LightComponentType:
-            component = new LightComponent(this);
             break;
         case OSRE::App::ComponentType::CameraComponentType:
             component = new CameraComponent(this);

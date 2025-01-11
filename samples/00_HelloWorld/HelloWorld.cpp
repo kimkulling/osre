@@ -69,7 +69,7 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
-    CameraComponent *setupCamera(World *world) {
+    CameraComponent *setupCamera(Scene *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
         CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
@@ -98,8 +98,8 @@ protected:
         }
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        World *world = getStage()->addActiveWorld("hello_world");
-
+        Scene *world = new Scene("hello_world");
+        addWorld(world);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         MeshBuilder meshBuilder;
         Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();

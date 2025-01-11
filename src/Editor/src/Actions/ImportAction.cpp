@@ -36,7 +36,7 @@ using namespace ::OSRE::App;
 
 using namespace ::cppcore;
 
-ImportAction::ImportAction(Ids *ids, World *activeWorld) :
+ImportAction::ImportAction(Ids *ids, Scene *activeWorld) :
         ActionBase(), 
         mIds(ids),
         mActiveWorld(activeWorld),

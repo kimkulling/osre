@@ -68,10 +68,8 @@ SET( app_src
     App/AssetRegistry.cpp
     App/AssimpWrapper.h
     App/AssimpWrapper.cpp
-    App/World.h
-    App/World.cpp
-    App/Stage.h
-    App/Stage.cpp
+    App/Scene.h
+    App/Scene.cpp
     App/MouseEventListener.cpp
     App/MouseEventListener.h
     App/TAbstractCtrlBase.h

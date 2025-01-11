@@ -59,13 +59,20 @@ bool AssetRegistry::registerAssetPath(const String &mount, const String &path) {
     }
     
     const HashId hashId = StringUtils::hashName(mount);
-    sInstance->mName2pathMap.insert(hashId, path);
+    PathNode pn;
+    pn.mountPoint = mount;
+    pn.assignedPath = path;
+    sInstance->mName2pathMap.insert(hashId, pn);
 
     return true;
 }
 
 bool AssetRegistry::hasPath( const String &mount ) {
     if ( nullptr == sInstance ) {
+        return false;
+    }
+    
+    if (mount.empty()) {
         return false;
     }
 
@@ -76,7 +83,6 @@ bool AssetRegistry::hasPath( const String &mount ) {
 
     return true;
 }
-
 
 String AssetRegistry::getPath( const String &mount ) {
     static const String Dummy("");
@@ -89,9 +95,9 @@ String AssetRegistry::getPath( const String &mount ) {
         return Dummy;
     }
 
-    String path;
-    if (sInstance->mName2pathMap.getValue(hashId, path) ) {
-        return path;
+    PathNode pn;
+    if (sInstance->mName2pathMap.getValue(hashId, pn)) {
+        return pn.assignedPath;
     }
 
     return Dummy;

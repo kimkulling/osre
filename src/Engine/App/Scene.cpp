@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "App/Entity.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "Common/Logger.h"
 #include "Common/StringUtils.h"
 #include "Debugging/osre_debugging.h"
@@ -37,7 +37,7 @@ using namespace ::OSRE::RenderBackend;
 
 static constexpr c8 Tag[] = "World";
 
-World::World(const String &worldName) :
+Scene::Scene(const String &worldName) :
         Object(worldName),
         mEntities(),
         mActiveCamera(nullptr),
@@ -48,7 +48,7 @@ World::World(const String &worldName) :
     // empty
 }
 
-void World::addEntity(Entity *entity) {
+void Scene::addEntity(Entity *entity) {
     if (nullptr == entity) {
         osre_debug(Tag, "Pointer to entity are nullptr");
         return;
@@ -57,7 +57,7 @@ void World::addEntity(Entity *entity) {
     mEntities.add(entity);
 }
 
-Entity *World::findEntity(const String &name) {
+Entity *Scene::findEntity(const String &name) {
     if (name.empty()) {
         return nullptr;
     }
@@ -75,7 +75,7 @@ Entity *World::findEntity(const String &name) {
     return nullptr;
 }
 
-bool World::removeEntity(Entity *entity) {
+bool Scene::removeEntity(Entity *entity) {
     if (nullptr == entity) {
         return false;
     }
@@ -91,7 +91,7 @@ bool World::removeEntity(Entity *entity) {
     return found;
 }
 
-bool World::setActiveCamera(CameraComponent *camera) {
+bool Scene::setActiveCamera(CameraComponent *camera) {
     if (camera == nullptr) {
         return false;
     }
@@ -101,7 +101,7 @@ bool World::setActiveCamera(CameraComponent *camera) {
     return true;
 }
 
-Entity *World::getEntityByName(const String &name) const {
+Entity *Scene::getEntityByName(const String &name) const {
     if (name.empty()) {
         return nullptr;
     }
@@ -119,18 +119,17 @@ Entity *World::getEntityByName(const String &name) const {
     return entity;
 }
 
-void World::setSceneRoot(TransformComponent *root ) {
+void Scene::setSceneRoot(TransformComponent *root ) {
     mRoot = root;
     mDirtry = true;
 }
 
-
-void World::init() {
+void Scene::init() {
     Time dt;
     update(dt);
 }
 
-void World::update(Time dt) {
+void Scene::update(Time dt) {
     if (mActiveCamera != nullptr) {
         mActiveCamera->update(dt);
     }
@@ -146,7 +145,7 @@ void World::update(Time dt) {
     }
 }
 
-void World::render(RenderBackendService *rbSrv) {
+void Scene::render(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
@@ -166,7 +165,7 @@ void World::render(RenderBackendService *rbSrv) {
     rbSrv->endPass();
 }
 
-void World::updateBoundingTrees() {
+void Scene::updateBoundingTrees() {
     for (ui32 i = 0; i < mEntities.size(); ++i) {
         auto *entity = mEntities[i];
         if (entity == nullptr) {

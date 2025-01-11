@@ -5,7 +5,7 @@
 #include "App/Project.h"
 #include "App/CameraComponent.h"
 #include "App/Entity.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "RenderBackend/RenderBackendService.h"
@@ -17,7 +17,7 @@ class OsreEdApp : public App::AppBase {
 public:
     OsreEdApp(int argc, char *argv[]);
     ~OsreEdApp() override = default;
-    App::CameraComponent *setupCamera(App::World *world);
+    App::CameraComponent *setupCamera(App::Scene *world);
     bool onCreate() override;
     void onUpdate() override;
     void newProjectCmd(ui32, void *data);

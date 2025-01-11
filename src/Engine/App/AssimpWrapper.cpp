@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/AssimpWrapper.h"
 #include "App/Component.h"
 #include "App/Entity.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "Common/Ids.h"
 #include "Common/Logger.h"
 #include "Common/StringUtils.h"
@@ -97,7 +97,7 @@ static void setTexture(const String &resolvedPath, const aiString &texPath,
 }
 
     
-AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
+AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, Scene *world) :
         mScene(nullptr),
         mMeshArray(),
         mEntity(nullptr),
@@ -113,7 +113,7 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
     // empty
 }
 
-AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
+AssimpWrapper::AssimpWrapper( Common::Ids &ids, Scene *world ) :
         mImporter(nullptr),
         mAssetContext(ids, world) {
     // empty
@@ -194,7 +194,7 @@ Entity *AssimpWrapper::convertScene() {
     }
 
     if (mAssetContext.mWorld == nullptr) {
-        mAssetContext.mWorld = new World("scene");
+        mAssetContext.mWorld = new Scene("scene");
     }
 
     mAssetContext.mEntity = new Entity(mAssetContext.mAbsPathWithFile, mAssetContext.mIds, mAssetContext.mWorld);

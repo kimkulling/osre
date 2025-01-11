@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "App/AppCommon.h"
 #include "App/TAbstractCtrlBase.h"
-#include "App/Stage.h"
+#include "App/Scene.h"
 #include "Platform/AbstractWindow.h"
 #include "Platform/PlatformCommon.h"
 #include "Platform/PlatformInterface.h"
@@ -58,8 +58,7 @@ namespace RenderBackend {
 namespace App {
 
 class CameraComponent;
-class Stage;
-class World;
+class Scene;
 class AppBase;
 
 //-------------------------------------------------------------------------------------------------
@@ -202,10 +201,6 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
-    /// @brief Will return the current stage or nullptr if none is active.
-    /// @return The current stage or nullptr.
-    virtual Stage *getStage() const;
-
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
 
@@ -253,9 +248,23 @@ public:
     /// @return The keyboard listener.
     virtual KeyboardEventListener *getKeyboardEventListener() const;
 
-    /// @brief
+    /// @brief Will return the canvas renderer.
+    /// @return The canvas renderer.
     virtual RenderBackend::CanvasRenderer *getCanvasRenderer() const;
     
+    /// @brief Will add a new world to the application.
+    /// @param world The world to add.
+    virtual void addWorld(Scene *world);
+    
+    /// @brief Will activate a world.
+    /// @param worldName The name of the world to activate.
+    /// @return true, if successful, false if not.
+    virtual bool activateWorld(const String &worldName);
+
+    /// @brief Will return the active world.
+    /// @return The active world.
+    virtual Scene *getActiveWorld() const;
+
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -291,19 +300,14 @@ private:
     Platform::PlatformInterface *mPlatformInterface;
     Platform::AbstractTimer *mTimer;
     RenderBackend::RenderBackendService *mRbService;
-    cppcore::TArray<World*> mWorlds;
-    Stage *mStage;
+    cppcore::TArray<Scene*> mWorlds;
+    Scene *mActiveWorld;
     MouseEventListener *mMouseEvListener;
     KeyboardEventListener *mKeyboardEvListener;
     Common::Ids *mIds;
-    StageMode mStageMode = StageMode::Stage3D;
     bool mShutdownRequested = false;
     RenderBackend::IRenderPath *mCanvasRenderer = nullptr;
 };
-
-inline Stage *AppBase::getStage() const {
-    return mStage;
-}
 
 inline MouseEventListener *AppBase::getMouseEventListener() const {
     return mMouseEvListener;
@@ -319,6 +323,28 @@ inline const Common::ArgumentParser &AppBase::getArgumentParser() const {
 
 inline Common::Ids *AppBase::getIdContainer() const {
     return mIds;
+}
+
+inline void AppBase::addWorld(Scene *world) {
+    if (nullptr == world) {
+        return;
+    }
+    mWorlds.add(world);
+    mActiveWorld = world;
+}
+
+inline bool AppBase::activateWorld(const String &worldName) {
+    for (ui32 i = 0; i < mWorlds.size(); ++i) {
+        if (mWorlds[i]->getName() == worldName) {
+            mActiveWorld = mWorlds[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+inline Scene* AppBase::getActiveWorld() const {
+    return mActiveWorld;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -46,7 +46,7 @@ class AbstractBehaviour;
 class Component;
 class RenderComponent;
 class AppBase;
-class World;
+class Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -57,7 +57,7 @@ class OSRE_EXPORT Entity final : public Common::Object {
 public:
     using ComponentArray = cppcore::TArray<Component*>;
 
-    Entity(const String &name, Common::Ids &ids, World *world);
+    Entity(const String &name, Common::Ids &ids, Scene *world);
     ~Entity() override;
     void setBehaviourControl(AbstractBehaviour *behaviour );
     void setNode(TransformComponent *node);
@@ -76,7 +76,7 @@ private:
     TransformComponent *mTransformNode;
     Common::Ids &mIds;
     Common::AABB mAabb;
-    World *mOwner;
+    Scene *mOwner;
 };
 
 } // Namespace App

@@ -5,7 +5,6 @@
 #include "Actions/ImportAction.h"
 #include "Platform/PlatformOperations.h"
 #include "RenderBackend/MeshBuilder.h"
-#include "App/Stage.h"
 #include "App/TransformController.h"
 #include "App/ServiceProvider.h"
 #include "Common/Logger.h"
@@ -41,7 +40,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
 constexpr float Near = 0.001f;
 constexpr float Far  = 1000.f;
 
-CameraComponent *OsreEdApp::setupCamera(World *world) {
+CameraComponent *OsreEdApp::setupCamera(Scene *world) {
     Entity *camEntity = world->findEntity("camera");
     if (camEntity != nullptr) {
         return (CameraComponent*) camEntity->getComponent(ComponentType::CameraComponentType);
@@ -79,7 +78,9 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     ProgressReporter reporter(rootWindow);
     reporter.start();
     reporter.update(10);
-    ImportAction action(getIdContainer(), getStage()->getActiveWorld(0));
+    Scene *world = new Scene("model");
+    addWorld(world);
+    ImportAction action(getIdContainer(), getActiveWorld());
     ArgumentList args;
     args.add(cppcore::Variant::createFromString(modelLoc.getAbsPath()));
     if (!action.run(args)) {
@@ -88,7 +89,6 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     }
     if (mProject == nullptr) {
         newProjectCmd(1, cppcore::Variant::createFromString(modelLoc.getResource()));
-        mProject->setStage(AppBase::getStage());
     }
     reporter.update(10);
     RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
@@ -99,7 +99,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    World *world = getStage()->getActiveWorld(0);
+    world = getActiveWorld();
     if (mProject == nullptr) {
         mProject = createProject(modelLoc.getAbsPath());
     }
@@ -115,8 +115,6 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
 
-    String asset = modelLoc.getResource();
-    mProject->addAsset(asset);
     String title;
     createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
@@ -131,7 +129,8 @@ bool OsreEdApp::onCreate() {
     }
 
     AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-    World *world = getStage()->addActiveWorld("hello_world");
+    Scene *world = new Scene("hello_world");
+    addWorld(world);
     mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
     CameraComponent *camera = setupCamera(world);
 

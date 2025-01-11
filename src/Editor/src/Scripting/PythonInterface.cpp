@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Actions/ImportAction.h"
 
 #include "Common/Logger.h"
-#include "App/Stage.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "App/App.h"
 #include "App/Project.h"
 
@@ -42,11 +41,10 @@ using namespace ::OSRE::App;
 
 typedef struct Osre_World {
     PyObject_HEAD
-    World *mWorld;
+    Scene *mWorld;
 } Osre_World;
 
 typedef struct Osre_Project {
-    Stage *mStage;
     Project *mProject;
 } Osre_Project;
 
@@ -89,7 +87,7 @@ static PyObject *osre_project_load(PyObject*, PyObject *args, PyObject *keywds) 
     }
 
     gActiceProject->mProject = new Project();
-    if (!gActiceProject->mProject->load(project_file, gActiceProject->mStage)) {
+    if (!gActiceProject->mProject->load(project_file)) {
         osre_error(Tag, "Error while loading project file " + String(project_file));
     }
 
@@ -107,7 +105,7 @@ static PyObject *osre_project_save(PyObject*, PyObject *args, PyObject *keywds) 
         return nullptr;
     }
 
-    if (!gActiceProject->mProject->save(project_file, gActiceProject->mStage)) {
+    if (!gActiceProject->mProject->save(project_file)) {
         osre_error(Tag, "Error while saving project file " + String(project_file));
     }
 

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 #include "App/TransformComponent.h"
-#include "App/World.h"
+#include "App/Scene.h"
 
 namespace OSRE {
 namespace Editor {
