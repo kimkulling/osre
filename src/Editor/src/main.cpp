@@ -66,9 +66,10 @@ int main(int argc, char *argv[]) {
     bool running = true;
     while (running) {
         running = osreApp.handleEvents();
-        App::Stage *stage = osreApp.getStage();
-        if (stage != nullptr) {
-            World *world = stage->getActiveWorld(0);
+        Scene *world = osreApp.getActiveScene();
+        if (world != nullptr) {
+            world = new Scene("world");
+            osreApp.addScene(world, true);
         }
         osreApp.update();
         osreApp.requestNextFrame();

@@ -65,7 +65,7 @@ protected:
         if (nullptr == rootWindow) {
             return false;
         }
-        World *world = getStage()->getActiveWorld(0);
+        Scene *world = AppBase::getActiveScene();
         mEntity = new App::Entity("instance", world->getIds(), world);
         Entity *camEntity = new App::Entity("camera", world->getIds(), world);
         App::CameraComponent *camera = (App::CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);

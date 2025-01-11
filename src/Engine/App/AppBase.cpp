@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/AssetRegistry.h"
 #include "App/ResourceCacheService.h"
 #include "App/ServiceProvider.h"
-#include "App/World.h"
+#include "App/Scene.h"
 #include "App/TransformController.h"
 #include "Common/Environment.h"
 #include "Common/TObjPtr.h"
@@ -80,7 +80,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mTimer(nullptr),
         mRbService(nullptr),
         mWorlds(),
-        mStage(nullptr),
+        mActiveWorld(nullptr),
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr) {
@@ -156,12 +156,12 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 
 void AppBase::requestNextFrame() {
     osre_assert(mRbService != nullptr);
-    if (mStage == nullptr) {
-        osre_debug(Tag, "Invalid stage.");
+    if (mActiveWorld == nullptr) {
+        osre_debug(Tag, "Invalid active world.");
         return;
     }
 
-    mStage->render(mRbService);
+    mActiveWorld->render(mRbService);
     mRbService->update();
 }
 
@@ -269,8 +269,8 @@ bool AppBase::onCreate() {
     }
 
     // Create our world
-    mStage = new Stage("stage", mStageMode);
-    mStage->createWorld("world");
+    mActiveWorld = new Scene("world");
+    mWorlds.add(mActiveWorld);
 
     const String &api = mRbService->getSettings()->getString(Properties::Settings::RenderAPI);
     mEnvironment->addStrVar("api", api.c_str());
@@ -347,9 +347,6 @@ bool AppBase::onDestroy() {
 
     MaterialBuilder::destroy();
 
-    delete mStage;
-    mStage = nullptr;
-
     delete mIds;
     mIds = nullptr;
 
@@ -371,16 +368,16 @@ bool AppBase::onDestroy() {
 
 void AppBase::onUpdate() {
     const Time dt = mTimer->getTimeDiff();
-    if (nullptr != mStage) {
-        mStage->update(dt);
+    if (mActiveWorld != nullptr) {
+        mActiveWorld->update(dt);
     }
 
     mKeyboardEvListener->clearKeyMap();
 }
 
 void AppBase::onRender() {
-    if (mStage != nullptr) {
-        mStage->render(mRbService);
+    if (mActiveWorld != nullptr) {
+        mActiveWorld->render(mRbService);
     }
 }
 

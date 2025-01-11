@@ -39,22 +39,20 @@ class Entity;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to create the world for the engine. 
+///	@brief  This class is used to create a render-scene.
 ///
-/// Worlds are the container for all content which shall be rendered.
-/// A world is build by set a stage. A stage is the container for scene nodes ( @see Stage ). 
-/// A world can be seen by defining an active view. A view represents the camera for looking into 
-/// the stage ( @see View ).
+/// Scenes are the container for all content which shall be rendered.
+/// A scene can be seen by defining one or more active cameras. 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT World : public Common::Object {
+class OSRE_EXPORT Scene : public Common::Object {
 public:
     /// @brief  The class constructor with the name and the requested render-mode.
     /// @param  worldName   [in] The world name.
     /// @param  renderMode  [in] The requested render mode. @see RenderMode
-    explicit World(const String &worldName);
+    explicit Scene(const String &worldName);
 
     /// @brief  The class destructor.
-    ~World() override = default;
+    ~Scene() override = default;
 
     /// @brief Will add a new entity.
     /// @param entity   The entity to add.
@@ -80,7 +78,7 @@ public:
     Entity *getEntityByName( const String &name ) const;
 
     ///	@brief
-    void getEntityArray(cppcore::TArray<Entity *> &entities);
+    const cppcore::TArray<Entity *>& getEntityArray() const;
 
     ///	@brief
     /// @param[in] root 
@@ -118,15 +116,15 @@ private:
     bool mDirtry;
 };
 
-inline TransformComponent *World::getRootNode() const {
+inline TransformComponent *Scene::getRootNode() const {
     return mRoot;
 }
 
-inline void World::getEntityArray(cppcore::TArray<Entity *> &entities) {
-    entities = mEntities;
+inline const cppcore::TArray<Entity *> &Scene::getEntityArray() const {
+    return mEntities;
 }
 
-inline Common::Ids &World::getIds() {
+inline Common::Ids &Scene::getIds() {
     return mIds;
 }
 

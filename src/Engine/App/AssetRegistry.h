@@ -40,7 +40,7 @@ namespace RenderBackend {
 
 namespace App {
 
-class World;
+class Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -109,8 +109,11 @@ private:
 
 private:
     static AssetRegistry *sInstance;
-
-    using Name2PathMap = cppcore::THashMap<HashId, String>;
+    struct PathNode {
+        String mountPoint;
+        String assignedPath;
+    };
+    using Name2PathMap = cppcore::THashMap<HashId, PathNode>;
     Name2PathMap mName2pathMap;
 };
 

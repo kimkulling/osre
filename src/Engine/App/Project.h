@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/Object.h"
-#include "App/Stage.h"
 
 #include <cppcore/Common/TBitField.h>
 
@@ -31,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 	
-class World;
+class Scene;
 
 constexpr i32 NotInited = -1;
 static constexpr ui32 ProjectDirty = 1;
@@ -137,18 +136,18 @@ struct WorldData {
     }
 };
 
-struct StageData {
+struct ProjectData {
     i32 mMajorVersion;
     i32 mMinorVersion;
-    ChunkName mStageName;
+    ChunkName mProjectName;
     ChunkName mActiveWorld;
     i32 mNumWorlds;
     WorldData *mWorldData;
 
-    StageData() :
+    ProjectData() :
             mMajorVersion(NotInited),
             mMinorVersion(NotInited),
-            mStageName(),
+            mProjectName(),
             mActiveWorld(),
             mNumWorlds(NotInited),
             mWorldData(nullptr) {
@@ -183,32 +182,6 @@ public:
     /// @return The assigned project name.
     const String& getProjectName() const;
 
-    /// @brief Will ass a new stored asset name.
-    /// @param[in] assetName    The new asset name.
-    void addAsset(const String &assetName);
-    
-    /// @brief Will return the number of assigned assets.
-    /// @return The number of assets.
-    size_t getNumAssets() const;
-
-    /// @brief Will return the asset name at the given index.
-    /// @param[in] index    The index.
-    /// @return The assigned name or none.
-    const String &getAssetAt(size_t index) const;
-
-    /// @brief Will remove an asset name.
-    /// @param[in] assetName    The asset name.
-    /// @return true for was removed, false for not.
-    bool removeAsset(const String &assetName);
-    
-    /// @brief Will assign the sate for the project.
-    /// @param[in] stage    The stage to use.
-    void setStage(Stage *stage);
-    
-    /// @brief  Will return the assigned stage. Is nullptr if no stage was assigned.
-    /// @return The assigned stage or nullptr.
-    Stage *getStage() const;
-    
     /// @brief Will return true, if the project needs to get saved.
     /// @return true for dirty.
     bool dataNeedsSave() const;
@@ -218,20 +191,17 @@ public:
 
     /// @brief Will load the project file from IO.
     /// @param[in] name     The URI to load from.
-    /// @param stage        The stage to load in.
     /// @return true for success, false for failure.
-    bool load(const String &name, Stage *stage);
+    bool load(const String &name);
 
     /// @brief Will save the current project.
     /// @param[in] name     The name for saving.
-    /// @param stage        The stage to save.
     /// @return true for success, false for failure.
-    bool save(const String &name, const Stage *stage);
+    bool save(const String &name);
 
 private:
     ProjectDirtyState mProjectDirtyState;
     String mProjectName;
-    Stage *mStage;
     StringArray mAssetArray;
 };
 

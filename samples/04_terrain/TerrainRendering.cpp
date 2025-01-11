@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/AppBase.h"
 #include "App/CameraComponent.h"
 #include "App/Entity.h"
-#include "App/World.h"
-#include "App/Stage.h"
+#include "App/Scene.h"
 #include "App/ServiceProvider.h"
 #include "App/TransformController.h"
 #include "RenderBackend/RenderBackendService.h"
@@ -145,7 +144,7 @@ protected:
         return mesh;
     }
 
-    CameraComponent *setupCamera(World *world) {
+    CameraComponent *setupCamera(Scene *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
         CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
@@ -163,7 +162,8 @@ protected:
         }
 
         AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        World *world = getStage()->addActiveWorld("hello_world");
+        Scene *world = new Scene("hello_world");
+        addScene(world, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         CameraComponent *camera = setupCamera(world);
 

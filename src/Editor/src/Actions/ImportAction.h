@@ -32,7 +32,7 @@ namespace Common {
 }
 
 namespace App {
-    class World;
+    class Scene;
     class Entity;
 }
 
@@ -48,7 +48,7 @@ public:
     /// @brief The class constructor.
     /// @param ids          The id container.
     /// @param activeWorld  The active world to run the command in.
-    ImportAction(Common::Ids *ids, App::World *activeWorld);
+    ImportAction(Common::Ids *ids, App::Scene *activeWorld);
 
     /// @brief  The default class destructor.
     ~ImportAction() override = default;
@@ -70,7 +70,7 @@ protected:
 
 private:
     Common::Ids *mIds;
-    App::World *mActiveWorld;
+    App::Scene *mActiveWorld;
     App::Entity *mEntity;
     ui32 mNumVertices, mNumTriangles;
 };

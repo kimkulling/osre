@@ -97,25 +97,5 @@ bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
     return true;
 }
 
-LightComponent::LightComponent(Entity *owner) : Component(owner, ComponentType::LightComponentType) {
-    // empty
-}
-
-void LightComponent::setLight(RenderBackend::Light *light) {
-    mLight = light;
-}
-
-bool LightComponent::onUpdate(Time) {
-    if (mLight == nullptr) {
-        return true;
-    }
-
-    return true;
-}
-
-bool LightComponent::onRender(RenderBackend::RenderBackendService*) {
-    return true;
-}
-
 } // namespace App
 } // namespace OSRE

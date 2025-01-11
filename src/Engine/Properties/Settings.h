@@ -82,7 +82,7 @@ public:
     ///	@brief	The configuration map will be initiated by a given configuration file.
     ///	@param	initScriptFile		[in] The name of the init script file.
     ///	@return	true, if configuration was performed with success, false if not.
-    bool configure( const String &initScriptFile );
+    bool configure(const String &initScriptFile);
 
     ///	@brief	Set a configuration key with the assigned value.
     ///	@param	key		The configuration key.
@@ -99,7 +99,7 @@ public:
     /// @param key 
     /// @param value 
     /// @return 
-    bool setInt( ConfigKey key, i32 value );
+    bool setInt(ConfigKey key, i32 value);
     
     /// @brief 
     /// @param key 

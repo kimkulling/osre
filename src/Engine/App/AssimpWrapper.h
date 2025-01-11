@@ -63,7 +63,7 @@ namespace IO {
 namespace App {
 
 class Entity;
-class World;
+class Scene;
 class TransformComponent;
 
 //-------------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ public:
     /// @brief The class constructor.
     /// @param ids      The id container.
     /// @param world    The world to put the imported entity in.
-    AssimpWrapper(Common::Ids &ids, World *world);
+    AssimpWrapper(Common::Ids &ids, Scene *world);
 
     ///	@brief  The default class destructor.
     ~AssimpWrapper();
@@ -121,7 +121,7 @@ private:
         const aiScene *mScene;
         RenderBackend::MeshArray mMeshArray;
         Entity *mEntity;
-        World *mWorld;
+        Scene *mWorld;
         MaterialArray mMatArray;
         App::TransformComponent *mParentNode;
         Common::Ids &mIds;
@@ -131,7 +131,7 @@ private:
         ui32 mNumVertices;
         ui32 mNumTriangles;
         
-        AssetContext(Common::Ids &ids, World *world);
+        AssetContext(Common::Ids &ids, Scene *world);
         ~AssetContext() = default;
         AssetContext(const AssetContext &) = delete;
         AssetContext &operator=(const AssetContext&) = delete;

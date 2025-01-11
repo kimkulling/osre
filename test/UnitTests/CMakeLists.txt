@@ -21,7 +21,6 @@ SET ( unittest_app_src
     src/App/AssetBundleTest.cpp
     src/App/AssetRegistryTest.cpp
     src/App/AssetWrapperTest.cpp
-    src/App/StageTest.cpp
 )
 
 SET ( unittest_common_src
@@ -80,7 +79,7 @@ SET ( unittest_scene_src
     src/Scene/DbgRendererTest.cpp
     src/Scene/GeometryBuilderTest.cpp
     src/Scene/NodeTest.cpp
-    src/Scene/WorldTest.cpp
+    src/Scene/SceneTest.cpp
     src/Scene/TAABBTest.cpp
 )
 

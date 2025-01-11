@@ -46,7 +46,6 @@ enum class ComponentType {
     Invalid = -1,               ///< Indicates an invalid component.
     RenderComponentType = 0,    ///< A Render-component, will contain any render data.
     TransformComponentType,     ///< For all transformation types.
-    LightComponentType,         ///< For light types.
     CameraComponentType,        ///< For camera components.
     AnimationComponentType,     ///< For animation support.
     Count                       ///< The number of components.
@@ -161,31 +160,6 @@ private:
     cppcore::TArray<RenderBackend::Mesh*> m_newGeo;
 };
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-/// @brief  This component class implements a light.
-//-------------------------------------------------------------------------------------------------
-class LightComponent final : public Component {
-public:
-    /// @brief The class constructor.
-    /// @param owner    The owning entity.
-    LightComponent(Entity *owner);
-
-    /// @brief The class destructor.
-    ~LightComponent() override = default;
-
-    /// @brief Will set a new light instance.
-    /// @param light    Thew new light.
-    void setLight(RenderBackend::Light *light);
-
-protected:
-    bool onUpdate(Time dt) override;
-    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-
-private:
-    RenderBackend::Light *mLight = nullptr;
-};
 
 } // namespace App
 } // namespace OSRE

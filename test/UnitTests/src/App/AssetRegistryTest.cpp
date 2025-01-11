@@ -60,7 +60,7 @@ TEST_F( AssetRegistryTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
-TEST_F( AssetRegistryTest, resolve_uri_from_mount_Test ) {
+TEST_F( AssetRegistryTest, resolveUriFromMountTest ) {
     static const String ModelPath = "file://assets/Models/Obj/spider.obj";
     IO::Uri fileUri( ModelPath );
     String loc = AssetRegistry::resolvePathFromUri( fileUri );
