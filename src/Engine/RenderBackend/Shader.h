@@ -41,7 +41,7 @@ enum class ShaderType {
     Count                     ///< Number of enums.
 };
 
-constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::Count);
+constexpr size_t MaxShaderTypes = static_cast<size_t>(ShaderType::Count);
 
 using ShaderSourceArray = cppcore::TStaticArray<String, MaxShaderTypes>;
 
@@ -120,16 +120,17 @@ public:
 
 private:
     enum CompileState {
+        Invalid = -1,
         Updated = 0,
         Compiled,
         Error,
-        MaxCompileState
+        Count
     };
 
     StringArray mUniformBuffer;
     StringArray mVertexAttributes;
     String mSrc[MaxShaderTypes];
-    CompileState mCompileState[MaxCompileState];
+    CompileState mCompileState[Count];
 };
 
 inline size_t Shader::getNumVertexAttributes() const {

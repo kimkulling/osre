@@ -60,13 +60,6 @@ public:
     /// @param  access      [in] The data access type.
     /// @return The created mesh.
     MeshBuilder& allocQuads(RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
-
-    /// @brief 
-    /// @param dim 
-    /// @param vc 
-    /// @param ic 
-    /// @return 
-    //MeshBuilder& allocUiQuad(const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
     
     /// @brief 
     /// @param type 

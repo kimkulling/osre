@@ -307,6 +307,7 @@ bool ArgumentParser::validateArguments(i32 argc, const c8 *ppArgv[]) {
                 }
             }
             if (!supported) {
+                mLastError = "Invalid argument: " + incomingArg;
                 valid = false;
                 break;
             }

@@ -41,7 +41,7 @@ struct ClearState {
     ui32 m_state;
 
     /// @brief  The default class constructor.
-    ClearState();
+    ClearState() noexcept;
 
     /// @brief  The class constructor with the requested clear states.
     /// @param  states      [in] The requested clear states.
@@ -52,7 +52,7 @@ struct ClearState {
     bool operator != (const ClearState &rhs) const;
 };
 
-inline ClearState::ClearState() :
+inline ClearState::ClearState() noexcept:
         m_state(0) {
     // empty
 }
@@ -72,16 +72,17 @@ inline bool ClearState::operator!=(const ClearState &rhs) const {
 
 /// @brief 
 struct DepthState {
-    /// @brief 
+    /// @brief The enum to descrive the type of depth state.
     enum class DepthStateType {
+        Invalid = -1,
         Enabled = 0,
         Disabled,
-        NumDepthStates,
-        InvalidDepthState
+        Count
     };
 
-    /// @brief 
+    /// @brief  The enum to describe the type of requested depth function.
     enum class DepthFuncType {
+        Invalid = -1,
         Always = 0,
         Never,
         Less,
@@ -90,15 +91,14 @@ struct DepthState {
         Greater,
         NotEqual,
         GEqual,
-        NumDepthFuncs,
-        InvalidDepthFunc
+        Count
     };
 
     DepthStateType m_type;
     DepthFuncType m_func;
 
     /// @brief The default class constructor.
-    DepthState();
+    DepthState() noexcept;
 
     /// @brief The class constructor with all parameters.
     /// @param stateType        [in] The state type enum.
@@ -112,7 +112,7 @@ struct DepthState {
     bool operator!=(const DepthState &rhs) const;
 };
 
-inline DepthState::DepthState() :
+inline DepthState::DepthState() noexcept:
         m_type(DepthStateType::Enabled),
         m_func(DepthFuncType::Always) {
     // empty
@@ -165,7 +165,8 @@ struct StencilState {
 public:
     /// @brief
     enum class StencilFunc {
-        Never,
+        Invalid = -1,
+        Never = 0,
         Always,
         Equal,
         NotEqual,
@@ -173,23 +174,25 @@ public:
         LEqual,
         GEqual,
         Greater,
-        Off
+        Off,
+        Count
     };
 
     /// @brief
     enum class StencilOp {
-        Keep,
+        Invalid = -1,
+        Keep = 0,
         Zero,
         Replace,
         Incr,
         IncrWrap,
         Decr,
         DecrWrap,
-        Invert
+        Invert,
+        Count
     };
 
     StencilState();
-    ~StencilState();
     void setStencilFunc(StencilFunc, i32 ref, c8 mask);
     StencilFunc getStencilFunc() const;
     i32 getStencilFuncRef() const;
@@ -212,10 +215,6 @@ private:
 
 inline StencilState::StencilState() :
         m_stencilFunc(StencilFunc::Never), m_stencilFuncRef(1), m_stencilFuncMask(0xFF), m_sFail(StencilOp::Keep), m_dpFail(StencilOp::Keep), m_dpPass(StencilOp::Keep) {
-    // empty
-}
-
-inline StencilState::~StencilState() {
     // empty
 }
 
@@ -266,13 +265,15 @@ inline bool StencilState::operator!=(const StencilState &rhs) const {
 struct BlendState {
     ///
     enum class BlendFunc {
-        FuncNone,
+        Invalid = -1,
+        FuncNone = 0,
         FuncAdd,
         FuncSubstract,
         ReverseSubstract,
         Min,
         Max,
-        Off
+        Off,
+        Count
     };
     BlendFunc m_blendFunc;
 

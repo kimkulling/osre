@@ -3,29 +3,34 @@ INCLUDE_DIRECTORIES(
     ../
 )
 
-SET ( 00_helloworld_src
+SET (00_helloworld_src
     00_HelloWorld/HelloWorld.cpp
     00_HelloWorld/README.md
 )
 
-SET ( 01_modelloading_src
+SET (01_modelloading_src
     01_ModelLoading/ModelLoading.cpp
     01_ModelLoading/README.md
 )
 
-SET ( 02_demo2d_src
+SET (02_demo2d_src
     02_Demo2D/Demo2D.cpp
     02_Demo2D/README.md
 )
 
-SET ( 03_instancing_src
+SET (03_instancing_src
     03_Instancing/Instancing.cpp
     03_Instancing/README.md
 )
 
-SET ( 04_terrain_src
-	04_terrain/TerrainRendering.cpp
-	04_terrain/README.md
+SET (04_terrain_src
+    04_terrain/TerrainRendering.cpp
+    04_terrain/README.md
+)
+
+SET (05_animation_src
+    05_Animation/Animation.cpp
+    05_Animation/README.md
 )
 
 ADD_EXECUTABLE(helloworld
@@ -36,6 +41,9 @@ ADD_EXECUTABLE(modelloading
     ${01_modelloading_src}
 )
 
+ADD_EXECUTABLE(demo2d
+    ${02_demo2d_src}
+)
 
 ADD_EXECUTABLE(instancing
     ${03_instancing_src}
@@ -45,8 +53,8 @@ ADD_EXECUTABLE(terrain
     ${04_terrain_src}
 )
 
-ADD_EXECUTABLE(demo2d
-    ${02_demo2d_src}
+ADD_EXECUTABLE(animation
+    ${05_animation_src}
 )
 
 link_directories(
@@ -59,10 +67,12 @@ target_link_libraries(modelloading osre)
 target_link_libraries(demo2d       osre)
 target_link_libraries(instancing   osre)
 target_link_libraries(terrain      osre)
+target_link_libraries(animation    osre)
 
 set_target_properties(helloworld   PROPERTIES FOLDER Samples)
 set_target_properties(modelloading PROPERTIES FOLDER Samples)
 set_target_properties(demo2d       PROPERTIES FOLDER Samples)
 set_target_properties(instancing   PROPERTIES FOLDER Samples)
 set_target_properties(terrain      PROPERTIES FOLDER Samples)
+set_target_properties(animation    PROPERTIES FOLDER Samples)
 

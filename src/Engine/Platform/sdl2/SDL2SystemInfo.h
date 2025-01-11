@@ -32,7 +32,7 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-/// @brief IMplaments system info queries.
+/// @brief Implaments system info queries.
 //-------------------------------------------------------------------------------------------------
 class SDL2SystemInfo final : public AbstractSystemInfo {
 public:
@@ -43,13 +43,13 @@ public:
     ~SDL2SystemInfo() = default;
 
     /// @brief Returns the resolutions.
-    /// @param resolution   The resolution.
+    /// @param resolution   The resolution of the desktop.
     void getDesktopResolution( Resolution &resolution ) override;
     
     /// @brief Returns the free space of a given disk,
-    /// @param drive             The drive.
-    /// @param freeSpaceInBytes  The free space.
-    /// @return 
+    /// @param drive             The drive to check.
+    /// @param freeSpaceInBytes  The free space in bytes.
+    /// @return true if successful, false in case of an error.
     bool getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) override;
 };
 

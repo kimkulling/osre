@@ -39,10 +39,11 @@ struct ResourceStatistics {
 };
 
 enum class ResourceState {
-    Uninitialized,
+    Uninitialized = -1,
     Unloaded,
     Loaded,
-    Error
+    Error,
+    Count
 };
 
 template <class TResType, class TResLoader>
@@ -65,55 +66,55 @@ protected:
     virtual ResourceState onUnload(TResLoader &loader) = 0;
 
 private:
-    ResourceState m_state;
-    ResourceStatistics m_stats;
-    IO::Uri m_uri;
-    TResType *m_res;
+    ResourceState mState;
+    ResourceStatistics mStats;
+    IO::Uri mUri;
+    TResType *mRes;
 };
 
 template <class TResType, class TResLoader>
 inline TResource<TResType, TResLoader>::TResource(const String &name, const IO::Uri &uri) :
         Object(name),
-        m_state(ResourceState::Uninitialized),
-        m_stats(),
-        m_uri(uri),
-        m_res(nullptr) {
+        mState(ResourceState::Uninitialized),
+        mStats(),
+        mUri(uri),
+        mRes(nullptr) {
     // empty
 }
 
 template <class TResType, class TResLoader>
 inline void TResource<TResType, TResLoader>::setUri(const IO::Uri &uri) {
-    if (m_uri == uri) {
+    if (mUri == uri) {
         return;
     }
 
-    m_uri = uri;
+    mUri = uri;
 }
 
 template <class TResType, class TResLoader>
 inline const IO::Uri &TResource<TResType, TResLoader>::getUri() const {
-    return m_uri;
+    return mUri;
 }
 
 template <class TResType, class TResLoader>
 inline ResourceState TResource<TResType, TResLoader>::getState() const {
-    return m_state;
+    return mState;
 }
 
 template <class TResType, class TResLoader>
 inline TResType *TResource<TResType, TResLoader>::create() {
-    m_res = new TResType;
-    return m_res;
+    mRes = new TResType;
+    return mRes;
 }
 
 template <class TResType, class TResLoader>
 inline TResType *TResource<TResType, TResLoader>::get() {
-    return m_res;
+    return mRes;
 }
 
 template <class TResType, class TResLoader>
 inline ResourceStatistics &TResource<TResType, TResLoader>::getStats() {
-    return m_stats;
+    return mStats;
 }
 
 template <class TResType, class TResLoader>
@@ -128,7 +129,7 @@ inline ResourceState TResource<TResType, TResLoader>::unload(TResLoader &loader)
 
 template <class TResType, class TResLoader>
 inline void TResource<TResType, TResLoader>::setState(ResourceState newState) {
-    m_state = newState;
+    mState = newState;
 }
 
 } // Namespace Common

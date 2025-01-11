@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -29,33 +29,30 @@ namespace UnitTest {
 
 using namespace ::OSRE::Common;
 
-class TestService : public AbstractService {
+class TestService final : public AbstractService {
     bool m_shallFail;
 
 public:
-    TestService()
-        : AbstractService( "TestService" )
-        , m_shallFail( false ) {
+    TestService() : AbstractService("TestService"), m_shallFail( false ) {
         // empty
     }
 
-    virtual ~TestService() {
-        // empty
-    }
+    virtual ~TestService() = default;
 
     void setShallFail( bool shallfail ) {
         m_shallFail = shallfail;
     }
+
 protected:
-    virtual bool onOpen() override {
+    bool onOpen() override {
         return !m_shallFail;
     }
 
-    virtual bool onClose()  override {
+    bool onClose()  override {
         return !m_shallFail;
     }
 
-    virtual bool onUpdate() override {
+    bool onUpdate() override {
         return !m_shallFail;
     }
 };
@@ -79,11 +76,11 @@ protected:
     }
 };
 
-TEST_F( AbstractServiceTest, createTest ) {
+TEST_F(AbstractServiceTest, createTest) {
     EXPECT_NE( m_ts, nullptr );
 }
 
-TEST_F( AbstractServiceTest, openTest ) {
+TEST_F(AbstractServiceTest, openTest ) {
     bool result( m_ts->open() );
     EXPECT_TRUE( result );
 
@@ -91,7 +88,7 @@ TEST_F( AbstractServiceTest, openTest ) {
     EXPECT_FALSE( result );
 }
 
-TEST_F( AbstractServiceTest, openWithErrorTest ) {
+TEST_F(AbstractServiceTest, openWithErrorTest) {
     m_ts->setShallFail( true );
 
     bool result( m_ts->open() );
@@ -101,8 +98,8 @@ TEST_F( AbstractServiceTest, openWithErrorTest ) {
     EXPECT_FALSE( result );
 }
 
-TEST_F( AbstractServiceTest, closeTest ) {
-    bool result( m_ts->open() );
+TEST_F(AbstractServiceTest, closeTest) {
+    bool result = m_ts->open();
     EXPECT_TRUE( result );
 
     result = m_ts->close();

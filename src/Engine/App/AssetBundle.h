@@ -32,62 +32,61 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	
+///	@brief	This helper class can be used to bundle files.
 //-------------------------------------------------------------------------------------------------
 class AssetBundle {
 public:
+    /// @param  The class construtor.
+    /// @param[in] name     The bundle name.
     AssetBundle(const String &name);
+
+    /// @brief The class destructor.
     ~AssetBundle() = default;
+
+    /// @brief Will validate the bundle validation.
+    /// @return tue if it it valid, false if not.
     bool isValid() const;
+
+    /// @brief Will return the bundle name.
+    /// @return The bundle name.
     const String &getName() const;
-    bool isSupported(const String &file) const;
+    
+    /// @brief Will add a file to the bundle.
+    /// @param file     The file to add.
     void add(const String &file);
+
+    /// @brief Will remove a file from the bundle.
+    /// @param file     The file to remove.
     void remove(const String &file);
+    
+    /// @brief Will return the number of files in the bundle.
+    /// @return The number of files in the bundle.
     size_t getNumAssets() const;
+
+    /// @brief Will return the asset from the bundle at the given index.
+    /// @param index    The asset index.
+    /// @return The asset name.
     const String &getAssetAt(size_t index) const;
 
 private:
+    bool isSupported(const String &file) const;
+
+private:
     String mName;
-    cppcore::TArray<String> mExtList;
     using AssetArray = cppcore::TArray<String>;
     AssetArray mAssetArray;
 };
 
 inline AssetBundle::AssetBundle(const String &name) : mName(name) {
-    mExtList.add("zip");
+    // empty
 }
 
 inline bool AssetBundle::isValid() const {
-    const String::size_type pos = mName.find_last_of(".");
-    if (pos == String::npos) {
-        return true;
-    }
-
     return AssetBundle::isSupported(getName());
 }
 
 inline const String &AssetBundle::getName() const {
     return mName;
-}
-
-inline bool AssetBundle::isSupported(const String &file) const {
-    if (file.empty()) {
-        return false;
-    }
-
-    String::size_type pos = file.find_last_of('.');
-    if (pos == String::npos) {
-        return false;
-    }
-
-    String ext = file.substr(pos+1, file.size() - pos - 1);
-    for (size_t i=0; i<mExtList.size(); ++i) {
-        if (ext == mExtList[i]) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 inline void AssetBundle::add(const String &file) {
@@ -107,6 +106,19 @@ inline size_t AssetBundle::getNumAssets() const {
 
 inline const String &AssetBundle::getAssetAt(size_t index) const {
     return mAssetArray[index];
+}
+
+inline bool AssetBundle::isSupported(const String &file) const {
+    if (file.empty()) {
+        return false;
+    }
+
+    String::size_type pos = file.find_last_of('.');
+    if (pos == String::npos) {
+        return false;
+    }
+
+    return false;
 }
 
 } // Namespace Assets

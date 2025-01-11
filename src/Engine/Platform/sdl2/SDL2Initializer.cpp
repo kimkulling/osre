@@ -30,11 +30,11 @@ namespace Platform {
 bool SDL2Initializer::sInited = false;
 
 bool SDL2Initializer::init() {
-    if( sInited ) {
+    if (sInited) {
         return false;
     }
 
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0 ) {
+    if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0) {
         return false;
     }
 
