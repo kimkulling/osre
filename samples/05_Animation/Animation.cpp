@@ -62,12 +62,13 @@ protected:
         }
 
         AppBase::setWindowsTitle("Animation sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        World *world = getStage()->addActiveWorld("animation");
+        Scene *scene = new Scene("hello_world");
+        addScene(scene, true);
 
-        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        world->addEntity(camEntity);
+        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        scene->addEntity(camEntity);
         CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
-        world->setActiveCamera(camera);
+        scene->setActiveCamera(camera);
 
         Animation::AnimatorComponent *animator = (Animation::AnimatorComponent *)camEntity->createComponent(ComponentType::AnimationComponentType);
         mTrack.NumVectorChannels = 1;

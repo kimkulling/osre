@@ -78,8 +78,13 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     ProgressReporter reporter(rootWindow);
     reporter.start();
     reporter.update(10);
-    Scene *world = new Scene("model");
-    addScene(world, true);
+    
+    Scene *scene = getActiveScene();
+    if (scene == nullptr) {
+        scene = new Scene(modelLoc.getResource());
+        addScene(scene, true);
+    }
+
     ImportAction action(getIdContainer(), getActiveScene());
     ArgumentList args;
     args.add(cppcore::Variant::createFromString(modelLoc.getAbsPath()));
@@ -99,19 +104,19 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    world = getActiveScene();
+    scene = getActiveScene();
     if (mProject == nullptr) {
         mProject = createProject(modelLoc.getAbsPath());
     }
     Entity *entity = action.getEntity();
-    Entity *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), world);
+    Entity *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), scene);
     CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
-    world->setActiveCamera(camera);
+    scene->setActiveCamera(camera);
     mSceneData.mCamera = camera;
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
 
     reporter.update(10);
-    world->addEntity(entity);
+    scene->addEntity(entity);
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
 
