@@ -79,8 +79,8 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     reporter.start();
     reporter.update(10);
     Scene *world = new Scene("model");
-    addWorld(world);
-    ImportAction action(getIdContainer(), getActiveWorld());
+    addScene(world, true);
+    ImportAction action(getIdContainer(), getActiveScene());
     ArgumentList args;
     args.add(cppcore::Variant::createFromString(modelLoc.getAbsPath()));
     if (!action.run(args)) {
@@ -99,7 +99,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    world = getActiveWorld();
+    world = getActiveScene();
     if (mProject == nullptr) {
         mProject = createProject(modelLoc.getAbsPath());
     }
@@ -130,7 +130,7 @@ bool OsreEdApp::onCreate() {
 
     AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
     Scene *world = new Scene("hello_world");
-    addWorld(world);
+    addScene(world, true);
     mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
     CameraComponent *camera = setupCamera(world);
 

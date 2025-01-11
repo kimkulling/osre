@@ -163,7 +163,7 @@ protected:
 
         AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         Scene *world = new Scene("hello_world");
-        addWorld(world);
+        addScene(world, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         CameraComponent *camera = setupCamera(world);
 

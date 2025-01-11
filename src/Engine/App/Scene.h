@@ -39,12 +39,10 @@ class Entity;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to create a world for the engine. 
+///	@brief  This class is used to create a render-scene.
 ///
-/// Worlds are the container for all content which shall be rendered.
-/// A world is build by set a stage. A stage is the container for scene nodes ( @see Stage ). 
-/// A world can be seen by defining an active view. A view represents the camera for looking into 
-/// the stage ( @see View ).
+/// Scenes are the container for all content which shall be rendered.
+/// A scene can be seen by defining one or more active cameras. 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Scene : public Common::Object {
 public:

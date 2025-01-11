@@ -130,7 +130,7 @@ protected:
     }
 
     void loadAsset(const IO::Uri &modelLoc) {
-        AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
+        AssimpWrapper assimpWrapper(*getIdContainer(), getActiveScene());
         if (!assimpWrapper.importAsset(modelLoc, 0)) {
             return;
         }
@@ -149,7 +149,7 @@ protected:
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
         Scene *world = new Scene("model");
-        addWorld(world);
+        addScene(world, true);
         Entity *entity = assimpWrapper.getEntity();
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         mCamera = (CameraComponent*)camEntity->createComponent(ComponentType::CameraComponentType);

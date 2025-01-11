@@ -253,17 +253,18 @@ public:
     virtual RenderBackend::CanvasRenderer *getCanvasRenderer() const;
     
     /// @brief Will add a new world to the application.
-    /// @param world The world to add.
-    virtual void addWorld(Scene *world);
+    /// @param scene    The world to add.
+    /// @param enable   true if the world shall be enabled after the add.
+    virtual void addScene(Scene *scene, bool enable);
     
     /// @brief Will activate a world.
     /// @param worldName The name of the world to activate.
     /// @return true, if successful, false if not.
-    virtual bool activateWorld(const String &worldName);
+    virtual bool activateScene(const String &worldName);
 
     /// @brief Will return the active world.
     /// @return The active world.
-    virtual Scene *getActiveWorld() const;
+    virtual Scene *getActiveScene() const;
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
@@ -325,15 +326,17 @@ inline Common::Ids *AppBase::getIdContainer() const {
     return mIds;
 }
 
-inline void AppBase::addWorld(Scene *world) {
+inline void AppBase::addScene(Scene *world, bool enable) {
     if (nullptr == world) {
         return;
     }
     mWorlds.add(world);
-    mActiveWorld = world;
+    if (enable) {
+        mActiveWorld = world;
+    }
 }
 
-inline bool AppBase::activateWorld(const String &worldName) {
+inline bool AppBase::activateScene(const String &worldName) {
     for (ui32 i = 0; i < mWorlds.size(); ++i) {
         if (mWorlds[i]->getName() == worldName) {
             mActiveWorld = mWorlds[i];
@@ -343,7 +346,7 @@ inline bool AppBase::activateWorld(const String &worldName) {
     return false;
 }
 
-inline Scene* AppBase::getActiveWorld() const {
+inline Scene* AppBase::getActiveScene() const {
     return mActiveWorld;
 }
 

@@ -35,7 +35,7 @@ namespace App {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 Tag[] = "World";
+static constexpr c8 Tag[] = "Scene";
 
 Scene::Scene(const String &worldName) :
         Object(worldName),

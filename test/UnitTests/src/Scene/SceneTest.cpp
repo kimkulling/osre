@@ -28,14 +28,12 @@ namespace UnitTest {
 
 using namespace ::OSRE::App;
 
-class WorldTest : public ::testing::Test {
-    // empty
-};
+class SceneTest : public ::testing::Test {};
 
-TEST_F( WorldTest, createTest ) {
+TEST_F(SceneTest, createTest) {
     bool ok( true );
     try {
-        Scene myWorld( "test" );
+        Scene myScene( "test" );
     } catch ( ... ) {
         ok = false;
     }

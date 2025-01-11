@@ -180,10 +180,10 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
     }
 }
 
-static bool saveWorld(const Scene *world, WorldData &wd) {
-    setNameChunk(world->getName(), wd.mWorldName);
+static bool saveScene(const Scene *scene, WorldData &wd) {
+    setNameChunk(scene->getName(), wd.mWorldName);
 
-    TransformComponent *root = world->getRootNode();
+    TransformComponent *root = scene->getRootNode();
     if (nullptr == root) {
         return true;
     }
@@ -193,7 +193,7 @@ static bool saveWorld(const Scene *world, WorldData &wd) {
     wd.mNodes = new NodeData[wd.mNumNodes];
     size_t index = 0;
     storeNodes(root, wd.mNodes, index);
-    const cppcore::TArray<Entity *> &entities = world->getEntityArray();
+    const cppcore::TArray<Entity *> &entities = scene->getEntityArray();
     storeEntities(entities, wd);
 
     return true;
