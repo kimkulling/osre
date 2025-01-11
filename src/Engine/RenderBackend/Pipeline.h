@@ -37,6 +37,7 @@ class RenderBackendService;
 
 using cppcore::TArray;
 
+/// @brief The pipeline access
 namespace DefaultPipelines {
     OSRE_EXPORT const c8 *get3DPipelineDefault();
     OSRE_EXPORT const c8 *get2DPipelineDefault();

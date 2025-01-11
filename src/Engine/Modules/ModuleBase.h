@@ -62,7 +62,6 @@ protected:
     virtual bool onAttached(const Common::EventData *eventData);
     virtual bool onDetached(const Common::EventData *eventData);
 
-
 private:
     enum class ModuleState {
         Init,

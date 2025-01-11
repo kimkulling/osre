@@ -184,58 +184,6 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     return *this;
 }
 
-/*MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
-    const f32 x = static_cast<f32>(dim.getX1());
-    const f32 y = static_cast<f32>(dim.getY1());
-    const f32 w = static_cast<f32>(dim.getWidth());
-    const f32 h = static_cast<f32>(dim.getHeight());
-
-    // setup triangle vertices    
-    static const ui32 NumVert = 4;
-    glm::vec3 col[NumVert] = {};
-    col[ 0 ] = glm::vec3( 1, 0, 0 );
-    col[ 1 ] = glm::vec3( 0, 1, 0 );
-    col[ 2 ] = glm::vec3( 0, 0, 1 );
-    col[ 3 ] = glm::vec3( 1, 0, 0 );
-
-    glm::vec3 pos[NumVert] = {};
-    pos[ 0 ] = glm::vec3( x, y, 0 );
-    pos[ 1 ] = glm::vec3( x, y+h, 0 );
-    pos[ 2 ] = glm::vec3( x+w, y, 0 );
-    pos[ 3 ] = glm::vec3( x+h, y+h, 0 );
-
-    glm::vec2 tex0[NumVert] = {};
-    tex0[ 0 ] = glm::vec2( 0, 0 );
-    tex0[ 1 ] = glm::vec2( 0, 1 );
-    tex0[ 2 ] = glm::vec2( 1, 0 );
-    tex0[ 3 ] = glm::vec2( 1, 1 );
-
-    for (ui32 i = 0; i < 4; ++i) {
-        RenderVert v;
-        v.position = pos[ i ];
-        v.color0 = col[ i ];
-        v.tex0 = tex0[ i ];
-        vc.add( v );
-    }
-
-    // setup triangle indices
-    static const ui32 NumIndices = 6;
-    ui16 indices[NumIndices] = {};
-    indices[ 0 ] = 0;
-    indices[ 1 ] = 2;
-    indices[ 2 ] = 1;
-
-    indices[ 3 ] = 1;
-    indices[ 4 ] = 2;
-    indices[ 5 ] = 3;
-    
-    for (ui32 i = 0; i < 4; ++i) {
-        ic.add( indices[ i ] );
-    }
-
-    return *this;
-}*/
-
 MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
     clear();
     mActiveMesh = new Mesh("cube", type, IndexType::UnsignedShort);

@@ -355,15 +355,6 @@ SET( scripting_mono_src
 )
 
 #==============================================================================
-# WindowsManager
-#==============================================================================
-SET( winmanager_src
-    WinManager/WMButton.h
-    WinManager/WMDialog.h
-    WinManager/WMDialog.cpp
-)
-
-#==============================================================================
 # Threading
 #==============================================================================
 SET( threading_src
@@ -405,7 +396,6 @@ SOURCE_GROUP( RenderBackend\\Text         FILES ${renderbackend_text_src})
 SOURCE_GROUP( Resources                   FILES ${resources_src} )
 SOURCE_GROUP( Scene                       FILES ${scene_src} )
 SOURCE_GROUP( Threading                   FILES ${threading_src} )
-SOURCE_GROUP( WinManager                  FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common                  FILES ${ui_common_src} )
 
 SOURCE_GROUP( Documentation                    FILES ${doc_inc} )
@@ -447,7 +437,6 @@ ADD_LIBRARY( osre SHARED
         ${scene_shader_src}
     ${threading_src}
         ${threading_impl_src}
-    ${winmanager_src}
 )
 
 target_link_libraries ( osre cppcore zlibstatic GLEW::GLEW ${platform_libs} assimp )

@@ -49,10 +49,6 @@ public:
     ///	@brief	The class default constructor.
     Tokenizer();
     
-    ///	@brief	The class copy constructor.
-    ///	@param	rInstance	[in] Instance to copy from.
-    Tokenizer( const Tokenizer &rOther );
-
     ///	@brief	The class destructor.
     ~Tokenizer() = default;
 
@@ -87,6 +83,9 @@ public:
     size_t tokenize( const String& str, const String& delimiters );
 
     static bool isLineBreak( c8 c );
+
+    Tokenizer(const Tokenizer&) = delete;
+    Tokenizer& operator = (const Tokenizer &) = delete;
 
 private:
     StringArray m_Token;

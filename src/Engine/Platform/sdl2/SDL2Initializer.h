@@ -32,7 +32,7 @@ namespace Platform {
 ///
 ///	@brief  Will init the SDL2 Library.
 //-------------------------------------------------------------------------------------------------
-class SDL2Initializer {
+class SDL2Initializer final {
 public:
     /// @brief Inits SLD2,
     /// @return true if successful

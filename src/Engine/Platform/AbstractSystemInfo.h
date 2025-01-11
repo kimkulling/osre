@@ -36,7 +36,7 @@ namespace Platform {
 class OSRE_EXPORT AbstractSystemInfo {
 public:
     /// @brief  The class destructor, virtual.
-    virtual ~AbstractSystemInfo();
+    virtual ~AbstractSystemInfo() = default;
 
     /// @brief  Will return the current desktop resolution.
     /// @param  resolution  [out] The resolution info.
@@ -48,10 +48,6 @@ public:
     /// @return true, if this feature is supported.
     virtual bool getDiskInfo( const c8 *drive, ui64 &freeSpaceInBytes) = 0;
 };
-
-inline AbstractSystemInfo::~AbstractSystemInfo() {
-    // empty
-}
 
 } // Namespace Platform
 } // Namespace OSRE

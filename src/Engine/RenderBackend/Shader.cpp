@@ -32,7 +32,7 @@ using namespace ::OSRE::IO;
 
 Shader::Shader() :
         mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
-    ::memset(mCompileState, 0, sizeof(CompileState) * MaxCompileState);
+    ::memset(mCompileState, 0, sizeof(CompileState) * Count);
 }
 
 void Shader::addVertexAttribute(const String &name) {
@@ -125,7 +125,7 @@ ShaderType Shader::getTypeFromeExtension(const String &extension) {
     return ShaderType::InvalidShaderType;
 }
 
-size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
+size_t ShaderLoader::load(const IO::Uri &uri, Shader *shader) {
     if (nullptr == shader) {
         return 0;
     }
@@ -157,7 +157,7 @@ size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
     return size;
 }
 
-bool ShaderLoader::unload( Shader *shader ) {
+bool ShaderLoader::unload(Shader *shader) {
     if (nullptr == shader) {
         return false;
     }
@@ -181,15 +181,18 @@ Common::ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &
     }
 
     Shader *shader = create();
-    loader.load(uri, shader);
+    if (loader.load(uri, shader) == 0l) {
+    }
 
     return getState();
 }
 
-Common::ResourceState ShaderResource::onUnload( ShaderLoader &) {
+Common::ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
     if (getState() == ResourceState::Unloaded) {
         return getState();
     }
+
+    loader.unload(get());
 
     return getState();
 }

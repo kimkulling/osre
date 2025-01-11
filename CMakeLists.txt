@@ -25,6 +25,11 @@ SET( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are ins
 SET( INCLUDE_INSTALL_DIR "osre" CACHE PATH "Path the header files are installed to." )
 SET( BIN_INSTALL_DIR "bin"      CACHE PATH "Path the tool executables are installed to." )
 
+# Set the default build output folders
+SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
+SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
+SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
+
 INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/
@@ -46,10 +51,6 @@ link_directories(
     ${CMAKE_HOME_DIRECTORY}/bin
     ${SDL2_LIBRARIES}
 )
-
-SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
-SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
-SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

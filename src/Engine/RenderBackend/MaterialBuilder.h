@@ -32,7 +32,7 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class takes care of all default materials.
+///	@brief  This class takes care of all default material management tasks.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
@@ -71,6 +71,8 @@ public:
     /// @return The instance of the material.
     static RenderBackend::Material *createDebugRenderTextMaterial();
 
+    /// @brief Will return the default 2d material.
+    /// @return The 2D material.
     static Material *create2DMaterial();
     static Material *createTextMaterial(const String &fontName);
 

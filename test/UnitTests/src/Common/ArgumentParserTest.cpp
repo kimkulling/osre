@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -75,7 +75,18 @@ TEST_F(ArgumentParserTest, getArgTest) {
     EXPECT_TRUE(value.empty());
 }
 
+TEST_F(ArgumentParserTest, getLastErrorsTest) {
+    static const String SupportedArgs = "help:api:gen_project:asset_path";
+    static const String Descs = "Shows the help:The render API:Generates a template project:Path to media";
 
-}
+    i32 argc = 3;
+    const c8 *ppArgv[] = { "testApp", "--apo", "opengl" };
+    ArgumentParser testParser(argc, ppArgv, SupportedArgs, Descs);
+    EXPECT_FALSE(testParser.hasValidArgs());
+    
+    String error = testParser.getLastErrors();
+    EXPECT_FALSE(error.empty());
 }
 
+} // namespace UnitTest
+} // namespace OSRE
