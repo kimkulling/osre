@@ -50,7 +50,7 @@ class HelloWorldApp : public App::AppBase {
     /// The entity to render
     Entity *mEntity;
     /// The keyboard controller instance.
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
+    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;
     Animation::AnimationTrack mTrack;
     f32 mAngle;
 
@@ -60,7 +60,6 @@ public:
             AppBase(argc, (const char **)argv),
             mTransformMatrix(),
             mEntity(nullptr),
-            mKeyboardTransCtrl(nullptr),
             mAngle(1.0f) {
         // empty
     }
