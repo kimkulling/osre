@@ -71,7 +71,9 @@ private:
     i64 mLastTime;
 };
 
-inline AbstractTimer::AbstractTimer(const String &name) : Object(name), mReqTimeSlice(-1), mLastTime(0l) {}
+inline AbstractTimer::AbstractTimer(const String &name) : Object(name), mReqTimeSlice(-1), mLastTime(0l) {
+    // empty
+}
 
 inline i64 AbstractTimer::getRequestedTimeStep() const {
     return mReqTimeSlice;

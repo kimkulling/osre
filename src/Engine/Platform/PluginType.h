@@ -28,12 +28,13 @@ namespace OSRE {
 namespace Platform {
 
 enum class PluginType {
+    Invalid = -1,
 #ifdef OSRE_WINDOWS
     WindowsPlugin = 0,
 #else
     SDL2Plugin = 0,
 #endif // OSRE_WINDOWS
-    MaxPlugin
+    Count
 };
 
 } // Namespace Platform

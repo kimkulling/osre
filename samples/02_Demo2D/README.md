@@ -3,91 +3,154 @@
 This example shows how to use the simple engine-intern User-Interface-Framework.
 
 So lets start with the basic application:
+
 ```cpp
-#include <osre/App/AppBase.h>
-#include <osre/Properties/Settings.h>
-#include <osre/Common/Logger.h>
-#include <osre/Assets/AssetRegistry.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/UI/Screen.h>
-#include <osre/UI/ButtonBase.h>
-#include <osre/UI/Panel.h>
-#include <osre/Platform/PlatformOperations.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-using namespace ::OSRE;
-using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::UI;
-using namespace ::OSRE::Platform;
-
-// To identify local log entries
-static const c8 *Tag = "ModelLoadingApp";
-
-// The example application, will create the render environment and render a simple triangle onto it
-class UIDemoApp : public App::AppBase {
-    Screen *m_screen;
-    TransformMatrixBlock m_transformMatrix;
+class Demo2DApp : public App::AppBase {
+    /// The transform matrices
+    TransformMatrixBlock  mTransformMatrix;
+    /// The 2D renderer for the ui overlay
+    CanvasRenderer *mCanvasRenderer;
+    /// The entity to render the 3d-scene
+    Entity *mEntity;
 
 public:
-    UIDemoApp( int argc, char *argv[] )
-    : AppBase( argc, argv )
-    , m_screen( nullptr )
-    , m_transformMatrix() {
+    Demo2DApp(int argc, char *argv[]) :
+            AppBase(argc, (const char **)argv),
+            mTransformMatrix(),
+            mCanvasRenderer(nullptr),
+            mEntity(nullptr) {
         // empty
     }
 
-    virtual ~UIDemoApp() {
-        // empty
-    }
-    void openFileCallback( ui32 id, void *data ) {
-        IO::Uri loc;
-        PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );
+    ~Demo2DApp() override {
+        delete mCanvasRenderer;
     }
 
-    void quitCallback( ui32 id, void *data ) {
+    void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
     }
 
 protected:
-    bool onCreate( Properties::Settings *settings = nullptr ) override {
-        Properties::Settings *baseSettings( AppBase::getSettings() );
-        if ( nullptr == baseSettings ) {
+    CameraComponent *setupCamera(Scene *scene) {
+        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        scene->addEntity(camEntity);
+        CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+        scene->setActiveCamera(camera);
+
+        ui32 w, h;
+        AppBase::getResolution(w, h);
+        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
+
+        return camera;
+    }
+
+    bool onCreate() override {
+        Properties::Settings *baseSettings  = AppBase::getSettings();
+        if (baseSettings == nullptr) {
             return false;
         }
 
-        baseSettings->setString( Properties::Settings::WindowsTitle, "Demo UI!" );
-        if ( !AppBase::onCreate( baseSettings ) ) {
+        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo in 2D!");
+        if (!AppBase::onCreate()) {
             return false;
         }
+        
+        mCanvasRenderer = AppBase::getCanvasRenderer();
+        
+        mCanvasRenderer->selectLayer(0);
+        const Color4 Red(1, 0, 0, 0);
+        mCanvasRenderer->setColor(Red);
+        mCanvasRenderer->drawRect(10, 10, 500, 40, true);
+        
+        Color4 green(0, 1, 0, 1);
+        
+        mCanvasRenderer->setColor(Red);
+        mCanvasRenderer->drawRect(1, 1, 1000, 760, false);
 
-#ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../assets" );
-#else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../assets" );
-#endif
+        mCanvasRenderer->setColor(green);
+        mCanvasRenderer->drawRect(100, 100, 100, 40, true);
 
-        m_screen = AppBase::createScreen( "HelloWorld" );
+        mCanvasRenderer->drawRect(100, 200, 90, 50, true);
 
-        Panel *panel = new Panel( "panel", m_screen );
-        panel->setRect( 10, 10, 500, 500 );
-        ButtonBase *btnClick = new ButtonBase( "click", panel );
-        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::openFileCallback ));
-        btnClick->setRect( 20, 20, 100, 20 );
-        ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
-        btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make( this, &UIDemoApp::quitCallback ) );
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        mCanvasRenderer->drawRect(100, 300, 80, 60, true);
+
+        mCanvasRenderer->drawRect(100, 400, 70, 70, true);
+
+        mCanvasRenderer->drawRect(100, 500, 60, 60, false);
+
+        mCanvasRenderer->selectLayer(2);
+        Color4 yellow(1, 1, 0, 1);
+        mCanvasRenderer->setColor(yellow);
+        mCanvasRenderer->drawRect(100, 100, 110, 30, true);
+
+        mCanvasRenderer->drawRect(100, 600, 110, 124, true);
+
+        mCanvasRenderer->drawRect(100, 700, 110, 124, true);
+        
+        mCanvasRenderer->drawRect(100, 1000, 110, 124, true);
+
+        mCanvasRenderer->drawText(300, 100, "Test");
+
+        Scene *scene = new Scene("hello_world");
+        addScene(scene, true);
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
+        MeshBuilder meshBuilder;
+        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
+        if (mesh != nullptr) {
+            RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+            rc->addStaticMesh(mesh);
+
+            CameraComponent *camera = setupCamera(scene);
+            scene->init();
+            camera->observeBoundingBox(mEntity->getAABB());
+        }
 
         return true;
     }
+
+    bool onDestroy() override {
+        delete mCanvasRenderer;
+        mCanvasRenderer = nullptr;
+
+        return true;
+    }
+
+    void onUpdate() {
+        RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        
+        rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
+        rbSerive->beginRenderBatch("b1");
+        rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+        rbSerive->endRenderBatch();
+        rbSerive->endPass();
+
+        rbSerive->beginPass(RenderPass::getPassNameById(UiPassId));
+        rbSerive->beginRenderBatch("2d.b1");
+        rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+        mCanvasRenderer->render(rbSerive);
+        rbSerive->endRenderBatch();
+        rbSerive->endPass();
+
+        AppBase::onUpdate();
+    }
 };
 
-OSRE_MAIN( UIDemoApp )
+int main(int argc, char *argv[]) {
+    Demo2DApp myApp(argc, argv);
+    if (!myApp.create()) {
+        return 1;
+    }
+
+    while (myApp.handleEvents()) {
+        myApp.update();
+        myApp.requestNextFrame();
+    }
+    myApp.destroy();
+
+    return 0;
+}
+
 ```
 At first you have to create your application window with your render-window. 
 To be able to render any UI-Elements you have to create a screen first. A screen represents a 2D-rect

@@ -138,10 +138,8 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             }
             renderMatCmd->m_data = matData;
             eh->enqueueRenderCmd(renderMatCmd);
-        } break;
-        
-        default:
-            break;
+        }                                  
+        break;
     }
 
     return matData;

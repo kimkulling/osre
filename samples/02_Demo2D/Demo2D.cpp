@@ -21,13 +21,16 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "App/AppBase.h"
-#include "App/AssetRegistry.h"
+#include "App/Entity.h"
+#include "App/ServiceProvider.h"
+#include "App/Component.h"
+#include "App/CameraComponent.h"
 #include "Properties/Settings.h"
 #include "Common/Logger.h"
 #include "RenderBackend/RenderCommon.h"
-#include "App/ServiceProvider.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/MeshBuilder.h"
 #include "RenderBackend/2D/CanvasRenderer.h"
 #include "RenderBackend/2D/RenderPass2D.h"
 
@@ -45,26 +48,40 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 //-------------------------------------------------------------------------------------------------
 class Demo2DApp : public App::AppBase {
     TransformMatrixBlock  mTransformMatrix;
+    /// The 2D renderer for the ui overlay
     CanvasRenderer *mCanvasRenderer;
+    /// The entity to render the 3d-scene
+    Entity *mEntity;
 
 public:
     Demo2DApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
             mTransformMatrix(),
-            mCanvasRenderer(nullptr) {
+            mCanvasRenderer(nullptr),
+            mEntity(nullptr) {
         // empty
     }
 
-    ~Demo2DApp() override {
-        delete mCanvasRenderer;
-        mCanvasRenderer = nullptr;
-    }
+    ~Demo2DApp() override = default;
 
     void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
     }
 
 protected:
+    CameraComponent *setupCamera(Scene *scene) {
+        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        scene->addEntity(camEntity);
+        CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+        scene->setActiveCamera(camera);
+
+        ui32 w, h;
+        AppBase::getResolution(w, h);
+        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
+
+        return camera;
+    }
+
     bool onCreate() override {
         Properties::Settings *baseSettings  = AppBase::getSettings();
         if (baseSettings == nullptr) {
@@ -112,6 +129,20 @@ protected:
 
         mCanvasRenderer->drawText(300, 100, "Test");
 
+        Scene *scene = new Scene("hello_world");
+        addScene(scene, true);
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
+        MeshBuilder meshBuilder;
+        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
+        if (mesh != nullptr) {
+            RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+            rc->addStaticMesh(mesh);
+
+            CameraComponent *camera = setupCamera(scene);
+            scene->init();
+            camera->observeBoundingBox(mEntity->getAABB());
+        }
+
         return true;
     }
 
@@ -122,14 +153,19 @@ protected:
         return true;
     }
 
-    void onUpdate() {
+    void onUpdate() override {
         RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        
         rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSerive->beginRenderBatch("2D");
+        rbSerive->beginRenderBatch("b1");
+        rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+        rbSerive->endRenderBatch();
+        rbSerive->endPass();
 
+        rbSerive->beginPass(RenderPass::getPassNameById(UiPassId));
+        rbSerive->beginRenderBatch("2d.b1");
         rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
         mCanvasRenderer->render(rbSerive);
-
         rbSerive->endRenderBatch();
         rbSerive->endPass();
 

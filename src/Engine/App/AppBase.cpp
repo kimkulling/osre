@@ -79,8 +79,8 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mPlatformInterface(nullptr),
         mTimer(nullptr),
         mRbService(nullptr),
-        mWorlds(),
-        mActiveWorld(nullptr),
+        mScenes(),
+        mActiveScene(nullptr),
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr) {
@@ -156,12 +156,12 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 
 void AppBase::requestNextFrame() {
     osre_assert(mRbService != nullptr);
-    if (mActiveWorld == nullptr) {
+    if (mActiveScene == nullptr) {
         osre_debug(Tag, "Invalid active world.");
         return;
     }
 
-    mActiveWorld->render(mRbService);
+    mActiveScene->render(mRbService);
     mRbService->update();
 }
 
@@ -269,8 +269,8 @@ bool AppBase::onCreate() {
     }
 
     // Create our world
-    mActiveWorld = new Scene("world");
-    mWorlds.add(mActiveWorld);
+    mActiveScene = new Scene("world");
+    mScenes.add(mActiveScene);
 
     const String &api = mRbService->getSettings()->getString(Properties::Settings::RenderAPI);
     mEnvironment->addStrVar("api", api.c_str());
@@ -368,16 +368,16 @@ bool AppBase::onDestroy() {
 
 void AppBase::onUpdate() {
     const Time dt = mTimer->getTimeDiff();
-    if (mActiveWorld != nullptr) {
-        mActiveWorld->update(dt);
+    if (mActiveScene != nullptr) {
+        mActiveScene->update(dt);
     }
 
     mKeyboardEvListener->clearKeyMap();
 }
 
 void AppBase::onRender() {
-    if (mActiveWorld != nullptr) {
-        mActiveWorld->render(mRbService);
+    if (mActiveScene != nullptr) {
+        mActiveScene->render(mRbService);
     }
 }
 
@@ -391,12 +391,12 @@ bool AppBase::isKeyPressed(Key key) const {
 
 void AppBase::getResolution(ui32 &width, ui32 &height) {
     width = height = 0;
-    Rect2ui windowsRect;
     Platform::AbstractWindow *rootWindow = getRootWindow();
     if (rootWindow == nullptr) {
         return;
     }
 
+    Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
     width = windowsRect.getWidth();
     height = windowsRect.getHeight();
@@ -404,4 +404,3 @@ void AppBase::getResolution(ui32 &width, ui32 &height) {
 
 } // Namespace App
 } // Namespace OSRE
-

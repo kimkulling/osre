@@ -66,11 +66,11 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
-    CameraComponent *setupCamera(Scene *world) {
-        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        world->addEntity(camEntity);
+    CameraComponent *setupCamera(Scene *scene) {
+        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        scene->addEntity(camEntity);
         CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
-        world->setActiveCamera(camera);
+        scene->setActiveCamera(camera);
         
         ui32 w, h;
         AppBase::getResolution(w, h);
@@ -85,17 +85,17 @@ protected:
         }
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        Scene *world = new Scene("hello_world");
-        addScene(world, true);
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
+        Scene *scene = new Scene("hello_world");
+        addScene(scene, true);
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         MeshBuilder meshBuilder;
         Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
-        if (nullptr != mesh) {
+        if (mesh != nullptr) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            CameraComponent *camera = setupCamera(world);
-            world->init();
+            CameraComponent *camera = setupCamera(scene);
+            scene->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
         mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);

@@ -39,7 +39,7 @@ public:
     using ControlBase = TAbstractCtrlBase<TEnum>;
 
     ///	@brief  The class destructor, virtual.
-    virtual ~TAbstractCtrlStateListener();
+    virtual ~TAbstractCtrlStateListener() = default;
 
     /// @brief The state change callback.
     /// @param newState The new state.
@@ -51,17 +51,12 @@ protected:
     TAbstractCtrlStateListener(ControlBase *ctrl);
 
 private:
-    TAbstractCtrlBase<TEnum> *m_instance;
+    TAbstractCtrlBase<TEnum> *mInstance;
 };
 
 template <class TEnum>
 inline TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener(ControlBase *ctrl) :
-        m_instance(ctrl) {
-    // empty
-}
-
-template <class TEnum>
-inline TAbstractCtrlStateListener<TEnum>::~TAbstractCtrlStateListener() {
+        mInstance(ctrl) {
     // empty
 }
 
@@ -73,7 +68,7 @@ inline TAbstractCtrlStateListener<TEnum>::~TAbstractCtrlStateListener() {
 template <class T>
 class TAbstractCtrlBase {
 public:
-    virtual ~TAbstractCtrlBase();
+    virtual ~TAbstractCtrlBase() = default;
     bool registerListener(TAbstractCtrlStateListener<T> *listener);
     bool unregisterListener(TAbstractCtrlStateListener<T> *listener);
     bool gotoState(T newState);
@@ -90,18 +85,13 @@ protected:
 
 private:
     typedef typename cppcore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ListenerIt;
-    cppcore::TArray<TAbstractCtrlStateListener<T> *> m_listener;
-    T m_state;
+    cppcore::TArray<TAbstractCtrlStateListener<T> *> mListener;
+    T mState;
 };
 
 template <class T>
 inline TAbstractCtrlBase<T>::TAbstractCtrlBase(T initialState) :
-        m_listener(), m_state(initialState) {
-    // empty
-}
-
-template <class T>
-inline TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
+        mListener(), mState(initialState) {
     // empty
 }
 
@@ -111,7 +101,7 @@ inline bool TAbstractCtrlBase<T>::registerListener(TAbstractCtrlStateListener<T>
         return false;
     }
 
-    m_listener.add(listener);
+    mListener.add(listener);
 
     return true;
 }
@@ -122,26 +112,26 @@ inline bool TAbstractCtrlBase<T>::unregisterListener(TAbstractCtrlStateListener<
         return false;
     }
 
-    ListenerIt it = m_listener.find(listener);
-    if (it == m_listener.end()) {
+    ListenerIt it = mListener.find(listener);
+    if (it == mListener.end()) {
         return false;
     }
 
-    m_listener.remove(it);
+    mListener.remove(it);
 
     return true;
 }
 
 template <class T>
 inline bool TAbstractCtrlBase<T>::gotoState(T newState) {
-    if (!onStateLeave(m_state)) {
+    if (!onStateLeave(mState)) {
         return false;
     }
     if (!onStateEnter(newState)) {
         return false;
     }
 
-    m_state = newState;
+    mState = newState;
     if (!onState()) {
         return false;
     }
@@ -153,7 +143,7 @@ inline bool TAbstractCtrlBase<T>::gotoState(T newState) {
 
 template <class T>
 inline T TAbstractCtrlBase<T>::getState() const {
-    return m_state;
+    return mState;
 }
 
 template <class T>
@@ -161,14 +151,15 @@ inline bool TAbstractCtrlBase<T>::update(d32 timetick) {
     if (onState()) {
         return onUpdate(timetick);
     }
+    
     return false;
 }
 
 template <class T>
 inline void TAbstractCtrlBase<T>::notifyListener() {
-    for (ui32 i = 0; i < m_listener.size(); i++) {
-        if (nullptr != m_listener[i]) {
-            m_listener[i]->onStateChanged(m_state);
+    for (ui32 i = 0; i < mListener.size(); i++) {
+        if (nullptr != mListener[i]) {
+            mListener[i]->onStateChanged(mState);
         }
     }
 }

@@ -36,7 +36,7 @@ template <class RET, class P1, class P2>
 class FunctorImpl {
 public:
     /// @brief The virtual destructor.
-    virtual ~FunctorImpl();
+    virtual ~FunctorImpl() = default;
 
     /// @brief Call for overwrite.
     ///	@param	p1	UniformVar 1.
@@ -44,11 +44,6 @@ public:
     ///	@return	The return value.
     virtual RET call(P1 p1, P2 p2) const = 0;
 };
-
-template <class RET, class P1, class P2>
-inline FunctorImpl<RET, P1, P2>::~FunctorImpl() {
-    // empty
-}
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -62,22 +57,23 @@ public:
     typedef RET (*FunctorFunctionType)(P1, P2);
 
     /// @brief The constructor with the function type.
-    FunctorFunction(FunctorFunctionType func) : m_Func(func) {}
-
-    /// @brief Virtual destructor.
-    virtual ~FunctorFunction() {
+    FunctorFunction(FunctorFunctionType func) :
+            mFunc(func) {
         // empty
     }
+
+    /// @brief Virtual destructor.
+    virtual ~FunctorFunction() = default;
 
     /// @brief Performs the binded function call
     ///	@param	p1	UniformVar 1.
     ///	@param	p2	UniformVar 1.
     RET call(P1 p1, P2 p2) const override {
-        return m_Func(p1, p2);
+        return mFunc(p1, p2);
     }
 
 private:
-    FunctorFunctionType m_Func;
+    FunctorFunctionType mFunc;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -94,8 +90,8 @@ public:
     ///	@param	P1				[in] UniformVar one.
     ///	@param	P2				[in] UniformVar two.
     FunctorMember(T *obj, RET (T::*func)(P1, P2)) :
-            m_Func(func),
-            m_Obj(obj) {
+            mFunc(func),
+            mObj(obj) {
         // empty
     }
 
@@ -107,13 +103,13 @@ public:
     ///	@param	P2		[in] UniformVar two.
     ///	@return	The return value.
     RET call(P1 p1, P2 p2) const override {
-        return (m_Obj->*m_Func)(p1, p2);
+        return (mObj->*mFunc)(p1, p2);
     }
 
 private:
-    RET(T::*m_Func)
+    RET(T::*mFunc)
     (P1, P2);
-    T *m_Obj;
+    T *mObj;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -126,23 +122,23 @@ class Functor {
 public:
     /// @brief The class default constructor
     Functor() noexcept :
-            m_data(nullptr),
-            m_refCounter(nullptr) {
+            mData(nullptr),
+            mRefCounter(nullptr) {
         // empty
     }
 
     /// @brief The class copy constructor
     Functor(const Functor &f) :
-            m_data(f.m_data), m_refCounter(f.m_refCounter) {
-        ++(*m_refCounter);
+            mData(f.mData), mRefCounter(f.mRefCounter) {
+        ++(*mRefCounter);
     }
 
     /// @brief The class destructor.
     virtual ~Functor() {
-        if (nullptr != m_refCounter) {
-            if (--(*m_refCounter) <= 0) {
-                delete m_refCounter;
-                delete m_data;
+        if (nullptr != mRefCounter) {
+            if (--(*mRefCounter) <= 0) {
+                delete mRefCounter;
+                delete mData;
             }
         }
     }
@@ -153,8 +149,8 @@ public:
     /// @return return type
     RET operator()(P1 p1, P2 p2) const {
         // Check for a valid this pointer
-        if (nullptr != m_data) {
-            return (m_data->call(p1, p2));
+        if (nullptr != mData) {
+            return (mData->call(p1, p2));
         }
 
         // Just return the default
@@ -162,12 +158,12 @@ public:
     }
 
     void incRef() {
-        ++(*m_refCounter);
+        ++(*mRefCounter);
     }
 
     /// @brief == operator implementation
     bool operator==(const Functor &other) const {
-        return (m_data == other.m_data);
+        return (mData == other.mData);
     }
 
     /// @brief Binding to function by a function pointer
@@ -185,13 +181,13 @@ private:
     /// @brief The constructor with the functor.
     ///	@param	d	The functor.
     Functor(FunctorImpl<RET, P1, P2> *d) :
-            m_data(d), m_refCounter(new ui32(1)) {
+            mData(d), mRefCounter(new ui32(1)) {
         // empty
     }
 
 private:
-    FunctorImpl<RET, P1, P2> *m_data;
-    ui32 *m_refCounter;
+    FunctorImpl<RET, P1, P2> *mData;
+    ui32 *mRefCounter;
 };
 
 } // Namespace Common

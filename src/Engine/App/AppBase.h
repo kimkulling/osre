@@ -301,8 +301,8 @@ private:
     Platform::PlatformInterface *mPlatformInterface;
     Platform::AbstractTimer *mTimer;
     RenderBackend::RenderBackendService *mRbService;
-    cppcore::TArray<Scene*> mWorlds;
-    Scene *mActiveWorld;
+    cppcore::TArray<Scene*> mScenes;
+    Scene *mActiveScene;
     MouseEventListener *mMouseEvListener;
     KeyboardEventListener *mKeyboardEvListener;
     Common::Ids *mIds;
@@ -330,16 +330,16 @@ inline void AppBase::addScene(Scene *world, bool enable) {
     if (nullptr == world) {
         return;
     }
-    mWorlds.add(world);
+    mScenes.add(world);
     if (enable) {
-        mActiveWorld = world;
+        mActiveScene = world;
     }
 }
 
 inline bool AppBase::activateScene(const String &worldName) {
-    for (ui32 i = 0; i < mWorlds.size(); ++i) {
-        if (mWorlds[i]->getName() == worldName) {
-            mActiveWorld = mWorlds[i];
+    for (ui32 i = 0; i < mScenes.size(); ++i) {
+        if (mScenes[i]->getName() == worldName) {
+            mActiveScene = mScenes[i];
             return true;
         }
     }
@@ -347,7 +347,7 @@ inline bool AppBase::activateScene(const String &worldName) {
 }
 
 inline Scene* AppBase::getActiveScene() const {
-    return mActiveWorld;
+    return mActiveScene;
 }
 
 //-------------------------------------------------------------------------------------------------
