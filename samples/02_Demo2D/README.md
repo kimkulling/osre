@@ -1,13 +1,40 @@
-## The User-Interface-Demo
+## The 2D Demo
 
-This example shows how to use the simple engine-intern User-Interface-Framework.
+## Screenshot
+![Demo2D](../../assets/Images/02_demo2d.png)
 
-So lets start with the basic application:
+## Introduction
+This sample shows how to render a simple 2D scene. There is a cube in the background.
 
+## Code Overview
 ```cpp
+#include "App/AppBase.h"
+#include "App/Entity.h"
+#include "App/ServiceProvider.h"
+#include "App/Component.h"
+#include "App/CameraComponent.h"
+#include "Properties/Settings.h"
+#include "Common/Logger.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
+#include "RenderBackend/2D/RenderPass2D.h"
 
+using namespace ::OSRE;
+using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::App;
+
+// To identify local log entries
+static constexpr c8 Tag[] = "ModelLoadingApp";
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief 
+//-------------------------------------------------------------------------------------------------
 class Demo2DApp : public App::AppBase {
-    /// The transform matrices
     TransformMatrixBlock  mTransformMatrix;
     /// The 2D renderer for the ui overlay
     CanvasRenderer *mCanvasRenderer;
@@ -23,9 +50,7 @@ public:
         // empty
     }
 
-    ~Demo2DApp() override {
-        delete mCanvasRenderer;
-    }
+    ~Demo2DApp() override = default;
 
     void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
@@ -116,7 +141,7 @@ protected:
         return true;
     }
 
-    void onUpdate() {
+    void onUpdate() override {
         RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         
         rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
@@ -150,19 +175,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
 ```
-At first you have to create your application window with your render-window. 
-To be able to render any UI-Elements you have to create a screen first. A screen represents a 2D-rect
-on you screen.
-
-The next step is to create your dialog: defining a panel, add two buttons and assign callbacks to them
-In this case the button on the left will open a FileOpen-dialog and the second button will destroy your 
-application.
-
-# Todo
-- Optimize UI-elements styling
-- Add button texts
-- Add button images
-- Add onClicked animation
-- Implement OpenFile-dialog for other platforms

@@ -1,11 +1,6 @@
 # Hello World
 ![HelloWorld](../../assets/Images/HelloWorld.png)
-This sample just shows how to render a simple Triangle. The creation of the render window and the base setup is included. 
-You can rotate the triangle with your keyboard.
-
-## The main application
-At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. 
-The we will generate our simple model-, view- and projection-matrix.
+This sample shows how to render a simple cube. You can rotate the triangle with your keyboard.
 
 ```cpp
 #include "App/App.h"
