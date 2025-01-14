@@ -91,7 +91,7 @@ public:
         String name = node.mName.C_Str();
         checkName(name);
         for (int i=0; i<mIntention; ++i) {
-            std::cout << "  ";
+            std::cout << "+-";
         }
         
         std::cout << "Node name: " <<  name << "\n";
