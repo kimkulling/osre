@@ -34,24 +34,24 @@ namespace Common {
 ///
 ///	@brief	This class the API for id container. You can use an id container to store unique ids.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Ids {
+class OSRE_EXPORT Ids final {
 public:
     /// @brief  The default class constructor.
     Ids();
 
     /// @brief  The class constructor with the start id.
-    /// @param  startId     [in] The start id.
+    /// @param[in] startId  The start id.
     Ids(guid startId);
 
     /// @brief  The class destructor.
-    ~Ids();
+    ~Ids() = default;
 
     /// @brief  Returns an unique id.
     /// @return The unique id.
     guid getUniqueId();
 
     /// @brief  Will release a unique id.
-    /// @param  id      [in] The unique id to release.
+    /// @param[in] id   The unique id to release.
     void releaseId(guid id);
 
     // Copying is not allowed
@@ -59,8 +59,8 @@ public:
     Ids &operator = (const Ids &) = delete;
 
 private:
-    cppcore::TArray<guid> m_freeIds;
-    guid m_last;
+    cppcore::TArray<guid> mFreeIds;
+    guid mLast;
 };
 
 } // Namespace Common

@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "Animation/AnimatorComponent.h"
-#include "App/Entity.h"
 #include "Platform/AbstractWindow.h"
 #include "Common/glm_common.h"
 
@@ -85,9 +84,10 @@ protected:
         }
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        Scene *scene = new Scene("hello_world");
+        Scene *scene = new Scene("hello_world", *getIdContainer());
         addScene(scene, true);
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
+        mEntity = scene->createEntity("entity");
+        //mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         MeshBuilder meshBuilder;
         Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (mesh != nullptr) {

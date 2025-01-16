@@ -129,9 +129,9 @@ protected:
 
         mCanvasRenderer->drawText(300, 100, "Test");
 
-        Scene *scene = new Scene("hello_world");
+        Scene *scene = new Scene("hello_world", *getIdContainer());
         addScene(scene, true);
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
+        mEntity = scene->createEntity("entity");
         MeshBuilder meshBuilder;
         Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
         if (mesh != nullptr) {

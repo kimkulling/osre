@@ -148,7 +148,7 @@ protected:
 
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
-        Scene *world = new Scene("model");
+        Scene *world = new Scene("model", *getIdContainer());
         addScene(world, true);
         Entity *entity = assimpWrapper.getEntity();
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);

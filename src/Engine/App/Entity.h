@@ -54,23 +54,29 @@ class Scene;
 ///	@brief	
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Entity final : public Common::Object {
+    friend class Scene;
+
 public:
     using ComponentArray = cppcore::TArray<Component*>;
 
-    Entity(const String &name, Common::Ids &ids, Scene *world);
+    /// @brief  The class constructor.
+    /// @param[in] name     The name for the scene.
+    /// @param[in] ids      The id container.
+    /// @param[in] scene    The owning scene.
+    Entity(const String &name, Common::Ids &ids, Scene *scene);
+
+    /// @brief The class destructor.
     ~Entity() override;
-    void setBehaviourControl(AbstractBehaviour *behaviour );
     void setNode(TransformComponent *node);
     TransformComponent *getNode() const;
     bool update( Time dt );
-    bool render( RenderBackend::RenderBackendService *rbSrv );
+    bool render(RenderBackend::RenderBackendService *rbSrv);
     Component *createComponent(ComponentType type);
     Component *getComponent(ComponentType type) const;
     void setAABB( const Common::AABB &aabb );
     const Common::AABB &getAABB() const;
 
 private:
-    AbstractBehaviour *mBehavior;
     RenderComponent *mRenderComponent;
     ComponentArray mComponentArray;
     TransformComponent *mTransformNode;

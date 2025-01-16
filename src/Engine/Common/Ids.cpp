@@ -26,36 +26,32 @@ namespace OSRE {
 namespace Common {
 
 Ids::Ids() :
-        m_freeIds(),
-        m_last(0) {
+        mFreeIds(),
+        mLast(0) {
     // empty
 }
 
 Ids::Ids(guid startId) :
-        m_freeIds(),
-        m_last(startId) {
-    // empty
-}
-
-Ids::~Ids() {
+        mFreeIds(),
+        mLast(startId) {
     // empty
 }
 
 guid Ids::getUniqueId() {
-    if (m_freeIds.isEmpty()) {
-        const guid id = m_last;
-        ++m_last;
+    if (mFreeIds.isEmpty()) {
+        const guid id = mLast;
+        ++mLast;
         return id;
     }
 
-    const guid id = m_freeIds.back();
-    m_freeIds.removeBack();
+    const guid id = mFreeIds.back();
+    mFreeIds.removeBack();
 
     return id;
 }
 
 void Ids::releaseId(guid id) {
-    m_freeIds.add(id);
+    mFreeIds.add(id);
 }
 
 } // Namespace Common

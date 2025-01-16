@@ -269,7 +269,7 @@ bool AppBase::onCreate() {
     }
 
     // Create our world
-    mActiveScene = new Scene("world");
+    mActiveScene = new Scene("world", *mIds);
     mScenes.add(mActiveScene);
 
     const String &api = mRbService->getSettings()->getString(Properties::Settings::RenderAPI);

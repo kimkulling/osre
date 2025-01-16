@@ -31,9 +31,10 @@ using namespace ::OSRE::App;
 class SceneTest : public ::testing::Test {};
 
 TEST_F(SceneTest, createTest) {
+    Common::Ids ids;
     bool ok( true );
     try {
-        Scene myScene( "test" );
+        Scene myScene("test", ids);
     } catch ( ... ) {
         ok = false;
     }

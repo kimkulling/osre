@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/Object.h"
 #include "Common/Ids.h"
+#include "App/Component.h"
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
@@ -49,15 +50,17 @@ public:
     /// @brief  The class constructor with the name and the requested render-mode.
     /// @param  worldName   [in] The world name.
     /// @param  renderMode  [in] The requested render mode. @see RenderMode
-    explicit Scene(const String &worldName);
+    explicit Scene(const String &worldName, Common::Ids &ids);
 
     /// @brief  The class destructor.
     ~Scene() override = default;
 
     /// @brief Will add a new entity.
     /// @param entity   The entity to add.
-    void addEntity(Entity *entity);
+    Entity *createEntity(const String &name);
     
+    void addEntity(Entity *entity);
+
     /// @brief Will remove the entity from the world.
     /// @param entity   The entity to remove.
     bool removeEntity(Entity *entity);
@@ -111,8 +114,9 @@ private:
     cppcore::TArray<Entity*> mEntities;
     CameraComponent *mActiveCamera;
     TransformComponent *mRoot;
-    Common::Ids mIds;
+    Common::Ids &mIds;
     RenderBackend::Pipeline *mPipeline;
+    ComponentRegistry mComponentRegistry;
     bool mDirtry;
 };
 

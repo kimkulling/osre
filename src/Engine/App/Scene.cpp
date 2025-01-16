@@ -37,25 +37,35 @@ using namespace ::OSRE::RenderBackend;
 
 static constexpr c8 Tag[] = "Scene";
 
-Scene::Scene(const String &worldName) :
+Scene::Scene(const String &worldName, Common::Ids &ids) :
         Object(worldName),
         mEntities(),
         mActiveCamera(nullptr),
         mRoot(nullptr),
-        mIds(),
+        mIds(ids),
         mPipeline(nullptr),
         mDirtry(false) {
     // empty
 }
 
-void Scene::addEntity(Entity *entity) {
-    if (nullptr == entity) {
-        osre_debug(Tag, "Pointer to entity are nullptr");
+Entity *Scene::createEntity(const String &name) {
+    Entity *entity = new Entity(name, mIds, this);
+    mDirtry = true;
+    mEntities.add(entity);
+
+    return entity;
+}
+
+void Scene::addEntity(Entity* entity) {
+    if (entity == nullptr) {
+        osre_error(Tag, "Entity is a nullptr.");
         return;
     }
+
     mDirtry = true;
     mEntities.add(entity);
 }
+
 
 Entity *Scene::findEntity(const String &name) {
     if (name.empty()) {

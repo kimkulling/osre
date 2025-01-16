@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         running = osreApp.handleEvents();
         Scene *world = osreApp.getActiveScene();
         if (world != nullptr) {
-            world = new Scene("world");
+            world = new Scene("world", *osreApp.getIdContainer());
             osreApp.addScene(world, true);
         }
         osreApp.update();

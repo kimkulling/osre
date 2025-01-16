@@ -62,10 +62,10 @@ protected:
         }
 
         AppBase::setWindowsTitle("Animation sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        Scene *scene = new Scene("hello_world");
+        Scene *scene = new Scene("hello_world", *getIdContainer());
         addScene(scene, true);
 
-        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        Entity *camEntity = scene->createEntity("camera");
         scene->addEntity(camEntity);
         CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
         scene->setActiveCamera(camera);

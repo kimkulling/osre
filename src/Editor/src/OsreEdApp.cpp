@@ -81,7 +81,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     
     Scene *scene = getActiveScene();
     if (scene == nullptr) {
-        scene = new Scene(modelLoc.getResource());
+        scene = new Scene(modelLoc.getResource(), *getIdContainer());
         addScene(scene, true);
     }
 
@@ -134,7 +134,7 @@ bool OsreEdApp::onCreate() {
     }
 
     AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-    Scene *world = new Scene("hello_world");
+    Scene *world = new Scene("hello_world", *getIdContainer());
     addScene(world, true);
     mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
     CameraComponent *camera = setupCamera(world);

@@ -194,7 +194,7 @@ Entity *AssimpWrapper::convertScene() {
     }
 
     if (mAssetContext.mWorld == nullptr) {
-        mAssetContext.mWorld = new Scene("scene");
+        mAssetContext.mWorld = new Scene("scene", mAssetContext.mIds);
     }
 
     mAssetContext.mEntity = new Entity(mAssetContext.mAbsPathWithFile, mAssetContext.mIds, mAssetContext.mWorld);

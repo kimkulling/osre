@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderCommon.h"
 
 #include <cppcore/Container/TArray.h>
+#include <map>
 
 namespace OSRE {
 
@@ -49,6 +50,42 @@ enum class ComponentType {
     CameraComponentType,        ///< For camera components.
     AnimationComponentType,     ///< For animation support.
     Count                       ///< The number of components.
+};
+
+using EntityId = guid;
+
+struct Transform {
+    EntityId mId;
+    EntityId mParentId;
+    glm::vec3 mTranslate;
+    glm::vec3 mScale;
+    glm::quat mRotation;
+    glm::mat4 mLocalTransform;
+    glm::mat4 mWorldTransform;
+
+    Transform() :
+            mId(), mParentId(), mTranslate(0), mScale(1), mRotation(), mLocalTransform(1), mWorldTransform(1) {
+        // empty
+    }
+};
+
+struct ComponentRegistry {
+    cppcore::TArray<Transform> mTransformComponents;
+
+    ComponentRegistry() = default;
+    ~ComponentRegistry() = default;
+};
+
+struct TransformSystem {
+    void update(ComponentRegistry &reg) {
+        for (size_t i = 0; i < reg.mTransformComponents.size(); ++i) {
+            Transform &t = reg.mTransformComponents[i];
+            glm::translate(t.mLocalTransform, t.mTranslate);
+            glm::scale(t.mLocalTransform, t.mScale);
+            const glm::mat4 r = glm::toMat4(t.mRotation);
+            t.mLocalTransform *= r;
+        }
+    }
 };
 
 //-------------------------------------------------------------------------------------------------

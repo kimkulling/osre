@@ -36,21 +36,20 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 
-Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
+Entity::Entity(const String &name, Common::Ids &ids, Scene *scene) :
         Object(name),
-        mBehavior(nullptr),
         mRenderComponent(nullptr),
         mComponentArray(),
         mTransformNode(nullptr),
         mIds(ids),
         mAabb(),
-        mOwner(world) {
+        mOwner(scene) {
     mComponentArray.resize(Component::getIndex(ComponentType::Count));
     mComponentArray.set(nullptr);
     mRenderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
-    if (nullptr != mOwner) {
+    /* if (nullptr != mOwner) {
         mOwner->addEntity(this);
-    }
+    }*/
 }
 
 Entity::~Entity() {
@@ -63,10 +62,6 @@ Entity::~Entity() {
     }
 }
 
-void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {
-    mBehavior = behaviour;
-}
-
 void Entity::setNode(TransformComponent *node) {
     mTransformNode = node;
 }
@@ -76,10 +71,6 @@ TransformComponent *Entity::getNode() const {
 }
 
 bool Entity::update(Time dt) {
-    if (nullptr != mBehavior) {
-        mBehavior->update(dt);
-    }
-
     for (auto &it : mComponentArray) {
         if (it != nullptr) {
             it->update(dt);
