@@ -41,7 +41,7 @@ namespace IO {
 
 namespace App {
 
-class TransformComponent;
+class SceneNode;
 class AbstractBehaviour;
 class Component;
 class RenderComponent;
@@ -67,8 +67,8 @@ public:
 
     /// @brief The class destructor.
     ~Entity() override;
-    void setNode(TransformComponent *node);
-    TransformComponent *getNode() const;
+    void setNode(SceneNode *node);
+    SceneNode *getNode() const;
     bool update( Time dt );
     bool render(RenderBackend::RenderBackendService *rbSrv);
     Component *createComponent(ComponentType type);
@@ -79,7 +79,7 @@ public:
 private:
     RenderComponent *mRenderComponent;
     ComponentArray mComponentArray;
-    TransformComponent *mTransformNode;
+    SceneNode *mTransformNode;
     Common::Ids &mIds;
     Common::AABB mAabb;
     Scene *mOwner;

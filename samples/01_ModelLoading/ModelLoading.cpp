@@ -53,7 +53,7 @@ class ModelLoadingApp : public App::AppBase {
     String mAssetFolder;                                                ///< The asset folder, here we will locate our assets.
     App::CameraComponent *mCamera;                                      ///< The camera component.
     TransformMatrixBlock mTransformMatrix;                              ///< The transform block.
-    TransformComponent::NodePtr mModelNode;                             ///< The mode node.
+    SceneNode::NodePtr mModelNode;                             ///< The mode node.
     int mIntention = 0;                                                 ///< The intention. 
     Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;   ///< The controller for the keyboard.
 

@@ -85,11 +85,11 @@ public:
 
     ///	@brief
     /// @param[in] root 
-    void setSceneRoot(TransformComponent *root);
+    void setSceneRoot(SceneNode *root);
     
     /// @brief  Will return the root node of the world.
     /// @return Pointer showing to the root node.
-    TransformComponent *getRootNode() const;
+    SceneNode *getRootNode() const;
 
     /// @brief  
     void init();
@@ -113,14 +113,15 @@ protected:
 private:
     cppcore::TArray<Entity*> mEntities;
     CameraComponent *mActiveCamera;
-    TransformComponent *mRoot;
+    SceneNode *mRoot;
     Common::Ids &mIds;
     RenderBackend::Pipeline *mPipeline;
     ComponentRegistry mComponentRegistry;
+    TransformSystem mTransformSystem;
     bool mDirtry;
 };
 
-inline TransformComponent *Scene::getRootNode() const {
+inline SceneNode *Scene::getRootNode() const {
     return mRoot;
 }
 

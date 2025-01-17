@@ -49,7 +49,7 @@ namespace App {
 class MouseEventListener;
 class KeyboardEventListener;
 class CameraComponent;
-class TransformComponent;
+class SceneNode;
 
 template<class T> class TAbstractCtrlBase;
 

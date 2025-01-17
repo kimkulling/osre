@@ -109,7 +109,7 @@ struct EntityData {
             mEntityName() {}
 };
 
-struct WorldData {
+struct SceneData {
     ChunkName mWorldName;
     i32 mNumNodes;
     NodeData *mNodes;
@@ -121,7 +121,7 @@ struct WorldData {
     i32 mNumEntities;
     EntityData *mEntityData;
 
-    WorldData() :
+    SceneData() :
             mWorldName(), 
             mNumNodes(NotInited), 
             mNodes(nullptr), 
@@ -142,7 +142,7 @@ struct ProjectData {
     ChunkName mProjectName;
     ChunkName mActiveWorld;
     i32 mNumWorlds;
-    WorldData *mWorldData;
+    SceneData *mSceneData;
 
     ProjectData() :
             mMajorVersion(NotInited),
@@ -150,7 +150,7 @@ struct ProjectData {
             mProjectName(),
             mActiveWorld(),
             mNumWorlds(NotInited),
-            mWorldData(nullptr) {
+            mSceneData(nullptr) {
         // empty
     }
 };

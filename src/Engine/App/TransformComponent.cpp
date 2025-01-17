@@ -33,7 +33,7 @@ namespace OSRE {
 namespace App {
 
 namespace {
-    static void releaseTransformComponent(TransformComponent *child) {
+    static void releaseTransformComponent(SceneNode *child) {
         osre_assert(child != nullptr);
 
         child->setParent(nullptr);
@@ -45,7 +45,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 
 static constexpr size_t NotFound = 99999999;
-TransformComponent::TransformComponent(const String &name, Entity *owner, Ids &ids, TransformComponent *parent) :
+SceneNode::SceneNode(const String &name, Entity *owner, Ids &ids, SceneNode *parent) :
         Object(name),
         Component(owner, ComponentType::TransformComponentType),
         mChildren(),
@@ -60,7 +60,7 @@ TransformComponent::TransformComponent(const String &name, Entity *owner, Ids &i
     }
 }
 
-TransformComponent::~TransformComponent() {
+SceneNode::~SceneNode() {
     if (!mChildren.isEmpty()) {
         for (size_t i = 0; i < mChildren.size(); i++) {
             releaseTransformComponent(mChildren[i]);
@@ -69,37 +69,37 @@ TransformComponent::~TransformComponent() {
     }
 }
 
-void TransformComponent::setParent(TransformComponent *parent) {
+void SceneNode::setParent(SceneNode *parent) {
     // weak reference
     mParent = parent;
 }
 
-TransformComponent *TransformComponent::getParent() const {
+SceneNode *SceneNode::getParent() const {
     return mParent;
 }
 
-TransformComponent *TransformComponent::createChild(const String &name) {
-    TransformComponent *child = new TransformComponent(name, getOwner(), * mIds, this);
+SceneNode *SceneNode::createChild(const String &name) {
+    SceneNode *child = new SceneNode(name, getOwner(), * mIds, this);
     mChildren.add(child);
     child->get();
 
     return child;
 }
 
-void TransformComponent::addChild(TransformComponent *child) {
+void SceneNode::addChild(SceneNode *child) {
     if (nullptr != child) {
         mChildren.add(child);
         child->get();
     }
 }
 
-bool TransformComponent::removeChild(const String &name, TraverseMode mode) {
+bool SceneNode::removeChild(const String &name) {
     if (name.empty()) {
         return false;
     }
 
     bool found = false;
-    TransformComponent *currentNode = nullptr;
+    SceneNode *currentNode = nullptr;
     for (ui32 i = 0; i < mChildren.size(); i++) {
         currentNode = mChildren[i];
         if (nullptr != currentNode) {
@@ -111,23 +111,21 @@ bool TransformComponent::removeChild(const String &name, TraverseMode mode) {
             }
         }
 
-        if (TraverseMode::RecursiveMode == mode) {
-            found = currentNode->removeChild(name, mode);
-            if (found) {
-                break;
-            }
+        found = currentNode->removeChild(name);
+        if (found) {
+            break;
         }
     }
 
     return found;
 }
 
-TransformComponent *TransformComponent::findChild(const String &name) const {
+SceneNode *SceneNode::findChild(const String &name) const {
     if (name.empty()) {
         return nullptr;
     }
 
-    TransformComponent *currentNode = nullptr;
+    SceneNode *currentNode = nullptr;
     for (ui32 i = 0; i < mChildren.size(); i++) {
         currentNode = mChildren[i];
         if (nullptr != currentNode) {
@@ -140,11 +138,11 @@ TransformComponent *TransformComponent::findChild(const String &name) const {
     return nullptr;
 }
 
-size_t TransformComponent::getNumChildren() const {
+size_t SceneNode::getNumChildren() const {
     return mChildren.size();
 }
 
-TransformComponent *TransformComponent::getChildAt(size_t idx) const {
+SceneNode *SceneNode::getChildAt(size_t idx) const {
     if (idx >= mChildren.size()) {
         return nullptr;
     }
@@ -152,7 +150,7 @@ TransformComponent *TransformComponent::getChildAt(size_t idx) const {
     return mChildren[idx];
 }
 
-void TransformComponent::releaseChildren() {
+void SceneNode::releaseChildren() {
     if (mChildren.isEmpty()) {
         return;
     }
@@ -164,7 +162,7 @@ void TransformComponent::releaseChildren() {
     }
 }
 
-void TransformComponent::render(RenderBackendService *renderBackendSrv) {
+void SceneNode::render(RenderBackendService *renderBackendSrv) {
     if (nullptr == renderBackendSrv) {
         return;
     }
@@ -172,61 +170,45 @@ void TransformComponent::render(RenderBackendService *renderBackendSrv) {
     onRender(renderBackendSrv);
 }
 
-void TransformComponent::translate(const glm::vec3 &pos) {
-    mLocalTransform = glm::translate(mLocalTransform, pos);
-}
-
-void TransformComponent::scale(const glm::vec3 &scale) {
-    mLocalTransform = glm::scale(mLocalTransform, scale);
-}
-
-void TransformComponent::rotate(f32 angle, const glm::vec3 &axis) {
-    mLocalTransform = glm::rotate(mLocalTransform, angle, axis);
-}
-
-void TransformComponent::setRotation(glm::quat &rotation) {
-    glm::toMat4(rotation);
-}
-
-void TransformComponent::setTransformationMatrix(const glm::mat4 &m) {
+void SceneNode::setTransformationMatrix(const glm::mat4 &m) {
     mLocalTransform = m;
 }
 
-const glm::mat4 &TransformComponent::getTransformationMatrix() const {
+const glm::mat4 &SceneNode::getTransformationMatrix() const {
     return mLocalTransform;
 }
 
-glm::mat4 TransformComponent::getWorlTransformMatrix() {
+glm::mat4 SceneNode::getWorlTransformMatrix() {
     glm::mat4 wt(1.0);
-    for (const TransformComponent *node = this; node != nullptr; node = node->getParent()) {
+    for (const SceneNode *node = this; node != nullptr; node = node->getParent()) {
         wt *= node->getTransformationMatrix();
     }
 
     return wt;
 }
 
-bool TransformComponent::onUpdate(Time) {
+bool SceneNode::onUpdate(Time) {
     mWorldTransform = getWorlTransformMatrix();
 
     return true;
 }
 
-bool TransformComponent::onRender(RenderBackendService *) {
+bool SceneNode::onRender(RenderBackendService *) {
     return true;
 }
 
-void TransformComponent::addMeshReference(size_t entityMeshIdx) {
+void SceneNode::addMeshReference(size_t entityMeshIdx) {
     MeshReferenceArray::Iterator it = mMeshRefererenceArray.find(entityMeshIdx);
     if (mMeshRefererenceArray.end() == it) {
         mMeshRefererenceArray.add(entityMeshIdx);
     }
 }
 
-size_t TransformComponent::getNumMeshReferences() const {
+size_t SceneNode::getNumMeshReferences() const {
     return mMeshRefererenceArray.size();
 }
 
-size_t TransformComponent::getMeshReferenceAt(size_t index) const {
+size_t SceneNode::getMeshReferenceAt(size_t index) const {
     if (index >= mMeshRefererenceArray.size()) {
         return NotFound;
     }

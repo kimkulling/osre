@@ -129,7 +129,7 @@ Entity *Scene::getEntityByName(const String &name) const {
     return entity;
 }
 
-void Scene::setSceneRoot(TransformComponent *root ) {
+void Scene::setSceneRoot(SceneNode *root ) {
     mRoot = root;
     mDirtry = true;
 }
@@ -147,6 +147,8 @@ void Scene::update(Time dt) {
     if (mDirtry) {
         updateBoundingTrees();
     }
+
+    mTransformSystem.update(mComponentRegistry);
 
     for (Entity *entity : mEntities) {
         if (nullptr != entity) {

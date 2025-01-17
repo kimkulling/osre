@@ -97,5 +97,21 @@ bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
     return true;
 }
 
+
+void RenderableSystem::render(ComponentRegistry &reg, RenderBackend::RenderBackendService *rbSrv) {
+    for (size_t i = 0; i < reg.mRenderComponents.size(); ++i) {
+        Renderable &r = reg.mRenderComponents[i];
+        for (size_t j = 0; j < r.mRenderMeshes.size(); ++j) {
+            rbSrv->addMesh(r.mRenderMeshes[j], 0);
+        }
+        r.mRenderMeshes.clear();
+
+        for (size_t j = 0; j < r.mRenderMeshes.size(); ++j) {
+            rbSrv->updateMesh(r.mRenderMeshes[j]);
+        }
+        r.mRenderUpdates.clear();
+    }
+}
+
 } // namespace App
 } // namespace OSRE

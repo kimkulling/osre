@@ -40,7 +40,7 @@ namespace RenderBackend {
 namespace App {
 
 class Entity;
-class TransformComponent;
+class SceneNode;
 
 ///	@brief This enum describes the component type.
 enum class ComponentType {
@@ -69,8 +69,15 @@ struct Transform {
     }
 };
 
+struct Renderable {
+    EntityId mId;
+    cppcore::TArray<RenderBackend::Mesh*> mRenderMeshes;
+    cppcore::TArray<RenderBackend::Mesh*> mRenderUpdates;
+};
+
 struct ComponentRegistry {
     cppcore::TArray<Transform> mTransformComponents;
+    cppcore::TArray<Renderable> mRenderComponents;
 
     ComponentRegistry() = default;
     ~ComponentRegistry() = default;
@@ -86,6 +93,10 @@ struct TransformSystem {
             t.mLocalTransform *= r;
         }
     }
+};
+
+struct RenderableSystem {
+    void render(ComponentRegistry &reg, RenderBackend::RenderBackendService *rbSrv);
 };
 
 //-------------------------------------------------------------------------------------------------

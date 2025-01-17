@@ -56,43 +56,32 @@ namespace App {
 /// several functionalities by adding components to is. Each component implements functionality
 /// like render geometry or transformation information.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TransformComponent : public Common::Object, public Component {
+class OSRE_EXPORT SceneNode : public Common::Object, public Component {
 public:
     /// @brief The node pointer type.
-    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::TransformComponent>;
+    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::SceneNode>;
     /// @brief The node array type.
-    using NodeArray = cppcore::TArray<TransformComponent *>;
+    using NodeArray = cppcore::TArray<SceneNode *>;
     /// @brief Used to declare mesh-array instances.
     using MeshReferenceArray = ::cppcore::TArray<size_t>;
     /// @brief Used to declare properties.
     using PropertyMap = cppcore::THashMap<ui32, Properties::Property *>;
 
-    ///	@brief  Describes the traversal mode.
-    enum class TraverseMode {
-        FlatMode,           ///< Flat, ignore children.
-        RecursiveMode       ///< Recursive, iterate through children.
-    };
-
 public:
-    TransformComponent(const String &name, Entity *owner, Common::Ids &ids, TransformComponent *parent = nullptr);
-    virtual ~TransformComponent();
-    virtual void setParent(TransformComponent *parent);
-    virtual TransformComponent *getParent() const;
-    virtual TransformComponent *createChild(const String &name);
-    virtual void addChild(TransformComponent *child);
-    virtual bool removeChild(const String &name, TraverseMode mode);
-    virtual TransformComponent *findChild(const String &name) const;
+    SceneNode(const String &name, Entity *owner, Common::Ids &ids, SceneNode *parent = nullptr);
+    virtual ~SceneNode();
+    virtual void setParent(SceneNode *parent);
+    virtual SceneNode *getParent() const;
+    virtual SceneNode *createChild(const String &name);
+    virtual void addChild(SceneNode *child);
+    virtual bool removeChild(const String &name);
+    virtual SceneNode *findChild(const String &name) const;
     virtual size_t getNumChildren() const;
-    virtual TransformComponent *getChildAt(size_t idx) const;
+    virtual SceneNode *getChildAt(size_t idx) const;
     virtual void releaseChildren();
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
-
-    void translate(const glm::vec3 &pos);
-    void scale(const glm::vec3 &pos);
-    void rotate(f32 angle, const glm::vec3 &axis);
-    void setRotation(glm::quat &rotation);
     void setTransformationMatrix(const glm::mat4 &m);
     const glm::mat4 &getTransformationMatrix() const;
     glm::mat4 getWorlTransformMatrix();
@@ -107,7 +96,7 @@ protected:
 
 private:
     NodeArray mChildren;
-    TransformComponent *mParent;
+    SceneNode *mParent;
     MeshReferenceArray mMeshRefererenceArray;
     bool mIsActive;
     Common::Ids *mIds;
@@ -115,11 +104,11 @@ private:
     glm::mat4 mWorldTransform;
 };
 
-inline void TransformComponent::setActive(bool isActive) {
+inline void SceneNode::setActive(bool isActive) {
     mIsActive = isActive;
 }
 
-inline bool TransformComponent::isActive() const {
+inline bool SceneNode::isActive() const {
     return mIsActive;
 }
 

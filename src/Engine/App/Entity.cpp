@@ -47,9 +47,6 @@ Entity::Entity(const String &name, Common::Ids &ids, Scene *scene) :
     mComponentArray.resize(Component::getIndex(ComponentType::Count));
     mComponentArray.set(nullptr);
     mRenderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
-    /* if (nullptr != mOwner) {
-        mOwner->addEntity(this);
-    }*/
 }
 
 Entity::~Entity() {
@@ -62,11 +59,11 @@ Entity::~Entity() {
     }
 }
 
-void Entity::setNode(TransformComponent *node) {
+void Entity::setNode(SceneNode *node) {
     mTransformNode = node;
 }
 
-TransformComponent *Entity::getNode() const {
+SceneNode *Entity::getNode() const {
     return mTransformNode;
 }
 
@@ -101,7 +98,7 @@ Component *Entity::createComponent(ComponentType type) {
             break;
         case OSRE::App::ComponentType::TransformComponentType: {
                 const String name = getName() + "_transform";
-                component = new TransformComponent(name, this, mIds, nullptr); 
+                component = new SceneNode(name, this, mIds, nullptr); 
             }
             break;
         case OSRE::App::ComponentType::CameraComponentType:

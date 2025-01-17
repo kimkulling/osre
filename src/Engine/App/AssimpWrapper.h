@@ -64,7 +64,7 @@ namespace App {
 
 class Entity;
 class Scene;
-class TransformComponent;
+class SceneNode;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -109,7 +109,7 @@ public:
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
-    void importNode( aiNode *node, TransformComponent *parent );
+    void importNode( aiNode *node, SceneNode *parent );
     void importMaterial( aiMaterial *material );
     void importAnimations(const aiScene *scene);
     void optimizeVertexBuffer();
@@ -123,7 +123,7 @@ private:
         Entity *mEntity;
         Scene *mWorld;
         MaterialArray mMatArray;
-        App::TransformComponent *mParentNode;
+        App::SceneNode *mParentNode;
         Common::Ids &mIds;
         String mRoot;
         String mAbsPathWithFile;

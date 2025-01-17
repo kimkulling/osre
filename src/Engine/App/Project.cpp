@@ -90,14 +90,14 @@ static void setNameChunk(const String &name, ChunkName &cn) {
     ::memcpy(cn.mChunkName, name.c_str(), cn.mLenChunkName);
 }
     
-static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
+static size_t getNumNodes(SceneNode *node, size_t currentNodeCount) {
     if (node->getNumChildren() == 0) {
         return currentNodeCount;
     }
     size_t numChildren = node->getNumChildren();
     currentNodeCount += numChildren;
     for (size_t i = 0; i < numChildren; ++i) {
-        TransformComponent *child = node->getChildAt(i);        
+        SceneNode *child = node->getChildAt(i);        
         if (child != nullptr) {
             currentNodeCount = getNumNodes(child, currentNodeCount);
         }
@@ -106,7 +106,7 @@ static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
     return currentNodeCount;
 }
  
-static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &index) {
+static void storeNodes(SceneNode *currentNode, NodeData *nd, size_t &index) {
     if (currentNode == nullptr || nd == nullptr) {
         return;
     }
@@ -119,7 +119,7 @@ static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &in
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;
     for (int i = 0; i < curNodeData.mNumChildren; i++) {
-        TransformComponent *child = currentNode->getChildAt(i);
+        SceneNode *child = currentNode->getChildAt(i);
         curNodeData.mChildrenIndices[current_child] = (i32) i;
         current_child++;
         ++index;
@@ -148,14 +148,14 @@ static void storeMeshes(MeshArray &meshes, MeshData *md) {
     }
 }
 
-static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &wd) {
+static void storeEntities(const cppcore::TArray<Entity *> &entities, SceneData &sceneData) {
     if (entities.isEmpty()) {
         return;
     }
     
     size_t numMeshes = 0;
-    wd.mNumEntities = (i32)entities.size();
-    wd.mEntityData = new EntityData[wd.mNumEntities];
+    sceneData.mNumEntities = (i32)entities.size();
+    sceneData.mEntityData = new EntityData[sceneData.mNumEntities];
     for (size_t i = 0; i < entities.size(); ++i) {
         const Entity *entity = entities[i];
         if (entity == nullptr) {
@@ -180,21 +180,21 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
     }
 }
 
-static bool saveScene(const Scene *scene, WorldData &wd) {
-    setNameChunk(scene->getName(), wd.mWorldName);
+static bool saveScene(const Scene *scene, SceneData &sceneData) {
+    setNameChunk(scene->getName(), sceneData.mWorldName);
 
-    TransformComponent *root = scene->getRootNode();
+    SceneNode *root = scene->getRootNode();
     if (nullptr == root) {
         return true;
     }
 
     size_t numNodes = 1;
-    wd.mNumNodes = (i32) getNumNodes(root, numNodes);
-    wd.mNodes = new NodeData[wd.mNumNodes];
+    sceneData.mNumNodes = (i32)getNumNodes(root, numNodes);
+    sceneData.mNodes = new NodeData[sceneData.mNumNodes];
     size_t index = 0;
-    storeNodes(root, wd.mNodes, index);
+    storeNodes(root, sceneData.mNodes, index);
     const cppcore::TArray<Entity *> &entities = scene->getEntityArray();
-    storeEntities(entities, wd);
+    storeEntities(entities, sceneData);
 
     return true;
 }
