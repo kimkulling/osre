@@ -85,7 +85,7 @@ protected:
         }
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        Scene *scene = new Scene("hello_world");
+        auto *scene = new Scene("hello_world");
         addScene(scene, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         MeshBuilder meshBuilder;
