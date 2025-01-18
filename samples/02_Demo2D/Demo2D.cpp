@@ -70,7 +70,7 @@ public:
 
 protected:
     CameraComponent *setupCamera(Scene *scene) {
-        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        auto *camEntity = new Entity("camera", *getIdContainer(), scene);
         scene->addEntity(camEntity);
         CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
         scene->setActiveCamera(camera);
@@ -129,7 +129,7 @@ protected:
 
         mCanvasRenderer->drawText(300, 100, "Test");
 
-        Scene *scene = new Scene("hello_world");
+        auto *scene = new Scene("hello_world");
         addScene(scene, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         MeshBuilder meshBuilder;
