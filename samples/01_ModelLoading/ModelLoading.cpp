@@ -148,15 +148,15 @@ protected:
 
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
-        Scene *world = new Scene("model");
-        addScene(world, true);
-        Entity *entity = assimpWrapper.getEntity();
-        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
+        auto *scene = new Scene("model");
+        addScene(scene, true);
+        auto *entity = assimpWrapper.getEntity();
+        auto *camEntity = new Entity("camera", *getIdContainer(), scene);
         mCamera = (CameraComponent*)camEntity->createComponent(ComponentType::CameraComponentType);
         mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
-        world->setActiveCamera(mCamera);
+        scene->setActiveCamera(mCamera);
 
-        world->addEntity(entity);
+        scene->addEntity(entity);
         mCamera->observeBoundingBox(entity->getAABB());
         mModelNode = entity->getNode();
 
