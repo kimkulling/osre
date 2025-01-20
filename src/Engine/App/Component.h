@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/BaseMath.h"
 #include "IO/Stream.h"
 #include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/RenderBackendService.h"
 
 #include <cppcore/Container/TArray.h>
 #include <map>
@@ -96,7 +97,21 @@ struct TransformSystem {
 };
 
 struct RenderableSystem {
-    void render(ComponentRegistry &reg, RenderBackend::RenderBackendService *rbSrv);
+    void render(ComponentRegistry& reg, RenderBackend::RenderBackendService* rbSrv) {
+        for (size_t i = 0; i < reg.mRenderComponents.size(); ++i) {
+            Renderable &r = reg.mRenderComponents[i];
+            if (!r.mRenderMeshes.isEmpty()) {
+                for (size_t j = 0; j < r.mRenderMeshes.size(); ++j) {
+                    rbSrv->addMesh(r.mRenderMeshes[j], 0);
+                }
+                r.mRenderMeshes.clear();
+                for (size_t j = 0; j < r.mRenderUpdates.size(); ++j) {
+                    rbSrv->updateMesh(r.mRenderUpdates[j]);
+                }
+                r.mRenderUpdates.clear();
+            }
+        }
+    }
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -207,7 +222,6 @@ protected:
 private:
     cppcore::TArray<RenderBackend::Mesh*> m_newGeo;
 };
-
 
 } // namespace App
 } // namespace OSRE
