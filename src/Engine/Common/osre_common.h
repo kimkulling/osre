@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -233,26 +233,18 @@ inline i64 Time::asMicroSeconds() const {
 
 /// @brief  This type can be used to define a color with 4 colors.
 struct Color4 {
-    f32 m_r, m_g, m_b, m_a;
+    f32 r, g, b, a;
 
-    Color4() :
-            m_r(1.f),
-            m_g(1.f),
-            m_b(1.f),
-            m_a(1.f) {
+    Color4() : r(1.f), g(1.f), b(1.f), a(1.f) {
         // empty
     }
 
-    Color4(f32 r, f32 _g, f32 b, f32 a) :
-            m_r(r),
-            m_g(_g),
-            m_b(b),
-            m_a(a) {
+    Color4(f32 r_, f32 g_, f32 b_, f32 a_) : r(r_), g(g_), b(b_), a(a_) {
         // empty
     }
 
     bool operator==(const Color4 &rhs) const {
-        return (m_r == rhs.m_r && m_g == rhs.m_g && m_b == rhs.m_b && m_a == rhs.m_a);
+        return (r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a);
     }
 
     bool operator!=(const Color4 &rhs) const {
@@ -260,67 +252,51 @@ struct Color4 {
     }
 
     glm::vec4 toVec4() const {
-        glm::vec4 col = {};
-        col.r = m_r;
-        col.g = m_g;
-        col.b = m_b;
-        col.a = m_a;
+        glm::vec4 col = {r, b, g, a};
         return col;
     }
 
     glm::vec3 toVec3() const {
-        glm::vec3 col = {};
-        col.r = m_r;
-        col.g = m_g;
-        col.b = m_b;
+        glm::vec3 col = {r, g, b};
         return col;
     }
 
     f32 operator[](ui32 index) const {
         switch (index) {
-            case 0: return m_r;
-            case 1: return m_g;
-            case 2: return m_b;
-            case 3: return m_a;
-            default:
-                break;
+            case 0: return r;
+            case 1: return g;
+            case 2: return b;
+            case 3: return a;
         }
 
         return 0.0f;
     }
 };
 
-/// @brief  a 2D point.
+/// @brief Representation of a 2D point.
 template <class T>
 struct TPoint2 {
     T x, y;
 
     /// @brief  The default class constructor.
-    TPoint2() :
-            x(0),
-            y(0) {
+    TPoint2() : x(0), y(0) {
         // empty
     }
 
     /// @brief  The class constructor with the values.
-    /// @param  x   [in] The x-component.
-    /// @param  y   [in] The y-component.
-    TPoint2(T x_, T y_) :
-            x(x_),
-            y(y_) {
+    /// @param[in] x    The x-component.
+    /// @param[in] y    The y-component.
+    TPoint2(T x_, T y_) : x(x_), y(y_) {
         // empty
     }
 
-    ///	@brief  The class destructor.
-    ~TPoint2() = default;
-
     /// @brief  The compare operator.
-    bool operator==(const TPoint2<T> &rhs) const {
+    bool operator == (const TPoint2<T> &rhs) const {
         return (x == rhs.x && y == rhs.y);
     }
 
     /// @brief  The not-equal operator.
-    bool operator!=(const TPoint2<T> &rhs) const {
+    bool operator != (const TPoint2<T> &rhs) const {
         return !(*this == rhs);
     }
 };
@@ -334,8 +310,7 @@ struct TRectangle {
     T x1, y1, x2, y2, width, height;
 
     /// @brief  The default class constructor.
-    TRectangle() :
-            x1(0), y1(0), x2(0), y2(0), width(0), height(0) {
+    TRectangle() : x1(0), y1(0), x2(0), y2(0), width(0), height(0) {
         // empty
     }
 
@@ -345,17 +320,9 @@ struct TRectangle {
     /// @param[in] width   The width of the rectangle.
     /// @param[in] height  The height of the rectangle.
     TRectangle(T x, T y, T width, T height) :
-            x1(x),
-            y1(y),
-            x2(x + width),
-            y2(y + height),
-            width(width),
-            height(height) {
+            x1(x), y1(y), x2(x + width), y2(y + height), width(width), height(height) {
         // empty
     }
-
-    /// @brief  The class destructor.
-    ~TRectangle() = default;
 
     /// @brief  Will set the rectangle-geometry with the upper left corner, width and height.
     /// @param[in] x       X coordinate of upper left corner.
@@ -433,12 +400,12 @@ struct TRectangle {
     }
 
     /// @brief  The compare operator.
-    const bool operator==(const TRectangle<T> &rhs) const {
+    const bool operator == (const TRectangle<T> &rhs) const {
         return (x1 == rhs.x1 && y1 == rhs.y1 && width == rhs.width && height == rhs.height);
     }
 
     /// @brief  The not-equal operator.
-    const bool operator!=(const TRectangle<T> &rhs) const {
+    const bool operator != (const TRectangle<T> &rhs) const {
         return (x1 != rhs.x1 || y1 != rhs.y1 || width != rhs.width || height != rhs.height);
     }
 
@@ -463,17 +430,29 @@ using Rect2i = TRectangle<i32>;
 /// @brief  The resolution type
 template <class T>
 struct TResolution {
-    T width;
-    T height;
+    T width;        ///< The width
+    T height;       ///< he heigth
 
+    /// @brief The default class constructor.
+    TResolution() : width(0), height(0) {
+        // empty
+    }
+
+    /// @brief The class constructor.
+    /// @param[in] w    The width
+    /// @param[in] h    The height
     TResolution(T w, T h) : width(w), height(h) {
         // empty
     }
 
+    /// @brief Will calculate the area.
+    /// @return The area.
     T getArea() const {
         return width * height;
     }
 };
+
+using ResolutionUi = TResolution<ui32>;
 
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE(NAME)  \
@@ -490,37 +469,46 @@ static constexpr i32 CurrentMinorVersion = 1;
 
 /// @brief  The version type
 struct Version {
-    i32 mMajor;
-    i32 mMinor;
+    i32 major;      ///< Major version
+    i32 minor;      ///< Minor version
 
-    Version(i32 major, i32 minor) : mMajor(major), mMinor(minor) {
+    Version(i32 major, i32 minor) : major(major), minor(minor) {
         // empty
     }
 };
 
+/// @brief ontainer for the memory consumption data.
 class OSRE_EXPORT MemoryStatistics {
 public:
-    static size_t sAllocated;
-    static size_t sNumNew;
-    static size_t sActiveAllocs;
+    static size_t allocated;        ///< Allocated memory in bytes
+    static size_t numNew;           ///< Number of new calls
+    static size_t activeAllocs;     ///< Number of delete calls
 
+    /// @brief Will add bytes to the allocated memory.
+    /// @param[in] allocSize    The number of allocated byzes.
     static void addAllocated(size_t allocSize);
+    
+    /// @brief Will clear the statistics.
     static void releaseAlloc();
+    
+    /// @brief Will show the statistics
     static void showStatistics();
 };
 
+/// @brief Enum for the fifetime cyle.
 enum class LifetimeState {
-    Invalid = -1,
-    Inited,
-    Created,
-    Running,
-    Detroyed,
-    Error,
-    Count
+    Invalid = -1,   ///< Marks an invalid enum
+    Inited,         ///< Item is inited
+    Created,        ///< Item is created
+    Running,        ///< Item is running, still alive
+    Detroyed,       ///< Item is destroyed, not running any more
+    Error,          ///< Item is in error
+    Count           ///< Number of valid lifetime states
 };
 
 } // Namespace OSRE
 
+/// New overrides
 void *operator new(size_t size);
 void operator delete(void *ptr) noexcept;
 

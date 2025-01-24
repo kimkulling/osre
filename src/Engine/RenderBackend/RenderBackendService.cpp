@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -52,7 +52,7 @@ static i32 hasPass(const c8 *id, const ::cppcore::TArray<PassData *> &passDataAr
     }
 
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
-        if (0 == strncmp(passDataArray[i]->m_id, id, strlen(id))) {
+        if (0 == strncmp(passDataArray[i]->id, id, strlen(id))) {
             return i;
         }
     }
@@ -66,7 +66,7 @@ static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &bat
     }
 
     for (ui32 i = 0; i < batchDataArray.size(); ++i) {
-        if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
+        if (0 == strncmp(batchDataArray[i]->id, id, strlen(id))) {
             return i;
         }
     }
@@ -223,31 +223,31 @@ void RenderBackendService::commitNextFrame() {
             continue;
         }
 
-        for (ui32 j = 0; j < currentPass->mMeshBatches.size(); ++j) {
-            RenderBatchData *currentBatch = currentPass->mMeshBatches[j];
+        for (ui32 j = 0; j < currentPass->meshBatches.size(); ++j) {
+            RenderBatchData *currentBatch = currentPass->meshBatches[j];
             if (currentBatch == nullptr) {
                 continue;
             }
 
-            if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
-                FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
-                currentBatch->m_matrixBuffer.m_view = currentPass->mView;
-                currentBatch->m_matrixBuffer.m_proj = currentPass->mProj;
-                assert(cmd->m_batchId != nullptr);
-                cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
-                cmd->m_size = sizeof(MatrixBuffer);
-                cmd->m_data = new c8[cmd->m_size];
+            if (currentBatch->needsUpdate(RenderBatchData::MatrixBufferUpdate)) {
+                FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->id, currentBatch->id);
+                currentBatch->matrixBuffer.m_view = currentPass->view;
+                currentBatch->matrixBuffer.m_proj = currentPass->proj;
+                assert(cmd->batchId != nullptr);
+                cmd->updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
+                cmd->size = sizeof(MatrixBuffer);
+                cmd->data = new c8[cmd->size];
 
-                ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
+                ::memcpy(cmd->data, &currentBatch->matrixBuffer, cmd->size);
             }
 
-            if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
-                UniformBuffer &uniformBuffer = data->NextFrame->m_uniforBuffers[i];
-                for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
-                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
-                    assert(cmd->m_batchId != nullptr);
-                    cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
-                    UniformVar *var = currentBatch->m_uniforms[k];
+            if (currentBatch->needsUpdate(RenderBatchData::UniformBufferUpdate)) {
+                UniformBuffer &uniformBuffer = data->NextFrame->uniforBuffers[i];
+                for (ui32 k = 0; k < currentBatch->uniforms.size(); ++k) {
+                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->id, currentBatch->id);
+                    assert(cmd->batchId != nullptr);
+                    cmd->updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
+                    UniformVar *var = currentBatch->uniforms[k];
                     if (nullptr == var) {
                         continue;
                     }
@@ -255,38 +255,38 @@ void RenderBackendService::commitNextFrame() {
                     uniformBuffer.writeVar(var);
 
                     // todo: replace by uniform buffer.
-                    cmd->m_size = var->getSize();
-                    cmd->m_data = new c8[cmd->m_size];
+                    cmd->size = var->size();
+                    cmd->data = new c8[cmd->size];
                     size_t offset = 0;
-                    cmd->m_data[offset] = var->m_name.size() > 255 ? 255 : static_cast<c8>(var->m_name.size());
+                    cmd->data[offset] = var->name.size() > 255 ? 255 : static_cast<c8>(var->name.size());
                     ++offset;
-                    ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
-                    offset += var->m_name.size();
-                    ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
+                    ::memcpy(&cmd->data[offset], var->name.c_str(), var->name.size());
+                    offset += var->name.size();
+                    ::memcpy(&cmd->data[offset], var->data.getData(), var->data.size);
                 }
             }
 
-            if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
-                for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
-                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
-                    cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
-                    Mesh *currentMesh = currentBatch->m_updateMeshArray[k];
-                    cmd->m_meshId = currentMesh->getId();
-                    cmd->m_size = currentMesh->getVertexBuffer()->getSize();
-                    cmd->m_data = new c8[cmd->m_size];
-                    ::memcpy(cmd->m_data, currentMesh->getVertexBuffer()->getData(), cmd->m_size);
+            if (currentBatch->needsUpdate(RenderBatchData::MeshUpdateUpdate)) {
+                for (ui32 k = 0; k < currentBatch->updateMeshArray.size(); ++k) {
+                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->id, currentBatch->id);
+                    cmd->updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
+                    Mesh *currentMesh = currentBatch->updateMeshArray[k];
+                    cmd->meshId = currentMesh->getId();
+                    cmd->size = currentMesh->getVertexBuffer()->getSize();
+                    cmd->data = new c8[cmd->size];
+                    ::memcpy(cmd->data, currentMesh->getVertexBuffer()->getData(), cmd->size);
                 }
             }
 
-            if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
-                FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
-                PassData *pd = new PassData(currentPass->m_id, nullptr);
-                pd->mMeshBatches.add(currentBatch);
-                cmd->m_updatedPasses.add(pd);
-                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
+            if (currentBatch->needsUpdate(RenderBatchData::MeshUpdate)) {
+                FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->id, currentBatch->id);
+                PassData *pd = new PassData(currentPass->id, nullptr);
+                pd->meshBatches.add(currentBatch);
+                cmd->updatedPasses.add(pd);
+                cmd->updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
             }
 
-            currentBatch->m_dirtyFlag = 0;
+            currentBatch->clearFlags();
         }
     }
 
@@ -339,13 +339,13 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     }
 
     if (nullptr != mCurrentPass) {
-        if (0 == ::strncmp(mCurrentPass->m_id, id, strlen(id))) {
+        if (0 == ::strncmp(mCurrentPass->id, id, strlen(id))) {
             return mCurrentPass;
         }
     }
 
     for (ui32 i = 0; i < mPasses.size(); ++i) {
-        if (0 == ::strncmp(mPasses[i]->m_id, id, strlen(id))) {
+        if (0 == ::strncmp(mPasses[i]->id, id, strlen(id))) {
             return mPasses[i];
         }
     }
@@ -362,7 +362,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     mCurrentPass = getPassById(id);
     if (nullptr == mCurrentPass) {
         mCurrentPass = new PassData(id, nullptr);
-        mCurrentPass->mViewport = mViewport;
+        mCurrentPass->viewport = mViewport;
     }
     mDirty = true;
 
@@ -394,7 +394,7 @@ void RenderBackendService::setRenderTarget(FrameBuffer *fb) {
         return;
     }
 
-    mCurrentPass->mRenderTarget = fb;
+    mCurrentPass->renderTarget = fb;
 }
 
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
@@ -405,18 +405,18 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
 
     switch (type) {
         case MatrixType::Model:
-            mCurrentBatch->m_matrixBuffer.m_model = m;
-            mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
+            mCurrentBatch->matrixBuffer.m_model = m;
+            mCurrentBatch->dirtyFlag |= RenderBatchData::MatrixBufferUpdate;
             break;
         case MatrixType::View:
-            mCurrentPass->mView = m;
-            mCurrentBatch->m_matrixBuffer.m_view = m;
-            mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
+            mCurrentPass->view = m;
+            mCurrentBatch->matrixBuffer.m_view = m;
+            mCurrentBatch->dirtyFlag |= RenderBatchData::MatrixBufferUpdate;
             break;
         case MatrixType::Projection:
-            mCurrentPass->mProj = m;
-            mCurrentBatch->m_matrixBuffer.m_proj = m;
-            mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
+            mCurrentPass->proj = m;
+            mCurrentBatch->matrixBuffer.m_proj = m;
+            mCurrentBatch->dirtyFlag |= RenderBatchData::MatrixBufferUpdate;
             break;
         default:
             osre_warn(Tag, "Unknown matrix type.");
@@ -433,11 +433,11 @@ void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix
     UniformVar *var = mCurrentBatch->getVarByName(name.c_str());
     if (nullptr == var) {
         var = UniformVar::create(name, ParameterType::PT_Mat4);
-        mCurrentBatch->m_uniforms.add(var);
+        mCurrentBatch->uniforms.add(var);
     }
 
-    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
-    ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
+    mCurrentBatch->dirtyFlag |= RenderBatchData::UniformBufferUpdate;
+    ::memcpy(var->data.data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
 void RenderBackendService::addUniform(UniformVar *uniformVar) {
@@ -451,8 +451,8 @@ void RenderBackendService::addUniform(UniformVar *uniformVar) {
         return;
     }
 
-    mCurrentBatch->m_uniforms.add(uniformVar);
-    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
+    mCurrentBatch->uniforms.add(uniformVar);
+    mCurrentBatch->dirtyFlag |= RenderBatchData::UniformBufferUpdate;
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
@@ -464,11 +464,11 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     UniformVar *var = mCurrentBatch->getVarByName(name.c_str());
     if (nullptr == var) {
         var = UniformVar::create(name, ParameterType::PT_Mat4Array, numMat);
-        mCurrentBatch->m_uniforms.add(var);
+        mCurrentBatch->uniforms.add(var);
     }
 
-    ::memcpy(var->m_data.m_data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
-    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
+    ::memcpy(var->data.data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
+    mCurrentBatch->dirtyFlag |= RenderBatchData::UniformBufferUpdate;
 }
 
 void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
@@ -485,8 +485,8 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     MeshEntry *entry = new MeshEntry;
     entry->mMeshArray.add(mesh);
     entry->numInstances = numInstances;
-    mCurrentBatch->m_meshArray.add(entry);
-    mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
+    mCurrentBatch->meshArray.add(entry);
+    mCurrentBatch->dirtyFlag |= RenderBatchData::MeshUpdate;
 }
 
 void RenderBackendService::addMesh(const MeshArray &meshArray, ui32 numInstances) {
@@ -503,8 +503,8 @@ void RenderBackendService::addMesh(const MeshArray &meshArray, ui32 numInstances
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
     entry->mMeshArray.add(&meshArray[0], meshArray.size());
-    mCurrentBatch->m_meshArray.add(entry);
-    mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
+    mCurrentBatch->meshArray.add(entry);
+    mCurrentBatch->dirtyFlag |= RenderBatchData::MeshUpdate;
 }
 
 void RenderBackendService::updateMesh(Mesh *mesh) {
@@ -518,8 +518,8 @@ void RenderBackendService::updateMesh(Mesh *mesh) {
         return;
     }
 
-    mCurrentBatch->m_updateMeshArray.add(mesh);
-    mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshUpdateDirty;
+    mCurrentBatch->updateMeshArray.add(mesh);
+    mCurrentBatch->dirtyFlag |= RenderBatchData::MeshUpdateUpdate;
 }
 
 bool RenderBackendService::endRenderBatch() {
@@ -531,8 +531,8 @@ bool RenderBackendService::endRenderBatch() {
         mCurrentPass = new PassData("defaultPass", nullptr);
     }
 
-    if (-1 == hasBatch(mCurrentBatch->m_id, mCurrentPass->mMeshBatches)) {
-        mCurrentPass->mMeshBatches.add(mCurrentBatch);
+    if (-1 == hasBatch(mCurrentBatch->id, mCurrentPass->meshBatches)) {
+        mCurrentPass->meshBatches.add(mCurrentBatch);
     }
 
     mCurrentBatch = nullptr;
@@ -545,7 +545,7 @@ bool RenderBackendService::endPass() {
         return false;
     }
 
-    if (-1 == hasPass(mCurrentPass->m_id, mPasses)) {
+    if (-1 == hasPass(mCurrentPass->id, mPasses)) {
         mPasses.add(mCurrentPass);
     }
     mCurrentPass = nullptr;
@@ -589,10 +589,10 @@ void RenderBackendService::syncRenderThread() {
 }
 
 void RenderBackendService::setViewport( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    mViewport.m_x = x;
-    mViewport.m_y = y;
-    mViewport.m_w = w;
-    mViewport.m_h = h;
+    mViewport.x = x;
+    mViewport.y = y;
+    mViewport.w = w;
+    mViewport.h = h;
 }
 
 const Viewport &RenderBackendService::getViewport() const {

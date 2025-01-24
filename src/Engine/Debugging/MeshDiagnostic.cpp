@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -77,7 +77,7 @@ void MeshDiagnostic::dumpUiVertexCache(const UiVertexCache& vertexCache) {
     std::stringstream stream;
     stream << std::endl;
     for (size_t idx = 0; idx < vertexCache.numVertices(); ++idx) {
-        const RenderVert& vertex = vertexCache.m_cache[idx];
+        const RenderVert& vertex = vertexCache.cache[idx];
         stream << "v[" << idx << "].position = " << vertex.position.x << "|" << vertex.position.y << "|" << vertex.position.z << "\n";
         stream << "v[" << idx << "].normal   = " << vertex.normal.x << "|" << vertex.normal.y << "|" << vertex.normal.z << "\n";
         stream << "v[" << idx << "].color0   = " << vertex.color0.x << "|" << vertex.color0.y << "|" << vertex.color0.z << "\n";
@@ -131,7 +131,7 @@ void MeshDiagnostic::dumpUiIndexCache(const UiIndexCache& indexCache) {
     std::stringstream stream;
     stream << std::endl;
     for (size_t i = 0; i < indexCache.numIndices(); ++i){
-        stream << indexCache.m_cache[i] << ", ";
+        stream << indexCache.cache[i] << ", ";
     }
     stream << "\n";
     osre_info(Tag, stream.str());

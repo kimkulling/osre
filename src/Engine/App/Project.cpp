@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -46,7 +46,8 @@ static constexpr c8 Ext[] = "osre";
 Project::Project() :
         Object("App/Project"),
         mProjectDirtyState(0),
-        mProjectName() {
+        mProjectName(),
+        mScene(nullptr) {
     // empty
 }
 
@@ -181,6 +182,10 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, SceneData &
 }
 
 static bool saveScene(const Scene *scene, SceneData &sceneData) {
+    if (scene == nullptr) {
+        return false;
+    }
+
     setNameChunk(scene->getName(), sceneData.mWorldName);
 
     SceneNode *root = scene->getRootNode();
@@ -203,7 +208,13 @@ bool Project::save(const String &name) {
     if (name.empty()) {
         return false;
     }
+    
+    if (mScene == nullptr) {
+        return true;
+    }
 
+    SceneData sd;    
+    saveScene(mScene, sd);
         
     return true;
 }

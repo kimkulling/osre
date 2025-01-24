@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -89,12 +89,12 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
 
     for (ui32 i = 0; i < numTextures; ++i) {
         Texture *tex(mat->mTextures[i]);
-        if (!tex->TextureName.empty()) {
-            OGLTexture *oglTexture = rb->createTexture(tex->TextureName, tex);
+        if (!tex->textureName.empty()) {
+            OGLTexture *oglTexture = rb->createTexture(tex->textureName, tex);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
             } else {
-                textures.add(rb->createDefaultTexture(tex->TargetType, tex->PixelFormat, tex->Width, tex->Height));
+                textures.add(rb->createDefaultTexture(tex->targetType, tex->pixelFormat, tex->width, tex->height));
             }
         }
     }
@@ -118,13 +118,13 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             setupTextures(material, rb, textures);
             auto *renderMatCmd = new OGLRenderCmd(OGLRenderCmdType::SetMaterialCmd);
             if (!textures.isEmpty()) {
-                matData->m_textures = textures;
+                matData->textures = textures;
             }
             String name = "mat";
             name += material->mName;
             OGLShader *shader = rb->createShader(name, material->mShader);
             if (nullptr != shader) {
-                matData->m_shader = shader;
+                matData->shader = shader;
                 for (size_t i = 0; i < material->mShader->getNumVertexAttributes(); ++i) {
                     shader->addAttribute(material->mShader->getVertexAttributeAt(i));
                 }
@@ -155,11 +155,11 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
     }
 
     ::cppcore::TArray<OGLParameter *> paramArray;
-    OGLParameter *oglParam = rb->getParameter(param->m_name);
+    OGLParameter *oglParam = rb->getParameter(param->name);
     if (nullptr == oglParam) {
-        oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);
+        oglParam = rb->createParameter(param->name, param->type, &param->data, param->numItems);
     } else {
-        ::memcpy(oglParam->m_data->getData(), param->m_data.getData(), param->m_data.m_size);
+        ::memcpy(oglParam->data->getData(), param->data.getData(), param->data.size);
     }
 
     paramArray.add(oglParam);
@@ -188,10 +188,10 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     }
 
     // create vertex buffer and  and pass triangle vertex to buffer object
-    OGLBuffer *vb = rb->createBuffer(vertices->m_type);
-    vb->m_geoId = mesh->getId();
+    OGLBuffer *vb = rb->createBuffer(vertices->type);
+    vb->geoId = mesh->getId();
     rb->bindBuffer(vb);
-    rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->m_access);
+    rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->access);
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute *> attributes;
@@ -201,10 +201,10 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     rb->releaseVertexCompArray(attributes);
 
     // create index buffer and pass indices to element array buffer
-    OGLBuffer *ib = rb->createBuffer(indices->m_type);
-    ib->m_geoId = mesh->getId();
+    OGLBuffer *ib = rb->createBuffer(indices->type);
+    ib->geoId = mesh->getId();
     rb->bindBuffer(ib);
-    rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->m_access);
+    rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->access);
 
     rb->unbindVertexArray();
 
@@ -225,14 +225,14 @@ void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &mode
     auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
     auto *drawPrimitiveCmdData = new DrawPrimitivesCmdData;
     if (useLocalMatrix) {
-        drawPrimitiveCmdData->m_model = model;
-        drawPrimitiveCmdData->m_localMatrix = useLocalMatrix;
+        drawPrimitiveCmdData->model = model;
+        drawPrimitiveCmdData->localMatrix = useLocalMatrix;
     }
-    drawPrimitiveCmdData->m_id = id;
-    drawPrimitiveCmdData->m_vertexArray = va;
-    drawPrimitiveCmdData->m_primitives.reserve(primGroups.size());
+    drawPrimitiveCmdData->id = id;
+    drawPrimitiveCmdData->vertexArray = va;
+    drawPrimitiveCmdData->primitives.reserve(primGroups.size());
     for (ui32 i = 0; i < primGroups.size(); ++i) {
-        drawPrimitiveCmdData->m_primitives.add(primGroups[i]);
+        drawPrimitiveCmdData->primitives.add(primGroups[i]);
     }
     renderCmd->m_data = static_cast<void*>(drawPrimitiveCmdData);
 
@@ -251,12 +251,12 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
     OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesInstancesCmd);
 
     DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
-    data->m_id = id;
-    data->m_vertexArray = va;
-    data->m_numInstances = numInstances;
-    data->m_primitives.reserve(ids.size());
+    data->id = id;
+    data->vertexArray = va;
+    data->numInstances = numInstances;
+    data->primitives.reserve(ids.size());
     for (ui32 j = 0; j < ids.size(); ++j) {
-        data->m_primitives.add(ids[j]);
+        data->primitives.add(ids[j]);
     }
     renderCmd->m_data = static_cast<void *>(data);
     eh->enqueueRenderCmd(renderCmd);

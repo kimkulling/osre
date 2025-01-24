@@ -1,6 +1,6 @@
  /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -100,63 +100,63 @@ RenderPass &RenderPass::set(RenderTarget &rt, RenderStates &states) {
 }
 
 RenderPass &RenderPass::setPolygonState(PolygonState polyState) {
-    mStates.m_polygonState = polyState;
+    mStates.polygonState = polyState;
 
     return *this;
 }
 
 PolygonState RenderPass::getPolygonState() const {
-    return mStates.m_polygonState;
+    return mStates.polygonState;
 }
 
 RenderPass &RenderPass::setCullState(CullState &cullstate) {
-    mStates.m_cullState = cullstate;
+    mStates.cullState = cullstate;
 
     return *this;
 }
 
 CullState RenderPass::getCullState() const {
-    return mStates.m_cullState;
+    return mStates.cullState;
 }
 
 RenderPass &RenderPass::setBlendState(BlendState &blendState) {
-    mStates.m_blendState = blendState;
+    mStates.blendState = blendState;
 
     return *this;
 }
 
 const BlendState &RenderPass::getBlendState() const {
-    return mStates.m_blendState;
+    return mStates.blendState;
 }
 
 RenderPass &RenderPass::setSamplerState(SamplerState &samplerState) {
-    mStates.m_samplerState = samplerState;
+    mStates.samplerState = samplerState;
 
     return *this;
 }
 
 const SamplerState &RenderPass::getSamplerState() const {
-    return mStates.m_samplerState;
+    return mStates.samplerState;
 }
 
 RenderPass &RenderPass::setClearState(ClearState &clearState) {
-    mStates.m_clearState = clearState;
+    mStates.clearState = clearState;
 
     return *this;
 }
 
 const ClearState &RenderPass::getClearState() const {
-    return mStates.m_clearState;
+    return mStates.clearState;
 }
 
 RenderPass &RenderPass::setStencilState(StencilState &stencilState) {
-    mStates.m_stencilState = stencilState;
+    mStates.stencilState = stencilState;
 
     return *this;
 }
 
 const StencilState &RenderPass::getStencilState() const {
-    return mStates.m_stencilState;
+    return mStates.stencilState;
 }
 
 RenderPass &RenderPass::setShader(Shader *shader) {
@@ -177,14 +177,14 @@ const c8 *RenderPass::getPassNameById(guid id) {
     return Details::RenderPassNames[id];
 }
 
-bool RenderPass::operator==(const RenderPass &rhs) const {
-    return (mId == rhs.mId && mStates.m_polygonState == rhs.mStates.m_polygonState &&
-            mStates.m_cullState == rhs.mStates.m_cullState && mStates.m_blendState == rhs.mStates.m_blendState &&
-            mStates.m_samplerState == rhs.mStates.m_samplerState && mStates.m_clearState == rhs.mStates.m_clearState &&
-            mStates.m_stencilState == rhs.mStates.m_stencilState);
+bool RenderPass::operator == (const RenderPass &rhs) const {
+    return (mId == rhs.mId && mStates.polygonState == rhs.mStates.polygonState &&
+            mStates.cullState == rhs.mStates.cullState && mStates.blendState == rhs.mStates.blendState &&
+            mStates.samplerState == rhs.mStates.samplerState && mStates.clearState == rhs.mStates.clearState &&
+            mStates.stencilState == rhs.mStates.stencilState);
 }
 
-bool RenderPass::operator!=(const RenderPass &rhs) const {
+bool RenderPass::operator != (const RenderPass &rhs) const {
     return !(*this == rhs);
 }
 

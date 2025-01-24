@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -42,7 +42,7 @@ using namespace ::glm;
 VertComponent VertexLayout::ErrorComp;
 
 // The log tag for messages
-static const c8 *Tag = "RenderCommon";
+static constexpr c8 Tag[] = "RenderCommon";
 
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String
@@ -70,11 +70,12 @@ static const String ErrorCmpName = "Error";
 // List of attributes for color vertices
 static constexpr ui32 NumColorVertAttributes = 3;
 static const String ColorVertAttributes[NumColorVertAttributes] = {
-    "position", "normal", "color0"
+    "position", 
+    "normal", 
+    "color0"
 };
 
-ColorVert::ColorVert() :
-        position(), normal(), color0(1, 1, 1) {
+ColorVert::ColorVert() : position(), normal(), color0(1, 1, 1) {
     // empty
 }
 
@@ -104,12 +105,12 @@ RenderVert::RenderVert() :
     // empty
 }
 
-bool RenderVert::operator==(const RenderVert &rhs) const {
+bool RenderVert::operator == (const RenderVert &rhs) const {
     return (position == rhs.position && normal == rhs.normal &&
             color0 == rhs.color0 && tex0 == rhs.tex0);
 }
 
-bool RenderVert::operator!=(const RenderVert &rhs) const {
+bool RenderVert::operator != (const RenderVert &rhs) const {
     return !(*this == rhs);
 }
 
@@ -128,10 +129,11 @@ const String &getVertCompName(VertexAttribute attrib) {
     return VertCompName[static_cast<size_t>(attrib)];
 }
 
-const size_t NumUIVertAttributes = 2;
+constexpr size_t NumUIVertAttributes = 2;
 
 static const String UIVertAttributes[NumUIVertAttributes] = {
-    "position", "color0"
+    "position", 
+    "color0"
 };
 
 size_t UIVert::getNumAttributes() {
@@ -143,55 +145,55 @@ const String *UIVert::getAttributes() {
 }
 
 VertComponent::VertComponent() :
-        m_attrib(VertexAttribute::Invalid),
-        m_format(VertexFormat::Invalid) {
+        attrib(VertexAttribute::Invalid),
+        format(VertexFormat::Invalid) {
     // empty
 }
 
-VertComponent::VertComponent(VertexAttribute attrib, VertexFormat format) :
-        m_attrib(attrib),
-        m_format(format) {
+VertComponent::VertComponent(VertexAttribute attrib_, VertexFormat format_) :
+        attrib(attrib_),
+        format(format_) {
     // empty
 }
 
 VertexLayout::VertexLayout() :
-        m_attributes(nullptr),
-        m_components(),
-        m_offsets(),
-        m_currentOffset(0),
-        m_sizeInBytes(0) {
+        attributes(nullptr),
+        components(),
+        offsets(),
+        currentOffset(0),
+        size(0) {
     // empty
 }
 
 VertexLayout::~VertexLayout() {
-    delete[] m_attributes;
+    delete[] attributes;
 }
 
 void VertexLayout::clear() {
-    if (!m_components.isEmpty()) {
-        for (size_t i = 0; i < m_components.size(); ++i) {
-            delete m_components[i];
+    if (!components.isEmpty()) {
+        for (size_t i = 0; i < components.size(); ++i) {
+            delete components[i];
         }
-        m_components.clear();
+        components.clear();
     }
 
-    m_offsets.clear();
-    m_currentOffset = 0;
+    offsets.clear();
+    currentOffset = 0;
 }
 
 size_t VertexLayout::sizeInBytes() {
-    if (0 == m_sizeInBytes) {
-        for (size_t i = 0; i < m_components.size(); ++i) {
-            const size_t compSizeInBytes = getVertexFormatSize(m_components[i]->m_format);
-            m_sizeInBytes += compSizeInBytes;
+    if (0 == size) {
+        for (size_t i = 0; i < components.size(); ++i) {
+            const size_t compSizeInBytes = getVertexFormatSize(components[i]->format);
+            size += compSizeInBytes;
         }
     }
 
-    return m_sizeInBytes;
+    return size;
 }
 
 size_t VertexLayout::numComponents() const {
-    return m_components.size();
+    return components.size();
 }
 
 VertexLayout &VertexLayout::add(VertComponent *comp) {
@@ -199,55 +201,54 @@ VertexLayout &VertexLayout::add(VertComponent *comp) {
         return *this;
     }
 
-    m_components.add(comp);
-    const size_t offset(getVertexFormatSize(comp->m_format));
-    m_offsets.add(m_currentOffset);
-    m_currentOffset += offset;
+    components.add(comp);
+    const size_t offset(getVertexFormatSize(comp->format));
+    offsets.add(currentOffset);
+    currentOffset += offset;
 
     return *this;
 }
 
 VertComponent &VertexLayout::getAt(size_t idx) const {
-    if (idx >= m_components.size()) {
+    if (idx >= components.size()) {
         return ErrorComp;
     }
 
-    return *m_components[idx];
+    return *components[idx];
 }
 
 const String *VertexLayout::getAttributes() {
-    if (m_components.isEmpty()) {
+    if (components.isEmpty()) {
         return nullptr;
     }
 
-    if (nullptr == m_attributes) {
-        const size_t numAttributes(m_components.size());
-        m_attributes = new String[numAttributes];
-        for (size_t i = 0; i < m_components.size(); ++i) {
-            m_attributes[i] =
-                    VertCompName[static_cast<int>(m_components[i]->m_attrib)];
+    if (nullptr == attributes) {
+        const size_t numAttributes = components.size();
+        attributes = new String[numAttributes];
+        for (size_t i = 0; i < components.size(); ++i) {
+            attributes[i] = VertCompName[static_cast<int>(components[i]->attrib)];
         }
     }
 
-    return m_attributes;
+    return attributes;
 }
 
 BufferData::BufferDataAllocator BufferData::sBufferDataAllocator(256);
 
 BufferData::BufferData() :
-        m_type(BufferType::EmptyBuffer),
-        m_buffer(),
-        m_cap(0),
-        m_access(BufferAccessType::ReadOnly) {
+        type(BufferType::EmptyBuffer),
+        buffer(),
+        cap(0),
+        access(BufferAccessType::ReadOnly) {
     // empty
 }
 
 BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessType access) {
     BufferData *buffer = sBufferDataAllocator.alloc();
-    buffer->m_cap = sizeInBytes;
-    buffer->m_access = access;
-    buffer->m_type = type;
-    buffer->m_buffer.resize(sizeInBytes);
+    buffer->cap = sizeInBytes;
+    buffer->access = access;
+    buffer->type = type;
+    buffer->buffer.resize(sizeInBytes);
 
     return buffer;
 }
@@ -256,12 +257,12 @@ void BufferData::copyFrom(void *data, size_t size) {
     if (nullptr == data) {
         return;
     }
-    if (size > m_cap) {
+    if (size > cap) {
         osre_error(Tag, "Out of buffer error.");
         return;
     }
 
-    ::memcpy(&m_buffer[0], data, size);
+    ::memcpy(&buffer[0], data, size);
 }
 
 void BufferData::attach(const void *data, size_t size) {
@@ -270,42 +271,42 @@ void BufferData::attach(const void *data, size_t size) {
     }
     osre_assert(data != nullptr);
     
-    const size_t oldSize = m_buffer.size();
-    m_buffer.resize(oldSize + size);
-    ::memcpy(&m_buffer[oldSize], data, size);
+    const size_t oldSize = buffer.size();
+    buffer.resize(oldSize + size);
+    ::memcpy(&buffer[oldSize], data, size);
 }
 
 BufferType BufferData::getBufferType() const {
-    return m_type;
+    return type;
 }
 
 BufferAccessType BufferData::getBufferAccessType() const {
-    return m_access;
+    return access;
 }
 
 PrimitiveGroup::PrimitiveGroup() :
-        m_primitive(PrimitiveType::LineList), m_startIndex(0), m_numIndices(0), m_indexType(IndexType::UnsignedShort) {
+        primitive(PrimitiveType::LineList), startIndex(0), numIndices(0), indexType(IndexType::UnsignedShort) {
     // empty
 }
 
-void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx) {
-    m_indexType = indexType;
-    m_numIndices = numPrimitives;
-    m_primitive = primType;
-    m_startIndex = startIdx;
+void PrimitiveGroup::init(IndexType indexType_, size_t numPrimitives_, PrimitiveType primType_, size_t startIdx_) {
+    indexType = indexType_;
+    numIndices = numPrimitives_;
+    primitive = primType_;
+    startIndex = startIdx_;
 }
 
 Texture::Texture() :
-        TextureName(""),
-        Loc(),
-        TargetType(TextureTargetType::Texture2D),
-        PixelFormat(PixelFormatType::R8G8B8),
-        Size(0),
-        Data(nullptr),
-        Width(0),
-        Height(0),
-        Channels(0),
-        TexHandle() {
+        textureName(""),
+        loc(),
+        targetType(TextureTargetType::Texture2D),
+        pixelFormat(PixelFormatType::R8G8B8),
+        size(0),
+        data(nullptr),
+        width(0),
+        height(0),
+        channels(0),
+        texHandle() {
     // empty
 }
 
@@ -314,8 +315,8 @@ Texture::~Texture() {
 }
 
 void Texture::clear() {
-    delete[] Data;
-    Data = nullptr;
+    delete[] data;
+    data = nullptr;
 }
 
 size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
@@ -333,23 +334,23 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
 
     i32 width = 0, height = 0, channels = 0;
     
-    tex->Data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-    if (nullptr == tex->Data) {
+    tex->data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    if (nullptr == tex->data) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return 0;
     }
-    tex->Width = width;
-    tex->Height = height;
-    tex->Channels = channels;
+    tex->width = width;
+    tex->height = height;
+    tex->channels = channels;
 
     // swap the texture data
     for (i32 j = 0; j * 2 < height; ++j) {
         i32 index1 = j * width * channels;
         i32 index2 = (height - 1 - j) * width * channels;
         for (i32 i = width * channels; i > 0; --i) {
-            uc8 temp = tex->Data[index1];
-            tex->Data[index1] = tex->Data[index2];
-            tex->Data[index2] = temp;
+            uc8 temp = tex->data[index1];
+            tex->data[index1] = tex->data[index2];
+            tex->data[index2] = temp;
             ++index1;
             ++index2;
         }
@@ -369,20 +370,20 @@ RenderBackend::Texture *TextureLoader::getDefaultTexture() {
     const ui32 Size = 256u;
     const ui32 FullColorChannel = 255u;
     Texture *texture = new Texture;
-    texture->TextureName = "default";
-    texture->TargetType = TextureTargetType::Texture2D;
-    texture->Width = Size;
-    texture->Height = Size;
-    texture->Channels = 4;
+    texture->textureName = "default";
+    texture->targetType = TextureTargetType::Texture2D;
+    texture->width = Size;
+    texture->height = Size;
+    texture->channels = 4;
     const size_t data_size = Size * Size;
-    texture->Data = new unsigned char[data_size * texture->Channels];
+    texture->data = new unsigned char[data_size * texture->channels];
     unsigned char rgba_fg[4] = { FullColorChannel, FullColorChannel, 0, FullColorChannel }; // yellow
     unsigned char rgba_bg[4] = { FullColorChannel, 0, 0, FullColorChannel }; // red
-    for (auto it = texture->Data; it < texture->Data + data_size; it += 20) {
+    for (auto it = texture->data; it < texture->data + data_size; it += 20) {
         memset(it, 0, 20);
-        if (((it - texture->Data) + 40) % (20 * 400) == 0) {
+        if (((it - texture->data) + 40) % (20 * 400) == 0) {
             it += 40;
-        } else if (((it - texture->Data) + 20) % (20 * 400) != 0) {
+        } else if (((it - texture->data) + 20) % (20 * 400) != 0) {
             it += 20;
         }
     }
@@ -395,11 +396,11 @@ bool TextureLoader::unload(Texture *tex) {
         return false;
     }
 
-    stbi_image_free(tex->Data);
-    tex->Data = nullptr;
-    tex->Width = 0;
-    tex->Height = 0;
-    tex->Channels = 0;
+    stbi_image_free(tex->data);
+    tex->data = nullptr;
+    tex->width = 0;
+    tex->height = 0;
+    tex->channels = 0;
 
     return true;
 }
@@ -437,15 +438,15 @@ ResourceState TextureResource::onLoad(const IO::Uri &uri, TextureLoader &loader)
         return ResourceState::Error;
     }
 
-    tex->TextureName = getName();
-    if (tex->TextureName.find("$default") != String::npos) {
+    tex->textureName = getName();
+    if (tex->textureName.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
         setState(ResourceState::Loaded);
         return getState();
     }
 
     getStats().m_memory = loader.load(uri, tex);
-    tex->TargetType = m_targetType;
+    tex->targetType = m_targetType;
     if (0 == getStats().m_memory) {
         setState(ResourceState::Error);
         osre_debug(Tag, "Cannot load texture " + uri.getAbsPath());
@@ -470,9 +471,9 @@ ResourceState TextureResource::onUnload(TextureLoader &loader) {
 }
 
 TransformState::TransformState() :
-        m_translate(1.0f),
-        m_scale(1.0f),
-        m_rotation(1.0f) {
+        translate(1.0f),
+        scale(1.0f),
+        rotation(1.0f) {
     // empty
 }
 
@@ -481,20 +482,20 @@ TransformState::~TransformState() {
 }
 
 void TransformState::setTranslation(f32 x, f32 y, f32 z) {
-    m_translate.x = x;
-    m_translate.y = y;
-    m_translate.z = z;
+    translate.x = x;
+    translate.y = y;
+    translate.z = z;
 }
 
 void TransformState::setScale(f32 sx, f32 sy, f32 sz) {
-    m_scale.x = sx;
-    m_scale.y = sy;
-    m_scale.z = sz;
+    scale.x = sx;
+    scale.y = sy;
+    scale.z = sz;
 }
 
 bool TransformState::operator==(const TransformState &rhs) const {
-    return (m_translate == rhs.m_translate && m_scale == rhs.m_scale &&
-            m_rotation == rhs.m_rotation);
+    return (translate == rhs.translate && scale == rhs.scale &&
+            rotation == rhs.rotation);
 }
 
 bool TransformState::operator!=(const TransformState &rhs) const {
@@ -502,28 +503,28 @@ bool TransformState::operator!=(const TransformState &rhs) const {
 }
 
 void TransformState::toMatrix(mat4 &m) const {
-    m *= glm::translate(m, m_translate);
-    m *= glm::scale(m, m_scale);
-    m *= m_rotation;
+    m *= glm::translate(m, translate);
+    m *= glm::scale(m, scale);
+    m *= rotation;
 }
 
 Viewport::Viewport() :
-        m_x(-1), m_y(-1), m_w(-1), m_h(-1) {
+        x(-1), y(-1), w(-1), h(-1) {
     // empty
 }
 
-Viewport::Viewport(i32 x, i32 y, i32 w, i32 h) :
-        m_x(x), m_y(y), m_w(w), m_h(h) {
+Viewport::Viewport(i32 x_, i32 y_, i32 w_, i32 h_) :
+        x(x_), y(y_), w(w_), h(h_) {
     // empty
 }
 
 Viewport::Viewport(const Viewport &rhs) :
-        m_x(rhs.m_x), m_y(rhs.m_y), m_w(rhs.m_w), m_h(rhs.m_h) {
+        x(rhs.x), y(rhs.y), w(rhs.w), h(rhs.h) {
     // empty
 }
         
 bool Viewport::operator==(const Viewport &rhs) const {
-    return (m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h);
+    return (x == rhs.x && y == rhs.y && w == rhs.w && h == rhs.h);
 }
 
 bool Viewport::operator!=(const Viewport &rhs) const {
@@ -531,14 +532,14 @@ bool Viewport::operator!=(const Viewport &rhs) const {
 }
 
 Light::Light() :
-        Position(0.0f, 0.0f, 0.0f, 1.0f),
-        Specular(1.0f, 1.0f, 1.0f),
-        Diffuse(1.0f, 1.0f, 1.0f),
-        Ambient(1.0f, 1.0f, 1.0f),
-        Direction(0.0f, 0.0f, 1.0f, 1.0f),
-        SpecularExp(1.0f),
-        Radius(1.0f),
-        Type(LightType::Invalid) {
+        position(0.0f, 0.0f, 0.0f, 1.0f),
+        specular(1.0f, 1.0f, 1.0f),
+        diffuse(1.0f, 1.0f, 1.0f),
+        ambient(1.0f, 1.0f, 1.0f),
+        direction(0.0f, 0.0f, 1.0f, 1.0f),
+        specularExp(1.0f),
+        radius(1.0f),
+        type(LightType::Invalid) {
     // empty
 }
 
@@ -547,7 +548,7 @@ MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
         return nullptr;
     }
 
-    for (auto &i : m_meshArray) {
+    for (auto &i : meshArray) {
         for (ui32 j = 0; j < i->mMeshArray.size(); ++j) {
             if (i->mMeshArray[j]->getName() == name) {
                 return i;
@@ -563,8 +564,8 @@ UniformVar *RenderBatchData::getVarByName(const c8 *name) {
         return nullptr;
     }
 
-    for (auto &uniform : m_uniforms) {
-        if (uniform->m_name == name) {
+    for (auto &uniform : uniforms) {
+        if (uniform->name == name) {
             return uniform;
         }
     }
@@ -572,14 +573,14 @@ UniformVar *RenderBatchData::getVarByName(const c8 *name) {
     return nullptr;
 }
 
-RenderBatchData *PassData::getBatchById(const c8 *id) const {
-    if (nullptr == id) {
+RenderBatchData *PassData::getBatchById(const c8 *id_) const {
+    if (nullptr == id_) {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < mMeshBatches.size(); ++i) {
-        if (0 == strncmp(mMeshBatches[i]->m_id, id, strlen(id))) {
-            return mMeshBatches[i];
+    for (ui32 i = 0; i < meshBatches.size(); ++i) {
+        if (0 == strncmp(meshBatches[i]->id, id, strlen(id))) {
+            return meshBatches[i];
         }
     }
 
@@ -589,44 +590,47 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
 static constexpr size_t MaxSubmitCmds = 500;
 
 Frame::Frame() :
-        m_newPasses(),
-        m_submitCmds(),
-        m_submitCmdAllocator(),
-        m_uniforBuffers(nullptr),
-        m_pipeline(nullptr) {
-    m_submitCmdAllocator.reserve(MaxSubmitCmds);
+        newPasses(),
+        submitCmds(),
+        submitCmdAllocator(),
+        uniforBuffers(nullptr),
+        pipeline(nullptr) {
+    submitCmdAllocator.reserve(MaxSubmitCmds);
 }
 
 Frame::~Frame() {
-    delete[] m_uniforBuffers;
-    m_uniforBuffers = nullptr;
+    delete[] uniforBuffers;
 }
 
-void Frame::init(TArray<PassData*> &newPasses) {
+void Frame::init(TArray<PassData*> &newPasses_) {
     if (newPasses.isEmpty()) {
         return;
     }
 
-    for (auto newPasse : newPasses) {
-        m_newPasses.add(newPasse);
+    for (auto newPasse : newPasses_) {
+        newPasses.add(newPasse);
     }
-    m_uniforBuffers = new UniformBuffer[newPasses.size()];
+    uniforBuffers = new UniformBuffer[newPasses.size()];
 }
 
 FrameSubmitCmd *Frame::enqueue(const char *passId, const char *batchId) {
-    FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
+    if (passId == nullptr || batchId == nullptr) {
+        return nullptr;
+    }
+    
+    FrameSubmitCmd *cmd = submitCmdAllocator.alloc();
     if (nullptr != cmd) {
-        cmd->m_passId = passId;
-        cmd->m_batchId = batchId;
-        m_submitCmds.add(cmd);
+        cmd->passId = passId;
+        cmd->batchId = batchId;
+        submitCmds.add(cmd);
     }
 
     return cmd;
 }
 
 UniformDataBlob::UniformDataBlob() :
-        m_data(nullptr),
-        m_size(0) {
+        data(nullptr),
+        size(0) {
     // empty
 }
 
@@ -635,56 +639,56 @@ UniformDataBlob::~UniformDataBlob() {
 }
 
 void *UniformDataBlob::getData() const {
-    return m_data;
+    return data;
 }
 
 void UniformDataBlob::clear() {
-    ::free(m_data);
-    m_data = nullptr;
-    m_size = 0;
+    ::free(data);
+    data = nullptr;
+    size = 0;
 }
 
 UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
     UniformDataBlob *blob = new UniformDataBlob;
     switch (type) {
         case ParameterType::PT_Int:
-            blob->m_size = sizeof(i32);
+            blob->size = sizeof(i32);
             break;
         case ParameterType::PT_Float:
-            blob->m_size = sizeof(f32);
+            blob->size = sizeof(f32);
             break;
         case ParameterType::PT_Float2:
-            blob->m_size = sizeof(f32) * 2;
+            blob->size = sizeof(f32) * 2;
             break;
         case ParameterType::PT_Float3:
-            blob->m_size = sizeof(f32) * 3;
+            blob->size = sizeof(f32) * 3;
             break;
         case ParameterType::PT_Mat4:
-            blob->m_size = sizeof(f32) * 16;
+            blob->size = sizeof(f32) * 16;
             break;
         case ParameterType::PT_Mat4Array:
-            blob->m_size = sizeof(f32) * 16 * arraySize;
+            blob->size = sizeof(f32) * 16 * arraySize;
             break;
         default:
-            blob->m_size = 0;
+            blob->size = 0;
             break;
     }
-    blob->m_data = ::malloc(blob->m_size);
-    ::memset(blob->m_data, 0, blob->m_size);
+    blob->data = ::malloc(blob->size);
+    ::memset(blob->data, 0, blob->size);
 
     return blob;
 }
 
 UniformVar::UniformVar() :
-        m_name(""),
-        m_type(ParameterType::PT_None),
-        m_numItems(1),
-        m_next(nullptr) {
+        name(""),
+        type(ParameterType::PT_None),
+        numItems(1),
+        next(nullptr) {
     // empty
 }
 
 ui32 UniformVar::getParamDataSize(ParameterType type, ui32 arraySize) {
-    ui32 size(0);
+    ui32 size = 0u;
     switch (type) {
         case ParameterType::PT_Int:
             size = sizeof(i32);
@@ -712,21 +716,20 @@ ui32 UniformVar::getParamDataSize(ParameterType type, ui32 arraySize) {
     return size;
 }
 
-UniformVar *UniformVar::create(const String &name, ParameterType type,
-        ui32 arraySize) {
+UniformVar *UniformVar::create(const String &name, ParameterType type, ui32 arraySize) {
     if (name.empty()) {
         osre_debug(Tag, "Empty name for parameter.");
         return nullptr;
     }
 
     UniformVar *param = new UniformVar;
-    param->m_name = name;
-    param->m_type = type;
-    param->m_numItems = arraySize;
-    param->m_data.m_size = UniformVar::getParamDataSize(type, arraySize);
-    param->m_data.m_data = new uc8[param->m_data.m_size];
-    param->m_next = nullptr;
-    ::memset(param->m_data.m_data, 0, param->m_data.m_size);
+    param->name = name;
+    param->type = type;
+    param->numItems = arraySize;
+    param->data.size = UniformVar::getParamDataSize(type, arraySize);
+    param->data.data = new uc8[param->data.size];
+    param->next = nullptr;
+    ::memset(param->data.data, 0, param->data.size);
 
     return param;
 }
@@ -737,9 +740,9 @@ void UniformVar::destroy(UniformVar *param) {
     }
 }
 
-size_t UniformVar::getSize() {
+size_t UniformVar::size() const {
     // len of name | name | buffer
-    return m_name.size() + 1 + m_data.m_size;
+    return name.size() + 1 + data.size;
 }
 
 static const c8 *GlslVersionStringArray[(size_t)GLSLVersion::Count] = {

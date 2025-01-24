@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -48,18 +48,19 @@ public:
     /// @brief  Will allocate an empty mesh.
     /// @param[in] name     The name for the mesh.
     ///	@param[in] type     The vertex type.
-    MeshBuilder &allocEmptyMesh(const String &name, RenderBackend::VertexType type);
+    ///	@return The mesh builder instance.
+    MeshBuilder &allocEmptyMesh(const String &name, VertexType type);
 
     /// @brief  Will allocate a triangle mesh.
     ///	@param  type        [in] The vertex type.
-    /// @return The created mesh.
-    MeshBuilder& createTriangle(RenderBackend::VertexType type, RenderBackend::BufferAccessType access);
+    ///	@return The mesh builder instance.
+    MeshBuilder& createTriangle(VertexType type, BufferAccessType access);
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
     /// @param  access      [in] The data access type.
-    /// @return The created mesh.
-    MeshBuilder& allocQuads(RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    ///	@return The mesh builder instance.
+    MeshBuilder& allocQuads(VertexType type, BufferAccessType access );
     
     /// @brief 
     /// @param type 
@@ -67,13 +68,15 @@ public:
     /// @param h 
     /// @param d 
     /// @param access 
-    /// @return 
-    MeshBuilder& createCube(RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
+    ///	@return The mesh builder instance.
+    MeshBuilder& createCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
-    ///	@param  type        [in] The vertex type.
-    MeshBuilder& allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
-            ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
+    ///	@param[in] type         The vertex type.
+    ///	@param[in] access
+    ///	@return The mesh builder instance.
+    MeshBuilder& allocLineList(VertexType type, BufferAccessType access, ui32 numLines,
+        glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices);
 
     /// @brief 
     /// @param type 
@@ -81,7 +84,7 @@ public:
     /// @param numPoints 
     /// @param posArray 
     /// @param colorArray 
-    /// @return 
+    ///	@return The mesh builder instance.
     MeshBuilder& allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
 
@@ -90,7 +93,7 @@ public:
     /// @param  y           [in] Upper position of the text box.
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
-    /// @return The created mesh.
+    ///	@return The mesh builder instance.
     MeshBuilder& allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
     /// @brief  Will update the vertices of a text box.
@@ -125,11 +128,11 @@ private:
     cppcore::TArray<glm::vec3> mDiffuseColCache;
     cppcore::TArray<glm::vec3> mNormalCache;
     cppcore::TArray<glm::vec2> mTex0Cache;
-    RenderBackend::PrimitiveGroup *mActivePrimGroup;
+    PrimitiveGroup *mActivePrimGroup;
     cppcore::TArray<ui32> mIndexCache;
-    cppcore::TArray<RenderBackend::PrimitiveGroup*> mPrimGroupCache;
+    cppcore::TArray<PrimitiveGroup*> mPrimGroupCache;
     bool mIsDirty;
-    RenderBackend::Mesh *mActiveMesh;
+    Mesh *mActiveMesh;
 };
 
 } // Namespace RenderBackend

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,25 +27,25 @@ namespace OSRE {
 
 static constexpr c8 Tag[] = "Common";
 
-size_t MemoryStatistics::sAllocated = 0;
-size_t MemoryStatistics::sNumNew = 0;
-size_t MemoryStatistics::sActiveAllocs = 0;
+size_t MemoryStatistics::allocated = 0;
+size_t MemoryStatistics::numNew = 0;
+size_t MemoryStatistics::activeAllocs = 0;
 
 void MemoryStatistics::addAllocated( size_t allocSize ) {
-    sNumNew++;
-    sActiveAllocs++;
-    sAllocated += allocSize;
+    numNew++;
+    activeAllocs++;
+    allocated += allocSize;
 }
 
 void MemoryStatistics::releaseAlloc() {
-    sActiveAllocs--;
+    activeAllocs--;
 }
 
 void MemoryStatistics::showStatistics() {
     osre_info(Tag, "Memory-Statistics\n=================");
     std::stringstream stream;
-    stream << "\nSum Allocs      : " << sNumNew << "\n";
-    stream << "Number of leaks : " << sActiveAllocs << "\n";
+    stream << "\nSum Allocs      : " << numNew << "\n";
+    stream << "Number of leaks : " << activeAllocs << "\n";
     osre_info(Tag, stream.str());
 }
 

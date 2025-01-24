@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -103,7 +103,7 @@ public:
                 m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));
                 m_transformMatrix.mModel = glm::scale(m_transformMatrix.mModel, glm::vec3(.5, .5, .5));
                 UniformVar *parameter = UniformVar::create("MVP", ParameterType::PT_Mat4);
-                ::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.mProjection * m_transformMatrix.mView * m_transformMatrix.mModel), sizeof(glm::mat4));
+                ::memcpy(parameter->data.data, glm::value_ptr(m_transformMatrix.mProjection * m_transformMatrix.mView * m_transformMatrix.mModel), sizeof(glm::mat4));
 
                 m_transformMatrix.update();
                 rbSrv->setMatrix("MVP", m_transformMatrix.mMvp);

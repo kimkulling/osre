@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -49,8 +49,6 @@ public:
             AbstractRenderTest("rendertest/GeoModelMatrixRenderTest"), mAngle(0.0f) {
         // empty
     }
-
-    ~GeoModelMatrixRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
@@ -108,7 +106,7 @@ public:
                 glm::mat4 model(1);
                 transform.setTranslation(0.25f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.m_rotation = rot;
+                transform.rotation = rot;
                 transform.toMatrix(model);
                 rbSrv->setMatrix(MatrixType::Model, model);
             }
@@ -119,7 +117,7 @@ public:
                 glm::mat4 model(1);
                 transform.setTranslation(-0.25f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.m_rotation = rot;
+                transform.rotation = rot;
                 transform.toMatrix(model);
                 rbSrv->setMatrix(MatrixType::Model, model);
             }

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -312,34 +312,34 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
     cppcore::TArray<size_t> primGroups;
     Frame *frame = frameToCommitData->NextFrame;
-    for (PassData *currentPass : frame->m_newPasses) {
+    for (PassData *currentPass : frame->newPasses) {
         if (nullptr == currentPass) {
             osre_assert(nullptr != currentPass);
             continue;
         }
 
-        if (!currentPass->mIsDirty) {
+        if (!currentPass->isDirty) {
             continue;
         }
 
         // ToDo: create pipeline pass for the name.
-        for (RenderBatchData * currentBatchData : currentPass->mMeshBatches) {
+        for (RenderBatchData * currentBatchData : currentPass->meshBatches) {
             if (nullptr == currentBatchData) {
                 continue;
             }
 
             // set the matrix
-            MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
+            MatrixBuffer &matrixBuffer = currentBatchData->matrixBuffer;
             getRenderCmdBuffer()->setMatrixes(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj);
 
             // set uniforms
-            for (auto & uniform : currentBatchData->m_uniforms) {
+            for (auto & uniform : currentBatchData->uniforms) {
                 setupParameter(uniform, m_oglBackend, this);
             }
 
             // set meshes
-            for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->m_meshArray.size(); ++meshEntryIdx) {
-                MeshEntry *currentMeshEntry = currentBatchData->m_meshArray[meshEntryIdx];
+            for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->meshArray.size(); ++meshEntryIdx) {
+                MeshEntry *currentMeshEntry = currentBatchData->meshArray[meshEntryIdx];
                 if (nullptr == currentMeshEntry) {
                     osre_assert(nullptr != currentMeshEntry);
                     continue;
@@ -372,14 +372,14 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                         osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
                         return false;
                     }
-                    data->m_vertexArray = m_vertexArray;
+                    data->vertexArray = m_vertexArray;
 
                     // setup the render calls
                     if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
+                        setupPrimDrawCmd(currentBatchData->id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                                 primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
-                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
+                        setupInstancedDrawCmd(currentBatchData->id, primGroups, m_oglBackend, this, m_vertexArray,
                                 currentMeshEntry->numInstances);
                     }
 
@@ -391,7 +391,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
         }
     }
 
-    frame->m_newPasses.clear();
+    frame->newPasses.clear();
 
     m_oglBackend->useShader(nullptr);
 
@@ -400,43 +400,43 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
 static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
     ::memset(name, '\0', bufferSize);
-    size_t bufferLen = cmd->m_data[0];
+    size_t bufferLen = cmd->data[0];
     if (bufferLen > bufferSize-1) {
         bufferLen = bufferSize - 1;
     }
-    ::strncpy(name, &cmd->m_data[1], bufferLen);
+    ::strncpy(name, &cmd->data[1], bufferLen);
 }
 
 static constexpr size_t BufferSize = 256;
 
 void OGLRenderEventHandler::onHandleCommit(FrameSubmitCmd *cmd) {
-    if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
-        MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
-        osre_assert(cmd->m_batchId != nullptr);
-        m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
-    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
+    if (cmd->updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
+        MatrixBuffer *buffer = (MatrixBuffer *)cmd->data;
+        osre_assert(cmd->batchId != nullptr);
+        m_renderCmdBuffer->setMatrixBuffer(cmd->batchId, buffer);
+    } else if (cmd->updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
         c8 name[BufferSize];
         setName(name, BufferSize, cmd);
-        const ui32 offset = cmd->m_data[0] + 1;
-        const size_t size = cmd->m_size - offset;
+        const ui32 offset = cmd->data[0] + 1;
+        const size_t size = cmd->size - offset;
         OGLParameter *oglParam = m_oglBackend->getParameter(name);
-        ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
-    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
-        OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->m_meshId);
+        ::memcpy(oglParam->data->getData(), &cmd->data[offset], size);
+    } else if (cmd->updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
+        OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->meshId);
         m_oglBackend->bindBuffer(buffer);
-        m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
+        m_oglBackend->copyDataToBuffer(buffer, cmd->data, cmd->size, BufferAccessType::ReadWrite);
         m_oglBackend->unbindBuffer(buffer);
-    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
-        for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
-            PassData *pd = cmd->m_updatedPasses[i];
+    } else if (cmd->updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
+        for (ui32 i = 0; i < cmd->updatedPasses.size(); ++i) {
+            PassData *pd = cmd->updatedPasses[i];
             if (pd == nullptr) {
                 continue;
             }
 
-            for (RenderBatchData *rbd : pd->mMeshBatches) {
-                for (MeshEntry *entry : rbd->m_meshArray) {
+            for (RenderBatchData *rbd : pd->meshBatches) {
+                for (MeshEntry *entry : rbd->meshArray) {
                     cppcore::TArray<size_t> primGroups;
-                    addMeshes(cmd->m_batchId, primGroups, entry);
+                    addMeshes(cmd->batchId, primGroups, entry);
                 }
             }
         }
@@ -453,17 +453,17 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         return false;
     }
 
-    for (FrameSubmitCmd *cmd : data->NextFrame->m_submitCmds) {
+    for (FrameSubmitCmd *cmd : data->NextFrame->submitCmds) {
         if (cmd == nullptr) {
             continue;
         }
 
         onHandleCommit(cmd);
-        cmd->m_updateFlags = 0u;
+        cmd->updateFlags = 0u;
     }
 
-    data->NextFrame->m_submitCmds.resize(0);
-    data->NextFrame->m_submitCmdAllocator.release();
+    data->NextFrame->submitCmds.resize(0);
+    data->NextFrame->submitCmdAllocator.release();
 
     return true;
 }

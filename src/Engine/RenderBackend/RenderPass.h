@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -38,14 +38,21 @@ class RenderPass;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderPassFactory {
 public:
+    /// @brief Will reate a new render pass.
+    /// @param[in] id       The renderpass id.
     static RenderPass *create(guid id);
+
+    /// @brief Will register a new render pass.
+    /// @param[in] id       The renderpass id.
     static void registerPass(guid id, RenderPass *renderPass);
+
+    /// @brief Will unregister an already registered render pass.
+    /// @param[in] id       The renderpass id.
     static void unregisterPass(guid id);
 
 private:
     static cppcore::TArray<RenderPass*> sPasses;
 };
-
 
 static constexpr ui32 RenderPassId = 0;
 static constexpr ui32 UiPassId = 1;

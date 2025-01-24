@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -49,10 +49,10 @@ LineBuilder &LineBuilder::addLine(const glm::vec3 &pos0, const glm::vec3 &pos1) 
 
     preparePrimGroups();
 
-    mActivePrimGroup->m_startIndex = mIndexCache.size();
-    mActivePrimGroup->m_numIndices += 2;
+    mActivePrimGroup->startIndex = mIndexCache.size();
+    mActivePrimGroup->numIndices += 2;
 
-    mIndexCache.add((ui32) mActivePrimGroup->m_startIndex);
+    mIndexCache.add((ui32) mActivePrimGroup->startIndex);
     mIsDirty = true;
 
     return *this;
@@ -68,10 +68,10 @@ LineBuilder &LineBuilder::addLines(glm::vec3 *pos0, glm::vec3 *pos1, ui32 numLin
 
     preparePrimGroups();
 
-    mActivePrimGroup->m_startIndex = mIndexCache.size();
-    mActivePrimGroup->m_numIndices += numLines;
+    mActivePrimGroup->startIndex = mIndexCache.size();
+    mActivePrimGroup->numIndices += numLines;
     for (ui32 i = 0; i < numLines; ++i) {
-        mIndexCache.add((ui32)mActivePrimGroup->m_startIndex + i);
+        mIndexCache.add((ui32)mActivePrimGroup->startIndex + i);
     }
     mIsDirty = true;
 
@@ -128,18 +128,18 @@ Mesh *LineBuilder::getMesh() {
 
 void LineBuilder::preparePrimGroups() {
     PrimitiveGroup *pg = new PrimitiveGroup;
-    pg->m_primitive = PrimitiveType::LineList;
+    pg->primitive = PrimitiveType::LineList;
     if (mActivePrimGroup != nullptr) {
-        if (PrimitiveType::LineList != mActivePrimGroup->m_primitive) {
+        if (PrimitiveType::LineList != mActivePrimGroup->primitive) {
             mPrimGroupCache.add(pg);
             mActivePrimGroup = pg;
-            mActivePrimGroup->m_indexType = mActiveMesh->getIndexType();
+            mActivePrimGroup->indexType = mActiveMesh->getIndexType();
         }
     } else {
         mPrimGroupCache.add(pg);
         mActivePrimGroup = pg;
-        mActivePrimGroup->m_indexType = mActiveMesh->getIndexType();
-        mActivePrimGroup->m_startIndex = mIndexCache.size();
+        mActivePrimGroup->indexType = mActiveMesh->getIndexType();
+        mActivePrimGroup->startIndex = mIndexCache.size();
     }
 }
 

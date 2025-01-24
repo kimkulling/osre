@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,9 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Common/TObjPtr.h"
-#include "Common/BaseMath.h"
-#include "IO/Stream.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/RenderBackendService.h"
 
@@ -97,21 +94,7 @@ struct TransformSystem {
 };
 
 struct RenderableSystem {
-    void render(ComponentRegistry& reg, RenderBackend::RenderBackendService* rbSrv) {
-        for (size_t i = 0; i < reg.mRenderComponents.size(); ++i) {
-            Renderable &r = reg.mRenderComponents[i];
-            if (!r.mRenderMeshes.isEmpty()) {
-                for (size_t j = 0; j < r.mRenderMeshes.size(); ++j) {
-                    rbSrv->addMesh(r.mRenderMeshes[j], 0);
-                }
-                r.mRenderMeshes.clear();
-                for (size_t j = 0; j < r.mRenderUpdates.size(); ++j) {
-                    rbSrv->updateMesh(r.mRenderUpdates[j]);
-                }
-                r.mRenderUpdates.clear();
-            }
-        }
-    }
+    void render(ComponentRegistry& reg, RenderBackend::RenderBackendService* rbSrv);
 };
 
 //-------------------------------------------------------------------------------------------------

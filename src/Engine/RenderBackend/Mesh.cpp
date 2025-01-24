@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -87,7 +87,7 @@ void Mesh::resizeVertexBuffer(size_t vbSize) {
         return;
     }
         
-    mVertexBuffer->m_buffer.resize(vbSize);
+    mVertexBuffer->buffer.resize(vbSize);
 }
 
 
@@ -135,10 +135,10 @@ void Mesh::addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, Primitiv
     const size_t index = mPrimGroups.size();
     for (size_t i = 0; i < numPrimGroups; ++i) {
         mPrimGroups.add(new PrimitiveGroup);
-        mPrimGroups[index + i]->m_indexType = mIndexType;
-        mPrimGroups[index + i]->m_numIndices = numIndices[i];
-        mPrimGroups[index + i]->m_primitive = primTypes[i];
-        mPrimGroups[index + i]->m_startIndex = startIndices[i];
+        mPrimGroups[index + i]->indexType = mIndexType;
+        mPrimGroups[index + i]->numIndices = numIndices[i];
+        mPrimGroups[index + i]->primitive = primTypes[i];
+        mPrimGroups[index + i]->startIndex = startIndices[i];
     }
 
 }
@@ -151,10 +151,10 @@ void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 sta
 
     const size_t index = mPrimGroups.size();
     mPrimGroups.add(new PrimitiveGroup);
-    mPrimGroups[index]->m_numIndices = numIndices;
-    mPrimGroups[index]->m_indexType = mIndexType;
-    mPrimGroups[index]->m_primitive = primType;
-    mPrimGroups[index]->m_startIndex = startIndex;
+    mPrimGroups[index]->numIndices = numIndices;
+    mPrimGroups[index]->indexType = mIndexType;
+    mPrimGroups[index]->primitive = primType;
+    mPrimGroups[index]->startIndex = startIndex;
 }
 
 void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {

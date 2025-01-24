@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -38,7 +38,7 @@ struct ClearState {
     };
 
     /// The clear buffer states bit coded.
-    ui32 m_state;
+    ui32 state;
 
     /// @brief  The default class constructor.
     ClearState() noexcept;
@@ -53,17 +53,17 @@ struct ClearState {
 };
 
 inline ClearState::ClearState() noexcept:
-        m_state(0) {
+        state(0) {
     // empty
 }
 
-inline ClearState::ClearState(ui32 state) :
-        m_state(state) {
+inline ClearState::ClearState(ui32 state_) :
+        state(state_) {
     // empty
 }
 
 inline bool ClearState::operator==(const ClearState &rhs) const {
-    return m_state == rhs.m_state;
+    return state == rhs.state;
 }
 
 inline bool ClearState::operator!=(const ClearState &rhs) const {
@@ -94,8 +94,8 @@ struct DepthState {
         Count
     };
 
-    DepthStateType m_type;
-    DepthFuncType m_func;
+    DepthStateType type;
+    DepthFuncType func;
 
     /// @brief The default class constructor.
     DepthState() noexcept;
@@ -108,59 +108,61 @@ struct DepthState {
     /// @brief The compare constructor.
     /// @param rhs      [in] Right hand side to compare
     /// @return true if equal.
-    bool operator==(const DepthState &rhs) const;
-    bool operator!=(const DepthState &rhs) const;
+    bool operator == (const DepthState &rhs) const;
+    bool operator != (const DepthState &rhs) const;
 };
 
 inline DepthState::DepthState() noexcept:
-        m_type(DepthStateType::Enabled),
-        m_func(DepthFuncType::Always) {
+        type(DepthStateType::Enabled),
+        func(DepthFuncType::Always) {
     // empty
 }
 
 inline DepthState::DepthState(DepthStateType stateType, DepthFuncType depthFuncType) :
-        m_type(stateType), m_func(depthFuncType) {
+        type(stateType), func(depthFuncType) {
     // empty
 }
 
 inline bool DepthState::operator==(const DepthState &rhs) const {
-    return (m_type == rhs.m_type && m_func == rhs.m_func);
+    return (type == rhs.type && func == rhs.func);
 }
 
 inline bool DepthState::operator!=(const DepthState &rhs) const {
     return !(*this == rhs);
 }
 
+/// @brief
 struct SamplerState {
-    TextureTargetType m_targetType;
-    TextureStageType m_stageType;
+    TextureTargetType targetType;
+    TextureStageType  stageType;
 
     SamplerState();
     SamplerState(TextureTargetType targetType, TextureStageType stageType);
 
-    bool operator==(const SamplerState &rhs) const;
-    bool operator!=(const SamplerState &rhs) const;
+    bool operator == (const SamplerState &rhs) const;
+    bool operator != (const SamplerState &rhs) const;
 };
 
 inline SamplerState::SamplerState() :
-        m_targetType(TextureTargetType::Texture2D), m_stageType(TextureStageType::TextureStage0) {
+        targetType(TextureTargetType::Texture2D), stageType(TextureStageType::TextureStage0) {
     // empty
 }
 
 inline SamplerState::SamplerState(TextureTargetType targetType, TextureStageType stageType) :
-        m_targetType(targetType), m_stageType(stageType) {
+        targetType(targetType), stageType(stageType) {
 
     // empty
 }
 
-inline bool SamplerState::operator==(const SamplerState &rhs) const {
-    return (m_targetType == rhs.m_targetType && m_stageType == rhs.m_stageType);
+inline bool SamplerState::operator == (const SamplerState &rhs) const {
+    return (targetType == rhs.targetType && stageType == rhs.stageType);
 }
 
 inline bool SamplerState::operator!=(const SamplerState &rhs) const {
     return !(*this == rhs);
 }
 
+/// @brief
 struct StencilState {
 public:
     /// @brief
@@ -321,8 +323,8 @@ struct CullState {
         Back, ///< Back polygons will be culled
         FrontAndBack ///< Show front an back polygon.
     };
-    CullMode m_cullMode;
-    CullFace m_cullFace;
+    CullMode cullMode;
+    CullFace cullFace;
 
     /// @brief  The default class constructor.
     CullState();
@@ -332,30 +334,23 @@ struct CullState {
     /// @param  cullFace    [in] The cullFace mode, @see CullFace.
     explicit CullState(CullMode mode, CullFace cullFace);
 
-    /// @brief  The class destructor.
-    ~CullState();
-
     /// The compare operators.
     bool operator==(const CullState &rhs) const;
     bool operator!=(const CullState &rhs) const;
 };
 
 inline CullState::CullState() :
-        m_cullMode(CullMode::CW), m_cullFace(CullFace::Back) {
+        cullMode(CullMode::CW), cullFace(CullFace::Back) {
     // empty
 }
 
-inline CullState::CullState(CullMode mode, CullFace cullFace) :
-        m_cullMode(mode), m_cullFace(cullFace) {
-    // empty
-}
-
-inline CullState::~CullState() {
+inline CullState::CullState(CullMode mode, CullFace cullFace_) :
+        cullMode(mode), cullFace(cullFace_) {
     // empty
 }
 
 inline bool CullState::operator==(const CullState &rhs) const {
-    return (m_cullMode == rhs.m_cullMode && m_cullFace == rhs.m_cullFace);
+    return (cullMode == rhs.cullMode && cullFace == rhs.cullFace);
 }
 
 inline bool CullState::operator!=(const CullState &rhs) const {
@@ -388,41 +383,43 @@ inline bool PolygonState::operator!=(const PolygonState &rhs) const {
     return !(*this == rhs);
 }
 
+/// @brief
 struct RenderStates {
-    ClearState m_clearState;
-    DepthState m_depthState;
-    TransformState m_transformState;
-    PolygonState m_polygonState;
-    BlendState m_blendState;
-    CullState m_cullState;
-    SamplerState m_samplerState;
-    StencilState m_stencilState;
-    bool m_applied;
+    ClearState clearState;
+    DepthState depthState;
+    TransformState transformState;
+    PolygonState polygonState;
+    BlendState blendState;
+    CullState cullState;
+    SamplerState samplerState;
+    StencilState stencilState;
+    bool applied;
 
+    /// @brief
     RenderStates() :
-            m_clearState(),
-            m_depthState(),
-            m_transformState(),
-            m_polygonState(),
-            m_blendState(),
-            m_cullState(),
-            m_samplerState(),
-            m_stencilState(),
-            m_applied(false) {
+            clearState(),
+            depthState(),
+            transformState(),
+            polygonState(),
+            blendState(),
+            cullState(),
+            samplerState(),
+            stencilState(),
+            applied(false) {
         // empty
     }
 
-    bool isEqual(const ClearState &ClearState, const DepthState &depthState, const TransformState &transformState,
-            const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState,
-            const SamplerState &samplerState, const StencilState &stencilState) const {
-        return (ClearState == m_clearState &&
-                depthState == m_depthState &&
-                transformState == m_transformState &&
-                polygonState == m_polygonState &&
-                blendState == m_blendState &&
-                cullstate == m_cullState &&
-                samplerState == m_samplerState &&
-                stencilState == m_stencilState);
+    bool isEqual(const ClearState &clearState_, const DepthState &depthState_, const TransformState &transformState_,
+            const PolygonState &polygonState_, const CullState &cullstate_, const BlendState &blendState_,
+            const SamplerState &samplerState_, const StencilState &stencilState_) const {
+        return (clearState_ == clearState &&
+                depthState_ == depthState &&
+                transformState_ == transformState &&
+                polygonState_ == polygonState &&
+                blendState_ == blendState &&
+                cullstate_ == cullState &&
+                samplerState_ == samplerState &&
+                stencilState_ == stencilState);
     }
 };
 

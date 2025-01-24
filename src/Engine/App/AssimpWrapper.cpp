@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -66,10 +66,10 @@ constexpr unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProce
                                         aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
 
 inline static void setColor4(const aiColor4D &aiCol, Color4 &col) {
-    col.m_r = aiCol.r;
-    col.m_g = aiCol.g;
-    col.m_b = aiCol.b;
-    col.m_a = aiCol.a;
+    col.r = aiCol.r;
+    col.g = aiCol.g;
+    col.b = aiCol.b;
+    col.a = aiCol.a;
 }
 
 static void setTexture(const String &resolvedPath, const aiString &texPath, 

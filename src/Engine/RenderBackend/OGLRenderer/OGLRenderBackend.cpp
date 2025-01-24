@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -84,15 +84,15 @@ OGLRenderBackend::~OGLRenderBackend() {
 }
 
 void OGLRenderBackend::enumerateGPUCaps() {
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &mOglCapabilities.mMaxAniso);
-    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mOglCapabilities.mContextMask);
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &mOglCapabilities.mMax3DTextureSize);
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &mOglCapabilities.mMaxTextureUnits);
-    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
-    glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &mOglCapabilities.maxAniso);
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mOglCapabilities.contextMask);
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &mOglCapabilities.max3DTextureSize);
+    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &mOglCapabilities.maxTextureUnits);
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.maxTextureImageUnits);
+    glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.maxTextureCoords);
 
-    mOglCapabilities.mGLSLVersionAsStr = (c8*) glGetString(GL_SHADING_LANGUAGE_VERSION);
-    mOglCapabilities.mGLSLVersion = getGlslVersionFromeString(mOglCapabilities.mGLSLVersionAsStr);
+    mOglCapabilities.glslVersionAsStr = (c8*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    mOglCapabilities.glslVersion = getGlslVersionFromeString(mOglCapabilities.glslVersionAsStr);
 }
 
 void OGLRenderBackend::setClearColor(const Color4& clearColor) {
@@ -141,30 +141,30 @@ void OGLRenderBackend::applyMatrix() {
     OGLParameter *model = getParameter("Model");
     if (nullptr == model) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
+        ::memcpy(blob->data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
         model = createParameter("Model", ParameterType::PT_Mat4, blob, 1);
     } else {
-        memcpy(model->m_data->m_data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
+        memcpy(model->data->data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
     }
     setParameter(model);
 
     OGLParameter *view = getParameter("View");
     if (nullptr == view) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
+        ::memcpy(blob->data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
         view = createParameter("View", ParameterType::PT_Mat4, blob, 1);
     } else {
-        memcpy(view->m_data->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
+        memcpy(view->data->data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
     }
     setParameter(view);
 
     OGLParameter *projection = getParameter("Projection");
     if (nullptr == projection) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
+        ::memcpy(blob->data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
         projection = createParameter("Projection", ParameterType::PT_Mat4, blob, 1);
     } else {
-        memcpy(projection->m_data->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
+        memcpy(projection->data->data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
     }
     setParameter(projection);
 }
@@ -176,19 +176,19 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
     enumerateGPUCaps();
 
     // checking the supported GL version
-    mOGLDriverInfo.mGLVendorString = (const c8 *)glGetString(GL_VENDOR);
-    if (mOGLDriverInfo.mGLVendorString) {
-        String vendor(mOGLDriverInfo.mGLVendorString);
+    mOGLDriverInfo.glVendorString = (const c8 *)glGetString(GL_VENDOR);
+    if (mOGLDriverInfo.glVendorString != nullptr) {
+        String vendor(mOGLDriverInfo.glVendorString);
         osre_info(Tag, vendor);
     }
-    mOGLDriverInfo.mGLRendererString = (const c8 *)glGetString(GL_RENDERER);
-    if (mOGLDriverInfo.mGLRendererString) {
-        String renderer(mOGLDriverInfo.mGLRendererString);
+    mOGLDriverInfo.glRendererString = (const c8 *)glGetString(GL_RENDERER);
+    if (mOGLDriverInfo.glRendererString != nullptr) {
+        String renderer(mOGLDriverInfo.glRendererString);
         osre_info(Tag, renderer);
     }
-    mOGLDriverInfo.mGLVersionString = (const c8 *)glGetString(GL_VERSION);
-    if (mOGLDriverInfo.mGLVersionString) {
-        String version(mOGLDriverInfo.mGLVersionString);
+    mOGLDriverInfo.glVersionString = (const c8 *)glGetString(GL_VERSION);
+    if (mOGLDriverInfo.glVersionString != nullptr) {
+        String version(mOGLDriverInfo.glVersionString);
         osre_info(Tag, version);
     }
     const char *GLExtensions = (const c8*) glGetString(GL_EXTENSIONS);
@@ -197,8 +197,8 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
         setExtensions(extensions);
     }
     // or better yet, use the GL4.x way to get the version number
-    glGetIntegerv(GL_MAJOR_VERSION, &mOGLDriverInfo.mOpenGLVersion[0]);
-    glGetIntegerv(GL_MINOR_VERSION, &mOGLDriverInfo.mOpenGLVersion[1]);
+    glGetIntegerv(GL_MAJOR_VERSION, &mOGLDriverInfo.glVersion[0]);
+    glGetIntegerv(GL_MINOR_VERSION, &mOGLDriverInfo.glVersion[1]);
 
     c8 *slv = (c8 *) glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_info(Tag, "Supported GLSL language " + String(slv));
@@ -251,7 +251,7 @@ void OGLRenderBackend::setRenderContext(Platform::AbstractOGLRenderContext *rend
 
 void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     GLbitfield glTarget{ 0 };
-    const ui32 clear{ clearState.m_state };
+    const ui32 clear{ clearState.state };
     if (clear & (int)ClearState::ClearBitType::ColorBit) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
@@ -263,7 +263,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     }
 
     glClear(glTarget);
-    glClearColor(mClearColor.m_r, mClearColor.m_g, mClearColor.m_b, mClearColor.m_a);
+    glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
@@ -284,10 +284,10 @@ OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
         buffer = mBuffers[handle];
         mFreeBufferSlots.removeBack();
     }
-    buffer->m_handle = handle;
-    buffer->m_type = type;
-    buffer->m_oglId = bufferId;
-    buffer->m_size = 0;
+    buffer->handle = handle;
+    buffer->type = type;
+    buffer->oglId = bufferId;
+    buffer->size = 0;
 
     return buffer;
 }
@@ -295,7 +295,7 @@ OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
 OGLBuffer *OGLRenderBackend::getBufferById(guid geoId) {
     OGLBuffer *buffer(nullptr);
     for (ui32 i = 0; i < mBuffers.size(); i++) {
-        if (mBuffers[i]->m_geoId == geoId) {
+        if (mBuffers[i]->geoId == geoId) {
             buffer = mBuffers[i];
             break;
         }
@@ -309,8 +309,8 @@ void OGLRenderBackend::bindBuffer(OGLBuffer *buffer) {
         return;
     }
 
-    GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
-    glBindBuffer(target, buffer->m_oglId);
+    GLenum target = OGLEnum::getGLBufferType(buffer->type);
+    glBindBuffer(target, buffer->oglId);
 
     //CHECKOGLERRORSTATE();
 }
@@ -329,7 +329,7 @@ void OGLRenderBackend::unbindBuffer(OGLBuffer *buffer) {
     }
     mActiveVB = NotInitedHandle;
     mActiveIB = NotInitedHandle;
-    GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
+    GLenum target = OGLEnum::getGLBufferType(buffer->type);
     glBindBuffer(target, 0);
 
     CHECKOGLERRORSTATE();
@@ -340,7 +340,7 @@ void OGLRenderBackend::copyDataToBuffer(OGLBuffer *buffer, void *data, size_t si
         osre_debug(Tag, "Pointer to buffer is nullptr");
         return;
     }
-    GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
+    GLenum target = OGLEnum::getGLBufferType(buffer->type);
     glBufferData(target, size, data, OGLEnum::getGLBufferAccessType(usage));
 
     CHECKOGLERRORSTATE();
@@ -352,16 +352,16 @@ void OGLRenderBackend::releaseBuffer(OGLBuffer *buffer) {
         return;
     }
 
-    if (buffer->m_oglId == OGLNotSetId) {
+    if (buffer->oglId == OGLNotSetId) {
         osre_debug(Tag, "OGL-Id was already released, skipped.");
         return;
     }
 
-    const size_t slot = buffer->m_handle;
-    glDeleteBuffers(1, &buffer->m_oglId);
-    buffer->m_handle = OGLNotSetId;
-    buffer->m_type = BufferType::EmptyBuffer;
-    buffer->m_oglId = OGLNotSetId;
+    const size_t slot = buffer->handle;
+    glDeleteBuffers(1, &buffer->oglId);
+    buffer->handle = OGLNotSetId;
+    buffer->type = BufferType::EmptyBuffer;
+    buffer->oglId = OGLNotSetId;
     mFreeBufferSlots.add(slot);
 }
 
@@ -369,7 +369,7 @@ void OGLRenderBackend::releaseAllBuffers() {
     for (ui32 i = 0; i < mBuffers.size(); ++i) {
         OGLBuffer *buffer = mBuffers[i];
         if (nullptr != buffer) {
-            if (buffer->m_type != BufferType::EmptyBuffer) {
+            if (buffer->type != BufferType::EmptyBuffer) {
                 releaseBuffer(buffer);
             }
         }
@@ -394,13 +394,13 @@ bool OGLRenderBackend::createVertexCompArray(const VertexLayout *layout, OGLShad
     for (ui32 i = 0; i < layout->numComponents(); i++) {
         VertComponent &comp(layout->getAt(i));
         attribute = new OGLVertexAttribute;
-        attribute->m_pAttributeName = getVertCompName(comp.m_attrib).c_str();
-        attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-        attribute->m_size = OGLEnum::getOGLSizeForFormat(comp.m_format);
-        attribute->m_type = OGLEnum::getOGLTypeForFormat(comp.m_format);
-        attribute->m_ptr = (GLvoid *)index;
+        attribute->attributeName = getVertCompName(comp.attrib).c_str();
+        attribute->index = shader->getAttributeLocation(attribute->attributeName);
+        attribute->size = OGLEnum::getOGLSizeForFormat(comp.format);
+        attribute->type = OGLEnum::getOGLTypeForFormat(comp.format);
+        attribute->ptr = (GLvoid *)index;
         attributes.add(attribute);
-        index += attribute->m_size;
+        index += attribute->size;
     }
 
     return true;
@@ -416,65 +416,62 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
     switch (type) {
         case VertexType::ColorVertex:
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::Position).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 3;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = 0;
+            attribute->attributeName = getVertCompName(VertexAttribute::Position).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 3;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = 0;
             attributes.add(attribute);
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::Normal).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 3;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = (const GLvoid *)offsetof(ColorVert, normal);
+            attribute->attributeName = getVertCompName(VertexAttribute::Normal).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 3;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = (const GLvoid *)offsetof(ColorVert, normal);
             attributes.add(attribute);
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::Color0).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 3;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = (const GLvoid *)offsetof(ColorVert, color0);
+            attribute->attributeName = getVertCompName(VertexAttribute::Color0).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 3;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = (const GLvoid *)offsetof(ColorVert, color0);
             attributes.add(attribute);
             break;
 
         case VertexType::RenderVertex:
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::Position).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 3;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = 0;
+            attribute->attributeName = getVertCompName(VertexAttribute::Position).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 3;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = 0;
             attributes.add(attribute);
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::Normal).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 3;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = (const GLvoid *)offsetof(RenderVert, normal);
+            attribute->attributeName = getVertCompName(VertexAttribute::Normal).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 3;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = (const GLvoid *)offsetof(RenderVert, normal);
             attributes.add(attribute);
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::Color0).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 3;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = (const GLvoid *)offsetof(RenderVert, color0);
+            attribute->attributeName = getVertCompName(VertexAttribute::Color0).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 3;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = (const GLvoid *)offsetof(RenderVert, color0);
             attributes.add(attribute);
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName(VertexAttribute::TexCoord0).c_str();
-            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-            attribute->m_size = 2;
-            attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = (const GLvoid *)offsetof(RenderVert, tex0);
+            attribute->attributeName = getVertCompName(VertexAttribute::TexCoord0).c_str();
+            attribute->index = shader->getAttributeLocation(attribute->attributeName);
+            attribute->size = 2;
+            attribute->type = GL_FLOAT;
+            attribute->ptr = (const GLvoid *)offsetof(RenderVert, tex0);
             attributes.add(attribute);
-            break;
-
-        default:
             break;
     }
 
@@ -494,10 +491,10 @@ void OGLRenderBackend::releaseVertexCompArray(TArray<OGLVertexAttribute *> &attr
 
 OGLVertexArray *OGLRenderBackend::createVertexArray() {
     OGLVertexArray *vertexArray = new OGLVertexArray;
-    glGenVertexArrays(1, &vertexArray->m_id);
+    glGenVertexArrays(1, &vertexArray->id);
     const size_t id = mVertexArrays.size();
     mVertexArrays.add(vertexArray);
-    vertexArray->m_slot = id;
+    vertexArray->slot = id;
 
     return vertexArray;
 }
@@ -509,11 +506,11 @@ bool OGLRenderBackend::bindVertexLayout(OGLVertexArray *va, OGLShader *shader, s
     }
 
     glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, (GLint)attrib->m_size,
-            attrib->m_type,
+    glVertexAttribPointer(loc, (GLint)attrib->size,
+            attrib->type,
             GL_FALSE,
             (GLsizei)stride,
-            attrib->m_ptr);
+            attrib->ptr);
 
     return true;
 }
@@ -525,7 +522,7 @@ bool OGLRenderBackend::bindVertexLayout(OGLVertexArray *va, OGLShader *shader, s
     }
 
     for (ui32 i = 0; i < attributes.size(); ++i) {
-        const c8 *attribName = attributes[i]->m_pAttributeName;
+        const c8 *attribName = attributes[i]->attributeName;
         if (nullptr == attribName) {
             continue;
         }
@@ -533,11 +530,11 @@ bool OGLRenderBackend::bindVertexLayout(OGLVertexArray *va, OGLShader *shader, s
         const GLint loc = shader->getAttributeLocation(attribName);
         if (-1 != loc) {
             glEnableVertexAttribArray(loc);
-            glVertexAttribPointer(loc, (GLint)attributes[i]->m_size,
-                    attributes[i]->m_type,
+            glVertexAttribPointer(loc, (GLint)attributes[i]->size,
+                    attributes[i]->type,
                     GL_FALSE,
                     (GLsizei)stride,
-                    attributes[i]->m_ptr);
+                    attributes[i]->ptr);
         }
     }
 
@@ -549,8 +546,8 @@ void OGLRenderBackend::destroyVertexArray(OGLVertexArray *vertexArray) {
         return;
     }
 
-    glDeleteVertexArrays(1, &vertexArray->m_id);
-    vertexArray->m_id = NotInitedHandle;
+    glDeleteVertexArrays(1, &vertexArray->id);
+    vertexArray->id = NotInitedHandle;
 }
 
 OGLVertexArray *OGLRenderBackend::getVertexArraybyId(ui32 id) const {
@@ -568,8 +565,8 @@ void OGLRenderBackend::bindVertexArray(OGLVertexArray *vertexArray) {
         return;
     }
 
-    if ((mActiveVertexArray == OGLNotSetId) || (mActiveVertexArray != vertexArray->m_id)) {
-        mActiveVertexArray = vertexArray->m_id;
+    if ((mActiveVertexArray == OGLNotSetId) || (mActiveVertexArray != vertexArray->id)) {
+        mActiveVertexArray = vertexArray->id;
         glBindVertexArray(mActiveVertexArray);
         CHECKOGLERRORSTATE();
     }
@@ -728,28 +725,28 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
         mFreeTexSlots.removeBack();
         tex = mTextures[slot];
     }
-    tex->m_slot = slot;
+    tex->slot = slot;
     m_texLookupMap[name] = slot;
 
     GLuint textureId;
     glGenTextures(1, &textureId);
-    tex->m_textureId = textureId;
-    tex->m_name = name;
-    tex->m_width = static_cast<ui32>(width);
-    tex->m_height = static_cast<ui32>(height);
-    tex->m_channels = static_cast<ui32>(channels);
-    tex->m_format = OGLEnum::getGLTextureFormat(format);
+    tex->textureId = textureId;
+    tex->name = name;
+    tex->resolution.width = static_cast<ui32>(width);
+    tex->resolution.height = static_cast<ui32>(height);
+    tex->channels = static_cast<ui32>(channels);
+    tex->format = OGLEnum::getGLTextureFormat(format);
 
     glActiveTexture(GL_TEXTURE0);
-    tex->m_target = OGLEnum::getGLTextureTarget(target);
-    glBindTexture(tex->m_target, textureId);
+    tex->target = OGLEnum::getGLTextureTarget(target);
+    glBindTexture(tex->target, textureId);
 
-    glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamMinFilter), GL_LINEAR);
-    glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamMagFilter), GL_LINEAR);
-    glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapS), GL_CLAMP);
-    glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapT), GL_CLAMP);
+    glTexParameteri(tex->target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamMinFilter), GL_LINEAR);
+    glTexParameteri(tex->target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamMagFilter), GL_LINEAR);
+    glTexParameteri(tex->target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapS), GL_CLAMP);
+    glTexParameteri(tex->target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapT), GL_CLAMP);
 
-    glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
+    glTexParameterf(tex->target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.maxAniso);
 
     return tex;
 }
@@ -770,10 +767,10 @@ OGLTexture *OGLRenderBackend::createDefaultTexture(TextureTargetType target, Pix
         }
     }
 
-    glTexImage2D(glTex->m_target, 0, GL_RGB, width, height, 0, OGLEnum::getGLTextureFormat(pixelFormat), GL_UNSIGNED_BYTE, imageData);
-    glGenerateMipmap(glTex->m_target);
-    glTexParameterf(glTex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
-    glBindTexture(glTex->m_target, 0);
+    glTexImage2D(glTex->target, 0, GL_RGB, width, height, 0, OGLEnum::getGLTextureFormat(pixelFormat), GL_UNSIGNED_BYTE, imageData);
+    glGenerateMipmap(glTex->target);
+    glTexParameterf(glTex->target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.maxAniso);
+    glBindTexture(glTex->target, 0);
 
     return glTex;
 }
@@ -784,12 +781,12 @@ void OGLRenderBackend::updateTexture(OGLTexture *oglTextue, ui32 offsetX, ui32 o
         return;
     }
 
-    const ui32 diffX = oglTextue->m_width - offsetX;
-    const ui32 diffY = oglTextue->m_height - offsetY;
-    const ui32 subSize = diffX * diffY * oglTextue->m_channels;
+    const ui32 diffX = oglTextue->resolution.width - offsetX;
+    const ui32 diffY = oglTextue->resolution.height - offsetY;
+    const ui32 subSize = diffX * diffY * oglTextue->channels;
     osre_validate(size < subSize, "Invalid size");
-    glTexSubImage2D(oglTextue->m_target, 0, offsetX, offsetY, oglTextue->m_width,
-            oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data);
+    glTexSubImage2D(oglTextue->target, 0, offsetX, offsetY, oglTextue->resolution.width,
+            oglTextue->resolution.height, oglTextue->format, GL_UNSIGNED_BYTE, data);
 }
 
 OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
@@ -802,11 +799,11 @@ OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
         return glTex;
     }
 
-    glTex = createEmptyTexture(name, tex->TargetType, tex->PixelFormat, tex->Width, tex->Height, tex->Channels);
-    glTexImage2D(glTex->m_target, 0, GL_RGB, tex->Width, tex->Height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->Data);
-    glGenerateMipmap(glTex->m_target);
-    glTexParameterf(glTex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
-    glBindTexture(glTex->m_target, 0);
+    glTex = createEmptyTexture(name, tex->targetType, tex->pixelFormat, tex->width, tex->height, tex->channels);
+    glTexImage2D(glTex->target, 0, GL_RGB, tex->width, tex->height, 0, glTex->format, GL_UNSIGNED_BYTE, tex->data);
+    glGenerateMipmap(glTex->target);
+    glTexParameterf(glTex->target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.maxAniso);
+    glBindTexture(glTex->target, 0);
 
     return glTex;
 }
@@ -842,8 +839,8 @@ OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO
 
     // create texture and fill it
     tex = createEmptyTexture(name, TextureTargetType::Texture2D, PixelFormatType::R8G8B8, width, height, channels);
-    glTexImage2D(tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data);
-    glBindTexture(tex->m_target, 0);
+    glTexImage2D(tex->target, 0, GL_RGB, width, height, 0, tex->format, GL_UNSIGNED_BYTE, data);
+    glBindTexture(tex->target, 0);
 
     stbi_image_free(data);
     return tex;
@@ -869,7 +866,7 @@ bool OGLRenderBackend::bindTexture(OGLTexture *oglTexture, TextureStageType stag
 
     GLenum glStageType = OGLEnum::getGLTextureStage(stageType);
     glActiveTexture(glStageType);
-    glBindTexture(oglTexture->m_target, oglTexture->m_textureId);
+    glBindTexture(oglTexture->target, oglTexture->textureId);
     mBindedTextures[(size_t)stageType] = oglTexture;
 
     return true;
@@ -895,28 +892,28 @@ void OGLRenderBackend::releaseTexture(OGLTexture *oglTexture) {
         return;
     }
 
-    if (nullptr == mTextures[oglTexture->m_slot]) {
+    if (nullptr == mTextures[oglTexture->slot]) {
         return;
     }
 
-    glDeleteTextures(1, &oglTexture->m_textureId);
-    oglTexture->m_textureId = OGLNotSetId;
-    oglTexture->m_width = 0;
-    oglTexture->m_height = 0;
-    oglTexture->m_channels = 0;
+    glDeleteTextures(1, &oglTexture->textureId);
+    oglTexture->textureId = OGLNotSetId;
+    oglTexture->resolution.width = 0;
+    oglTexture->resolution.height = 0;
+    oglTexture->channels = 0;
 
-    mFreeTexSlots.add(oglTexture->m_slot);
+    mFreeTexSlots.add(oglTexture->slot);
 
-    std::map<String, size_t>::iterator it = m_texLookupMap.find(oglTexture->m_name);
+    std::map<String, size_t>::iterator it = m_texLookupMap.find(oglTexture->name);
     if (m_texLookupMap.end() != it) {
         it = m_texLookupMap.erase(it);
     }
-    oglTexture->m_slot = 0;
+    oglTexture->slot = 0;
 }
 
 void OGLRenderBackend::releaseAllTextures() {
     for (ui32 i = 0; i < mTextures.size(); ++i) {
-        if (mTextures[i]->m_textureId != OGLNotSetId) {
+        if (mTextures[i]->textureId != OGLNotSetId) {
             releaseTexture(mTextures[i]);
             delete mTextures[i];
         }
@@ -936,14 +933,14 @@ OGLParameter *OGLRenderBackend::createParameter(const String &name, ParameterTyp
 
     // We need to create it
     param = new OGLParameter;
-    param->m_name = name;
-    param->m_type = type;
-    param->m_loc = NoneLocation;
-    param->m_numItems = numItems;
-    param->m_data = UniformDataBlob::create(type, param->m_numItems);
+    param->name = name;
+    param->type = type;
+    param->loc = NoneLocation;
+    param->numItems = numItems;
+    param->data = UniformDataBlob::create(type, param->numItems);
     if (nullptr != blob) {
-        if (0 != blob->m_size) {
-            ::memcpy(param->m_data->getData(), blob->getData(), blob->m_size);
+        if (0 != blob->size) {
+            ::memcpy(param->data->getData(), blob->getData(), blob->size);
         }
     }
     mParameters.add(param);
@@ -957,7 +954,7 @@ OGLParameter *OGLRenderBackend::getParameter(const String &name) const {
     }
 
     for (ui32 i = 0; i < mParameters.size(); ++i) {
-        if (mParameters[i]->m_name == name) {
+        if (mParameters[i]->name == name) {
             return mParameters[i];
         }
     }
@@ -976,69 +973,66 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
         return;
     }
 
-    if (NoneLocation == param->m_loc) {
-        param->m_loc = mShaderInUse->getUniformLocation(param->m_name);
-        if (NoneLocation == param->m_loc) {
-            osre_debug(Tag, "Cannot location for parameter " + param->m_name + " in shader " + mShaderInUse->getName() + ".");
+    if (NoneLocation == param->loc) {
+        param->loc = mShaderInUse->getUniformLocation(param->name);
+        if (NoneLocation == param->loc) {
+            osre_debug(Tag, "Cannot location for parameter " + param->name + " in shader " + mShaderInUse->getName() + ".");
             return;
         }
     }
 
-    switch (param->m_type) {
+    switch (param->type) {
         case ParameterType::PT_Int: {
             GLint data;
-            ::memcpy(&data, param->m_data->getData(), sizeof(GLint));
-            glUniform1i(param->m_loc, data);
+            ::memcpy(&data, param->data->getData(), sizeof(GLint));
+            glUniform1i(param->loc, data);
         } break;
 
         case ParameterType::PT_IntArray: {
-            glUniform1iv(param->m_loc, (GLsizei)param->m_numItems, (i32 *)param->m_data->getData());
+            glUniform1iv(param->loc, (GLsizei)param->numItems, (i32 *)param->data->getData());
         } break;
 
         case ParameterType::PT_Float: {
             GLfloat value;
-            ::memcpy(&value, param->m_data->getData(), sizeof(GLfloat));
-            glUniform1f(param->m_loc, value);
+            ::memcpy(&value, param->data->getData(), sizeof(GLfloat));
+            glUniform1f(param->loc, value);
         } break;
 
         case ParameterType::PT_FloatArray: {
-            glUniform1fv(param->m_loc, (GLsizei)param->m_numItems, (f32 *)param->m_data->getData());
+            glUniform1fv(param->loc, (GLsizei)param->numItems, (f32 *)param->data->getData());
 
         } break;
 
         case ParameterType::PT_Float2: {
             GLfloat value[2] = {};
-            ::memcpy(&value[0], param->m_data->getData(), sizeof(GLfloat) * 2);
-            glUniform2f(param->m_loc, value[0], value[1]);
+            ::memcpy(&value[0], param->data->getData(), sizeof(GLfloat) * 2);
+            glUniform2f(param->loc, value[0], value[1]);
         } break;
 
         case ParameterType::PT_Float2Array: {
-            glUniform2fv(param->m_loc, (GLsizei)param->m_numItems, (f32 *)param->m_data->getData());
+            glUniform2fv(param->loc, (GLsizei)param->numItems, (f32 *)param->data->getData());
         } break;
 
         case ParameterType::PT_Float3: {
             GLfloat value[3] = {};
-            ::memcpy(&value[0], param->m_data->getData(), sizeof(GLfloat) * 3);
-            glUniform3f(param->m_loc, value[0], value[1], value[2]);
+            ::memcpy(&value[0], param->data->getData(), sizeof(GLfloat) * 3);
+            glUniform3f(param->loc, value[0], value[1], value[2]);
         } break;
 
         case ParameterType::PT_Float3Array: {
-            glUniform3fv(param->m_loc, (GLsizei)param->m_numItems, (f32 *)param->m_data->getData());
+            glUniform3fv(param->loc, (GLsizei)param->numItems, (f32 *)param->data->getData());
 
         } break;
 
         case ParameterType::PT_Mat4: {
             glm::mat4 mat;
-            ::memcpy(&mat, param->m_data->getData(), sizeof(glm::mat4));
-            glUniformMatrix4fv(param->m_loc, 1, GL_FALSE, glm::value_ptr(mat));
+            ::memcpy(&mat, param->data->getData(), sizeof(glm::mat4));
+            glUniformMatrix4fv(param->loc, 1, GL_FALSE, glm::value_ptr(mat));
         } break;
 
         case ParameterType::PT_Mat4Array: {
-            glUniformMatrix4fv(param->m_loc, (GLsizei)param->m_numItems, GL_FALSE, (f32 *)param->m_data->getData());
+            glUniformMatrix4fv(param->loc, (GLsizei)param->numItems, GL_FALSE, (f32 *)param->data->getData());
         } break;
-
-        default:
-            break;
     }
     CHECKOGLERRORSTATE();
 }
@@ -1155,8 +1149,8 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
 
     for (ui32 i = 0; i < mFrameFuffers.size(); ++i) {
         if (mFrameFuffers[i] == oglFB) {
-            glDeleteFramebuffers(1, &oglFB->m_bufferId);
-            glDeleteTextures(1, &oglFB->m_renderedTexture);
+            glDeleteFramebuffers(1, &oglFB->bufferId);
+            glDeleteTextures(1, &oglFB->renderedTexture);
             mFrameFuffers.remove(i);
         }
     }
@@ -1170,11 +1164,11 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
 void OGLRenderBackend::render(size_t primpGrpIdx) {
     OGLPrimGroup *grp(mPrimitives[primpGrpIdx]);
     if (nullptr != grp) {
-        glDrawRangeElements(grp->m_primitive, 
-            grp->m_startIndex, 
-            grp->m_startIndex + grp->m_numIndices, 
-            grp->m_numIndices, 
-            grp->m_indexType, 
+        glDrawRangeElements(grp->primitive, 
+            grp->startIndex, 
+            static_cast<GLuint>(grp->startIndex + grp->numIndices), 
+            static_cast<GLsizei>(grp->numIndices), 
+            grp->indexType, 
             nullptr);        
     }
 }
@@ -1186,9 +1180,9 @@ void OGLRenderBackend::render(size_t primpGrpIdx) {
 void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
     OGLPrimGroup *grp(mPrimitives[primpGrpIdx]);
     if (nullptr != grp) {
-        glDrawArraysInstanced(grp->m_primitive,
-                grp->m_startIndex,
-                (GLsizei)grp->m_numIndices,
+        glDrawArraysInstanced(grp->primitive,
+                grp->startIndex,
+                (GLsizei)grp->numIndices,
                 (GLsizei)numInstances);
     }
 }
@@ -1206,39 +1200,39 @@ void OGLRenderBackend::renderFrame() {
 void OGLRenderBackend::setFixedPipelineStates(const RenderStates &states) {
     osre_assert(nullptr != mFpState);
 
-    if (mFpState->m_applied) {
-        if (mFpState->isEqual(states.m_clearState, states.m_depthState, states.m_transformState, states.m_polygonState,
-                    states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState)) {
+    if (mFpState->applied) {
+        if (mFpState->isEqual(states.clearState, states.depthState, states.transformState, states.polygonState,
+                    states.cullState, states.blendState, states.samplerState, states.stencilState)) {
             return;
         }
     }
 
-    mFpState->m_polygonState = states.m_polygonState;
-    mFpState->m_blendState = states.m_blendState;
-    mFpState->m_cullState = states.m_cullState;
-    mFpState->m_samplerState = states.m_samplerState;
-    mFpState->m_stencilState = states.m_stencilState;
+    mFpState->polygonState = states.polygonState;
+    mFpState->blendState = states.blendState;
+    mFpState->cullState = states.cullState;
+    mFpState->samplerState = states.samplerState;
+    mFpState->stencilState = states.stencilState;
 
-    if (mFpState->m_cullState.m_cullMode == CullState::CullMode::Off) {
+    if (mFpState->cullState.m_cullMode == CullState::CullMode::Off) {
         glDisable(GL_CULL_FACE);
     } else {
         glEnable(GL_CULL_FACE);
-        glCullFace(OGLEnum::getOGLCullFace(mFpState->m_cullState.m_cullFace));
-        glPolygonMode(OGLEnum::getOGLCullFace(mFpState->m_cullState.m_cullFace),
-                OGLEnum::getOGLPolygonMode(mFpState->m_polygonState.m_polyMode));
-        glFrontFace(OGLEnum::getOGLCullState(mFpState->m_cullState.m_cullMode));
+        glCullFace(OGLEnum::getOGLCullFace(mFpState->cullState.cullFace));
+        glPolygonMode(OGLEnum::getOGLCullFace(mFpState->cullState.cullFace),
+                OGLEnum::getOGLPolygonMode(mFpState->polygonState.polyMode));
+        glFrontFace(OGLEnum::getOGLCullState(mFpState->cullState.cullMode));
     }
 
-    if (mFpState->m_blendState.m_blendFunc == BlendState::BlendFunc::Off) {
+    if (mFpState->blendState.blendFunc == BlendState::BlendFunc::Off) {
         glDisable(GL_BLEND);
     } else {
         glEnable(GL_BLEND);
     }
-    mFpState->m_applied = true;
+    mFpState->applied = true;
 }
 
 void OGLRenderBackend::setExtensions(const String &extensions) {
-    mOGLDriverInfo.mExtensions = extensions;
+    mOGLDriverInfo.extensions = extensions;
 }
 
 const String &OGLRenderBackend::getExtensions() const {

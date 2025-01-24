@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -331,12 +331,16 @@ struct ExtensionProperty {
 
 /// @brief
 struct OSRE_EXPORT VertComponent {
-    VertexAttribute m_attrib;
-    VertexFormat m_format;
+    VertexAttribute attrib;
+    VertexFormat    format;
 
     /// @brief The class constructor
     VertComponent();
-    VertComponent(VertexAttribute attrib, VertexFormat format);
+
+    /// @brief The class constructor
+    /// @param[in] attrib_  The attribute type
+    /// @param[in] format_  The attribute format
+    VertComponent(VertexAttribute attrib_, VertexFormat format_);
 
     OSRE_NON_COPYABLE(VertComponent)
 };
@@ -344,11 +348,11 @@ struct OSRE_EXPORT VertComponent {
 /// @brief
 struct OSRE_EXPORT VertexLayout {
     static VertComponent ErrorComp;
-    String *m_attributes;
-    cppcore::TArray<VertComponent *> m_components;
-    cppcore::TArray<size_t> m_offsets;
-    size_t m_currentOffset;
-    size_t m_sizeInBytes;
+    String *attributes;
+    cppcore::TArray<VertComponent *> components;
+    cppcore::TArray<size_t> offsets;
+    size_t currentOffset;
+    size_t size;
 
     VertexLayout();
     ~VertexLayout();
@@ -368,10 +372,10 @@ struct OSRE_EXPORT BufferData {
     friend BufferDataAllocator;
     static BufferDataAllocator sBufferDataAllocator;
 
-    BufferType m_type; ///< The buffer type ( @see BufferType )
-    MemoryBuffer m_buffer; ///< The memory buffer
-    size_t m_cap; ///<
-    BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
+    BufferType type;            ///< The buffer type ( @see BufferType )
+    MemoryBuffer buffer;        ///< The memory buffer
+    size_t cap;                 ///< The capability
+    BufferAccessType access;    ///< Access token ( @see BufferAccessType )
 
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
     void copyFrom(void *data, size_t size);
@@ -389,19 +393,19 @@ private:
 };
 
 inline size_t BufferData::getSize() const {
-    return m_buffer.size();
+    return buffer.size();
 }
 
 inline c8 *BufferData::getData() {
-    return (c8 *)&m_buffer[0];
+    return (c8*) &buffer[0];
 }
 
 ///	@brief
 struct OSRE_EXPORT PrimitiveGroup {
-    PrimitiveType m_primitive;
-    size_t m_startIndex;
-    size_t m_numIndices;
-    IndexType m_indexType;
+    PrimitiveType   primitive;
+    size_t          startIndex;
+    size_t          numIndices;
+    IndexType       indexType;
 
     /// @brief The class constructor
     PrimitiveGroup();
@@ -413,16 +417,16 @@ struct OSRE_EXPORT PrimitiveGroup {
 
 ///	@brief
 struct OSRE_EXPORT Texture {
-    String TextureName;
-    IO::Uri Loc;
-    TextureTargetType TargetType;
-    PixelFormatType PixelFormat;
-    ui32 Size;
-    uc8 *Data;
-    ui32 Width;
-    ui32 Height;
-    ui32 Channels;
-    Handle TexHandle;
+    String              textureName;
+    IO::Uri             loc;
+    TextureTargetType   targetType;
+    PixelFormatType     pixelFormat;
+    ui32                size;
+    uc8                 *data;
+    ui32                width;
+    ui32                height;
+    ui32                channels;
+    Handle              texHandle;
 
     /// @brief The class constructor.
     Texture();
@@ -430,6 +434,7 @@ struct OSRE_EXPORT Texture {
     /// @brief The class destructor.
     ~Texture();
     void clear();
+    
     OSRE_NON_COPYABLE(Texture)
 };
 
@@ -464,25 +469,25 @@ private:
 
 ///	@brief
 struct OSRE_EXPORT TransformState {
-    glm::vec3 m_translate;
-    glm::vec3 m_scale;
-    glm::mat4 m_rotation;
+    glm::vec3 translate;
+    glm::vec3 scale;
+    glm::mat4 rotation;
 
     TransformState();
     ~TransformState();
     void setTranslation(f32 x, f32 y, f32 z);
     void setScale(f32 sx, f32 sy, f32 sz);
     void toMatrix(glm::mat4 &m) const;
-    bool operator==(const TransformState &rhs) const;
-    bool operator!=(const TransformState &rhs) const;
+    bool operator == (const TransformState &rhs) const;
+    bool operator != (const TransformState &rhs) const;
 };
 
 ///	@brief
 struct OSRE_EXPORT Viewport {
-    i32 m_x;
-    i32 m_y;
-    i32 m_w;
-    i32 m_h;
+    i32 x;
+    i32 y;
+    i32 w;
+    i32 h;
 
     Viewport();
     Viewport(i32 x, i32 y, i32 w, i32 h);
@@ -500,35 +505,30 @@ struct OSRE_EXPORT Viewport {
 template <class T>
 struct TVertexCache {
     using CacheType = ::cppcore::TArray<T>;
-    CacheType m_cache;
+    CacheType cache;
 
     /// @brief 
     /// @param size 
     TVertexCache(size_t size) :
-            m_cache(size) {
+            cache(size) {
         // empty
     }
 
     /// @brief 
     TVertexCache() :
-            m_cache() {
-        // empty
-    }
-
-    ///	@brief
-    ~TVertexCache() {
+            cache() {
         // empty
     }
 
     /// @brief 
     void clear() {
-        m_cache.clear();
+        cache.clear();
     }
 
     /// @brief 
     /// @return 
     bool isEmpty() const {
-        return m_cache.isEmpty();
+        return cache.isEmpty();
     }
 
     /// @brief 
@@ -537,7 +537,7 @@ struct TVertexCache {
         if (0 == newSize) {
             return;
         }
-        m_cache.reserve(m_cache.size() + newSize);
+        cache.reserve(cache.size() + newSize);
     }
 
     /// @brief 
@@ -547,25 +547,25 @@ struct TVertexCache {
         if (nullptr == vertices || 0 == numItems) {
             return;
         }
-        m_cache.add(vertices, numItems);
+        cache.add(vertices, numItems);
     }
 
     /// @brief 
     /// @param vertex 
     void add(const T &vertex) {
-        m_cache.add(vertex);
+        cache.add(vertex);
     }
 
     /// @brief 
     /// @return 
     size_t numVertices() const {
-        return m_cache.size();
+        return cache.size();
     }
 
     /// @brief 
     /// @return 
     size_t sizeInBytes() const {
-        return m_cache.size() * sizeof(T);
+        return cache.size() * sizeof(T);
     }
 };
 
@@ -578,39 +578,35 @@ template <class T>
 struct TIndexCache {
     using CacheType = ::cppcore::TArray<T>;
 
-    CacheType m_cache;
+    CacheType cache;
 
     /// @brief The class constructor with the buffer size.
     /// @param size   The requested buffer size.
-    TIndexCache(size_t size) : m_cache(size) {}
-
-    /// @brief 
-    TIndexCache() = default;
-
-    ///	@brief
-    ~TIndexCache() = default;
+    TIndexCache(size_t size) : cache(size) {
+        // empty
+    }
 
     ///	@brief
     void clear() {
-        m_cache.clear();
+        cache.clear();
     }
 
     ///	@brief
     /// @return 
     bool isEmpty() const {
-        return m_cache.isEmpty();
+        return cache.isEmpty();
     }
 
     ///	@brief
     /// @param newSize 
     void increaseSize(size_t newSize) {
-        m_cache.reserve(m_cache.size() + newSize);
+        cache.reserve(cache.size() + newSize);
     }
 
     ///	@brief
     /// @param index 
     void add(const T &index) {
-        m_cache.add(index);
+        cache.add(index);
     }
 
     /// @brief 
@@ -620,32 +616,32 @@ struct TIndexCache {
         if (nullptr == index || 0 == numItems) {
             return;
         }
-        m_cache.add(index, numItems);
+        cache.add(index, numItems);
     }
 
     /// @brief 
     /// @return 
     size_t numIndices() const {
-        return m_cache.size();
+        return cache.size();
     }
 
     ///	@brief
     /// @return 
     size_t sizeInBytes() const {
-        return m_cache.size() * sizeof(T);
+        return cache.size() * sizeof(T);
     }
 };
 
 ///	@brief This struct is used to desribe a light source.
 struct OSRE_EXPORT Light {
-    glm::vec4 Position;  ///< The position of the light
-    glm::vec3 Specular;  ///< The specular colot.
-    glm::vec3 Diffuse;   ///< The diffuse color.
-    glm::vec3 Ambient;   ///< The ambient color.
-    glm::vec4 Direction; ///< The direction vector.
-    f32 SpecularExp;     ///< The specular exponent.
-    f32 Radius;           ///< The light radius.
-    LightType Type;      ///< The light type.
+    glm::vec4 position;     ///< The position of the light
+    glm::vec3 specular;     ///< The specular colot.
+    glm::vec3 diffuse;      ///< The diffuse color.
+    glm::vec3 ambient;      ///< The ambient color.
+    glm::vec4 direction;    ///< The direction vector.
+    f32       specularExp;  ///< The specular exponent.
+    f32       radius;       ///< The light radius.
+    LightType type;         ///< The light type.
 
     /// @brief The class constructor.
     Light();
@@ -684,36 +680,39 @@ struct MeshEntry {
 
 /// @brief The render batch data.
 struct RenderBatchData {
-    /// @brief The dirty mode.
-    enum DirtyMode {
-        MatrixBufferDirty = 1,  ///< The matrix buffer is dirty.
-        UniformBufferDirty = 2, ///< The uniform buffer is dirty.
-        MeshDirty = 4,          ///< The mesh is dirty.
-        MeshUpdateDirty = 8     ///< The mesh is updated.
+    /// @brief The update mode for the batch data.
+    enum RequestedUpdate {
+        MatrixBufferUpdate = 1,     ///< The matrix buffer needs an update.
+        UniformBufferUpdate = 2,    ///< The uniform buffer needs an update.
+        MeshUpdate = 4,             ///< The mesh needs an update.
+        MeshUpdateUpdate = 8        ///< The mesh needs an update.
     };
 
-    const c8 *m_id;
-    MatrixBuffer m_matrixBuffer;
-    cppcore::TArray<UniformVar *> m_uniforms;
-    cppcore::TArray<MeshEntry *> m_meshArray;
-    MeshArray m_updateMeshArray;
-    ui32 m_dirtyFlag;
+    const c8 *id;
+    MatrixBuffer matrixBuffer;
+    cppcore::TArray<UniformVar *> uniforms;
+    cppcore::TArray<MeshEntry *> meshArray;
+    MeshArray updateMeshArray;
+    ui32 dirtyFlag;
 
     /// @brief  The class constructor
-    /// @param id  The batch name as a shortcut id.
-    RenderBatchData(const c8 *id) :
-            m_id(id),
-            m_matrixBuffer(),
-            m_uniforms(),
-            m_meshArray(),
-            m_updateMeshArray(),
-            m_dirtyFlag(0) {
+    /// @param[in] id_  The batch name as a shortcut id.
+    RenderBatchData(const c8 *id_) :
+            id(id_),
+            matrixBuffer(),
+            uniforms(),
+            meshArray(),
+            updateMeshArray(),
+            dirtyFlag(0) {
         osre_assert(id != nullptr);
     }
     
     /// @brief The class destructor.
     ~RenderBatchData() = default;
 
+    bool needsUpdate(RequestedUpdate update) const {
+        return dirtyFlag & update;
+    }
     /// @brief Will look for an entry by its name.
     /// @param name     The name to look for.
     /// @return The mesh entry or nullptr if not found
@@ -723,27 +722,34 @@ struct RenderBatchData {
     /// @param name     The name to look for.
     /// @return The uniform var or nullptr if not found.
     UniformVar *getVarByName(const c8 *name);
+
+    /// @brief Will clear all update flags.
+    void clearFlags() {
+        dirtyFlag = 0;
+    }
 };
 
+using RenderBatchDataArray = cppcore::TArray<RenderBatchData *>;
+        
 ///	@brief
 struct PassData {
-    const c8 *m_id;
-    FrameBuffer *mRenderTarget;
-    cppcore::TArray<RenderBatchData *> mMeshBatches;
-    glm::mat4 mView;
-    glm::mat4 mProj;
-    Viewport mViewport;
-    bool mIsDirty;
+    const c8                *id;
+    FrameBuffer             *renderTarget;
+    RenderBatchDataArray    meshBatches;
+    glm::mat4               view;
+    glm::mat4               proj;
+    Viewport                viewport;
+    bool                    isDirty;
 
     ///	@brief
-    PassData(const c8 *id, FrameBuffer *fb) :
-            m_id(id),
-            mRenderTarget(fb),
-            mMeshBatches(),
-            mView(1),
-            mProj(1),
-            mViewport(),
-            mIsDirty(true) {
+    PassData(const c8 *id_, FrameBuffer *fb) :
+            id(id_),
+            renderTarget(fb),
+            meshBatches(),
+            view(1),
+            proj(1),
+            viewport(),
+            isDirty(true) {
         // empty
     }
 
@@ -754,8 +760,8 @@ struct PassData {
 
 /// @brief 
 struct OSRE_EXPORT UniformDataBlob {
-    void *m_data;
-    size_t m_size;
+    void   *data;
+    size_t size;
 
     UniformDataBlob();
     ~UniformDataBlob();
@@ -767,50 +773,58 @@ struct OSRE_EXPORT UniformDataBlob {
 
 /// @brief 
 struct OSRE_EXPORT UniformVar {
-    String m_name;
-    ParameterType m_type;
-    ui32 m_numItems;
-    UniformDataBlob m_data;
-    UniformVar *m_next;
+    String          name;       ///<
+    ParameterType   type;       ///<
+    ui32            numItems;   ///<
+    UniformDataBlob data;       ///<
+    UniformVar      *next;      ///<
 
+    /// @brief
     static ui32 getParamDataSize(ParameterType type, ui32 arraySize);
+
+    /// @brief
     static UniformVar *create(const String &name, ParameterType type, ui32 arraySize = 1);
+
+    /// @brief
     static void destroy(UniformVar *param);
 
-    size_t getSize();
+    /// @brief
+    size_t size() const;
 
 private:
     UniformVar();
     ~UniformVar() = default;
 };
 
+/// @brief Container for the frame data to submit.
 struct FrameSubmitCmd {
+    /// brief Enum to describe the update state.  
     enum Type {
-        CreatePasses = 1,
-        UpdateBuffer = 2,
-        UpdateMatrixes = 4,
-        UpdateUniforms = 8,
-        AddRenderData = 16
+        CreatePasses = 1,       ///< Will create all passes
+        UpdateBuffer = 2,       ///< Perfoms an update of the buffers
+        UpdateMatrixes = 4,     ///< Updates all uniform matrixes
+        UpdateUniforms = 8,     ///< Updates all uniform buffers    
+        AddRenderData = 16      ///< Ad new data to existing buffers
     };
 
-    guid m_meshId;
-    const c8 *m_passId;
-    const c8 *m_batchId;
-    ui32 m_updateFlags;
-    size_t m_size;
-    c8 *m_data;
-    ::cppcore::TArray<MeshEntry*> m_newMeshes;
-    ::cppcore::TArray<PassData*> m_updatedPasses;
+    guid        meshId;
+    const c8    *passId;
+    const c8    *batchId;
+    ui32        updateFlags;
+    size_t      size;
+    c8          *data;
+    ::cppcore::TArray<MeshEntry*> newMeshes;
+    ::cppcore::TArray<PassData*> updatedPasses;
 
     /// @brief The class constructor.
     FrameSubmitCmd() :
-            m_meshId(999999),
-            m_passId(nullptr),
-            m_batchId(nullptr),
-            m_updateFlags(0),
-            m_size(0),
-            m_data(nullptr),
-            m_newMeshes() {
+            meshId(999999),
+            passId(nullptr),
+            batchId(nullptr),
+            updateFlags(0),
+            size(0),
+            data(nullptr),
+            newMeshes() {
         // empty
     }
     
@@ -821,31 +835,36 @@ struct FrameSubmitCmd {
 using FrameSubmitCmdAllocator = ::cppcore::TPoolAllocator<FrameSubmitCmd>;
 
 struct UniformBuffer {
+    size_t numvars;
+    size_t pos;
+    MemoryBuffer buffer;
+
+    /// @brief The class constructor.
     UniformBuffer() :
-            m_numvars(0),
-            m_pos(0L),
-            m_buffer() {
+            numvars(0),
+            pos(0L),
+            buffer() {
         // empty
     }
 
     ~UniformBuffer() = default;
 
     size_t getSize() const {
-        return m_buffer.size();
+        return buffer.size();
     }
 
     void create(size_t size = 1024 * 1024) {
-        m_buffer.resize(size);
-        m_pos = 0;
+        buffer.resize(size);
+        pos = 0;
     }
 
     void destroy() {
-        m_buffer.clear();
-        m_pos = 0;
+        buffer.clear();
+        pos = 0;
     }
 
-    void reset() {
-        m_pos = 0;
+    void clear() {
+        pos = 0;
     }
 
     static ui32 encode(ui16 nameLen, ui16 dataLen) {
@@ -866,10 +885,10 @@ struct UniformBuffer {
             return;
         }
 
-        ++m_numvars;
-        ui32 varInfo = encode((ui16)var->m_name.size(), (ui16)var->m_data.m_size);
+        ++numvars;
+        ui32 varInfo = encode((ui16)var->name.size(), (ui16) var->data.size);
         write((c8 *)&varInfo, sizeof(ui32));
-        write((c8 *)var->m_data.getData(), var->m_data.m_size);
+        write((c8 *)var->data.getData(), var->data.size);
     }
 
     void readVar(c8 *id, size_t &size, c8 *data) {
@@ -883,35 +902,34 @@ struct UniformBuffer {
     }
 
     void read(c8 *data, size_t size) {
-        if ((m_pos + size) > m_buffer.size() || 0 == size) {
+        if ((pos + size) > buffer.size() || 0 == size) {
             return;
         }
 
-        ::memcpy(data, &m_buffer[m_pos], size);
-        m_pos += size;
+        ::memcpy(data, &buffer[pos], size);
+        pos += size;
     }
 
     void write(c8 *data, size_t size) {
-        if (0 == size || (m_pos + size) > m_buffer.size()) {
+        if (0 == size || (pos + size) > buffer.size()) {
             return;
         }
 
-        ::memcpy(&m_buffer[m_pos], data, size);
-        m_pos += size;
+        ::memcpy(&buffer[pos], data, size);
+        pos += size;
     }
-
-    size_t m_numvars;
-    size_t m_pos;
-    MemoryBuffer m_buffer;
 };
+
+using PassDataArray = cppcore::TArray<PassData*>;
+using FrameSubmitCmdArray = cppcore::TArray<FrameSubmitCmd*>;
 
 /// @brief This struct is used to describe a new frame to render.
 struct Frame {
-    cppcore::TArray<PassData *> m_newPasses;
-    cppcore::TArray<FrameSubmitCmd*> m_submitCmds;
-    FrameSubmitCmdAllocator m_submitCmdAllocator;
-    UniformBuffer *m_uniforBuffers;
-    Pipeline *m_pipeline;
+    PassDataArray           newPasses;
+    FrameSubmitCmdArray     submitCmds;
+    FrameSubmitCmdAllocator submitCmdAllocator;
+    UniformBuffer           *uniforBuffers;
+    Pipeline                *pipeline;
 
     Frame();
     ~Frame();
@@ -925,16 +943,16 @@ struct Frame {
 
 /// @brief This struct is used to describe a frame buffer data structure.
 struct FrameBuffer {
-    i32 m_width;
-    i32 m_height;
-    i32 m_depth;
+    ResolutionUi    resolution; ///< The framebuffer resolution
+    i32             depth;      ///< The depth for the framebuffer
 
-    FrameBuffer(i32 w, i32 h, i32 d) :
-            m_width(w), m_height(h), m_depth(d) {
+    /// @brief The class constructor.
+    /// @param[in] w The width
+    /// @param[in] h The height
+    /// @param[in] d The depth
+    FrameBuffer(i32 w, i32 h, i32 d) : resolution(w, h), depth(d) {
         // empty
     }
-
-    ~FrameBuffer() = default;
 
     FrameBuffer(const FrameBuffer &) = delete;
     FrameBuffer(FrameBuffer &&) = delete;
@@ -1039,15 +1057,18 @@ enum class GLSLVersion {
 /// @return The GLSL version.
 GLSLVersion getGlslVersionFromeString(const c8 *versionString);
 
-/// @brief The 2D point structure for int32.
-struct Point2Di {
-    i32 x, y; /// Coordinate components
+/// @brief The 2D point struct.
+template<class T>
+struct TPoint2D {
+    T x;    ///< Coordinate x-component
+    T y;    ///< Coordinate y-component
 };
 
+/// @brief The 2D point structure for int32.
+using Point2Di = TPoint2D<i32>;
+
 /// @brief The 2D point structure for floats.
-struct Point2Df {
-    f32 x, y; ///< Coordinate components
-};
+using Point2Df = TPoint2D<f32>;
 
 /// @brief The font structure.
 struct Font {

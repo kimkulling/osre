@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -48,7 +48,7 @@ RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRen
     osre_assert(nullptr != mRBService);
     osre_assert(nullptr != mRenderCtx);
 
-    mClearState.m_state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
+    mClearState.state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
@@ -118,16 +118,16 @@ void RenderCmdBuffer::onRenderFrame() {
         }
 
         RenderStates states;
-        states.m_polygonState = pass->getPolygonState();
-        states.m_cullState = pass->getCullState();
-        states.m_blendState = pass->getBlendState();
-        states.m_samplerState = pass->getSamplerState();
-        states.m_stencilState = pass->getStencilState();
+        states.polygonState = pass->getPolygonState();
+        states.cullState = pass->getCullState();
+        states.blendState = pass->getBlendState();
+        states.samplerState = pass->getSamplerState();
+        states.stencilState = pass->getStencilState();
         mRBService->setFixedPipelineStates(states);
         mRBService->setMatrix(MatrixType::View, pass->getView());
         mRBService->setMatrix(MatrixType::Projection, pass->getProjection());
         const Viewport &v = pass->getViewport();
-        mRBService->setViewport(v.m_x, v.m_y, v.m_w, v.m_h);
+        mRBService->setViewport(v.x, v.y, v.w, v.h);
         for (OGLRenderCmd *renderCmd : mCommandQueue) {
             if (nullptr == renderCmd) {
                 continue;
@@ -170,7 +170,7 @@ void RenderCmdBuffer::clear() {
 static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *> &paramArray, size_t &index) {
     index = paramArray.size();
     for (ui32 i = 0; i < paramArray.size(); i++) {
-        if (name == paramArray[i]->m_name) {
+        if (name == paramArray[i]->name) {
             index = i;
             return true;
         }
@@ -180,7 +180,7 @@ static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *>
 
 void RenderCmdBuffer::setParameter(OGLParameter *param) {
     size_t i = 0;
-    if (hasParam(param->m_name, mParamArray, i)) {
+    if (hasParam(param->name, mParamArray, i)) {
         mParamArray[i] = param;
     }
 
@@ -192,7 +192,7 @@ void RenderCmdBuffer::setParameter(const ::cppcore::TArray<OGLParameter *> &para
         size_t index = 0;
         OGLParameter *param = paramArray[i];
         osre_assert(param != nullptr);
-        if (!hasParam(paramArray[i]->m_name, mParamArray, index)) {
+        if (!hasParam(paramArray[i]->name, mParamArray, index)) {
             mParamArray.add(param);
             return;
         } 
@@ -229,22 +229,22 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         return false;
     }
 
-    assert(data->m_id != nullptr);
-    auto it = mMatrixBuffer.find(data->m_id);
+    assert(data->id != nullptr);
+    auto it = mMatrixBuffer.find(data->id);
     if (it != mMatrixBuffer.end()) {
         MatrixBuffer *buffer = it->second;
         setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
     }
 
-    mRBService->bindVertexArray(data->m_vertexArray);
-    if (data->m_localMatrix) {
+    mRBService->bindVertexArray(data->vertexArray);
+    if (data->localMatrix) {
         glm::mat4 model = mRBService->getMatrix(MatrixType::Model);
-        mRBService->setMatrix(MatrixType::Model, data->m_model*model);
+        mRBService->setMatrix(MatrixType::Model, data->model*model);
         mRBService->applyMatrix();
     }
 
-    for (size_t i = 0; i < data->m_primitives.size(); ++i) {
-        mRBService->render(data->m_primitives[i]);
+    for (size_t i = 0; i < data->primitives.size(); ++i) {
+        mRBService->render(data->primitives[i]);
     }
 
     return true;
@@ -255,33 +255,33 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData
         return false;
     }
 
-    mRBService->bindVertexArray(data->m_vertexArray);
-    for (size_t i = 0; i < data->m_primitives.size(); i++) {
-        mRBService->render(data->m_primitives[i], data->m_numInstances);
+    mRBService->bindVertexArray(data->vertexArray);
+    for (size_t i = 0; i < data->primitives.size(); i++) {
+        mRBService->render(data->primitives[i], data->numInstances);
     }
 
     return true;
 }
 
 bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *data) {
-    if (data->mFrameBuffer == nullptr) {
+    if (data->frameBuffer == nullptr) {
         return true;
     }
 
-    mRBService->bindFrameBuffer(data->mFrameBuffer);
-    mRBService->clearRenderTarget(data->mClearState);
+    mRBService->bindFrameBuffer(data->frameBuffer);
+    mRBService->clearRenderTarget(data->clearState);
 
     return true;
 }
 
 bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
-    mRBService->bindVertexArray(data->m_vertexArray);
-    mRBService->useShader(data->m_shader);
+    mRBService->bindVertexArray(data->vertexArray);
+    mRBService->useShader(data->shader);
 
     commitParameters();
 
-    for (ui32 i = 0; i < data->m_textures.size(); ++i) {
-        OGLTexture *oglTexture = data->m_textures[i];
+    for (ui32 i = 0; i < data->textures.size(); ++i) {
+        OGLTexture *oglTexture = data->textures[i];
         if (nullptr != oglTexture) {
             mRBService->bindTexture(oglTexture, (TextureStageType)i);
         } else {

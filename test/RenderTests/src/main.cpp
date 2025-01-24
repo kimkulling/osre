@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,13 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "Common/Logger.h"
-#include "Properties/Settings.h"
 #include "Platform/PlatformInterface.h"
-#include "Platform/AbstractTimer.h"
 #include "Common/TObjPtr.h"
 #include "Common/ArgumentParser.h"
-#include "App/AssetRegistry.h"
 
 #include "RenderTestSuite.h"
 
@@ -86,5 +82,3 @@ int main( int argc, char *argv[] ) {
 
     return 0;
 }
-
-
