@@ -155,9 +155,6 @@ VertComponent::VertComponent(VertexAttribute attrib, VertexFormat format) :
 }
 
 VertexLayout::VertexLayout() :
-        attributes(nullptr),
-        components(),
-        offsets(),
         currentOffset(0),
         size(0) {
     // empty
@@ -288,11 +285,11 @@ PrimitiveGroup::PrimitiveGroup() :
     // empty
 }
 
-void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx) {
-    indexType = indexType;
-    numIndices = numPrimitives;
-    primitive = primType;
-    startIndex = startIdx;
+void PrimitiveGroup::init(IndexType indexType_, size_t numPrimitives_, PrimitiveType primType_, size_t startIdx_) {
+    indexType = indexType_;
+    numIndices = numPrimitives_;
+    primitive = primType_;
+    startIndex = startIdx_;
 }
 
 Texture::Texture() :

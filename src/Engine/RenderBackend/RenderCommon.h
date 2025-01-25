@@ -350,7 +350,7 @@ struct OSRE_EXPORT VertComponent {
 /// The layout describes the different components like position, normal, texcoord, etc.
 struct OSRE_EXPORT VertexLayout {
     static VertComponent ErrorComp;                 ///< Error component
-    String *attributes;                             ///< The attributes
+    String *attributes = nullptr;                   ///< The attributes
     cppcore::TArray<VertComponent *> components;    ///< The components
     cppcore::TArray<size_t> offsets;                ///< The offsets
     size_t currentOffset;                           ///< The current offset
