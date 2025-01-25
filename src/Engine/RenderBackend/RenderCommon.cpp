@@ -154,12 +154,6 @@ VertComponent::VertComponent(VertexAttribute attrib, VertexFormat format) :
     // empty
 }
 
-VertexLayout::VertexLayout() :
-        currentOffset(0),
-        size(0) {
-    // empty
-}
-
 VertexLayout::~VertexLayout() {
     delete[] attributes;
 }

@@ -353,11 +353,11 @@ struct OSRE_EXPORT VertexLayout {
     String *attributes = nullptr;                   ///< The attributes
     cppcore::TArray<VertComponent *> components;    ///< The components
     cppcore::TArray<size_t> offsets;                ///< The offsets
-    size_t currentOffset;                           ///< The current offset
-    size_t size;                                    ///< The size in bytes
+    size_t currentOffset = 0;                       ///< The current offset
+    size_t size = 0;                                ///< The size in bytes
 
     /// @brief The class constructor
-    VertexLayout();
+    VertexLayout() = default;
 
     /// @brief The class destructor
     ~VertexLayout();
