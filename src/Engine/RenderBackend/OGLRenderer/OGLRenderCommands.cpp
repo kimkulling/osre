@@ -89,12 +89,12 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
 
     for (ui32 i = 0; i < numTextures; ++i) {
         Texture *tex(mat->mTextures[i]);
-        if (!tex->TextureName.empty()) {
-            OGLTexture *oglTexture = rb->createTexture(tex->TextureName, tex);
+        if (!tex->textureName.empty()) {
+            OGLTexture *oglTexture = rb->createTexture(tex->textureName, tex);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
             } else {
-                textures.add(rb->createDefaultTexture(tex->TargetType, tex->PixelFormat, tex->Width, tex->Height));
+                textures.add(rb->createDefaultTexture(tex->targetType, tex->pixelFormat, tex->width, tex->height));
             }
         }
     }
@@ -188,10 +188,10 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     }
 
     // create vertex buffer and  and pass triangle vertex to buffer object
-    OGLBuffer *vb = rb->createBuffer(vertices->m_type);
+    OGLBuffer *vb = rb->createBuffer(vertices->type);
     vb->m_geoId = mesh->getId();
     rb->bindBuffer(vb);
-    rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->m_access);
+    rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->access);
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute *> attributes;
@@ -201,10 +201,10 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     rb->releaseVertexCompArray(attributes);
 
     // create index buffer and pass indices to element array buffer
-    OGLBuffer *ib = rb->createBuffer(indices->m_type);
+    OGLBuffer *ib = rb->createBuffer(indices->type);
     ib->m_geoId = mesh->getId();
     rb->bindBuffer(ib);
-    rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->m_access);
+    rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->access);
 
     rb->unbindVertexArray();
 

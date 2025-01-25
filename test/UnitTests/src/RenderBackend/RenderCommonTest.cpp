@@ -42,8 +42,8 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
     try {
         VertComponent comp1;
         VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
-        EXPECT_EQ( VertexAttribute::Position, comp2.m_attrib );
-        EXPECT_EQ( VertexFormat::Float3,   comp2.m_format );
+        EXPECT_EQ( VertexAttribute::Position, comp2.attrib );
+        EXPECT_EQ( VertexFormat::Float3,   comp2.format );
     } catch( ... ) {
         ok = false;
     }
@@ -111,16 +111,16 @@ TEST_F( RenderCommonTest, getVertCompNameTest ) {
 
 TEST_F(RenderCommonTest, viewportTest) {
     Viewport vp;
-    EXPECT_EQ( -1, vp.m_x );
-    EXPECT_EQ( -1, vp.m_y );
-    EXPECT_EQ( -1, vp.m_w );
-    EXPECT_EQ( -1, vp.m_h );
+    EXPECT_EQ( -1, vp.x );
+    EXPECT_EQ( -1, vp.y );
+    EXPECT_EQ( -1, vp.w );
+    EXPECT_EQ( -1, vp.h );
 
     Viewport vp_set( 1, 2, 3, 4 );
-    EXPECT_EQ( 1, vp_set.m_x );
-    EXPECT_EQ( 2, vp_set.m_y );
-    EXPECT_EQ( 3, vp_set.m_w );
-    EXPECT_EQ( 4, vp_set.m_h );
+    EXPECT_EQ( 1, vp_set.x );
+    EXPECT_EQ( 2, vp_set.y );
+    EXPECT_EQ( 3, vp_set.w );
+    EXPECT_EQ( 4, vp_set.h );
 
     Viewport vp_set2(1, 2, 3, 4);
     EXPECT_EQ( vp_set, vp_set2 );
@@ -129,9 +129,9 @@ TEST_F(RenderCommonTest, viewportTest) {
 TEST_F( RenderCommonTest, allocBufferDataTest ) {
     BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
     EXPECT_NE(data, nullptr);
-    EXPECT_EQ(data->m_access, BufferAccessType::ReadWrite);
+    EXPECT_EQ(data->access, BufferAccessType::ReadWrite);
     EXPECT_EQ(data->getSize(), 100u);
-    EXPECT_EQ(data->m_type, BufferType::VertexBuffer);
+    EXPECT_EQ(data->type, BufferType::VertexBuffer);
 }
 
 TEST_F( RenderCommonTest, copyBufferDataTest ) {

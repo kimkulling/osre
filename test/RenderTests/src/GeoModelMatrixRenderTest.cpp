@@ -108,7 +108,7 @@ public:
                 glm::mat4 model(1);
                 transform.setTranslation(0.25f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.m_rotation = rot;
+                transform.rotation = rot;
                 transform.toMatrix(model);
                 rbSrv->setMatrix(MatrixType::Model, model);
             }
@@ -119,7 +119,7 @@ public:
                 glm::mat4 model(1);
                 transform.setTranslation(-0.25f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.m_rotation = rot;
+                transform.rotation = rot;
                 transform.toMatrix(model);
                 rbSrv->setMatrix(MatrixType::Model, model);
             }

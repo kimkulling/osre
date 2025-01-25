@@ -394,10 +394,10 @@ bool OGLRenderBackend::createVertexCompArray(const VertexLayout *layout, OGLShad
     for (ui32 i = 0; i < layout->numComponents(); i++) {
         VertComponent &comp(layout->getAt(i));
         attribute = new OGLVertexAttribute;
-        attribute->m_pAttributeName = getVertCompName(comp.m_attrib).c_str();
+        attribute->m_pAttributeName = getVertCompName(comp.attrib).c_str();
         attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
-        attribute->m_size = OGLEnum::getOGLSizeForFormat(comp.m_format);
-        attribute->m_type = OGLEnum::getOGLTypeForFormat(comp.m_format);
+        attribute->m_size = OGLEnum::getOGLSizeForFormat(comp.format);
+        attribute->m_type = OGLEnum::getOGLTypeForFormat(comp.format);
         attribute->m_ptr = (GLvoid *)index;
         attributes.add(attribute);
         index += attribute->m_size;
@@ -802,8 +802,8 @@ OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
         return glTex;
     }
 
-    glTex = createEmptyTexture(name, tex->TargetType, tex->PixelFormat, tex->Width, tex->Height, tex->Channels);
-    glTexImage2D(glTex->m_target, 0, GL_RGB, tex->Width, tex->Height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->Data);
+    glTex = createEmptyTexture(name, tex->targetType, tex->pixelFormat, tex->width, tex->height, tex->channels);
+    glTexImage2D(glTex->m_target, 0, GL_RGB, tex->width, tex->height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->data);
     glGenerateMipmap(glTex->m_target);
     glTexParameterf(glTex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
     glBindTexture(glTex->m_target, 0);
@@ -1067,10 +1067,10 @@ size_t OGLRenderBackend::addPrimitiveGroup(PrimitiveGroup *grp) {
     }
 
     OGLPrimGroup *oglGrp = new OGLPrimGroup;
-    oglGrp->m_primitive = OGLEnum::getGLPrimitiveType(grp->m_primitive);
-    oglGrp->m_indexType = OGLEnum::getGLIndexType(grp->m_indexType);
-    oglGrp->m_startIndex = (ui32)grp->m_startIndex;
-    oglGrp->m_numIndices = grp->m_numIndices;
+    oglGrp->m_primitive = OGLEnum::getGLPrimitiveType(grp->primitive);
+    oglGrp->m_indexType = OGLEnum::getGLIndexType(grp->indexType);
+    oglGrp->m_startIndex = (ui32)grp->startIndex;
+    oglGrp->m_numIndices = grp->numIndices;
 
     const size_t idx = mPrimitives.size();
     mPrimitives.add(oglGrp);

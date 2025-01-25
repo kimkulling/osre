@@ -265,6 +265,7 @@ struct OSRE_EXPORT RenderVert {
 
 OSRE_EXPORT const String &getVertCompName(VertexAttribute attrib);
 
+/// @brief  This struct declares a vertex for UI rendering.
 struct OSRE_EXPORT UIVert {
     glm::vec2 position; ///< The position ( x|y )
     glm::vec4 color0; ///< The diffuse color ( r|g|b|a )
@@ -281,7 +282,7 @@ struct OSRE_EXPORT UIVert {
 
 ///	@brief  Utility function for calculate the vertex format size.
 inline size_t getVertexFormatSize(VertexFormat format) {
-    ui32 size(0);
+    ui32 size = 0u;
     switch (format) {
         case VertexFormat::Float:
             size = sizeof(f32);
@@ -320,43 +321,70 @@ inline size_t getVertexFormatSize(VertexFormat format) {
 
 /// @brief  This struct declares an extension description.
 struct ExtensionProperty {
-    c8 m_extensionName[MaxEntNameLen];
-    ui32 m_version;
+    c8 extensionName[MaxEntNameLen];
+    ui32 version;
 
     /// @brief The class constructor
-    ExtensionProperty() : m_version(0) {
-        ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
+    ExtensionProperty() : version(0) {
+        ::memset(extensionName, '\0', sizeof(c8) * MaxEntNameLen);
     }
 };
 
-/// @brief
+/// @brief Struct to describe a vertex component.
 struct OSRE_EXPORT VertComponent {
-    VertexAttribute m_attrib;
-    VertexFormat m_format;
+    VertexAttribute attrib; ///< The attribute
+    VertexFormat format;    ///< The format
 
     /// @brief The class constructor
     VertComponent();
+    
+    /// @brief The class constructor
+    /// @param attrib The attribute
+    /// @param format The format
     VertComponent(VertexAttribute attrib, VertexFormat format);
 
     OSRE_NON_COPYABLE(VertComponent)
 };
 
-/// @brief
+/// @brief Struct to describe the vertex layout.
+/// The layout describes the different components like position, normal, texcoord, etc.
 struct OSRE_EXPORT VertexLayout {
-    static VertComponent ErrorComp;
-    String *m_attributes;
-    cppcore::TArray<VertComponent *> m_components;
-    cppcore::TArray<size_t> m_offsets;
-    size_t m_currentOffset;
-    size_t m_sizeInBytes;
+    static VertComponent ErrorComp;                 ///< Error component
+    String *attributes;                             ///< The attributes
+    cppcore::TArray<VertComponent *> components;    ///< The components
+    cppcore::TArray<size_t> offsets;                ///< The offsets
+    size_t currentOffset;                           ///< The current offset
+    size_t size;                                    ///< The size in bytes
 
+    /// @brief The class constructor
     VertexLayout();
+
+    /// @brief The class destructor
     ~VertexLayout();
+
+    /// @brief Clears the layout.
     void clear();
+
+    /// @brief Returns the number of components.
+    /// @return The number of components.
     size_t numComponents() const;
+
+    /// @brief Returns the size in bytes.
+    /// @return The size in bytes.
     size_t sizeInBytes();
+
+    /// @brief Adds a new component to the layout.
+    /// @param comp The component to add.
+    /// @return The reference to the layout.
     VertexLayout &add(VertComponent *comp);
+
+    /// @brief Returns the component at the given index.
+    /// @param idx The index of the component.
+    /// @return The component.
     VertComponent &getAt(size_t idx) const;
+
+    /// @brief Returns all the attributes.
+    /// @return The attributes.
     const String *getAttributes();
 
     OSRE_NON_COPYABLE(VertexLayout)
@@ -368,10 +396,10 @@ struct OSRE_EXPORT BufferData {
     friend BufferDataAllocator;
     static BufferDataAllocator sBufferDataAllocator;
 
-    BufferType m_type; ///< The buffer type ( @see BufferType )
-    MemoryBuffer m_buffer; ///< The memory buffer
-    size_t m_cap; ///<
-    BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
+    BufferType type; ///< The buffer type ( @see BufferType )
+    MemoryBuffer buffer; ///< The memory buffer
+    size_t cap; ///<
+    BufferAccessType access; ///< Access token ( @see BufferAccessType )
 
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
     void copyFrom(void *data, size_t size);
@@ -389,40 +417,45 @@ private:
 };
 
 inline size_t BufferData::getSize() const {
-    return m_buffer.size();
+    return buffer.size();
 }
 
 inline c8 *BufferData::getData() {
-    return (c8 *)&m_buffer[0];
+    return (c8 *)&buffer[0];
 }
 
-///	@brief
+///	@brief This struct is used to describe a primitive group.
 struct OSRE_EXPORT PrimitiveGroup {
-    PrimitiveType m_primitive;
-    size_t m_startIndex;
-    size_t m_numIndices;
-    IndexType m_indexType;
+    PrimitiveType primitive;    ///< The primitive type
+    size_t startIndex;          ///< The start index
+    size_t numIndices;          ///< The number of indices
+    IndexType indexType;        ///< The index type
 
     /// @brief The class constructor
     PrimitiveGroup();
-    ~PrimitiveGroup() = default;
+    
+    /// @brief Will initialize the primitive group.
+    /// @param indexType The index type
+    /// @param numPrimitives The number of primitives
+    /// @param primType The primitive type
+    /// @param startIdx The start index
     void init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx);
 
     OSRE_NON_COPYABLE(PrimitiveGroup)
 };
 
-///	@brief
+///	@brief This struct is used to describe a texture parameter.
 struct OSRE_EXPORT Texture {
-    String TextureName;
-    IO::Uri Loc;
-    TextureTargetType TargetType;
-    PixelFormatType PixelFormat;
-    ui32 Size;
-    uc8 *Data;
-    ui32 Width;
-    ui32 Height;
-    ui32 Channels;
-    Handle TexHandle;
+    String textureName;             ///< The texture name
+    IO::Uri loc;                    ///< The location
+    TextureTargetType targetType;   ///< The target type
+    PixelFormatType pixelFormat;    ///< The pixel format
+    ui32 size;                      ///< The size
+    uc8 *data;                      ///< The data
+    ui32 width;                     ///< The width
+    ui32 height;                    ///< The height
+    ui32 channels;                  ///< The channels
+    Handle texHandle;               ///< The texture handle
 
     /// @brief The class constructor.
     Texture();
@@ -458,38 +491,64 @@ protected:
     Common::ResourceState onUnload(TextureLoader &loader) override;
 
 private:
-    TextureTargetType m_targetType;
-    TextureStageType m_stage;
+    TextureTargetType mTargetType;
+    TextureStageType mStage;
 };
 
-///	@brief
+///	@brief This struct is used to describe a buffer.
 struct OSRE_EXPORT TransformState {
-    glm::vec3 m_translate;
-    glm::vec3 m_scale;
-    glm::mat4 m_rotation;
+    glm::vec3 translate;    ///< The translation
+    glm::vec3 scale;        ///< The scale
+    glm::mat4 rotation;     ///< The rotation
 
+    /// @brief The class constructor.
     TransformState();
+
+    /// @brief The class destructor.
     ~TransformState();
+    
+    /// @brief Will set the translation.
+    /// @param x The x translation
+    /// @param y The y translation
+    /// @param z The z translation
     void setTranslation(f32 x, f32 y, f32 z);
+    
+    /// @brief Will set the scale.
+    /// @param sx The x scale
+    /// @param sy The y scale
+    /// @param sz The z scale
     void setScale(f32 sx, f32 sy, f32 sz);
+    
+    /// @brief Will calculate the matrix from the transform state.
+    /// @param m The matrix to calculate
     void toMatrix(glm::mat4 &m) const;
-    bool operator==(const TransformState &rhs) const;
-    bool operator!=(const TransformState &rhs) const;
+    
+    bool operator == (const TransformState &rhs) const;
+    bool operator != (const TransformState &rhs) const;
 };
 
-///	@brief
+///	@brief This struct is used to describe a viewport.
 struct OSRE_EXPORT Viewport {
-    i32 m_x;
-    i32 m_y;
-    i32 m_w;
-    i32 m_h;
+    i32 x; ///< The x position
+    i32 y; ///< The y position
+    i32 w; ///< The width
+    i32 h; ///< The height 
 
+    /// @brief The class constructor
     Viewport();
+    
+    /// @brief The class constructor
+    /// @param x The x position
+    /// @param y The y position
+    /// @param w The width
+    /// @param h The height
     Viewport(i32 x, i32 y, i32 w, i32 h);
+
+    /// @brief The class copy constructor
     Viewport(const Viewport &rhs);
-    ~Viewport() = default;
-    bool operator==(const Viewport &rhs) const;
-    bool operator!=(const Viewport &rhs) const;
+
+    bool operator == (const Viewport &rhs) const;
+    bool operator != (const Viewport &rhs) const;
 };
 
 //-------------------------------------------------------------------------------------------------

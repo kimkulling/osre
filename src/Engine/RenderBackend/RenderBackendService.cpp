@@ -589,10 +589,10 @@ void RenderBackendService::syncRenderThread() {
 }
 
 void RenderBackendService::setViewport( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    mViewport.m_x = x;
-    mViewport.m_y = y;
-    mViewport.m_w = w;
-    mViewport.m_h = h;
+    mViewport.x = x;
+    mViewport.y = y;
+    mViewport.w = w;
+    mViewport.h = h;
 }
 
 const Viewport &RenderBackendService::getViewport() const {
