@@ -288,12 +288,12 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
 }
 
 
-MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access) {
+MeshBuilder &MeshBuilder::allocTextBox(const String &name, f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access) {
 	if ( text.empty() ) {
 		return *this;
 	}
 
-    Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
+    Mesh *mesh = new Mesh(name, VertexType::RenderVertex, IndexType::UnsignedShort);
 
     Vec3Array positions;
     Vec3Array colors;

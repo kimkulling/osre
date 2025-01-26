@@ -1,5 +1,6 @@
 #include "RenderBackend/Text/TextRenderer.h"
 #include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/MeshBuilder.h"
 #include "RenderBackend/FontService.h"
 
 namespace OSRE {
@@ -22,9 +23,8 @@ bool getMeshInfo(Mesh *mesh, MeshInfoArray &meshInfoArray, MeshInfo &info) {
     return false;
 }
 
-
 void renderFontMesh(const DrawCmd &dc, Font2MeshMap &font2MeshMap, MeshInfoArray &meshInfoArray) {
-    MeshInfo info;
+    MeshInfo info = {};
     const String &fontKey = dc.UseFont->Name;
     Mesh *textMesh = nullptr;
     Font2MeshMap::const_iterator it = font2MeshMap.find(fontKey);
@@ -33,9 +33,8 @@ void renderFontMesh(const DrawCmd &dc, Font2MeshMap &font2MeshMap, MeshInfoArray
         if (textMesh == nullptr) {
             osre_debug(Tag, "Invalid font mesh detected.");
             return;
-        } else {
-            getMeshInfo(textMesh, meshInfoArray, info);
         }
+        getMeshInfo(textMesh, meshInfoArray, info);
     } else {
         osre_error(Tag, "Font key not found in font2MeshMap, stopping render.");
         return;
@@ -69,11 +68,14 @@ void TextRenderer::addText(i32 x, i32 y, Font *font, const String &text) {
 
     Mesh *textMesh = nullptr;
     Font2MeshMap::const_iterator it = mFont2MeshMap.find(usedFont->Name);
+    MeshBuilder meshBuilder;
     if (it == mFont2MeshMap.end()) {
-        textMesh = new Mesh(usedFont->Name + ".mesh", VertexType::RenderVertex, IndexType::UnsignedShort);
+        meshBuilder.allocTextBox(usedFont->Name + ".mesh", static_cast<f32>(x), static_cast<f32>(y), static_cast<f32>(font->Size), text, BufferAccessType::ReadWrite);
+        textMesh = meshBuilder.getMesh();
         mFont2MeshMap[usedFont->Name] = textMesh;
     } else {
         textMesh = it->second;
+        meshBuilder.updateTextBox(textMesh, static_cast<f32>(font->Size), text);
     }
 }
 
@@ -99,7 +101,12 @@ void TextRenderer::render(RenderBackendService* rbSrv) {
         if (mesh != nullptr) {
             if (getMeshInfo(mesh, mMeshInfoArray, info)) {
                 mesh->addPrimitiveGroup(info.mNumIndices, info.mPrim, 0);
-
+                auto *mat = MaterialBuilder::createTextMaterial(it.first);
+                if (mat == nullptr) {
+                    auto *defaultFont = FontService::getDefaultFont();
+                    mat = MaterialBuilder::createTextMaterial(defaultFont->Name);
+                }
+                mesh->setMaterial(mat);
                 rbSrv->addMesh(mesh, 0);
             }
         }

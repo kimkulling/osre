@@ -86,12 +86,13 @@ public:
             ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
 
     ///	@brief  Will allocate vertices for a text-box.
+    /// @param  name        [in] The name for the mesh.
     /// @param  x           [in] Left position of the text box.
     /// @param  y           [in] Upper position of the text box.
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
     /// @return The created mesh.
-    MeshBuilder& allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
+    MeshBuilder &allocTextBox(const String &name, f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access);
 
     /// @brief  Will update the vertices of a text box.
     /// @param  geo         [inout] The mesh to update.

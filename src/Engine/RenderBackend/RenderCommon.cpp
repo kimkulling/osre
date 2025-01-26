@@ -235,6 +235,10 @@ BufferData::BufferData() :
 
 BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessType access) {
     BufferData *buffer = sBufferDataAllocator.alloc();
+    if (nullptr == buffer) {
+        return nullptr;
+    }
+
     buffer->cap = sizeInBytes;
     buffer->access = access;
     buffer->type = type;
@@ -243,10 +247,11 @@ BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessT
     return buffer;
 }
 
-void BufferData::copyFrom(void *data, size_t size) {
+void BufferData::copyFrom(const void *data, size_t size) {
     if (nullptr == data) {
         return;
     }
+
     if (size > cap) {
         osre_error(Tag, "Out of buffer error.");
         return;

@@ -394,20 +394,22 @@ struct OSRE_EXPORT VertexLayout {
 struct OSRE_EXPORT BufferData {
     using BufferDataAllocator = ::cppcore::TPoolAllocator<BufferData>;
     friend BufferDataAllocator;
+    
+    /// @brief The allocator for the buffer data.
     static BufferDataAllocator sBufferDataAllocator;
 
-    BufferType type; ///< The buffer type ( @see BufferType )
-    MemoryBuffer buffer; ///< The memory buffer
-    size_t cap; ///<
-    BufferAccessType access; ///< Access token ( @see BufferAccessType )
+    BufferType type;            ///< The buffer type ( @see BufferType )
+    MemoryBuffer buffer;        ///< The memory buffer
+    size_t cap;                 ///< The capabilities
+    BufferAccessType access;    ///< Access token ( @see BufferAccessType )
 
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
-    void copyFrom(void *data, size_t size);
+    void copyFrom(const void *data, size_t size);
     void attach(const void *data, size_t size);
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
     size_t getSize() const;
-    c8 *getData();
+    c8 *getData() const;
 
 private:
     /// @brief The class constructor
@@ -420,7 +422,7 @@ inline size_t BufferData::getSize() const {
     return buffer.size();
 }
 
-inline c8 *BufferData::getData() {
+inline c8 *BufferData::getData() const {
     return (c8 *)&buffer[0];
 }
 

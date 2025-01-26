@@ -67,7 +67,7 @@ void Mesh::unmapVertexBuffer() {
     // empty
 }
 
-void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType) {
+void Mesh::createVertexBuffer(const void *vertices, size_t vbSize, BufferAccessType accessType) {
     if (vertices == nullptr) {
         return;
     }
@@ -95,7 +95,7 @@ BufferData *Mesh::getVertexBuffer() const {
     return mVertexBuffer;
 }
 
-void Mesh::createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType) {
+void Mesh::createIndexBuffer(const void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType) {
     if (indices == nullptr) {
         return;
     }

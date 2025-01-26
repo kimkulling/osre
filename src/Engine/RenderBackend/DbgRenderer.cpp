@@ -20,13 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "Debugging/osre_debugging.h"
+#include "RenderBackend/DbgRenderer.h"
 #include "Common/BaseMath.h"
+#include "Debugging/osre_debugging.h"
 #include "RenderBackend/Mesh.h"
 #include "RenderBackend/Pipeline.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
-#include "RenderBackend/DbgRenderer.h"
+
+#include "FontService.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/MeshBuilder.h"
 
@@ -96,8 +98,10 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
     mRbSrv->setMatrix(MatrixType::Projection, projection);
     if (foundDebugText == nullptr) {
         MeshBuilder meshBuilder;
-        meshBuilder.allocTextBox(static_cast<f32>(x), static_cast<f32>(y), 20, text, BufferAccessType::ReadWrite);
-        DebugText *entry = new DebugText;
+
+        String name = FontService::getDefaultFont()->Name +  ".mesh";
+        meshBuilder.allocTextBox(name, static_cast<f32>(x), static_cast<f32>(y), 20, text, BufferAccessType::ReadWrite);
+        auto *entry = new DebugText;
         entry->mesh = meshBuilder.getMesh();
         entry->mesh->setId(id);
         getInstance()->mDebugTextMeshes.add(entry);
@@ -113,7 +117,7 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
 
 static constexpr size_t NumIndices = 24;
 
-static ui16 indices[NumIndices] = {
+static constexpr ui16 indices[NumIndices] = {
     0, 1,
     1, 2,
     2, 3,

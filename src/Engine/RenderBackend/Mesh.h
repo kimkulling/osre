@@ -33,6 +33,9 @@ namespace RenderBackend {
 // Forward declarations ---------------------------------------------------------------------------
 class Material;
 
+// Types ------------------------------------------------------------------------------------------
+using PrimGroupArray = ::cppcore::TArray<PrimitiveGroup *>;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -50,10 +53,10 @@ public:
     const String &getName() const;
     void *mapVertexBuffer(size_t vbSize, BufferAccessType accessType);
     void unmapVertexBuffer();
-    void createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType);
+    void createVertexBuffer(const void *vertices, size_t vbSize, BufferAccessType accessType);
     void resizeVertexBuffer(size_t vbSize);
     BufferData *getVertexBuffer() const;
-    void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
+    void createIndexBuffer(const void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
     BufferData *getIndexBuffer() const;
     void setId(guid id);
     guid getId() const;
@@ -92,8 +95,6 @@ public:
     OSRE_NON_COPYABLE(Mesh)
 
 private:
-    using PrimGroupArray = ::cppcore::TArray<PrimitiveGroup*>;
-
     String mName;
     bool mLocalModelMatrix;
     glm::mat4 mModel;
