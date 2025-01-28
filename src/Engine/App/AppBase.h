@@ -326,13 +326,13 @@ inline Common::Ids *AppBase::getIdContainer() const {
     return mIds;
 }
 
-inline void AppBase::addScene(Scene *world, bool enable) {
-    if (nullptr == world) {
+inline void AppBase::addScene(Scene *scene, bool enable) {
+    if (nullptr == scene) {
         return;
     }
-    mScenes.add(world);
+    mScenes.add(scene);
     if (enable) {
-        mActiveScene = world;
+        mActiveScene = scene;
     }
 }
 

@@ -1,13 +1,14 @@
 #pragma once
 
 #include "OSREEdApp.h"
-#include "ProgressReporter.h"
 #include "Actions/ImportAction.h"
-#include "Platform/PlatformOperations.h"
-#include "RenderBackend/MeshBuilder.h"
-#include "App/TransformController.h"
 #include "App/ServiceProvider.h"
+#include "App/TransformController.h"
 #include "Common/Logger.h"
+#include "Platform/PlatformOperations.h"
+#include "ProgressReporter.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderView/MainRenderView.h"
 
 namespace OSRE {
 namespace Editor {
@@ -96,7 +97,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         newProjectCmd(1, cppcore::Variant::createFromString(modelLoc.getResource()));
     }
     reporter.update(10);
-    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+    auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
     if (nullptr == rbSrv) {
         reporter.stop();
         return;
@@ -109,8 +110,8 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         mProject = createProject(modelLoc.getAbsPath());
     }
     Entity *entity = action.getEntity();
-    Entity *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), scene);
-    CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+    auto *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), scene);
+    auto *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
     scene->setActiveCamera(camera);
     mSceneData.mCamera = camera;
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
@@ -128,27 +129,24 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     reporter.stop();
 }
 
+void setupTripod() {
+    Mesh *axis = MainRenderView::createCoordAxis(150);
+    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+    rbSrv->addMesh(axis, 0);
+}
+
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
     }
 
     AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-    Scene *world = new Scene("hello_world");
-    addScene(world, true);
-    mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-    CameraComponent *camera = setupCamera(world);
-
-    MeshBuilder meshBuilder;
-    RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
-    if (nullptr != mesh) {
-        RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
-        rc->addStaticMesh(mesh);
-
-        Time dt;
-        world->update(dt);
-        camera->observeBoundingBox(mEntity->getAABB());
-    }
+    Scene *scene = new Scene("hello_world");
+    addScene(scene, true);
+    mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
+    CameraComponent *camera = setupCamera(scene);
+    setupTripod();
+    mSceneData.mCamera->observeBoundingBox(mEntity->getAABB());
     mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
 
     osre_info(Tag, "Creation finished.");

@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     OsreEdApp osreApp(argc, argv);
     if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed",
             WindowMode::Windowed,
-            WindowType::Child,
+            WindowType::Root,
             RenderBackendType::OpenGLRenderBackend)) {
         osre_error(Tag, "Cannot open the window.");
         return AppError;
@@ -66,10 +66,10 @@ int main(int argc, char *argv[]) {
     bool running = true;
     while (running) {
         running = osreApp.handleEvents();
-        Scene *world = osreApp.getActiveScene();
-        if (world != nullptr) {
-            world = new Scene("world");
-            osreApp.addScene(world, true);
+        Scene *scene = osreApp.getActiveScene();
+        if (scene != nullptr) {
+            scene = new Scene("world");
+            osreApp.addScene(scene, true);
         }
         osreApp.update();
         osreApp.requestNextFrame();

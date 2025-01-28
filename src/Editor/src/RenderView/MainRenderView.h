@@ -22,8 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Gui/UIElements.h"
-
 #include "App/Entity.h"
 
 namespace OSRE {
@@ -41,6 +39,11 @@ namespace Animation {
 }
 
 namespace Editor {
+
+struct Style {
+    Color4 fg;
+    Color4 bg;
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor

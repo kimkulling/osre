@@ -24,6 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Animation/AnimatorBase.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderPass.h"
+#include "RenderBackend/RenderBackendService.h"
+
 
 namespace OSRE {
 namespace Editor {
@@ -160,10 +163,10 @@ void MainRenderView::createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) 
     edges[1].position = p1;
     edges[2].position = p2;
     edges[3].position = p3;
-    edges[0].color0 = style.BG.toVec4();
-    edges[1].color0 = style.BG.toVec4();
-    edges[2].color0 = style.BG.toVec4();
-    edges[3].color0 = style.BG.toVec4();
+    edges[0].color0 = style.bg.toVec4();
+    edges[1].color0 = style.bg.toVec4();
+    edges[2].color0 = style.bg.toVec4();
+    edges[3].color0 = style.bg.toVec4();
 
     constexpr size_t NumIndices = 6;
     cppcore::TArray<ui16> indices;

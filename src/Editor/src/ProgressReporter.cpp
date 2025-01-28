@@ -24,8 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Platform/AbstractWindow.h"
 #include "Platform/win32/Win32Window.h"
-#include "Gui/UIElements.h"
-#include "Platform/Windows/MinWindows.h"
+#ifdef _WIN32
+#   include "Platform/Windows/MinWindows.h"
+#endif
 #include "Platform/AbstractOSService.h"
 #include "Platform/PlatformInterface.h"
 
@@ -43,7 +44,7 @@ ProgressReporter::ProgressReporter(AbstractWindow *window) :
 
 ProgressReporter::~ProgressReporter() {
     if (nullptr != mProgressBar) {
-        UIElements::deleteProgressBar(mProgressBar);
+
     }
 }
 
@@ -65,21 +66,17 @@ void ProgressReporter::start() {
     if (nullptr == w) {
         return;
     }
-
-    mProgressBar = UIElements::createProgressBar(1, w->getHWnd(), r);
 }
 
 void ProgressReporter::stop() {
     if (nullptr != mWindow) {
         mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::ComonCursor);
-        UIElements::deleteProgressBar(mProgressBar);
         mProgressBar = nullptr;
     }
 }
 
 void ProgressReporter::update(i32 percent) {
     mProgress = percent;
-    UIElements::updateProgressBar(mProgressBar, percent);
 }
 
 void ProgressReporter::reset() {
