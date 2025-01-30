@@ -27,6 +27,7 @@ private:
     App::Project *mProject;
     RenderBackend::TransformMatrixBlock mTransformMatrix;
     App::Entity *mEntity;
+    App::Entity *mGuiEntity;
     Animation::AnimationControllerBase *mKeyboardTransCtrl;
     SceneData mSceneData;
 };

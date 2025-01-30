@@ -34,7 +34,11 @@ static Project *createProject(const String &name) {
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
-        AppBase(argc, (const char **)argv, "api", "The render API"), mProject(nullptr) {
+        AppBase(argc, (const char **)argv, "api", "The render API"),
+        mProject(nullptr),
+        mEntity(nullptr),
+        mGuiEntity(nullptr),
+        mKeyboardTransCtrl(nullptr) {
     // empty
 }
 
@@ -110,7 +114,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         mProject = createProject(modelLoc.getAbsPath());
     }
     Entity *entity = action.getEntity();
-    auto *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), scene);
+    auto *camEntity = new Entity(std::string("camera"), *getIdContainer(), scene);
     auto *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
     scene->setActiveCamera(camera);
     mSceneData.mCamera = camera;
@@ -129,10 +133,16 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     reporter.stop();
 }
 
-void setupTripod() {
+bool setupTripod(Entity *guiEntity) {
+    if (guiEntity == nullptr) {
+        return false;
+    }
+
     Mesh *axis = MainRenderView::createCoordAxis(150);
-    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-    rbSrv->addMesh(axis, 0);
+    RenderComponent *rc = (RenderComponent*) guiEntity->getComponent(ComponentType::RenderComponentType);
+    rc->addStaticMesh(axis);
+
+    return true;
 }
 
 bool OsreEdApp::onCreate() {
@@ -141,13 +151,18 @@ bool OsreEdApp::onCreate() {
     }
 
     AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-    Scene *scene = new Scene("hello_world");
-    addScene(scene, true);
-    mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
-    CameraComponent *camera = setupCamera(scene);
-    setupTripod();
-    mSceneData.mCamera->observeBoundingBox(mEntity->getAABB());
+    Scene *scene = getActiveScene();
+
+    mGuiEntity = new Entity("gui", *AppBase::getIdContainer(), scene);
+    scene->addEntity(mGuiEntity);
+
+    setupTripod(mGuiEntity);
     mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
+    auto *camEntity = new Entity(std::string("camera"), *getIdContainer(), scene);
+    auto *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+    scene->setActiveCamera(camera);
+    mSceneData.mCamera = camera;
+    //camera->observeBoundingBox(mGuiEntity->getAABB());
 
     osre_info(Tag, "Creation finished.");
 
