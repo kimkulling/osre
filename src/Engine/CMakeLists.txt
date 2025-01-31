@@ -48,7 +48,6 @@ SET( app_src
     App/AppCommon.h
     App/AssetBundle.h
     App/AssetRegistry.h
-    App/AbstractBehaviour.h
     App/TransformComponent.h
     App/TransformComponent.cpp
     App/CameraComponent.h
