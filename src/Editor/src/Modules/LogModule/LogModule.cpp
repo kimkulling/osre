@@ -26,15 +26,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/Logger.h"
 #include "Common/osre_common.h"
-#include "Common/Logger.h"
 #include "Platform/AbstractWindow.h"
 #include <assimp/Logger.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
 
-#include "richedit.h"
 #include "Platform/win32/Win32Window.h"
-#include "Platform/win32/Win32OSService.h"
+#include "richedit.h"
+
+#include <iostream>
 
 namespace OSRE {
 namespace Editor {
@@ -93,6 +93,7 @@ public:
     ~LogStream() override = default;
 
     void write(const String &rMessage) override {
+        std::cout << rMessage << std::endl;
     }
 
 private:

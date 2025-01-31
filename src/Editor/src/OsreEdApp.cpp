@@ -30,6 +30,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Platform/PlatformOperations.h"
 #include "ProgressReporter.h"
 #include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/Material.h"
+#include "RenderBackend/RenderPass.h"
+#include "RenderBackend/RenderBackendService.h"
 #include "RenderView/MainRenderView.h"
 
 namespace OSRE {
