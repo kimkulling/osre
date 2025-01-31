@@ -72,11 +72,9 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
     if (camEntity == nullptr) {
         camEntity = new Entity("camera", *getIdContainer(), scene);
     }
-    CameraComponent *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
 
-
+    auto *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
     scene->addEntity(camEntity);
-    camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
     scene->setActiveCamera(camera);
     ui32 w{0u}, h{0u};
     AppBase::getResolution(w, h);

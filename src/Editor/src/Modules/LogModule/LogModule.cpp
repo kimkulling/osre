@@ -49,13 +49,30 @@ using namespace ::OSRE::Platform;
 static constexpr int MarginWidth  = 20;
 static constexpr int MarginHeight = 300;
 
-class LogView : public IModuleView {
+/**
+ * @class LogView
+ * @brief Provides a module-specific implementation for managing and displaying log entries.
+ *
+ * The `LogView` class extends from `IModuleView` and serves as a mechanism to
+ * manage log messages within a module. It provides functionalities to add, clear,
+ * and display log messages. The class ensures that changes in the log data are
+ * updated in real-time via the `onUpdate()` method.
+ *
+ * A `LogView` requires an `AbstractWindow` instance upon construction. The
+ * `addEntry` method allows appending log messages, while the `clear` method
+ * resets the log storage. Changes to the log are visualized through the `onUpdate`
+ * call, which outputs the log data and resets after displaying.
+ *
+ * This class also overrides `onCreate` and `onUpdate`, ensuring integration
+ * with the lifecycle of the module view.
+ *
+ * @note The log data is cleared after each update in `onUpdate`.
+ */
+class LogView final : public IModuleView {
 public:
-    LogView(Platform::AbstractWindow *window) :
+    explicit LogView(AbstractWindow *window) :
             IModuleView("logview" ),
-            mText(),    
-            mRect(),
-            mRootWindow(window) {
+            mText() {
         // empty
     }
 
@@ -66,7 +83,7 @@ public:
         onUpdate();
     }
 
-    void addEntry(String text) {
+    void addEntry(const String &text) {
         mText.append(text);
         onUpdate();
     }
@@ -76,37 +93,52 @@ protected:
     }
 
     void onUpdate() override {
+        std::cout << mText << std::endl;
+        mText.clear();
     }
 
 private:
     String mText;
-    Platform::AbstractWindow *mRootWindow;
-    Rect2ui mRect;
 };
 
 class LogStream : public AbstractLogStream {
 public:
-    LogStream(LogView *lv) : AbstractLogStream() {
-        // empty
+    explicit LogStream(LogView *logView) : AbstractLogStream(), mLogView(logView) {
+        osre_assert(logView != nullptr);
     }
 
     ~LogStream() override = default;
 
     void write(const String &rMessage) override {
-        std::cout << rMessage << std::endl;
+        if (mLogView != nullptr) {
+            mLogView->addEntry(rMessage);
+        }
     }
 
 private:
+    LogView *mLogView;
 };
 
-class AssimpLogStream : public Assimp::LogStream {
+/**
+ * @class AssimpLogStream
+ * @brief Implements a custom log stream for Assimp logging to interface with a given LogView.
+ *
+ * This class extends the Assimp::LogStream interface, providing a mechanism
+ * to redirect log messages from the Assimp library to a given `LogView` instance.
+ * The log message is formatted and augmented with `(Assimp)` before being passed
+ * to the `LogView` for visualization or storage.
+ *
+ * @note The constructor requires a valid `LogView` instance; passing a nullptr will
+ * trigger an assertion failure.
+ */
+class AssimpLogStream final : public Assimp::LogStream {
 public:
-    AssimpLogStream(LogView *logView) :
+    explicit AssimpLogStream(LogView *logView) :
             LogStream(), mLogView(logView) {
         osre_assert(logView != nullptr);
     }
 
-    ~AssimpLogStream() = default;
+    ~AssimpLogStream() override = default;
 
     void write(const char *message) override {
         String logMsg = String(message)+ " (Assimp)";

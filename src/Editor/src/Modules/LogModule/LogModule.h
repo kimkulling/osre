@@ -44,7 +44,7 @@ class LogModule : public Modules::ModuleBase {
 public:
     /// @brief The class constructor.
     /// @param[in] parentApp    The parent application.
-    LogModule(App::AppBase *parentApp);
+    explicit LogModule(App::AppBase *parentApp);
 
     ///	@brief  The class destructor.
     ~LogModule() override;
