@@ -31,9 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
 
-#include "Platform/win32/Win32Window.h"
-#include "richedit.h"
-
 #include <iostream>
 
 namespace OSRE {
