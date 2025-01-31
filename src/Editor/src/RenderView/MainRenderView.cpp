@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -77,12 +77,12 @@ Mesh *MainRenderView::createCoordAxis(ui32 size) {
     v[5].position.x = v[5].position.y = 0;
     v[5].color0 = Colors::Blue;
 
-    cppcore::TArray<RenderBackend::ColorVert> axisData;
+    TArray<ColorVert> axisData;
     axisData.add(v, 6);
 
     axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
 
-    cppcore::TArray<ui16> axisIndices;
+    TArray<ui16> axisIndices;
     axisIndices.add(0);
     axisIndices.add(1);
 
@@ -108,8 +108,8 @@ Mesh *MainRenderView::createGrid(ui32 numLines) {
     f32 currentX = -300.0f, currentY = -300.0f;
     f32 diffX = 600.0f / numLines;
     f32 diffY = 600.0f / numLines;
-    cppcore::TArray<RenderBackend::ColorVert> lineData;
-    cppcore::TArray<ui16> lineIndices;
+    TArray<ColorVert> lineData;
+    TArray<ui16> lineIndices;
     ui16 currentIndex = 0;
     for (ui32 x = 0; x < numLines + 1; ++x) {
         ColorVert v1, v2;

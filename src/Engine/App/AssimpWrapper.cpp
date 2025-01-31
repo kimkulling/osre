@@ -136,11 +136,9 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
         flags = DefaultImportFlags;
     }
 
-    printf("Uri = %s\n", file.getUri().c_str());
     mAssetContext.mRoot = AssetRegistry::getPath("media");
     mAssetContext.mAbsPathWithFile = AssetRegistry::resolvePathFromUri(file);
 
-    printf("Path = %s\n", mAssetContext.mAbsPathWithFile.c_str());
     String filename;
     if (!Directory::getDirectoryAndFile(mAssetContext.mAbsPathWithFile, mAssetContext.mRoot, filename)) {
         osre_error(Tag, "Error while separating folder and file from  " + mAssetContext.mAbsPathWithFile);
@@ -157,7 +155,6 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
 
     mImporter = new Importer;
     osre_debug(Tag, "Start importing " + filename + ".");
-    printf("filename = %s\n", filename.c_str());
     mAssetContext.mScene = mImporter->ReadFile(filename, flags);
     if (nullptr == mAssetContext.mScene) {
         osre_error(Tag, "Cannot start importing " + filename + ", scene is nullptr.");
@@ -423,7 +420,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     mat2MeshMap.clear();
 }
 
-void AssimpWrapper::importNode(aiNode *node, TransformComponent *parent) {
+void AssimpWrapper::importNode(const aiNode *node, TransformComponent *parent) {
     if (nullptr == node) {
         return;
     }

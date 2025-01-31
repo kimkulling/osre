@@ -42,7 +42,6 @@ namespace IO {
 namespace App {
 
 class TransformComponent;
-class AbstractBehaviour;
 class Component;
 class RenderComponent;
 class AppBase;
@@ -59,7 +58,6 @@ public:
 
     Entity(const String &name, Common::Ids &ids, Scene *world);
     ~Entity() override;
-    void setBehaviourControl(AbstractBehaviour *behaviour );
     void setNode(TransformComponent *node);
     TransformComponent *getNode() const;
     bool update( Time dt );
@@ -70,7 +68,6 @@ public:
     const Common::AABB &getAABB() const;
 
 private:
-    AbstractBehaviour *mBehavior;
     RenderComponent *mRenderComponent;
     ComponentArray mComponentArray;
     TransformComponent *mTransformNode;

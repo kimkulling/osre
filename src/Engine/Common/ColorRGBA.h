@@ -42,11 +42,11 @@ public:
     ColorRGBA();
 
     /// @brief  The class constructor with an array of the 4 float components.
-    /// @param  pData       [in] A pointer showing to the buffer.
-    ColorRGBA( f32 *pData );
+    /// @param[in] data     A pointer showing to the buffer.
+    ColorRGBA( f32 *data );
 
     ///	@brief	The class constructor with the color components.
-    ///	@param	r, g, b, a	[in] The several components.
+    ///	@param[in]	r, g, b, a  The several components.
     ColorRGBA( f32 r, f32 g, f32 b, f32 a );
 
     ///	@brief	The class copy constructor.
@@ -104,11 +104,11 @@ inline ColorRGBA::ColorRGBA() {
     m_ColorValues[ 3 ] = 0.0f;
 }
 
-inline ColorRGBA::ColorRGBA( f32 *pData ) {
-    m_ColorValues[ 0 ] = pData[ 0 ];
-    m_ColorValues[ 1 ] = pData[ 1 ];
-    m_ColorValues[ 2 ] = pData[ 2 ];
-    m_ColorValues[ 3 ] = pData[ 3 ];
+inline ColorRGBA::ColorRGBA( f32 *data ) {
+    m_ColorValues[ 0 ] = data[ 0 ];
+    m_ColorValues[ 1 ] = data[ 1 ];
+    m_ColorValues[ 2 ] = data[ 2 ];
+    m_ColorValues[ 3 ] = data[ 3 ];
 }
 
 inline ColorRGBA::ColorRGBA( f32 r, f32 g, f32 b, f32 a ) {

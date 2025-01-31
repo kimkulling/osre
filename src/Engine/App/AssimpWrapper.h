@@ -109,7 +109,7 @@ public:
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
-    void importNode( aiNode *node, TransformComponent *parent );
+    void importNode(const aiNode *node, TransformComponent *parent );
     void importMaterial( aiMaterial *material );
     void importAnimations(const aiScene *scene);
     void optimizeVertexBuffer();
