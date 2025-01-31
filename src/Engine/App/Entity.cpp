@@ -21,11 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "App/Entity.h"
-#include "App/AbstractBehaviour.h"
 #include "App/Component.h"
 #include "App/CameraComponent.h"
 #include "App/Scene.h"
-#include "Animation/AnimatorBase.h"
 #include "Animation/AnimatorComponent.h"
 #include "RenderBackend/MeshProcessor.h"
 
@@ -38,7 +36,6 @@ using namespace ::OSRE::RenderBackend;
 
 Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
         Object(name),
-        mBehavior(nullptr),
         mRenderComponent(nullptr),
         mComponentArray(),
         mTransformNode(nullptr),
@@ -63,10 +60,6 @@ Entity::~Entity() {
     }
 }
 
-void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {
-    mBehavior = behaviour;
-}
-
 void Entity::setNode(TransformComponent *node) {
     mTransformNode = node;
 }
@@ -76,10 +69,6 @@ TransformComponent *Entity::getNode() const {
 }
 
 bool Entity::update(Time dt) {
-    if (nullptr != mBehavior) {
-        mBehavior->update(dt);
-    }
-
     for (auto &it : mComponentArray) {
         if (it != nullptr) {
             it->update(dt);

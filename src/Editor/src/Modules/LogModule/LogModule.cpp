@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -26,15 +26,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/Logger.h"
 #include "Common/osre_common.h"
-#include "Common/Logger.h"
 #include "Platform/AbstractWindow.h"
 #include <assimp/Logger.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
 
-#include "richedit.h"
-#include "Platform/win32/Win32Window.h"
-#include "Platform/win32/Win32OSService.h"
+#include <iostream>
 
 namespace OSRE {
 namespace Editor {
@@ -46,58 +43,33 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Modules;
 using namespace ::OSRE::Platform;
                                 
-/* INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM, LPARAM lParam) {
-    (void)lParam;
-    switch (uMsg) {
-        case WM_INITDIALOG:
-            return TRUE;
-
-        case WM_SIZE: {
-            const int x = LOWORD(lParam);
-            const int y = HIWORD(lParam);
-
-             ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 10, 10,
-                    x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
-
-            return TRUE;
-        }
-        case WM_CLOSE:
-            ::CloseWindow(hWnd);
-            return TRUE;
-    };
-
-    return FALSE;
-}
-*/
 static constexpr int MarginWidth  = 20;
 static constexpr int MarginHeight = 300;
 
-/* static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect) {
-    HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
-            hParent, &LogDialogProc);
-    if (hwnd == nullptr) {
-        osre_error(Tag, "Cannot create log window.");
-        return nullptr;
-    }
-
-    ::MoveWindow(hwnd, rect.getX1() + MarginWidth, rect.getY2() - 300, rect.getX2() - rect.getX1() - MarginWidth, 280, TRUE);
-    if (hwnd == nullptr) {
-        auto err = Win32OSService::getLastErrorAsString();
-        osre_error(Tag, "Unable to create log window. Error : " + err);
-        return nullptr;
-    }
-
-    return hwnd;
-}
-*/
-class LogView : public IModuleView {
+/**
+ * @class LogView
+ * @brief Provides a module-specific implementation for managing and displaying log entries.
+ *
+ * The `LogView` class extends from `IModuleView` and serves as a mechanism to
+ * manage log messages within a module. It provides functionalities to add, clear,
+ * and display log messages. The class ensures that changes in the log data are
+ * updated in real-time via the `onUpdate()` method.
+ *
+ * A `LogView` requires an `AbstractWindow` instance upon construction. The
+ * `addEntry` method allows appending log messages, while the `clear` method
+ * resets the log storage. Changes to the log are visualized through the `onUpdate`
+ * call, which outputs the log data and resets after displaying.
+ *
+ * This class also overrides `onCreate` and `onUpdate`, ensuring integration
+ * with the lifecycle of the module view.
+ *
+ * @note The log data is cleared after each update in `onUpdate`.
+ */
+class LogView final : public IModuleView {
 public:
-    LogView(Platform::AbstractWindow *window) :
+    explicit LogView(AbstractWindow *window) :
             IModuleView("logview" ),
-            mText(),    
-            mRect(),
-            mRootWindow(window),
-            mLogWndHandle(nullptr) {
+            mText() {
         // empty
     }
 
@@ -108,75 +80,62 @@ public:
         onUpdate();
     }
 
-    void addEntry(String text) {
+    void addEntry(const String &text) {
         mText.append(text);
         onUpdate();
     }
 
 protected:
     void onCreate(const Rect2ui &rect) override {
-        Win32Window *w = (Win32Window *)mRootWindow;
-        if (w == nullptr) {
-            osre_error(Tag, "Cannot create log module view.");
-            return;
-        }
-
-  //      mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd(), rect);
-        if (mLogWndHandle == nullptr) {
-            osre_error(Tag, "Cannot create log module view.");
-            return;
-        }
-        
-        ::ShowWindow(mLogWndHandle, SW_SHOW);
-        mRect = rect;
     }
 
     void onUpdate() override {
-        /* SETTEXTEX sInfo = {};
-        sInfo.flags = ST_DEFAULT;
-        sInfo.codepage = CP_ACP;
-        ::SendDlgItemMessage(mLogWndHandle, IDC_EDIT1, EM_SETTEXTEX, (WPARAM)&sInfo, (LPARAM)mText.c_str());*/
+        std::cout << mText << std::endl;
+        mText.clear();
     }
 
 private:
     String mText;
-    Platform::AbstractWindow *mRootWindow;
-    Rect2ui mRect;
-    HWND mLogWndHandle;
 };
 
 class LogStream : public AbstractLogStream {
 public:
-    LogStream(LogView *lv) :
-            AbstractLogStream(), mThreadId(999999), mLogView(lv) {
-        osre_assert(mLogView != nullptr);
-
-        mThreadId = ::GetCurrentThreadId();
+    explicit LogStream(LogView *logView) : AbstractLogStream(), mLogView(logView) {
+        osre_assert(logView != nullptr);
     }
 
     ~LogStream() override = default;
 
     void write(const String &rMessage) override {
-        if (mThreadId == ::GetCurrentThreadId()) {
-            if (mLogView != nullptr) {
-                mLogView->addEntry(rMessage);
-            }
+        if (mLogView != nullptr) {
+            mLogView->addEntry(rMessage);
         }
     }
 
 private:
-    DWORD mThreadId;
     LogView *mLogView;
 };
 
-class AssimpLogStream : public Assimp::LogStream {
+/**
+ * @class AssimpLogStream
+ * @brief Implements a custom log stream for Assimp logging to interface with a given LogView.
+ *
+ * This class extends the Assimp::LogStream interface, providing a mechanism
+ * to redirect log messages from the Assimp library to a given `LogView` instance.
+ * The log message is formatted and augmented with `(Assimp)` before being passed
+ * to the `LogView` for visualization or storage.
+ *
+ * @note The constructor requires a valid `LogView` instance; passing a nullptr will
+ * trigger an assertion failure.
+ */
+class AssimpLogStream final : public Assimp::LogStream {
 public:
-    AssimpLogStream(LogView *logView) :
+    explicit AssimpLogStream(LogView *logView) :
             LogStream(), mLogView(logView) {
         osre_assert(logView != nullptr);
     }
 
-    ~AssimpLogStream() = default;
+    ~AssimpLogStream() override = default;
 
     void write(const char *message) override {
         String logMsg = String(message)+ " (Assimp)";

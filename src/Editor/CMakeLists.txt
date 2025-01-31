@@ -52,13 +52,6 @@ set(actions_src
     src/Actions/ImportAction.h
 )
 
-set( gui_src
-    src/Gui/UIElementsWin32.h
-    src/Gui/UIElementsWin32.cpp
-    src/Gui/UIElements.cpp
-    src/Gui/UIElements.h
-)
-
 set(main_src
     src/OsreEdApp.cpp
     src/OsreEdApp.h
@@ -70,7 +63,6 @@ set(main_src
 )
 SOURCE_GROUP(RenderView               FILES ${renderview_src})
 SOURCE_GROUP(Actions                  FILES ${actions_src})
-source_group(Gui                      FILES ${gui_src})
 SOURCE_GROUP(Modules\\InspectorModule FILES ${inspector_module_src} )
 SOURCE_GROUP(Modules\\LogModule       FILES ${log_module_src} )
 SOURCE_GROUP(Modules\\EditorModule    FILES ${editor_module_src} )
@@ -80,7 +72,6 @@ SOURCE_GROUP(Main\\                   FILES ${main_src})
 
 ADD_EXECUTABLE( osre_ed
     ${actions_src}
-    ${gui_src}
     ${inspector_module_src}
     ${log_module_src}
     ${editor_module_src}

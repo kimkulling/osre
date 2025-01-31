@@ -1,13 +1,39 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #pragma once
 
 #include "OSREEdApp.h"
-#include "ProgressReporter.h"
 #include "Actions/ImportAction.h"
-#include "Platform/PlatformOperations.h"
-#include "RenderBackend/MeshBuilder.h"
-#include "App/TransformController.h"
 #include "App/ServiceProvider.h"
+#include "App/TransformController.h"
 #include "Common/Logger.h"
+#include "Platform/PlatformOperations.h"
+#include "ProgressReporter.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/Material.h"
+#include "RenderBackend/RenderPass.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderView/MainRenderView.h"
 
 namespace OSRE {
 namespace Editor {
@@ -26,33 +52,33 @@ static void createTitleString(const String &projectName, String &titleString) {
 }
 
 static Project *createProject(const String &name) {
-    Project *project = new App::Project();
+    auto *project = new App::Project();
     project->setProjectName(name);
 
     return project;
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
-        AppBase(argc, (const char **)argv, "api", "The render API"), mProject(nullptr) {
+        AppBase(argc, (const char **)argv, "api", "The render API"),
+        mProject(nullptr),
+        mEntity(nullptr),
+        mGuiEntity(nullptr),
+        mKeyboardTransCtrl(nullptr) {
     // empty
 }
 
-constexpr float Near = 0.001f;
-constexpr float Far  = 1000.f;
-
-CameraComponent *OsreEdApp::setupCamera(Scene *world) {
-    Entity *camEntity = world->findEntity("camera");
-    if (camEntity != nullptr) {
-        return (CameraComponent*) camEntity->getComponent(ComponentType::CameraComponentType);
+CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
+    Entity *camEntity = scene->findEntity("camera");
+    if (camEntity == nullptr) {
+        camEntity = new Entity("camera", *getIdContainer(), scene);
     }
-    
-    camEntity = new Entity("camera", *getIdContainer(), world);
-    world->addEntity(camEntity);
-    CameraComponent *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
-    world->setActiveCamera(camera);
+
+    auto *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
+    scene->addEntity(camEntity);
+    scene->setActiveCamera(camera);
     ui32 w{0u}, h{0u};
     AppBase::getResolution(w, h);
-    camera->setProjectionParameters(60.f, (f32)w, (f32)h, Near, Far);
+    camera->setProjectionParameters(mConfig.mFov, (f32)w, (f32)h, mConfig.mNear, mConfig.mFar);
 
     return camera;
 }
@@ -60,7 +86,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *world) {
 void OsreEdApp::newProjectCmd(ui32, void *data) {
     String name = "New project";
     if (data != nullptr) {
-        cppcore::Variant *v = (cppcore::Variant *)data;
+        cppcore::Variant *v = (cppcore::Variant*) data;
         name = v->getString();
     }
     mProject = createProject(name);
@@ -96,7 +122,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         newProjectCmd(1, cppcore::Variant::createFromString(modelLoc.getResource()));
     }
     reporter.update(10);
-    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+    auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
     if (nullptr == rbSrv) {
         reporter.stop();
         return;
@@ -109,11 +135,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         mProject = createProject(modelLoc.getAbsPath());
     }
     Entity *entity = action.getEntity();
-    Entity *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), scene);
-    CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
-    scene->setActiveCamera(camera);
-    mSceneData.mCamera = camera;
-    mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
+    mSceneData.mCamera = setupCamera(scene);
 
     reporter.update(10);
     scene->addEntity(entity);
@@ -128,28 +150,44 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     reporter.stop();
 }
 
+bool setupEditorGimmics(Entity *guiEntity) {
+    if (guiEntity == nullptr) {
+        return false;
+    }
+    RenderComponent *rc = (RenderComponent*) guiEntity->getComponent(ComponentType::RenderComponentType);
+    if (rc == nullptr) {
+        return false;
+    }
+
+    Mesh *axis = MainRenderView::createCoordAxis(150);
+    rc->addStaticMesh(axis);
+
+    Mesh *grid = MainRenderView::createGrid(50);
+    rc->addStaticMesh(grid);
+
+    return true;
+}
+
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
     }
 
-    AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-    Scene *world = new Scene("hello_world");
-    addScene(world, true);
-    mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-    CameraComponent *camera = setupCamera(world);
+    AppBase::setWindowsTitle("OSRE Ed ");
+    Scene *scene = getActiveScene();
 
-    MeshBuilder meshBuilder;
-    RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
-    if (nullptr != mesh) {
-        RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
-        rc->addStaticMesh(mesh);
+    mGuiEntity = new Entity("gui", *AppBase::getIdContainer(), scene);
+    scene->addEntity(mGuiEntity);
+    setupEditorGimmics(mGuiEntity);
+    scene->init();
 
-        Time dt;
-        world->update(dt);
-        camera->observeBoundingBox(mEntity->getAABB());
-    }
+    Platform::AbstractWindow *rootWindow = getRootWindow();
+    Rect2ui windowsRect;
+    rootWindow->getWindowsRect(windowsRect);
+
     mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
+    mSceneData.mCamera = setupCamera(scene);
+    mSceneData.mCamera->observeBoundingBox(mGuiEntity->getAABB());
 
     osre_info(Tag, "Creation finished.");
 

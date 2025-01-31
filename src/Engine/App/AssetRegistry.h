@@ -106,8 +106,7 @@ private:
 
     /// @brief The class destructor.
     ~AssetRegistry() = default;
-
-private:
+    
     static AssetRegistry *sInstance;
     struct PathNode {
         String mountPoint;

@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 // The public API from the App-layer
-#include "App/AbstractBehaviour.h"
 #include "App/AppBase.h"
 #include "App/Component.h"
 #include "App/CameraComponent.h"
