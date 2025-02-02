@@ -43,7 +43,7 @@ OGLShader::OGLShader(const String &name) :
         mUniformLocationMap(),
         mIsCompiledAndLinked(false),
         mIsInUse(false) {
-    ::memset(mShaders, 0, sizeof(unsigned int) * MaxShaderTypes);
+    ::memset(mShaders, 0, sizeof(ui32) * static_cast<ui32>(ShaderType::Count));
 }
 
 OGLShader::~OGLShader() {
@@ -51,8 +51,8 @@ OGLShader::~OGLShader() {
         osre_warn(Tag, "Destroying shader which is still in use.");
     }
 
-    cppcore::ContainerClear(mAttribParams);
-    cppcore::ContainerClear(mUniformParams);
+    ContainerClear(mAttribParams);
+    ContainerClear(mUniformParams);
     for (ui32 i = 0; i < static_cast<ui32>(ShaderType::Count); ++i) {
         if (0 != mShaders[i]) {
             glDeleteShader(mShaders[i]);

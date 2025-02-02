@@ -30,8 +30,8 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
-Shader::Shader() :
-        mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
+Shader::Shader(const String &name) :
+        mName(name), mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
     ::memset(mCompileState, 0, sizeof(CompileState) * Count);
 }
 
@@ -109,7 +109,7 @@ size_t Shader::getLocation( const c8 *vertexAttribute ) const {
 
 ShaderType Shader::getTypeFromeExtension(const String &extension) {
     if (extension.empty()) {
-        return ShaderType::InvalidShaderType;
+        return ShaderType::Invalid;
     }
 
     if (extension == "vs") {
@@ -122,7 +122,7 @@ ShaderType Shader::getTypeFromeExtension(const String &extension) {
         return ShaderType::SH_TesselationShaderType;
     }
 
-    return ShaderType::InvalidShaderType;
+    return ShaderType::Invalid;
 }
 
 size_t ShaderLoader::load(const IO::Uri &uri, Shader *shader) {
@@ -147,7 +147,7 @@ size_t ShaderLoader::load(const IO::Uri &uri, Shader *shader) {
 
     String shaderSrc = &buffer[0];
     ShaderType type = Shader::getTypeFromeExtension(ext);
-    if (type == ShaderType::InvalidShaderType) {
+    if (type == ShaderType::Invalid) {
         stream->close();
         return 0;
     }
@@ -175,19 +175,19 @@ ShaderResource::ShaderResource(const String &shaderName, const IO::Uri &uri) :
     // empty
 }
 
-Common::ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &loader ) {
+ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &loader ) {
     if (getState() == ResourceState::Loaded) {
         return getState();
     }
 
-    Shader *shader = create();
+    Shader *shader = create(uri.getResource());
     if (loader.load(uri, shader) == 0l) {
     }
 
     return getState();
 }
 
-Common::ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
+ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
     if (getState() == ResourceState::Unloaded) {
         return getState();
     }

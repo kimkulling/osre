@@ -68,7 +68,7 @@ public:
     using ParameterArray = ::cppcore::TArray<ActiveParameter *>;
 
     /// @brief  The class constructor.
-    /// @param  name    [in9 The name for the shader.
+    /// @param  name    [in] The name for the shader.
     OGLShader( const String &name );
 
     /// @brief  The class destructor.
@@ -143,7 +143,7 @@ private:
 
     ui32 mShaderprog;
     ui32 mNumShader;
-    ui32 mShaders[MaxShaderTypes];
+    ui32 mShaders[ShaderType::Count];
     std::map<String, GLint> mAttributeMap;
     std::map<String, GLint> mUniformLocationMap;
     bool mIsCompiledAndLinked;

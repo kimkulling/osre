@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Common/osre_common.h"
 #include "Common/Logger.h"
+#include "Common/StringUtils.h"
 
 namespace OSRE {
 
@@ -30,6 +31,10 @@ static constexpr c8 Tag[] = "Common";
 size_t MemoryStatistics::sAllocated = 0;
 size_t MemoryStatistics::sNumNew = 0;
 size_t MemoryStatistics::sActiveAllocs = 0;
+
+FastString::FastString(const String &name) : str(name), id(0) {
+    id = Common::StringUtils::hashName(str);
+}
 
 void MemoryStatistics::addAllocated( size_t allocSize ) {
     sNumNew++;

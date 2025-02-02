@@ -33,17 +33,16 @@ namespace RenderBackend {
 
 ///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
 enum class ShaderType {
-    InvalidShaderType = -1,   ///< Enum for invalid enum.
-    SH_VertexShaderType = 0,  ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType,    ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType, ///< The tesselation evaluation shader.
-    SH_FragmentShaderType,    ///< The shader is a fragment shader, used for rasterization.
-    Count                     ///< Number of enums.
+    Invalid = -1,               ///< Enum for invalid enum.
+    SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
+    SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
+    SH_TesselationShaderType,   ///< The tesselation evaluation shader.
+    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
+    Count                       ///< Number of enums.
 };
 
-constexpr size_t MaxShaderTypes = static_cast<size_t>(ShaderType::Count);
-
-using ShaderSourceArray = cppcore::TStaticArray<String, MaxShaderTypes>;
+/// @brief The type to store shader
+using ShaderSourceArray = cppcore::TStaticArray<String, static_cast<size_t>(ShaderType::Count)>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@brief  This class represents a container for all used shaders in the OSRE-runtime.
@@ -54,7 +53,8 @@ using ShaderSourceArray = cppcore::TStaticArray<String, MaxShaderTypes>;
 class OSRE_EXPORT Shader {
 public:
     /// @brief The default class constructor.
-    Shader();
+    /// @param[in] name The shader name
+    Shader(const String &name);
 
     ///	@brief  The class destructor.
     ~Shader() = default;
@@ -126,10 +126,10 @@ private:
         Error,
         Count
     };
-
+    String mName;
     StringArray mUniformBuffer;
     StringArray mVertexAttributes;
-    String mSrc[MaxShaderTypes];
+    String mSrc[static_cast<size_t>(ShaderType::Count)];
     CompileState mCompileState[Count];
 };
 

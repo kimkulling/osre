@@ -425,7 +425,8 @@ struct OSRE_EXPORT Texture {
     Handle TexHandle;
 
     /// @brief The class constructor.
-    Texture();
+    /// @param[in] name     The texture resource name.
+    Texture(const String &name);
 
     /// @brief The class destructor.
     ~Texture();

@@ -59,7 +59,7 @@ public:
     TResType *get();
 
 protected:
-    TResType *create();
+    TResType *create(const String &name);
     ResourceStatistics &getStats();
     virtual void setState(ResourceState newState);
     virtual ResourceState onLoad(const IO::Uri &uri, TResLoader &loader) = 0;
@@ -102,8 +102,8 @@ inline ResourceState TResource<TResType, TResLoader>::getState() const {
 }
 
 template <class TResType, class TResLoader>
-inline TResType *TResource<TResType, TResLoader>::create() {
-    mRes = new TResType;
+inline TResType *TResource<TResType, TResLoader>::create(const String &name) {
+    mRes = new TResType(name);
     return mRes;
 }
 

@@ -36,8 +36,8 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
-    using MaterialFactory = Common::TResourceFactory<RenderBackend::Material>;
-    using MaterialCache = Common::TResourceCache<MaterialFactory, RenderBackend::Material>;
+    using MaterialFactory = Common::TResourceFactory<Material>;
+    using MaterialCache = Common::TResourceCache<MaterialFactory, Material>;
 
     /// @brief Will create the material builder instance.
     static void create(GLSLVersion glslVersion);
@@ -48,15 +48,14 @@ public:
     /// @brief  Will create the built-in material for the given type of vertex.
     /// @param  type    The vertex type.
     /// @return The built-in material instance will be returned.
-    static Material *createBuildinMaterial( RenderBackend::VertexType type );
+    static Material *createBuildinMaterial(VertexType type);
         
     /// @brief  Will create the texture material instance.
     /// @param  matName      The name for the material.
     /// @param  texResArray  The array with all textures to use.
     /// @param  type         The vertex type.
     /// @return The created instance will be returned.
-    static Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
-        RenderBackend::VertexType type );
+    static Material* createTexturedMaterial(const String& matName, TextureResourceArray& texResArray, VertexType type );
     
     /// @brief  Will create the texture material instance with your own shader code.
     /// @param  matName      The name for the material.
@@ -64,12 +63,12 @@ public:
     /// @param  VsSrc        The vertex shader source.
     /// @param  FsSrc        The fragment shader source.
     /// @return The created instance will be returned.
-    static Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
-        const String& VsSrc, const String& FsSrc);
+    /*static Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray,
+        const String& VsSrc, const String& FsSrc);*/
 
     /// @brief  Will create the debug render text material.
     /// @return The instance of the material.
-    static RenderBackend::Material *createDebugRenderTextMaterial();
+    static Material *createDebugRenderTextMaterial();
 
     /// @brief Will return the default 2d material.
     /// @return The 2D material.

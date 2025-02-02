@@ -53,9 +53,9 @@ MaterialType Material::getMaterialType() const {
     return mType;
 }
 
-void Material::createShader(ShaderSourceArray &shaders) {
-    mShader = new Shader;
-    for (ui32 i = 0; i < MaxShaderTypes; ++i) {
+void Material::createShader(const String &name, ShaderSourceArray &shaders) {
+    mShader = new Shader(name);
+    for (ui32 i = 0; i < static_cast<ui32>(ShaderType::Count); ++i) {
         if (!shaders[i].empty()) {
             mShader->setSource(static_cast<ShaderType>(i), shaders[i]);
         }

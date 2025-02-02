@@ -121,7 +121,7 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
                 matData->m_textures = textures;
             }
             String name = "mat";
-            name += material->mName;
+            name += material->mName.str;
             OGLShader *shader = rb->createShader(name, material->mShader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
