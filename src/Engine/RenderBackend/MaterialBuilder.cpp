@@ -269,6 +269,7 @@ void MaterialBuilder::create(GLSLVersion glslVersion) {
         sData = new MaterialBuilder::Data;
         sData->mMaterialCache = new MaterialBuilder::MaterialCache;
         sData->mVersion = glslVersion;
+        sData->mShaderCache = new ShaderCache;
     }
 }
 
