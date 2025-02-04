@@ -57,6 +57,7 @@ public:
     virtual ResourceState load(TResLoader &loader);
     virtual ResourceState unload(TResLoader &loader);
     TResType *get();
+    void set(TResType *res);
 
 protected:
     TResType *create(const String &name);
@@ -109,6 +110,11 @@ inline TResType *TResource<TResType, TResLoader>::create(const String &name) {
 template <class TResType, class TResLoader>
 inline TResType *TResource<TResType, TResLoader>::get() {
     return mRes;
+}
+
+template<class TResType, class TResLoader>
+inline void TResource<TResType, TResLoader>::set(TResType *res) {
+    mRes = res;
 }
 
 template <class TResType, class TResLoader>

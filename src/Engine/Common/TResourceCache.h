@@ -61,6 +61,7 @@ public:
     ~TResourceCache();
     void registerFactory(TResourceFactory &factory, bool owning);
     TResource *create(const String &name, const IO::Uri &uri = IO::Uri());
+    void set(const String &name, TResource *resource);
     TResource *find(const String &name) const;
     void clear();
 
@@ -121,6 +122,11 @@ inline TResource *TResourceCache<TResourceFactory, TResource>::find(const String
     }
 
     return it->second;
+}
+
+template <class TResourceFactory, class TResource>
+inline void TResourceCache<TResourceFactory, TResource>::set(const String &name, TResource *resource) {
+    m_resourceMap[name] = resource;
 }
 
 template <class TResourceFactory, class TResource>

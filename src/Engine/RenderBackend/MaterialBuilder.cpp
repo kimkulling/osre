@@ -321,7 +321,8 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     return mat;
 }
 
-Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray, VertexType type) {
+Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
+        VertexType type) {
     if (matName.empty()) {
         return nullptr;
     }
@@ -367,7 +368,18 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, Texture
     ShaderSourceArray arr;
     arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vs;
     arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fs;
-    mat->createShader(shaderName, arr);
+    ShaderResource *shaderRes = sData->mShaderCache->find(shaderName);
+    if (shaderRes == nullptr) {
+        mat->createShader(shaderName, arr);
+        Shader *shader = mat->getShader();
+        if (shader != nullptr) {
+            ShaderResource *res = new ShaderResource(shaderName, IO::Uri(shaderName));
+            res->set(shader);
+            sData->mShaderCache->set(shaderName, res);
+        }
+    } else {
+        mat->setShader(shaderRes->get());
+    }
 
     // Setup shader attributes and variables
     if (nullptr != mat->mShader) {
