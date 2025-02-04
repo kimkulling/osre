@@ -441,7 +441,7 @@ public:
     ~TextureLoader() = default;
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
-    static RenderBackend::Texture *getDefaultTexture();
+    static Texture *getDefaultTexture();
 };
 
 ///	@brief  This class is used to represent a texture resource.

@@ -321,8 +321,7 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     return mat;
 }
 
-RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
-        RenderBackend::VertexType type) {
+Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray, VertexType type) {
     if (matName.empty()) {
         return nullptr;
     }

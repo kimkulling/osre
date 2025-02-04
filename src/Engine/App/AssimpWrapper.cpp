@@ -96,18 +96,12 @@ static void setTexture(const String &resolvedPath, const aiString &texPath,
     texResArray.add(texRes);
 }
 
-    
-AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, Scene *world) :
+AssimpWrapper::AssetContext::AssetContext(Ids &ids, Scene *world) :
         mScene(nullptr),
-        mMeshArray(),
         mEntity(nullptr),
         mWorld(world),
-        mMatArray(),
         mParentNode(nullptr),
         mIds(ids),
-        mRoot(),
-        mAbsPathWithFile(),
-        mBone2NodeMap(),
         mNumVertices(0),
         mNumTriangles(0) {
     // empty

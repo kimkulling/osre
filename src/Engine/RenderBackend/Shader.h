@@ -53,7 +53,7 @@ using ShaderSourceArray = cppcore::TStaticArray<String, static_cast<size_t>(Shad
 class OSRE_EXPORT Shader {
 public:
     /// @brief The default class constructor.
-    /// @param[in] name The shader name
+    /// @param[in] name     The shader name.
     Shader(const String &name);
 
     ///	@brief  The class destructor.

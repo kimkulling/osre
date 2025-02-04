@@ -38,8 +38,8 @@ class OSRE_EXPORT MaterialBuilder {
 public:
     using MaterialFactory = Common::TResourceFactory<Material>;
     using MaterialCache = Common::TResourceCache<MaterialFactory, Material>;
-    using ShaderFactory = Common::TResourceFactory<Shader>;
-    using ShaderCache = Common::TResourceCache<ShaderFactory, Shader>;
+    using ShaderFactory = Common::TResourceFactory<ShaderResource>;
+    using ShaderCache = Common::TResourceCache<ShaderFactory, ShaderResource>;
 
     /// @brief Will create the material builder instance.
     static void create(GLSLVersion glslVersion);
@@ -84,7 +84,7 @@ private:
     ///	@brief The class destructor.
     ~MaterialBuilder() = default;
 
-private:    
+private:
     struct Data {
         GLSLVersion mVersion;
         MaterialCache *mMaterialCache;

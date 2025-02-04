@@ -92,7 +92,7 @@ const String &AbstractRenderTest::getTestName() const {
     return mRenderTestName;
 }
 
-Material *AbstractRenderTest::createMaterial(const String &matName, const String &VsSrc, const String &FsSrc) {
+Material *AbstractRenderTest::createMaterial(const String &matName, const String &shaderName, const String &VsSrc, const String &FsSrc) {
     if (matName.empty()) {
         return nullptr;
     }
@@ -103,7 +103,7 @@ Material *AbstractRenderTest::createMaterial(const String &matName, const String
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
-    mat->createShader(shArray);
+    mat->createShader(shaderName, shArray);
 
     return mat;
 }
