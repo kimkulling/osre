@@ -32,12 +32,12 @@ namespace IO {
 ///
 ///	@brief  This class implements a file system stored on a hard dick.
 //-------------------------------------------------------------------------------------------------
-class LocaleFileSystem : public AbstractFileSystem {
+class LocaleFileSystem final : public AbstractFileSystem {
 public:
 	///	The default class constructor.
-	LocaleFileSystem();
+	LocaleFileSystem() = default;
 	///	The class destructor, virtual.
-	virtual ~LocaleFileSystem();
+	~LocaleFileSystem() override;
 	///	Opens a file on the local file system and returns the stream pointing onto the file.
 	virtual Stream *open( const Uri &rFile, Stream::AccessMode mode );
 	///	The stream will be closed.

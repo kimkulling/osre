@@ -119,10 +119,10 @@ public:
     /// @brief  Decrements the number of references.
     void removeDependency();
 
-    /// @brief  Will return the number of references.
-    /// @return The number of references.
-    size_t getNumRefs() const;
-    
+    /// @brief Will return the number of dependencies.
+    /// @return The number of dependencies.
+    size_t getNumDependencies() const;
+
     /// @brief  Will return the parent task.
     /// @return The parent task, nullptr if root.
     AbstractTask *getParent() const;
@@ -150,9 +150,9 @@ protected:
     AbstractTask( const String &taskName );
 
 private:
-    Platform::AtomicInt *m_pRefCount;
-    AbstractTask *m_pParent;
-    cppcore::TArray<AbstractTask*> m_childTasks;
+    Platform::AtomicInt *mRefCount;
+    AbstractTask *mParent;
+    cppcore::TArray<AbstractTask*> mChildrenTasks;
 };
 
 } // Namespace Threading

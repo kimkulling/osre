@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
+#include <cctype>
+#include <cstring>
 
 namespace OSRE {
 namespace Common {

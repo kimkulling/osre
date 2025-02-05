@@ -30,9 +30,22 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
-Shader::Shader() :
-        mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
+Shader::Shader(const String &name) :
+        mName(), mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
     ::memset(mCompileState, 0, sizeof(CompileState) * Count);
+    setName(name);
+}
+
+void Shader::setName(const String &name) {
+    mName.set(name);
+}
+
+guid Shader::getGuid() const {
+    return mName.id;
+}
+
+const String &Shader::getName() const {
+    return mName.str;
 }
 
 void Shader::addVertexAttribute(const String &name) {
@@ -107,25 +120,28 @@ size_t Shader::getLocation( const c8 *vertexAttribute ) const {
     return InvalidLocation;
 }
 
-ShaderType Shader::getTypeFromeExtension(const String &extension) {
+ShaderType Shader::getTypeFromExtension(const String &extension) {
     if (extension.empty()) {
-        return ShaderType::InvalidShaderType;
+        return ShaderType::Invalid;
     }
 
     if (extension == "vs") {
         return ShaderType::SH_VertexShaderType;
-    } else if (extension == "fs") {
+    }
+    if (extension == "fs") {
         return ShaderType::SH_FragmentShaderType;
-    } else if (extension == "gs") {
+    }
+    if (extension == "gs") {
         return ShaderType::SH_GeometryShaderType;
-    } else if (extension == "ts") {
+    }
+    if (extension == "ts") {
         return ShaderType::SH_TesselationShaderType;
     }
 
-    return ShaderType::InvalidShaderType;
+    return ShaderType::Invalid;
 }
 
-size_t ShaderLoader::load(const IO::Uri &uri, Shader *shader) {
+size_t ShaderLoader::load(const Uri &uri, Shader *shader) {
     if (nullptr == shader) {
         return 0;
     }
@@ -146,8 +162,8 @@ size_t ShaderLoader::load(const IO::Uri &uri, Shader *shader) {
     }
 
     String shaderSrc = &buffer[0];
-    ShaderType type = Shader::getTypeFromeExtension(ext);
-    if (type == ShaderType::InvalidShaderType) {
+    ShaderType type = Shader::getTypeFromExtension(ext);
+    if (type == ShaderType::Invalid) {
         stream->close();
         return 0;
     }
@@ -170,29 +186,31 @@ bool ShaderLoader::unload(Shader *shader) {
     return true;
 }
 
-ShaderResource::ShaderResource(const String &shaderName, const IO::Uri &uri) :
+ShaderResource::ShaderResource(const String &shaderName, const Uri &uri) :
         TResource<Shader, ShaderLoader>(shaderName, uri) {
     // empty
 }
 
-Common::ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &loader ) {
+ResourceState ShaderResource::onLoad( const Uri &uri, ShaderLoader &loader ) {
     if (getState() == ResourceState::Loaded) {
         return getState();
     }
 
-    Shader *shader = create();
+    Shader *shader = create(uri.getResource());
     if (loader.load(uri, shader) == 0l) {
+        setState(ResourceState::Error);
+        return getState();
     }
 
     return getState();
 }
 
-Common::ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
+ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
     if (getState() == ResourceState::Unloaded) {
         return getState();
     }
 
-    loader.unload(get());
+    loader.unload(getRes());
 
     return getState();
 }

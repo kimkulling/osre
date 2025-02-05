@@ -39,7 +39,7 @@ static constexpr c8 Tag[] = "player";
 
 typedef void* (*createModuleFn)(void);
 
-class PlayerApplication : public AppBase {
+class PlayerApplication final : public AppBase {
 public:
     PlayerApplication(int argc, c8 *argv[]) :
             AppBase(argc, (const char **)argv),

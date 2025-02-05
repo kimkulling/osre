@@ -110,7 +110,7 @@ public:
                 rbSrv->addMesh(mesh, NumInstances);
 
                 // use a default material
-                mesh->setMaterial(AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc));
+                mesh->setMaterial(AbstractRenderTest::createMaterial("ColorVertex.mat", "ColorVertex.sh", VsSrc, FsSrc));
                 Shader *shader = mesh->getMaterial()->getShader();
                 if (shader != nullptr) {
                     shader->addVertexAttribute("position");

@@ -57,7 +57,7 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        cppcore::TArray<Mesh *> meshArray;
+        MeshArray meshArray;
         MeshBuilder meshBuilder;
         meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         meshArray.add(meshBuilder.getMesh());

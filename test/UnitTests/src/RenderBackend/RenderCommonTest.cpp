@@ -183,7 +183,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
     Material *mat( new Material( "test", IO::Uri() ) );
-    mat->mShader = new Shader;
+    mat->mShader = new Shader("test.sh");
     mat->mShader->addUniformBuffer("MVP");
 
     EXPECT_EQ(1u, mat->mShader->getNumUniformBuffer());

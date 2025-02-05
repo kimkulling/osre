@@ -33,7 +33,7 @@ namespace Editor {
 using namespace OSRE::App;
 using namespace OSRE::Modules;
 
-class InspectorView : public IModuleView {
+class InspectorView final : public IModuleView {
 public:
     InspectorView() :
             IModuleView("InspectorView"),

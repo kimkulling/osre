@@ -55,8 +55,7 @@ class Demo2DApp : public App::AppBase {
 
 public:
     Demo2DApp(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv),
-            mTransformMatrix(),
+            AppBase(argc, const_cast<const char **>(argv)),
             mCanvasRenderer(nullptr),
             mEntity(nullptr) {
         // empty

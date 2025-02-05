@@ -27,12 +27,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/osre_debugging.h"
 #include "IO/Uri.h"
 
-#include <cstdio>
-
 namespace OSRE {
 namespace RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
+
+static constexpr c8 Tag[] = "MaterialBuilder";
 
 static void addMaterialParameter(Material *mat) {
     if (mat == nullptr) {
@@ -54,14 +54,14 @@ static void addMaterialParameter(Material *mat) {
 static constexpr c8 Render2DMat[] = "2d_mat";
 
 Material *MaterialBuilder::create2DMaterial() {
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(Render2DMat);
     if (nullptr != mat) {
         return mat;
     }
 
     mat = materialCache->create(Render2DMat);
-
+    const String shaderName = "2d.sh";
     const String vertex_2d =
             getGLSLVersionString_400() +
             getGLSLRenderVertexLayout() +
@@ -93,7 +93,7 @@ Material *MaterialBuilder::create2DMaterial() {
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
-    mat->createShader(shArray);
+    mat->createShader(shaderName, shArray);
 
     // Setup shader attributes and variables
     if (nullptr != mat->mShader) {
@@ -111,7 +111,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
 
     const String fontMatName = fontName + ".mat";
 
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(fontMatName);
     if (nullptr != mat) {
         return mat;
@@ -125,7 +125,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
     
     TextureLoader loader;
     texRes->load(loader);
-    mat->mTextures[0] = texRes->get();
+    mat->mTextures[0] = texRes->getRes();
 
     const String vertex_2d =
             getGLSLVersionString_400() +
@@ -264,9 +264,10 @@ const String GLSLFragmentShaderSrcRV =
 
 void MaterialBuilder::create(GLSLVersion glslVersion) {
     if (nullptr == sData) {
-        sData = new MaterialBuilder::Data;
-        sData->mMaterialCache = new MaterialBuilder::MaterialCache;
+        sData = new Data;
+        sData->mMaterialCache = new MaterialCache;
         sData->mVersion = glslVersion;
+        sData->mShaderCache = new ShaderCache;
     }
 }
 
@@ -276,20 +277,22 @@ void MaterialBuilder::destroy() {
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find("buildinShaderMaterial");
     if (nullptr != mat) {
         return mat;
     }
 
     mat = materialCache->create("buildinShaderMaterial", IO::Uri());
-    String vs, fs;
+    String vs, fs, shaderName;
     if (type == VertexType::ColorVertex) {
         vs = GLSLVsSrc;
         fs = GLSLFsSrc;
+        shaderName = "buildinShaderColVert.sh";
     } else if (type == VertexType::RenderVertex) {
         vs = GLSLVertexShaderSrcRV;
         fs = GLSLFragmentShaderSrcRV;
+        shaderName = "buildinShaderRenderVert.sh";
     }
     if (vs.empty() || fs.empty()) {
         delete mat;
@@ -299,7 +302,7 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     ShaderSourceArray arr;
     arr[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vs;
     arr[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fs;
-    mat->createShader(arr);
+    mat->createShader(shaderName, arr);
 
     // Setup shader attributes and variables
     Shader *shader = mat->mShader;
@@ -316,12 +319,12 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     return mat;
 }
 
-RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
-        RenderBackend::VertexType type) {
+Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
+        VertexType type) {
     if (matName.empty()) {
         return nullptr;
     }
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(matName);
     if (mat != nullptr) {
         return mat;
@@ -341,16 +344,25 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         }
         TextureLoader loader;
         texRes->load(loader);
-        mat->mTextures[i] = texRes->get();
+
+        Common::ResourceState state = texRes->load(loader);
+        if (state != Common::ResourceState::Loaded) {
+            osre_error(Tag, "Cannot load texture.");
+            mat->mTextures[i] = nullptr;
+        } else {
+            mat->mTextures[i] = texRes->getRes();
+        }
     }
 
-    String vs, fs;
+    String vs, fs, shaderName;
     if (type == VertexType::ColorVertex) {
         vs = GLSLVsSrc;
         fs = GLSLFsSrc;
+        shaderName = "buildinShaderColVert.sh";
     } else if (type == VertexType::RenderVertex) {
         vs = GLSLVertexShaderSrcRV;
         fs = GLSLFragmentShaderSrcRV;
+        shaderName = "buildinShaderRenderVert.sh";
     }
 
     if (vs.empty() || fs.empty()) {
@@ -361,7 +373,18 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     ShaderSourceArray arr;
     arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vs;
     arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fs;
-    mat->createShader(arr);
+    ShaderResource *shaderRes = sData->mShaderCache->find(shaderName);
+    if (shaderRes == nullptr) {
+        mat->createShader(shaderName, arr);
+        Shader *shader = mat->getShader();
+        if (shader != nullptr) {
+            ShaderResource *res = new ShaderResource(shaderName, IO::Uri(shaderName));
+            res->setRes(shader);
+            sData->mShaderCache->set(shaderName, res);
+        }
+    } else {
+        mat->setShader(shaderRes->getRes());
+    }
 
     // Setup shader attributes and variables
     if (nullptr != mat->mShader) {
@@ -377,56 +400,22 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     return mat;
 }
 
-RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
-        const String &VsSrc, const String &FsSrc) {
-    if (matName.empty()) {
-        return nullptr;
-    }
-
-    if (VsSrc.empty() || FsSrc.empty()) {
-        return nullptr;
-    }
-
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
-    Material *mat = materialCache->find(matName);
-    if (nullptr != mat) {
-        return mat;
-    }
-
-    mat = materialCache->create(matName);
-    mat->mNumTextures = texResArray.size();
-    mat->mTextures = new Texture *[texResArray.size()];
-    for (size_t i = 0; i < texResArray.size(); ++i) {
-        TextureResource *texRes = texResArray[i];
-        IO::Uri uri = texRes->getUri();
-        TextureLoader loader;
-        texRes->load(loader);
-        mat->mTextures[i] = texRes->get();
-    }
-
-    ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
-    mat->createShader(shArray);
-
-    return mat;
-}
-
-static constexpr c8 DefaultDebugTestMat[] = "debug_text_mat";
+static constexpr c8 DefaultDebugTestMat[] = "debug_text.mat";
 
 Material *MaterialBuilder::createDebugRenderTextMaterial() {
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(DefaultDebugTestMat);
     if (nullptr != mat) {
         return mat;
     }
+    const String shaderName = "debug_text.sh";
     mat = materialCache->create(DefaultDebugTestMat);
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = 
             "\n";
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] =
             "\n";
-    mat->createShader(shArray);
+    mat->createShader(shaderName, shArray);
 
     return mat;
 }

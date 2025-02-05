@@ -425,7 +425,8 @@ struct OSRE_EXPORT Texture {
     Handle TexHandle;
 
     /// @brief The class constructor.
-    Texture();
+    /// @param[in] name     The texture resource name.
+    Texture(const String &name);
 
     /// @brief The class destructor.
     ~Texture();
@@ -440,7 +441,7 @@ public:
     ~TextureLoader() = default;
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
-    static RenderBackend::Texture *getDefaultTexture();
+    static Texture *getDefaultTexture();
 };
 
 ///	@brief  This class is used to represent a texture resource.

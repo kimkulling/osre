@@ -120,8 +120,7 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             if (!textures.isEmpty()) {
                 matData->m_textures = textures;
             }
-            String name = "mat";
-            name += material->mName;
+            const String name = material->getShader()->getName();
             OGLShader *shader = rb->createShader(name, material->mShader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
@@ -140,6 +139,9 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             eh->enqueueRenderCmd(renderMatCmd);
         }                                  
         break;
+    default:
+            osre_debug(Tag, "Unsupported material type.");
+            break;
     }
 
     return matData;

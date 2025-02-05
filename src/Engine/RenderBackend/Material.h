@@ -43,7 +43,8 @@ static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::Cou
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Material {
 public:
-    String mName;
+    //String mName;
+    FastString mName;
     MaterialType mType;
     size_t mNumTextures;
     Texture **mTextures;
@@ -59,7 +60,7 @@ public:
     ~Material();
     void setMaterialType(MaterialType matType);
     MaterialType getMaterialType() const;
-    void createShader(ShaderSourceArray &shaders);
+    void createShader(const String &name, ShaderSourceArray &shaders);
     void setShader(Shader *shader);
     Shader *getShader() const;
 

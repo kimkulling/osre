@@ -69,11 +69,11 @@ TEST_F(ShaderTest, create_success) {
     IO::Uri location("file:\\temp");
     ShaderResource res("test", location);
     
-    Shader *shader = res.get();
+    Shader *shader = res.getRes();
     EXPECT_EQ(nullptr, shader);
     ShaderLoader *loader = new TestShaderLoader();
     res.load(*loader);
-    shader = res.get();
+    shader = res.getRes();
     EXPECT_NE(nullptr, shader);
 }
 

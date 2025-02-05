@@ -295,8 +295,8 @@ void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives, PrimitiveTy
     m_startIndex = startIdx;
 }
 
-Texture::Texture() :
-        TextureName(""),
+Texture::Texture(const String &name) :
+        TextureName(name),
         Loc(),
         TargetType(TextureTargetType::Texture2D),
         PixelFormat(PixelFormatType::R8G8B8),
@@ -368,8 +368,7 @@ RenderBackend::Texture *TextureLoader::getDefaultTexture() {
     }
     const ui32 Size = 256u;
     const ui32 FullColorChannel = 255u;
-    Texture *texture = new Texture;
-    texture->TextureName = "default";
+    Texture *texture = new Texture("default");
     texture->TargetType = TextureTargetType::Texture2D;
     texture->Width = Size;
     texture->Height = Size;
@@ -432,7 +431,7 @@ ResourceState TextureResource::onLoad(const IO::Uri &uri, TextureLoader &loader)
         return getState();
     }
 
-    Texture *tex = create();
+    Texture *tex = create(uri.getResource());
     if (nullptr == tex) {
         return ResourceState::Error;
     }
@@ -462,7 +461,7 @@ ResourceState TextureResource::onUnload(TextureLoader &loader) {
         return getState();
     }
 
-    loader.unload(get());
+    loader.unload(getRes());
     getStats().m_memory = 0;
     setState(ResourceState::Unloaded);
 

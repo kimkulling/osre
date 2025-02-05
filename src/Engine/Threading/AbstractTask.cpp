@@ -27,13 +27,12 @@ namespace OSRE {
 namespace Threading {
 
 AbstractTask::AbstractTask(const String &taskName) :
-        Object(taskName), m_pRefCount(nullptr), m_pParent(nullptr) {
-    m_pRefCount = new Platform::AtomicInt(0);
+        Object(taskName), mRefCount(nullptr), mParent(nullptr) {
+    mRefCount = new Platform::AtomicInt(0);
 }
 
 AbstractTask::~AbstractTask() {
-    delete m_pRefCount;
-    m_pRefCount = nullptr;
+    delete mRefCount;
 }
 
 bool AbstractTask::preExecute() {
@@ -41,55 +40,55 @@ bool AbstractTask::preExecute() {
 }
 
 bool AbstractTask::postExecute() {
-    if (m_pParent) {
-        m_pParent->removeDependency();
+    if (mParent) {
+        mParent->removeDependency();
     }
 
     return true;
 }
 
 void AbstractTask::addDependency() {
-    m_pRefCount->incValue(1);
+    mRefCount->incValue(1);
 }
 
 void AbstractTask::removeDependency() {
-    if (m_pRefCount->getValue() > 0) {
-        m_pRefCount->decValue(1);
+    if (mRefCount->getValue() > 0) {
+        mRefCount->decValue(1);
     }
 }
 
-size_t AbstractTask::getNumRefs() const {
-    if (m_pRefCount) {
-        const ui32 numRefs = m_pRefCount->getValue();
+size_t AbstractTask::getNumDependencies() const {
+    if (mRefCount) {
+        const ui32 numRefs = mRefCount->getValue();
         return numRefs;
     } 
     return 0;
 }
 
 AbstractTask *AbstractTask::getParent() const {
-    return m_pParent;
+    return mParent;
 }
 
 void AbstractTask::setParent(AbstractTask *pParent) {
-    m_pParent = pParent;
-    if (m_pParent) {
-        m_pParent->addDependency();
+    mParent = pParent;
+    if (mParent) {
+        mParent->addDependency();
     }
 }
 
 void AbstractTask::enqueue(AbstractTask *pTask) {
     if (pTask) {
         pTask->setParent(this);
-        m_childTasks.add(pTask);
+        mChildrenTasks.add(pTask);
     }
 }
 
 size_t AbstractTask::getNumChildTasks() const {
-    return m_childTasks.size();
+    return mChildrenTasks.size();
 }
 
 AbstractTask *AbstractTask::getChildTask(ui32 idx) const {
-    return m_childTasks[idx];
+    return mChildrenTasks[idx];
 }
 
 } // Namespace Threading

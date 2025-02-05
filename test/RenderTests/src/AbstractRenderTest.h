@@ -99,11 +99,12 @@ public:
     const String &getTestName() const;
 
     /// @brief  Creates a new material based on vertex- and fragment-shader.
-    /// @param[in] matName  The material name.
-    /// @param[in] VsSrc    The vertex-shader-code.
-    /// @param[in] FsSrc    The fragment-shader-code.
+    /// @param[in] matName      The material name.
+    /// @param[in] shaderName   The shader name
+    /// @param[in] VsSrc        The vertex-shader-code.
+    /// @param[in] FsSrc        The fragment-shader-code.
     /// @return The new created material.
-    RenderBackend::Material *createMaterial(const String &matName, const String &VsSrc, const String &FsSrc);
+    RenderBackend::Material *createMaterial(const String &matName, const String &shaderName, const String &VsSrc, const String &FsSrc);
 
     /// @brief  Will return the active window.
     /// @return A pointer sowing to the active window.

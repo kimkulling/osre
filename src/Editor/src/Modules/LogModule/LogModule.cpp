@@ -98,7 +98,7 @@ private:
     String mText;
 };
 
-class LogStream : public AbstractLogStream {
+class LogStream final : public AbstractLogStream {
 public:
     explicit LogStream(LogView *logView) : AbstractLogStream(), mLogView(logView) {
         osre_assert(logView != nullptr);
@@ -138,7 +138,7 @@ public:
     ~AssimpLogStream() override = default;
 
     void write(const char *message) override {
-        String logMsg = String(message)+ " (Assimp)";
+        const String logMsg = String(message)+ " (Assimp)";
         mLogView->addEntry(logMsg);
     }
 
@@ -162,7 +162,7 @@ LogModule::~LogModule() {
 }
 
 bool LogModule::onLoad() {
-    AppBase *parentApp = getParentApp();
+    const AppBase *parentApp = getParentApp();
     Platform::AbstractWindow *rootWindow = parentApp->getRootWindow();
     if (nullptr == rootWindow) {
         return true;

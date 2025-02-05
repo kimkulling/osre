@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-class OsreEdApp : public App::AppBase {
+class OsreEdApp final : public App::AppBase {
 public:
     OsreEdApp(int argc, char *argv[]);
     ~OsreEdApp() override = default;

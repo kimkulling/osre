@@ -36,8 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    define OSRE_ANDROID
 #endif
 
-#include <cppcore/Container/TArray.h>
 #include "Common/glm_common.h"
+#include <cppcore/Container/TArray.h>
 
 #include <cstring>
 #include <cmath>
@@ -137,6 +137,16 @@ using StringArray = ::cppcore::TArray<String>;
 
 /// @brief  The data type for hash ids.
 using HashId = ui64;
+
+/// @brief String with an id.
+struct FastString {
+    String str;
+    HashId id;
+
+    FastString() = default;
+    FastString(const String &name);
+    void set(const String &name);
+};
 
 /// @brief  A struct to manage a handle.
 struct Handle {
@@ -475,7 +485,6 @@ struct TResolution {
 
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE(NAME)  \
-private:                         \
     NAME(const NAME &) = delete; \
     NAME(const NAME &&) = delete; \
     NAME &operator=(const NAME &) = delete; \
