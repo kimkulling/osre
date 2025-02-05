@@ -93,7 +93,7 @@ void LocaleFileSystem::close( Stream **pFile ) {
     }
 
     const Uri &rFile = (*pFile)->getUri();
-    StreamMap::iterator it = m_FileMap.find( rFile.getResource() );
+    StreamMap::const_iterator it = m_FileMap.find( rFile.getResource() );
     m_FileMap.erase( it );
     (*pFile) = nullptr;
 }

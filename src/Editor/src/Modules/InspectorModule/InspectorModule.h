@@ -40,7 +40,7 @@ class InspectorView;
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class InspectorModule : public Modules::ModuleBase {
+class InspectorModule final : public Modules::ModuleBase {
 public:
     InspectorModule(App::AppBase *parentApp);
     ~InspectorModule() override;

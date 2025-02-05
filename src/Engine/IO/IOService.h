@@ -36,7 +36,7 @@ namespace IO {
 ///
 ///	@brief	This class implements the IO-server, which offers access to all mounted file systems.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT IOService : public Common::AbstractService {
+class OSRE_EXPORT IOService final : public Common::AbstractService {
 public:
     DECLARE_SINGLETON( IOService )
 

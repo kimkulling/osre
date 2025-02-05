@@ -34,7 +34,7 @@ namespace IO {
 ///	positioning the file pointer in an already opened file. You can also get some basic infos about
 ///	a file like its size. Renaming, checking for existence and removing it offers static methods.
 //--------------------------------------------------------------------------------------------------------------------
-class FileStream : public Stream {
+class FileStream final : public Stream {
 public:
     /// The default class constructor.
     FileStream() noexcept;

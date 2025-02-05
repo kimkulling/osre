@@ -43,7 +43,7 @@ namespace Editor {
 ///
 ///	@brief  This class will wrap the asset import command.
 //-------------------------------------------------------------------------------------------------
-class ImportAction : public ActionBase {
+class ImportAction final : public ActionBase {
 public:
     /// @brief The class constructor.
     /// @param ids          The id container.

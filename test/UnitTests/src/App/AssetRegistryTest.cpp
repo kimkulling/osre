@@ -62,8 +62,8 @@ TEST_F( AssetRegistryTest, createTest ) {
 
 TEST_F( AssetRegistryTest, resolveUriFromMountTest ) {
     static const String ModelPath = "file://assets/Models/Obj/spider.obj";
-    IO::Uri fileUri( ModelPath );
-    String loc = AssetRegistry::resolvePathFromUri( fileUri );
+    const IO::Uri fileUri( ModelPath );
+    const String loc = AssetRegistry::resolvePathFromUri( fileUri );
 #ifdef OSRE_WINDOWS
     static const String expRes = "../../assets/Models/Obj/spider.obj";
 #else

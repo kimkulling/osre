@@ -34,7 +34,7 @@ namespace Editor {
 ///
 /// @brief  This module is used to ...
 //-------------------------------------------------------------------------------------------------
-class EditorModule : public Modules::ModuleBase {
+class EditorModule final : public Modules::ModuleBase {
 public:
     EditorModule(App::AppBase *parentApp);
     ~EditorModule() override = default;
