@@ -27,11 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Common/glm_common.h"
 #include "Debugging/osre_debugging.h"
-#include "Debugging/MeshDiagnostic.h"
-#include "IO/Stream.h"
 #include "IO/Uri.h"
 #include "Platform/AbstractOGLRenderContext.h"
-#include "Platform/AbstractTimer.h"
 #include "Profiling/PerformanceCounterRegistry.h"
 #include "RenderBackend/RenderStates.h"
 #include "RenderBackend/Shader.h"
@@ -55,26 +52,14 @@ static constexpr ui32 NotInitedHandle = 9999999;
 OGLRenderBackend::OGLRenderBackend() :
         mClearColor(0.3f, 0.3f, 0.3f, 1.0f),
         mRenderCtx(nullptr),
-        mBuffers(),
         mActiveVB(NotInitedHandle),
         mActiveIB(NotInitedHandle),
-        mVertexArrays(),
         mActiveVertexArray(OGLNotSetId),
-        mShaders(),
-        mTextures(),
-        mFreeTexSlots(),
-        m_texLookupMap(),
-        mParameters(),
         mShaderInUse(nullptr),
-        mFreeBufferSlots(),
-        mPrimitives(),
         mFpState(nullptr),
-        mFpsCounter(nullptr),
-        mOglCapabilities(),
-        mFrameFuffers(),
-        mOGLDriverInfo() {
-    mBindedTextures.resize((size_t)TextureStageType::Count);
-    for (size_t i = 0; i < (size_t)TextureStageType::Count; ++i) {
+        mFpsCounter(nullptr) {
+    mBindedTextures.resize(static_cast<size_t>(TextureStageType::Count));
+    for (size_t i = 0; i < static_cast<size_t>(TextureStageType::Count); ++i) {
         mBindedTextures[i] = nullptr;
     }
 }
@@ -91,7 +76,7 @@ void OGLRenderBackend::enumerateGPUCaps() {
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
     glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
 
-    mOglCapabilities.mGLSLVersionAsStr = (c8*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    mOglCapabilities.mGLSLVersionAsStr = (const c8*) (glGetString(GL_SHADING_LANGUAGE_VERSION));
     mOglCapabilities.mGLSLVersion = getGlslVersionFromeString(mOglCapabilities.mGLSLVersionAsStr);
 }
 
@@ -151,7 +136,7 @@ void OGLRenderBackend::applyMatrix() {
     OGLParameter *view = getParameter("View");
     if (nullptr == view) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
+        memcpy(blob->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
         view = createParameter("View", ParameterType::PT_Mat4, blob, 1);
     } else {
         memcpy(view->m_data->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
@@ -161,7 +146,7 @@ void OGLRenderBackend::applyMatrix() {
     OGLParameter *projection = getParameter("Projection");
     if (nullptr == projection) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
+        memcpy(blob->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
         projection = createParameter("Projection", ParameterType::PT_Mat4, blob, 1);
     } else {
         memcpy(projection->m_data->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
@@ -178,22 +163,22 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
     // checking the supported GL version
     mOGLDriverInfo.mGLVendorString = (const c8 *)glGetString(GL_VENDOR);
     if (mOGLDriverInfo.mGLVendorString) {
-        String vendor(mOGLDriverInfo.mGLVendorString);
+        const String vendor(mOGLDriverInfo.mGLVendorString);
         osre_info(Tag, vendor);
     }
     mOGLDriverInfo.mGLRendererString = (const c8 *)glGetString(GL_RENDERER);
     if (mOGLDriverInfo.mGLRendererString) {
-        String renderer(mOGLDriverInfo.mGLRendererString);
+        const String renderer(mOGLDriverInfo.mGLRendererString);
         osre_info(Tag, renderer);
     }
     mOGLDriverInfo.mGLVersionString = (const c8 *)glGetString(GL_VERSION);
     if (mOGLDriverInfo.mGLVersionString) {
-        String version(mOGLDriverInfo.mGLVersionString);
+        const String version(mOGLDriverInfo.mGLVersionString);
         osre_info(Tag, version);
     }
     const char *GLExtensions = (const c8*) glGetString(GL_EXTENSIONS);
     if (GLExtensions) {
-        String extensions(GLExtensions);
+        const String extensions(GLExtensions);
         setExtensions(extensions);
     }
     // or better yet, use the GL4.x way to get the version number
@@ -232,13 +217,13 @@ bool OGLRenderBackend::destroy() {
     return true;
 }
 
-void OGLRenderBackend::setTimer(Platform::AbstractTimer *timer) {
+void OGLRenderBackend::setTimer(AbstractTimer *timer) {
     if (nullptr == mFpsCounter) {
         mFpsCounter = new Profiling::FPSCounter(timer);
     }
 }
 
-void OGLRenderBackend::setRenderContext(Platform::AbstractOGLRenderContext *renderCtx) {
+void OGLRenderBackend::setRenderContext(AbstractOGLRenderContext *renderCtx) {
     if (mRenderCtx == renderCtx) {
         return;
     }
@@ -327,9 +312,10 @@ void OGLRenderBackend::unbindBuffer(OGLBuffer *buffer) {
         osre_debug(Tag, "Pointer to buffer is nullptr");
         return;
     }
+
     mActiveVB = NotInitedHandle;
     mActiveIB = NotInitedHandle;
-    GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
+    const GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
     glBindBuffer(target, 0);
 
     CHECKOGLERRORSTATE();
@@ -340,7 +326,7 @@ void OGLRenderBackend::copyDataToBuffer(OGLBuffer *buffer, void *data, size_t si
         osre_debug(Tag, "Pointer to buffer is nullptr");
         return;
     }
-    GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
+    const GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
     glBufferData(target, size, data, OGLEnum::getGLBufferAccessType(usage));
 
     CHECKOGLERRORSTATE();

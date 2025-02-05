@@ -27,9 +27,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "RenderBackend/OGLRenderer/OGLCommon.h"
+#include "Platform/AbstractTimer.h"
 
 #include <cppcore/Container/TArray.h>
-#include <cppcore/Container/THashMap.h>
 
 #include <map>
 
@@ -44,7 +44,6 @@ namespace IO {
 
 namespace Platform {
 	class AbstractOGLRenderContext;
-	class AbstractTimer;
 } // namespace Platform
 
 namespace RenderBackend {

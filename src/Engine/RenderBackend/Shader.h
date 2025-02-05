@@ -59,6 +59,18 @@ public:
     ///	@brief  The class destructor.
     ~Shader() = default;
 
+    /// @brief Will assign the shader name, the guid gets updated.
+    /// @param[in] name     The new shader name
+    void setName(const String &name);
+
+    /// @brief Will return the guid of the shader.
+    /// @return The guid.
+    guid getGuid() const;
+
+    /// @brief Will return the name of the shader.
+    /// @return The name of the shader
+    const String &getName() const;
+
     /// @brief  Will a a new vertex attribute.
     /// @param  name    The name of the vertex attribute.
     void addVertexAttribute(const String &name);
@@ -113,7 +125,7 @@ public:
     /// @brief  Will return the type of a shader from its extension.
     /// @param  extension   The extension.
     /// @return The shader type.
-    static ShaderType getTypeFromeExtension(const String &extension);
+    static ShaderType getTypeFromExtension(const String &extension);
 
     // No copying
     OSRE_NON_COPYABLE(Shader)
@@ -126,7 +138,7 @@ private:
         Error,
         Count
     };
-    String mName;
+    FastString mName;
     StringArray mUniformBuffer;
     StringArray mVertexAttributes;
     String mSrc[static_cast<size_t>(ShaderType::Count)];

@@ -250,7 +250,7 @@ struct OGLCapabilities {
     i32 mMaxTextureImageUnits;  ///< The maximal number of texture image units.
     i32 mMaxTextureCoords;      ///< The maximal number of texture coordinates.
     bool mInstancing;           ///< Instancing is supported.
-    c8 *mGLSLVersionAsStr;      ///< The GLSL version as a string
+    const c8 *mGLSLVersionAsStr;      ///< The GLSL version as a string
     GLSLVersion mGLSLVersion;   ///< The GLSL version as an enum
 
     /// @brief The default class constructor.

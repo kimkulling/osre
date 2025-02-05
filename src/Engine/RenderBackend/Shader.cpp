@@ -31,8 +31,21 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
 Shader::Shader(const String &name) :
-        mName(name), mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
+        mName(), mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
     ::memset(mCompileState, 0, sizeof(CompileState) * Count);
+    setName(name);
+}
+
+void Shader::setName(const String &name) {
+    mName.set(name);
+}
+
+guid Shader::getGuid() const {
+    return mName.id;
+}
+
+const String &Shader::getName() const {
+    return mName.str;
 }
 
 void Shader::addVertexAttribute(const String &name) {
@@ -107,7 +120,7 @@ size_t Shader::getLocation( const c8 *vertexAttribute ) const {
     return InvalidLocation;
 }
 
-ShaderType Shader::getTypeFromeExtension(const String &extension) {
+ShaderType Shader::getTypeFromExtension(const String &extension) {
     if (extension.empty()) {
         return ShaderType::Invalid;
     }
@@ -149,7 +162,7 @@ size_t ShaderLoader::load(const Uri &uri, Shader *shader) {
     }
 
     String shaderSrc = &buffer[0];
-    ShaderType type = Shader::getTypeFromeExtension(ext);
+    ShaderType type = Shader::getTypeFromExtension(ext);
     if (type == ShaderType::Invalid) {
         stream->close();
         return 0;

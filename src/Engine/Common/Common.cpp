@@ -32,7 +32,12 @@ size_t MemoryStatistics::sAllocated = 0;
 size_t MemoryStatistics::sNumNew = 0;
 size_t MemoryStatistics::sActiveAllocs = 0;
 
-FastString::FastString(const String &name) : str(name), id(0) {
+FastString::FastString(const String &name) : str(), id(0) {
+    set(name);
+}
+
+void FastString::set(const String &name) {
+    str = name;
     id = Common::StringUtils::hashName(str);
 }
 

@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4201)
+#   pragma warning(push)
+#   pragma warning(disable : 4201)
 #endif // _MSC_VER
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
@@ -47,5 +47,5 @@ using Vec3Array = cppcore::TArray<glm::vec3>;
 using Vec2Array = cppcore::TArray<glm::vec2>;
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+#   pragma warning(pop)
 #endif // _MSC_VER
