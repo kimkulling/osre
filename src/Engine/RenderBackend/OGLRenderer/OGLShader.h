@@ -143,7 +143,7 @@ private:
 
     ui32 mShaderprog;
     ui32 mNumShader;
-    ui32 mShaders[ShaderType::Count];
+    ui32 mShaders[static_cast<size_t>(ShaderType::Count)];
     std::map<String, GLint> mAttributeMap;
     std::map<String, GLint> mUniformLocationMap;
     bool mIsCompiledAndLinked;
