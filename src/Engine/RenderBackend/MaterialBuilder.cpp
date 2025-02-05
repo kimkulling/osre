@@ -27,8 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/osre_debugging.h"
 #include "IO/Uri.h"
 
-#include <cstdio>
-
 namespace OSRE {
 namespace RenderBackend {
 
@@ -113,7 +111,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
 
     const String fontMatName = fontName + ".mat";
 
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(fontMatName);
     if (nullptr != mat) {
         return mat;
@@ -266,8 +264,8 @@ const String GLSLFragmentShaderSrcRV =
 
 void MaterialBuilder::create(GLSLVersion glslVersion) {
     if (nullptr == sData) {
-        sData = new MaterialBuilder::Data;
-        sData->mMaterialCache = new MaterialBuilder::MaterialCache;
+        sData = new Data;
+        sData->mMaterialCache = new MaterialCache;
         sData->mVersion = glslVersion;
         sData->mShaderCache = new ShaderCache;
     }
@@ -279,7 +277,7 @@ void MaterialBuilder::destroy() {
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
-    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find("buildinShaderMaterial");
     if (nullptr != mat) {
         return mat;
@@ -346,7 +344,14 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, Texture
         }
         TextureLoader loader;
         texRes->load(loader);
-        mat->mTextures[i] = texRes->get();
+
+        Common::ResourceState state = texRes->load(loader);
+        if (state != Common::ResourceState::Loaded) {
+            osre_error(Tag, "Cannot load texture.");
+            mat->mTextures[i] = nullptr;
+        } else {
+            mat->mTextures[i] = texRes->get();
+        }
     }
 
     String vs, fs, shaderName;
@@ -394,44 +399,6 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, Texture
 
     return mat;
 }
-
-/*Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
-        const String &VsSrc, const String &FsSrc) {
-    if (matName.empty()) {
-        return nullptr;
-    }
-
-    if (VsSrc.empty() || FsSrc.empty()) {
-        return nullptr;
-    }
-
-    MaterialCache *materialCache = sData->mMaterialCache;
-    Material *mat = materialCache->find(matName);
-    if (nullptr != mat) {
-        return mat;
-    }
-
-    mat = materialCache->create(matName);
-    mat->mNumTextures = texResArray.size();
-    mat->mTextures = new Texture *[texResArray.size()];
-    for (size_t i = 0; i < texResArray.size(); ++i) {
-        TextureResource *texRes = texResArray[i];
-        IO::Uri uri = texRes->getUri();
-        TextureLoader loader;
-        Common::ResourceState state = texRes->load(loader);
-        if (state != Common::ResourceState::Loaded) {
-            osre_error(Tag, "Cannot load texture.");
-        }
-        mat->mTextures[i] = texRes->get();
-    }
-
-    ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
-    mat->createShader(shArray);
-
-    return mat;
-}*/
 
 static constexpr c8 DefaultDebugTestMat[] = "debug_text.mat";
 

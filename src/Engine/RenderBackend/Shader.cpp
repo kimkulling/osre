@@ -198,7 +198,7 @@ ResourceState ShaderResource::onLoad( const Uri &uri, ShaderLoader &loader ) {
 
     Shader *shader = create(uri.getResource());
     if (loader.load(uri, shader) == 0l) {
-        setState(ResourceState::Unloaded);
+        setState(ResourceState::Error);
         return getState();
     }
 

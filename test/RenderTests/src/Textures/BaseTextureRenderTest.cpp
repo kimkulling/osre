@@ -43,7 +43,7 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "BasetexturerenderTest";
-
+/*
 const String VsSrc =
         "#version 400 core\n"
         "\n"
@@ -83,7 +83,7 @@ const String FsSrc =
         "    //set the interpolated color as the shader output\n"
         "    vFragColor = texture( tex0, vUV );\n"
         "}\n";
-
+*/
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///

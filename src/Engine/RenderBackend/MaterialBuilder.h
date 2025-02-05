@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -58,15 +58,6 @@ public:
     /// @param  type         The vertex type.
     /// @return The created instance will be returned.
     static Material* createTexturedMaterial(const String& matName, TextureResourceArray& texResArray, VertexType type );
-    
-    /// @brief  Will create the texture material instance with your own shader code.
-    /// @param  matName      The name for the material.
-    /// @param  texResArray  The array with all textures to use.
-    /// @param  VsSrc        The vertex shader source.
-    /// @param  FsSrc        The fragment shader source.
-    /// @return The created instance will be returned.
-    /*static Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray,
-        const String& VsSrc, const String& FsSrc);*/
 
     /// @brief  Will create the debug render text material.
     /// @return The instance of the material.
