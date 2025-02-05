@@ -49,7 +49,7 @@ inline TResource *TResourceFactory<TResource>::create(const String &name, const 
         return nullptr;
     }
 
-    TResource *res = new TResource(name, uri);
+    auto *res = new TResource(name, uri);
 
     return res;
 }
@@ -126,6 +126,13 @@ inline TResource *TResourceCache<TResourceFactory, TResource>::find(const String
 
 template <class TResourceFactory, class TResource>
 inline void TResourceCache<TResourceFactory, TResource>::set(const String &name, TResource *resource) {
+    if (name.empty()) {
+        return;
+    }
+    auto it = m_resourceMap.find(name);
+    if (it != m_resourceMap.end()) {
+        delete it->second;
+    }
     m_resourceMap[name] = resource;
 }
 
