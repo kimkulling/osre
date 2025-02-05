@@ -40,16 +40,11 @@ namespace IO {
 using namespace ::OSRE::Common;
 using namespace ::cppcore;
 
-static const c8 *BaseFileSchema = "file";
-static const c8 *Tag = "IOService";
-
-LocaleFileSystem::LocaleFileSystem() 
-: m_FileMap() {
-    // empty
-}
+static constexpr c8 BaseFileSchema[] = "file";
+static constexpr c8 Tag[] = "IOService";
 
 LocaleFileSystem::~LocaleFileSystem() {
-    for ( StreamMap::iterator it = m_FileMap.begin(); it != m_FileMap.end(); ++it )	{
+    for (auto it = m_FileMap.begin(); it != m_FileMap.end(); ++it )	{
         if ( it->second ) {
             delete it->second;
         }
@@ -59,7 +54,7 @@ LocaleFileSystem::~LocaleFileSystem() {
 
 Stream *LocaleFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
     if ( file.isEmpty() ) {
-        osre_debug( Tag, "Uri is empty." );
+        osre_error( Tag, "Uri is empty." );
         return nullptr;
     }
 
@@ -93,7 +88,7 @@ void LocaleFileSystem::close( Stream **pFile ) {
     }
 
     const Uri &rFile = (*pFile)->getUri();
-    StreamMap::const_iterator it = m_FileMap.find( rFile.getResource() );
+    const auto it = m_FileMap.find( rFile.getResource() );
     m_FileMap.erase( it );
     (*pFile) = nullptr;
 }
@@ -112,8 +107,7 @@ Stream *LocaleFileSystem::find(const Uri &file, Stream::AccessMode mode, StringA
     }
 
     Stream *stream( nullptr );
-    for ( ui32 i=0; i<searchPaths->size(); ++i ) {
-        const String &path = (*searchPaths)[ i ];
+    for (const auto & path : *searchPaths) {
         String abspath = path + file.getResource();
         Uri currentFile( file.getScheme() +"://" + abspath );
         stream = open(currentFile, mode );
@@ -131,7 +125,7 @@ const c8 *LocaleFileSystem::getSchema() const {
 
 String LocaleFileSystem::getWorkingDirectory() {
     String workingDir;
-    static const ui32 Size = 256;
+    static constexpr ui32 Size = 256;
     char buffer[ Size ];
 
 #ifdef OSRE_WINDOWS
