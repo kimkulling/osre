@@ -461,7 +461,7 @@ ResourceState TextureResource::onUnload(TextureLoader &loader) {
         return getState();
     }
 
-    loader.unload(get());
+    loader.unload(getRes());
     getStats().m_memory = 0;
     setState(ResourceState::Unloaded);
 

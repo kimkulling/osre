@@ -125,7 +125,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
     
     TextureLoader loader;
     texRes->load(loader);
-    mat->mTextures[0] = texRes->get();
+    mat->mTextures[0] = texRes->getRes();
 
     const String vertex_2d =
             getGLSLVersionString_400() +
@@ -350,7 +350,7 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, Texture
             osre_error(Tag, "Cannot load texture.");
             mat->mTextures[i] = nullptr;
         } else {
-            mat->mTextures[i] = texRes->get();
+            mat->mTextures[i] = texRes->getRes();
         }
     }
 
@@ -379,11 +379,11 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, Texture
         Shader *shader = mat->getShader();
         if (shader != nullptr) {
             ShaderResource *res = new ShaderResource(shaderName, IO::Uri(shaderName));
-            res->set(shader);
+            res->setRes(shader);
             sData->mShaderCache->set(shaderName, res);
         }
     } else {
-        mat->setShader(shaderRes->get());
+        mat->setShader(shaderRes->getRes());
     }
 
     // Setup shader attributes and variables

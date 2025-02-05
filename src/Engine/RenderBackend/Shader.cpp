@@ -210,7 +210,7 @@ ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
         return getState();
     }
 
-    loader.unload(get());
+    loader.unload(getRes());
 
     return getState();
 }
