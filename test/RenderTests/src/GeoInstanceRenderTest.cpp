@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -79,7 +79,7 @@ static constexpr c8 FsSrc[] =
 ///
 ///	@brief  A instancing render-call - rendering test
 //-------------------------------------------------------------------------------------------------
-class GeoInstanceRenderTest : public AbstractRenderTest {
+class GeoInstanceRenderTest final : public AbstractRenderTest {
     static constexpr ui32 NumInstances = 25;
     f32 m_angle;
     glm::mat4 m_mat[NumInstances];

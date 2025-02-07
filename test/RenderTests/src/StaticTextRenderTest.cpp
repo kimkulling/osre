@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -38,17 +38,15 @@ using namespace ::OSRE::RenderBackend;
 ///
 ///	@brief  A static text - rendering test
 //-------------------------------------------------------------------------------------------------
-class StaticTextRenderTest : public AbstractRenderTest {
+class StaticTextRenderTest final : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
-    ui32 m_frameCount;
 
 public:
-    StaticTextRenderTest() : AbstractRenderTest( "rendertest/StaticTextRenderTest" )
-        , m_frameCount( 0 ) {
+    StaticTextRenderTest() : AbstractRenderTest("rendertest/StaticTextRenderTest") {
         // empty
     }
 
-    virtual ~StaticTextRenderTest() = default;
+    ~StaticTextRenderTest() override = default;
 
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );

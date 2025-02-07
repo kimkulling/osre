@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -39,12 +39,11 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief This rendertest demonstrates the usage of a render target as a texture to render on.
 //-------------------------------------------------------------------------------------------------
-class RenderTargetRenderTest : public AbstractRenderTest {
+class RenderTargetRenderTest final : public AbstractRenderTest {
 public:
-    RenderTargetRenderTest() : 
-            AbstractRenderTest("rendertest/rendertargetrendertest") {
+    RenderTargetRenderTest() : AbstractRenderTest("rendertest/rendertargetrendertest") {
         // empty
     }
 

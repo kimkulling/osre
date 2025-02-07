@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -45,11 +45,12 @@ using namespace ::cppcore;
 
 // static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
-static const c8 *Tag = "RenderTestSuite";
 static const ui32 AllTestsDone = 999999;
 
+DEF_LOG_DOMAIN("RenderTestSuite")
+
 // our base keyboard event listener, for switching to the next test case
-class KeyboardEventListener : public Platform::OSEventListener {
+class KeyboardEventListener : public OSEventListener {
 public:
     KeyboardEventListener(RenderTestSuite *renderTestSuite) :
             OSEventListener("rendertest/keyboardeventlistener"), mTestSuite(renderTestSuite) {

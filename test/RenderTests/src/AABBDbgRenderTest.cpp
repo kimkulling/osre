@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -39,17 +39,18 @@ using namespace ::OSRE::App;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief  A debug AABB - rendering test
+///	@brief  Demonstrates the rendering of a debug Axis-aligned bounding box.
 //-------------------------------------------------------------------------------------------------
-class AABBDbgRenderTest : public AbstractRenderTest {
+class AABBDbgRenderTest final : public AbstractRenderTest {
     TransformMatrixBlock mTransformMatrix;
 
 public:
-    AABBDbgRenderTest() :
-            AbstractRenderTest("rendertest/AABBDbgRenderTest") {
+    /// @brief The class constructor.
+    AABBDbgRenderTest() : AbstractRenderTest("rendertest/AABBDbgRenderTest") {
         // empty
     }
-
+    
+    /// @brief The class destructor.
     ~AABBDbgRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -33,6 +33,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderTest {
 
+DEF_LOG_DOMAIN("AbstractRenderTest");
+
 using namespace ::OSRE::RenderBackend;
 
 AbstractRenderTest::AbstractRenderTest(const String &renderTestName) :
@@ -42,20 +44,28 @@ AbstractRenderTest::AbstractRenderTest(const String &renderTestName) :
 }
 
 bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
-    osre_assert(nullptr != rbSrv);
+    if (rbSrv == nullptr) {
+        osre_error(Tag, "Invalid pointer to renderbackend service.");
+        return false;
+    }
 
     osre_info(mRenderTestName, "=> Creating test.");
     const String &name(getTestName());
     mWindow = Platform::PlatformInterface::getInstance()->getRootWindow();
-    if (nullptr != mWindow) {
-        mWindow->setWindowsTitle("Performing test " + name);
+    if (nullptr == mWindow) {
+        osre_error(Tag, "Invalid pointer to root window.");
+        return false;
     }
+    mWindow->setWindowsTitle("Performing test " + name);
 
     return onCreate(rbSrv);
 }
 
 bool AbstractRenderTest::destroy(RenderBackendService *rbSrv) {
-    osre_assert(nullptr != rbSrv);
+    if (rbSrv == nullptr) {
+        osre_error(Tag, "Invalid pointer to renderbackend service.");
+        return false;
+    }
 
     osre_info(mRenderTestName, "<= Destroying test.");
 
@@ -63,7 +73,10 @@ bool AbstractRenderTest::destroy(RenderBackendService *rbSrv) {
 }
 
 bool AbstractRenderTest::render(RenderBackendService *rbSrv) {
-    osre_assert(nullptr != rbSrv);
+    if (rbSrv == nullptr) {
+        osre_error(Tag, "Invalid pointer to renderbackend service.");
+        return false;
+    }
 
     return onRender(rbSrv);
 }
@@ -94,6 +107,7 @@ const String &AbstractRenderTest::getTestName() const {
 
 Material *AbstractRenderTest::createMaterial(const String &matName, const String &VsSrc, const String &FsSrc) {
     if (matName.empty()) {
+        osre_error(Tag, "Material name is empty.");
         return nullptr;
     }
 

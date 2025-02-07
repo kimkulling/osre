@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -80,23 +80,20 @@ const String FsSrc =
 ///
 ///	@brief  A command buffer switch - rendering test
 //-------------------------------------------------------------------------------------------------
-class SwitchCmdBufferRenderTest : public AbstractRenderTest {
+class SwitchCmdBufferRenderTest final : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     static const ui32 NumPoints = 1000;
     Mesh *m_pointMesh;
     ParticleEmitter *m_particeGen;
 
 public:
-    SwitchCmdBufferRenderTest()
-    : AbstractRenderTest( "rendertest/SwitchCmdBufferRenderTest" )
-    , m_pointMesh( nullptr )
-    , m_particeGen( nullptr ) {
+    SwitchCmdBufferRenderTest() :
+            AbstractRenderTest( "rendertest/SwitchCmdBufferRenderTest" ), m_pointMesh( nullptr ), m_particeGen( nullptr ) {
         // empty
     }
 
-    virtual ~SwitchCmdBufferRenderTest() {
+    ~SwitchCmdBufferRenderTest() override {
         delete m_particeGen;
-        m_particeGen = nullptr;
     }
 
     bool onCreate( RenderBackendService *rbSrv ) override {
