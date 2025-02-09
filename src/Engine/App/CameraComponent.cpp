@@ -60,6 +60,7 @@ CameraComponent::CameraComponent(Entity *owner) :
         mEye(1, 1, 1),
         mCenter(0, 0, 0),
         mUp(0, 0, 1),
+        mRightVec(1,0,0),
         mView(1),
         mProjection(1) {
     // empty

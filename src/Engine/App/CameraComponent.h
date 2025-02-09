@@ -144,6 +144,10 @@ public:
     /// @return The position / center vector.
     const glm::vec3 &getCenter() const;
 
+    /// @brief  Will return the right vector.
+    /// @return The right vector.
+    const glm::vec3 &getRight() const;
+
     /// @brief Will reutrn the up vector.
     /// @return the up-vector.
     const glm::vec3 &getUp() const;
@@ -162,6 +166,7 @@ private:
     f32 mLeft, mRight, mTop, mBottom;
     glm::vec3 mEye;
     glm::vec3 mCenter;
+    glm::vec3 mRightVec;
     glm::vec3 mUp;
     glm::mat4 mView;
     glm::mat4 mProjection;
@@ -203,6 +208,10 @@ inline const glm::vec3 &CameraComponent::getCenter() const {
 
 inline const glm::vec3 &CameraComponent::getUp() const {
     return mUp;
+}
+
+inline const glm::vec3 &CameraComponent::getRight() const {
+    return mRightVec;
 }
 
 } // Namespace App

@@ -84,6 +84,8 @@ public:
     /// @return  The mouse input state.
     const MouseInputState &getMouseInputState() const;
 
+    void clearButtons();
+
 private:
     MouseInputState mMouseInputState;
 };
@@ -119,5 +121,10 @@ inline i32 MouseEventListener::getAbsoluteY() const {
 inline const MouseInputState &MouseEventListener::getMouseInputState() const {
     return mMouseInputState;
 }
+
+inline void MouseEventListener::clearButtons() {
+    mMouseInputState.MouseButtonState.clear();
+}
+
 } // Namespace App
 } // Namespace OSRE
