@@ -284,7 +284,7 @@ void Win32EventQueue::unregisterEventQueue(Win32EventQueue *server, HWND hWnd) {
     std::map<HWND, Win32EventQueue *>::iterator it = s_WindowsServerMap.find(hWnd);
     if (s_WindowsServerMap.end() != it) {
         if (server != it->second) {
-            osre_debug(Tag, "Invalid assignment from eventqueue to window handle.");
+            osre_debug(Tag, "Invalid assignment from event-queue to window handle.");
         }
         s_WindowsServerMap.erase(it);
     }
@@ -300,7 +300,7 @@ Win32EventQueue *Win32EventQueue::getQueueByWndInstance(HWND hWnd) {
 }
 
 void Win32EventQueue::onQuit() {
-    Common::EventData data(QuitEvent, m_eventTriggerer);
+    EventData data(QuitEvent, m_eventTriggerer);
     m_eventTriggerer->triggerEvent(data.getEvent(), &data);
     mShutdownRequested = true;
 }
