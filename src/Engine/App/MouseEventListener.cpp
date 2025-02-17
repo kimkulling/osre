@@ -29,9 +29,7 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-MouseEventListener::MouseEventListener() :
-        OSEventListener("App/MouseEventListener"),
-        mMouseInputState() {
+MouseEventListener::MouseEventListener() : OSEventListener("App/MouseEventListener") {
     // empty
 }
 

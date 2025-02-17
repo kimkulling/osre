@@ -112,7 +112,7 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
     return onCreate(); 
 }
 
-bool AppBase::create(Properties::Settings *config) {
+bool AppBase::create(Settings *config) {
     if (config != nullptr && config != mSettings) {
         delete mSettings;
         mSettings = config;
@@ -179,7 +179,7 @@ bool AppBase::handleEvents() {
     return result;
 }
 
-Properties::Settings *AppBase::getSettings() const {
+Settings *AppBase::getSettings() const {
     return mSettings;
 }
 
@@ -191,7 +191,7 @@ bool AppBase::shutdownRequested() const {
     return mShutdownRequested;
 }
 
-Platform::AbstractTimer *AppBase::getActiveTimer() const {
+AbstractTimer *AppBase::getActiveTimer() const {
     return mTimer;
 }
 
@@ -199,7 +199,7 @@ AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &t
     return new TransformController(tmb);
 }
 
-Platform::AbstractWindow *AppBase::getRootWindow() const {
+AbstractWindow *AppBase::getRootWindow() const {
     if (mPlatformInterface == nullptr) {
         osre_debug(Tag, "Platform interface instance is nullptr.");
         return nullptr;
@@ -241,7 +241,7 @@ bool AppBase::onCreate() {
     }
 
     // Create the platform interface instance
-    mPlatformInterface = Platform::PlatformInterface::create(mSettings);
+    mPlatformInterface = PlatformInterface::create(mSettings);
     if (mPlatformInterface == nullptr) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
         return false;
@@ -253,7 +253,7 @@ bool AppBase::onCreate() {
     }
 
     // Register any available platform-specific log streams
-    Common::AbstractLogStream *stream = Platform::PlatformPluginFactory::createPlatformLogStream();
+    AbstractLogStream *stream = PlatformPluginFactory::createPlatformLogStream();
     if (stream != nullptr) {
         Logger::getInstance()->registerLogStream(stream);
     }
@@ -302,10 +302,10 @@ bool AppBase::onCreate() {
         evHandler->registerEventListener(eventArray, mKeyboardEvListener);
     }
 
-    Common::AbstractService *ioSrv = IO::IOService::create();
+    AbstractService *ioSrv = IOService::create();
     ServiceProvider::setService(ServiceType::IOService, ioSrv);
 
-    App::AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
+    AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
     Rect2ui rect;
     mPlatformInterface->getRootWindow()->getWindowsRect(rect);
@@ -325,7 +325,7 @@ bool AppBase::onCreate() {
 }
 
 bool AppBase::onDestroy() {
-    if (mAppState != State::Running || mAppState != State::Created) {
+    if (mAppState != State::Running && mAppState != State::Created) {
         osre_debug(Tag, "AppBase::State not in proper state: Running.");
         return false;
     }
@@ -344,7 +344,7 @@ bool AppBase::onDestroy() {
     ServiceProvider::destroy();
 
     if (mPlatformInterface != nullptr) {
-        Platform::PlatformInterface::destroy();
+        PlatformInterface::destroy();
         mPlatformInterface = nullptr;
     }
 
