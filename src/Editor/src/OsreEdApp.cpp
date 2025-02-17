@@ -59,7 +59,7 @@ static Project *createProject(const String &name) {
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
-        AppBase(argc, (const char **)argv, "api", "The render API"),
+        AppBase(argc, const_cast<const char **>(argv), "api", "The render API"),
         mProject(nullptr),
         mEntity(nullptr),
         mGuiEntity(nullptr),
@@ -73,7 +73,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
         camEntity = new Entity("camera", *getIdContainer(), scene);
     }
 
-    auto *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
+    auto *camera = static_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
     scene->addEntity(camEntity);
     scene->setActiveCamera(camera);
     ui32 w{0u}, h{0u};

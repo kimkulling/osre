@@ -220,8 +220,8 @@ void AppBase::setWindowsTitle(const String &title) {
     }
 }
 
-RenderBackend::CanvasRenderer* AppBase::getCanvasRenderer() const {
-    return (CanvasRenderer*) mCanvasRenderer;
+CanvasRenderer* AppBase::getCanvasRenderer() const {
+    return static_cast<CanvasRenderer*>(mCanvasRenderer);
 }
 
 bool AppBase::onCreate() {
@@ -231,8 +231,8 @@ bool AppBase::onCreate() {
     }
 
     ServiceProvider::create();
-    mIds = new Common::Ids;
-    mEnvironment = new Common::Environment;
+    mIds = new Ids;
+    mEnvironment = new Environment;
 
     // create the asset registry
     if (AssetRegistry::create() == nullptr) {
@@ -309,7 +309,10 @@ bool AppBase::onCreate() {
 
     Rect2ui rect;
     mPlatformInterface->getRootWindow()->getWindowsRect(rect);
-    mCanvasRenderer = new CanvasRenderer(2, (i32)rect.getX1(), (i32)rect.getY1(), (i32)rect.getWidth(), (i32)rect.getHeight());
+    mCanvasRenderer = new CanvasRenderer(2, static_cast<i32>(rect.getX1()),
+        static_cast<i32>(rect.getY1()),
+        static_cast<i32>(rect.getWidth()),
+        static_cast<i32>(rect.getHeight()));
     if (!mCanvasRenderer->create()) {
         osre_error(Tag, "Error while creating the canvas renderer.");
         return false;

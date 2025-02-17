@@ -51,7 +51,7 @@ class AnimationApp : public App::AppBase {
 
 public:
     AnimationApp(int argc, char *argv[]) :
-            AppBase(argc, (const char**) argv) {}
+            AppBase(argc, const_cast<const char **>(argv)) {}
 
     ~AnimationApp() override = default;
 
@@ -67,10 +67,10 @@ protected:
 
         Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
         scene->addEntity(camEntity);
-        CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+        CameraComponent *camera = static_cast<CameraComponent *>(camEntity->createComponent(ComponentType::CameraComponentType));
         scene->setActiveCamera(camera);
 
-        Animation::AnimatorComponent *animator = (Animation::AnimatorComponent *)camEntity->createComponent(ComponentType::AnimationComponentType);
+        Animation::AnimatorComponent *animator = static_cast<Animation::AnimatorComponent *>(camEntity->createComponent(ComponentType::AnimationComponentType));
         mTrack.NumVectorChannels = 1;
         mTrack.AnimationChannels = new Animation::AnimationChannel[mTrack.NumVectorChannels];
         mTrack.Duration = 1.0f;

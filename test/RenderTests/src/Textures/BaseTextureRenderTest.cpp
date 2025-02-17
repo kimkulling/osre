@@ -43,69 +43,28 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "BasetexturerenderTest";
-/*
-const String VsSrc =
-        "#version 400 core\n"
-        "\n"
-        "layout(location = 0) in vec3 position;	            // object space vertex position\n"
-        "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-        "layout(location = 2) in vec3 color0;	            // object space vertex normal\n"
-        "layout(location = 3) in vec2 texcoord0;	        // texture coordinate\n"
-        "\n"
-        "//output from the vertex shader\n"
-        "smooth out vec4 vSmoothColor\n;		            //smooth colour to fragment shader\n"
-        "smooth out vec2 vUV;\n"
-        "\n"
-        "//uniform\n"
-        "uniform mat4 MVP;	                                //combined modelview projection matrix\n"
-        "\n"
-        "void main() {\n"
-        "    // assign the per-vertex color to vSmoothColor varying\n"
-        "    vSmoothColor = vec4(color0,1);\n"
-        "\n"
-        "    // get the clip space position by multiplying the combined MVP matrix with the object space\n"
-        "    // vertex position\n"
-        "    gl_Position = MVP*vec4(position,1);\n"
-        "    vUV = texcoord0;\n"
-        "}\n";
 
-const String FsSrc =
-        "#version 400 core\n"
-        "\n"
-        "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-        "\n"
-        "//input form the vertex shader\n"
-        "smooth in vec4 vSmoothColor;		    //interpolated colour to fragment shader\n"
-        "smooth in vec2 vUV;\n"
-        "uniform sampler2D tex0;\n"
-        "\n"
-        "void main() {\n"
-        "    //set the interpolated color as the shader output\n"
-        "    vFragColor = texture( tex0, vUV );\n"
-        "}\n";
-*/
-//-------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
 ///	@brief  This class implements a simple texture render test.
 //-------------------------------------------------------------------------------------------------
 class BaseTextureRenderTest : public AbstractRenderTest {
-    f32 m_angle;
-    TransformMatrixBlock m_transformMatrix;
-    UniformVar *m_mvpParam;
+    f32 mAngle;
+    TransformMatrixBlock mTransformMatrix;
+    UniformVar *mMvpParam;
 
 public:
     BaseTextureRenderTest() :
             AbstractRenderTest("rendertest/basetexturerendertest"),
-            m_angle(0.02f),
-            m_transformMatrix(),
-            m_mvpParam(nullptr) {
+            mAngle(0.02f),
+            mTransformMatrix(),
+            mMvpParam(nullptr) {
         // empty
     }
 
     ~BaseTextureRenderTest() override {
-        UniformVar::destroy(m_mvpParam);
-        m_mvpParam = nullptr;
+        UniformVar::destroy(mMvpParam);
     }
 
     bool onCreate(RenderBackendService *rbSrv) override {
@@ -113,9 +72,9 @@ public:
 
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        MeshBuilder geoBuilder;
-        geoBuilder.allocQuads(VertexType::RenderVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh = geoBuilder.getMesh();
+        MeshBuilder meshBuilder;
+        meshBuilder.allocQuads(VertexType::RenderVertex, BufferAccessType::ReadOnly);
+        Mesh *mesh = meshBuilder.getMesh();
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
@@ -140,8 +99,8 @@ public:
                     shader->addUniformBuffer("MVP");
                 }
 
-                m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, m_angle, glm::vec3(1, 1, 0));
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.mModel);
+                mTransformMatrix.mModel = glm::rotate(mTransformMatrix.mModel, mAngle, glm::vec3(1, 1, 0));
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
             }
             rbSrv->endRenderBatch();
         }
@@ -161,8 +120,8 @@ public:
         {
             rbSrv->beginRenderBatch("b1");
             {
-                m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, m_angle, glm::vec3(1, 1, 0));
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.mModel);
+                mTransformMatrix.mModel = glm::rotate(mTransformMatrix.mModel, mAngle, glm::vec3(1, 1, 0));
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
             }
             rbSrv->endRenderBatch();
         }
