@@ -75,17 +75,16 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mLastTime(0l),
         mArgParser(argc, argv, supportedArgs, desc),
         mEnvironment(nullptr),
-        mSettings(new Properties::Settings),
+        mSettings(new Settings),
         mPlatformInterface(nullptr),
         mTimer(nullptr),
         mRbService(nullptr),
-        mScenes(),
         mActiveScene(nullptr),
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr) {
-    mSettings->setString(Properties::Settings::RenderAPI, "opengl");
-    mSettings->setBool(Properties::Settings::PollingMode, true);
+    mSettings->setString(Settings::RenderAPI, "opengl");
+    mSettings->setBool(Settings::PollingMode, true);
 }
 
 AppBase::~AppBase() {

@@ -48,6 +48,8 @@ set(renderview_src
 
 set(actions_src
     src/Actions/ActionBase.h
+    src/Actions/ExportAction.cpp
+    src/Actions/ExportAction.h
     src/Actions/ImportAction.cpp
     src/Actions/ImportAction.h
 )

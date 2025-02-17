@@ -39,10 +39,8 @@ static constexpr c8 Tag[] = "Scene";
 
 Scene::Scene(const String &worldName) :
         Object(worldName),
-        mEntities(),
         mActiveCamera(nullptr),
         mRoot(nullptr),
-        mIds(),
         mPipeline(nullptr),
         mDirtry(false) {
     // empty
@@ -81,7 +79,7 @@ bool Scene::removeEntity(Entity *entity) {
     }
     
     bool found = false;
-    cppcore::TArray<Entity*>::Iterator it = mEntities.find(entity);
+    TArray<Entity*>::Iterator it = mEntities.find(entity);
     if (mEntities.end() != it) {
         mEntities.remove(it);
         found = true;
@@ -89,6 +87,18 @@ bool Scene::removeEntity(Entity *entity) {
     }
 
     return found;
+}
+
+size_t Scene::getNumEntities() const {
+    return mEntities.size();
+}
+
+Entity *Scene::getEntityAt(size_t index) const {
+    if (index >= mEntities.size()) {
+        return nullptr;
+    }
+
+    return mEntities[index];
 }
 
 bool Scene::setActiveCamera(CameraComponent *camera) {

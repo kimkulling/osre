@@ -36,10 +36,10 @@ using namespace ::OSRE::App;
 
 using namespace ::cppcore;
 
-ImportAction::ImportAction(Ids *ids, Scene *activeWorld) :
+ImportAction::ImportAction(Ids *ids, Scene *activeScene) :
         ActionBase(), 
         mIds(ids),
-        mActiveWorld(activeWorld),
+        mActiveScene(activeScene),
         mEntity(nullptr),
         mNumVertices(0u),
         mNumTriangles(0u) {
@@ -62,7 +62,7 @@ bool ImportAction::onRun(const ArgumentList &args) {
     }
 
     IO::Uri loc(path);
-    AssimpWrapper assimpWrapper(*mIds, mActiveWorld);
+    AssimpWrapper assimpWrapper(*mIds, mActiveScene);
     if (!assimpWrapper.importAsset(loc, 0)) {
         return false;
     }

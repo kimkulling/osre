@@ -47,8 +47,8 @@ class ImportAction final : public ActionBase {
 public:
     /// @brief The class constructor.
     /// @param ids          The id container.
-    /// @param activeWorld  The active world to run the command in.
-    ImportAction(Common::Ids *ids, App::Scene *activeWorld);
+    /// @param activeScene  The active world to run the command in.
+    ImportAction(Common::Ids *ids, App::Scene *activeScene);
 
     /// @brief  The default class destructor.
     ~ImportAction() override = default;
@@ -70,7 +70,7 @@ protected:
 
 private:
     Common::Ids *mIds;
-    App::Scene *mActiveWorld;
+    App::Scene *mActiveScene;
     App::Entity *mEntity;
     ui32 mNumVertices, mNumTriangles;
 };
