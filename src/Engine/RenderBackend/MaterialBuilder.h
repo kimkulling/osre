@@ -42,6 +42,7 @@ public:
     using ShaderCache = Common::TResourceCache<ShaderFactory, ShaderResource>;
 
     /// @brief Will create the material builder instance.
+    /// @param[in] glslVersion      The requested glsl version.
     static void create(GLSLVersion glslVersion);
 
     /// @brief Will destroy the material builder instance.
@@ -57,7 +58,7 @@ public:
     /// @param  texResArray  The array with all textures to use.
     /// @param  type         The vertex type.
     /// @return The created instance will be returned.
-    static Material* createTexturedMaterial(const String& matName, TextureResourceArray& texResArray, VertexType type );
+    static Material* createTexturedMaterial(const String& matName, const TextureResourceArray& texResArray, VertexType type );
 
     /// @brief  Will create the debug render text material.
     /// @return The instance of the material.

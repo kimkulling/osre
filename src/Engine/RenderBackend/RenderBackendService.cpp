@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -567,10 +567,10 @@ void RenderBackendService::attachView() {
     // empty
 }
 
-void RenderBackendService::resize(ui32 w, ui32 h) {
+void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
-        setViewport(0, 0, w, h);
-        ResizeEventData *data = new ResizeEventData(0, 0, w, h);
+        setViewport(x, y, w, h);
+        ResizeEventData *data = new ResizeEventData(x, y, w, h);
         mRenderTaskPtr->sendEvent(&OnResizeEvent, data);
     }
 }

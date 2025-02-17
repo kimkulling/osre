@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -319,7 +319,7 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     return mat;
 }
 
-Material *MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray &texResArray,
+Material *MaterialBuilder::createTexturedMaterial(const String &matName, const TextureResourceArray &texResArray,
         VertexType type) {
     if (matName.empty()) {
         return nullptr;
