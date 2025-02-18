@@ -22,45 +22,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "SceneData.h"
-#include "App/AppBase.h"
-#include "App/Project.h"
-#include "App/CameraComponent.h"
-#include "App/Entity.h"
+#include "Actions/ActionBase.h"
 #include "App/Scene.h"
-#include "RenderBackend/TransformMatrixBlock.h"
 
 namespace OSRE {
 namespace Editor {
 
-class PythonInterface;
-
-class OsreEdApp final : public App::AppBase {
+class ExportAction final : public ActionBase {
 public:
-    OsreEdApp(int argc, char *argv[]);
-    ~OsreEdApp() override = default;
-    App::CameraComponent *setupCamera(App::Scene *world);
-    bool onCreate() override;
-    bool onDestroy() override;
-    void onUpdate() override;
-    void newProjectCmd(ui32, void *data);
-    void loadAsset(const IO::Uri &modelLoc);
+    /// @brief The class constructor.
+    /// @param ids          The id container.
+    /// @param activeScene  The active world to run the command in.
+    ExportAction(Common::Ids *ids, const aiScene *activeScene);
+
+    /// @brief  The default class destructor.
+    ~ExportAction() override = default;
+
+protected:
+    bool onRun(const ArgumentList &args) override;
 
 private:
-    struct Config {
-        f32 mFov = 60.f;
-        f32 mNear = 0.01f;
-        f32 mFar = 10000.0f;
-    } mConfig;
-
-    App::Project *mProject;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    App::Entity *mEntity;
-    App::Entity *mGuiEntity;
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    SceneData mSceneData;
-    PythonInterface *mPythonInterface;
+    Common::Ids *mIds;
+    const aiScene *mActiveScene;
 };
 
-} // namespace Editor
-} // namespace OSRE
+}
+}

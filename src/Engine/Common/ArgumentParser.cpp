@@ -24,14 +24,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Common/Tokenizer.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 using namespace ::cppcore;
 
 static constexpr c8 option[] = "--";
 static constexpr c8 tokenArgIn = '<';
 static constexpr c8 tokenArgOut = '>';
+static constexpr c8 Tag[] = "ArgumentParser";
 
 ArgumentParser::Argument::Argument() :
         mArgument(""), mDesc(""), mNumArgs(0) {
@@ -43,7 +43,7 @@ ArgumentParser::Argument::Argument(const String &arg, const String &desc, ui32 n
     // empty
 }
 
-static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc, 
+static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc,
         TArray<ArgumentParser::Argument> &supportedArgs, String &error) {
     error.clear();
     StringArray extractedArgs, extractedDescs;
@@ -55,12 +55,17 @@ static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc,
     Tokenizer::tokenize(userDefinedArgs, extractedArgs, ":");
     Tokenizer::tokenize(desc, extractedDescs, ":");
     ui32 numParam(0);
+    if (extractedArgs.size() != extractedDescs.size()) {
+        error += "Number of arguments and descriptions do not match";
+        return false;
+    }
+
     for (ui32 i = 0; i < extractedArgs.size(); ++i) {
         String arg = extractedArgs[i];
         String currentDesc = extractedDescs[i];
         if (ArgumentParser::parseArgParameter(arg, numParam)) {
-            supportedArgs.add(ArgumentParser::Argument(ArgumentParser::getBlankArgument(arg), 
-                currentDesc, numParam));
+            supportedArgs.add(ArgumentParser::Argument(ArgumentParser::getBlankArgument(arg),
+                    currentDesc, numParam));
         }
     }
 
@@ -68,11 +73,13 @@ static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc,
 }
 
 ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc) :
-        mSupportedArguments(), mStoredArguments(), mCurrentIndex(0), mIsValid(true) {
+        mCurrentIndex(0), mIsValid(true) {
     // Parse and store the expected arguments
     const size_t optionLen = ::strlen(option);
     String error;
     if (!parseExpectedArgs(supportedArgs, desc, mSupportedArguments, error)) {
+        osre_error(Tag, "Error while parsing arguments: " + error);
+        mIsValid = false;
         return;
     }
 
@@ -83,8 +90,7 @@ ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &suppo
             if (String::npos != pos) {
                 argument = argument.substr(pos + optionLen, argument.size() - (pos + optionLen));
                 if (isSupported(argument)) {
-                    const ui32 numValues = getNumValues(argument);
-                    if (numValues) {
+                    if (const ui32 numValues = getNumValues(argument)) {
                         // Check the number of expected values for being a new option
                         for (ui32 valIdx = mCurrentIndex + 1; valIdx < mCurrentIndex + numValues + 1; valIdx++) {
                             String tmpVal(ppArgv[valIdx]);
@@ -130,21 +136,21 @@ String ArgumentParser::showHelp() const {
 
     String helpMsg;
     for (ui32 i = 0; i < mSupportedArguments.size(); i++) {
-        Argument argument = mSupportedArguments[i];
+        const Argument argument = mSupportedArguments[i];
         const String arg = argument.mArgument;
         const String desc = argument.mDesc;
         const ui32 numargs = argument.mNumArgs;
 
         helpMsg += "\t: ";
-        helpMsg += arg; 
+        helpMsg += arg;
         helpMsg += "\t: ";
         helpMsg += desc;
         helpMsg += "\n";
         if (numargs > 0) {
             helpMsg += "\n\tNumber of arguments: ";
             c8 buffer[512];
-            ::memset(buffer, '\0', 512);
-            ::sprintf(buffer, "%d\n", numargs);
+            memset(buffer, '\0', 512);
+            sprintf(buffer, "%d\n", numargs);
             helpMsg += String(buffer);
         }
     }
@@ -243,16 +249,14 @@ bool ArgumentParser::parseArgParameter(const String &argument, ui32 &numPara) {
             if (paraDefOpen) {
                 numPara = 0;
                 return false;
-            } else {
-                paraDefOpen = true;
             }
+            paraDefOpen = true;
         } else if (argument[i] == tokenArgOut) {
             if (!paraDefOpen) {
                 numPara = 0;
                 return false;
-            } else {
-                paraDefOpen = false;
             }
+            paraDefOpen = false;
 
         } else if (paraDefOpen) {
             paraStr += argument[i];
@@ -277,8 +281,7 @@ String ArgumentParser::getBlankArgument(const String &argument) {
     }
 
     // Check if any token for parameter definition is there
-    String::size_type pos = argument.find(tokenArgIn);
-    if (String::npos == pos) {
+    if (String::size_type pos = argument.find(tokenArgIn); String::npos == pos) {
         return argument;
     }
 
@@ -321,5 +324,4 @@ void ArgumentParser::setInvalid() {
     mIsValid = false;
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // namespace OSRE::Common
