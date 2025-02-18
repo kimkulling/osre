@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/ArgumentParser.h"
 #include "Common/Logger.h"
 #include "Common/Tokenizer.h"
-#include "contrib/assimp/code/AssetLib/MD3/MD3FileData.h"
 
 namespace OSRE::Common {
 
