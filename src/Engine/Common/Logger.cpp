@@ -283,96 +283,64 @@ void Logger::StdLogStream::write(const String &msg) {
     std::cout << msg;
 }
 
+static void addTraceInfo(const String &file, int line, String &msg) {
+    if (Logger::getInstance()->getVerboseMode() == Logger::VerboseMode::Trace) {
+        msg += " (";
+        msg += stripFilename(file);
+        msg += ", ";
+        std::stringstream ss;
+        ss << line;
+        msg += ss.str();
+        msg += ")";
+    }
+}
+ 
 void tracePrint(const String &domain, const String &file, int line, const String &msg) {
     String message;
     message += msg;
-    message += " (";
-    message += stripFilename(file);
-    message += ", ";
-    std::stringstream ss;
-    ss << line;
-    message += ss.str();
-    message += ")";
+    addTraceInfo(file, line, message);
     Logger::getInstance()->trace(domain, message);
 }
 
 void debugPrint(const String &domain, const String &file, int line, const String &msg) {
     String message;
     message += msg;
-    message += " (";
-    message += stripFilename(file);
-    message += ", ";
-    std::stringstream ss;
-    ss << line;
-    message += ss.str();
-    message += ")";
+    addTraceInfo(file, line, message);
     Logger::getInstance()->debug(domain, message);
 }
 
 void infoPrint(const String &domain, const String &file, int line, const String &msg) {
     String message;
     message += msg;
-    message += " (";
-    message += stripFilename(file);
-    message += ", ";
-    std::stringstream ss;
-    ss << line;
-    message += ss.str();
-    message += ")";
+    addTraceInfo(file, line, message);
     Logger::getInstance()->info(domain, message);
 }
 
 void logPrint(const String &domain, const String &file, int line, const String &message) {
     String msg;
-    msg += stripFilename(file);
-    msg += ", ";
-    std::stringstream ss;
-    ss << line;
-    msg += ss.str();
-    msg += " ";
-    String tmp = domain + " : " + message;
-    tmp += " (";
-    tmp += msg;
-    tmp += ")";
-    Logger::getInstance()->print(tmp);
+    msg += message;
+    addTraceInfo(file, line, msg);
+    Logger::getInstance()->print(msg);
 }
 
 void warnPrint(const String &domain, const String &file, int line, const String &message) {
     String msg;
     msg += message;
-    msg += " (";
-    msg += stripFilename(file);
-    msg += ", ";
-    std::stringstream ss;
-    ss << line;
-    msg += ss.str();
-    msg += ")";
+    addTraceInfo(file, line, msg);
     Logger::getInstance()->warn(domain, msg);
 }
 
 void errorPrint(const String &domain, const String &file, int line, const String &message) {
     String msg;
     msg += message;
-    msg += " (";
-    msg += stripFilename(file);
-    msg += ", ";
-    std::stringstream ss;
-    ss << line;
-    msg += ss.str();
-    msg += ")";
+    addTraceInfo(file, line, msg);
     Logger::getInstance()->error(domain, msg);
 }
 
 void fatalPrint(const String &domain, const String &file, int line, const String &message) {
     String msg;
     msg += message;
-    msg += " (";
-    msg += stripFilename(file);
-    msg += ", ";
-    std::stringstream ss;
-    ss << line;
-    msg += ss.str();
-    msg += ")";
+    addTraceInfo(file, line, msg);
     Logger::getInstance()->fatal(domain, msg);
 }
 
