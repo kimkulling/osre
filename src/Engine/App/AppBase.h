@@ -31,9 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/ArgumentParser.h"
 #include "Platform/KeyTypes.h"
 #include "Animation/AnimatorBase.h"
-#include "Common/glm_common.h"
-
-#include <cppcore/Container/TQueue.h>
 
 namespace OSRE {
 

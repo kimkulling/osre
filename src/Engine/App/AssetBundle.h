@@ -71,7 +71,6 @@ public:
 private:
     bool isSupported(const String &file) const;
 
-private:
     String mName;
     using AssetArray = cppcore::TArray<String>;
     AssetArray mAssetArray;

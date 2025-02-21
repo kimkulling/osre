@@ -20,47 +20,57 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "Actions/ExportAction.h"
+#include "Common/osre_common.h"
+#include "App/AssimpWrapper.h"
+#include "IO/Uri.h"
+#include "Common/Ids.h"
 
-#include "SceneData.h"
-#include "App/AppBase.h"
-#include "App/Project.h"
-#include "App/CameraComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "RenderBackend/TransformMatrixBlock.h"
+
+#include <assimp/Exporter.hpp>
 
 namespace OSRE {
 namespace Editor {
 
-class PythonInterface;
+using namespace ::OSRE::Common;
+using namespace cppcore;
 
-class OsreEdApp final : public App::AppBase {
-public:
-    OsreEdApp(int argc, char *argv[]);
-    ~OsreEdApp() override = default;
-    App::CameraComponent *setupCamera(App::Scene *world);
-    bool onCreate() override;
-    bool onDestroy() override;
-    void onUpdate() override;
-    void newProjectCmd(ui32, void *data);
-    void loadAsset(const IO::Uri &modelLoc);
+ExportAction::ExportAction(Ids *ids, const aiScene *activeScene) : mIds(ids), mActiveScene(activeScene) {
+    // empty
+}
 
-private:
-    struct Config {
-        f32 mFov = 60.f;
-        f32 mNear = 0.01f;
-        f32 mFar = 10000.0f;
-    } mConfig;
+bool ExportAction::onRun(const ArgumentList &args) {
+    if (args.isEmpty() || args.size() < 2) {
+        return false;
+    }
 
-    App::Project *mProject;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    App::Entity *mEntity;
-    App::Entity *mGuiEntity;
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    SceneData mSceneData;
-    PythonInterface *mPythonInterface;
-};
+    if (mActiveScene == nullptr) {
+        return true;
+    }
 
-} // namespace Editor
-} // namespace OSRE
+    const Variant *format = args[0];
+    if (format == nullptr) {
+        return false;
+    }
+    const String strFormat = format->getString();
+    if (strFormat.empty()) {
+        return false;
+    }
+
+    const Variant *modelPath = args[1];
+    if (modelPath == nullptr) {
+        return false;
+    }
+
+    const String path = modelPath->getString();
+    if (path.empty()) {
+        return false;
+    }
+
+    Assimp::Exporter exporter;
+    const aiReturn ret = exporter.Export(mActiveScene, strFormat, path);
+    return ret == aiReturn_SUCCESS;
+}
+
+}
+}

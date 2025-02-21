@@ -75,6 +75,15 @@ TEST_F(ArgumentParserTest, getArgTest) {
     EXPECT_TRUE(value.empty());
 }
 
+TEST_F(ArgumentParserTest, descMissingTest) {
+    static const String SupportedArgs = "help:api:gen_project:asset_path";
+    static const String Descs = "Shows the help:The render API:Generates a template project";
+    i32 argc = 3;
+    const c8 *ppArgv[] = { "testApp", "--api", "opengl" };
+    ArgumentParser testParser(argc, ppArgv, SupportedArgs, Descs);
+    EXPECT_FALSE(testParser.hasValidArgs());
+}
+
 TEST_F(ArgumentParserTest, getLastErrorsTest) {
     static const String SupportedArgs = "help:api:gen_project:asset_path";
     static const String Descs = "Shows the help:The render API:Generates a template project:Path to media";

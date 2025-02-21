@@ -23,19 +23,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "App/AppBase.h"
-#include "Common/TObjPtr.h"
 #include "Common/osre_common.h"
 #include "Platform/PlatformInterface.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
 /// @brief This class implements an event listener for mouse events.
 //-------------------------------------------------------------------------------------------------
-class MouseEventListener : public Platform::OSEventListener {
+class MouseEventListener final : public Platform::OSEventListener {
 public:
     static constexpr ui32 LeftButton = 1;
     static constexpr ui32 MiddleButton = 2;
@@ -54,15 +52,15 @@ public:
 
     ///	@brief  Will return true, if the left mouse-button was pressed,
     /// @return true if the left mouse button was pressed.
-    bool leftButttonPressed() const;
+    bool leftButtonPressed() const;
 
     ///	@brief  Will return true, if the middle mouse-button was pressed,
     /// @return true if the middle mouse button was pressed.
-    bool middleButttonPressed() const;
+    bool middleButtonPressed() const;
 
     ///	@brief  Will return true, if the right mouse-button was pressed,
     /// @return true if the right mouse button was pressed.
-    bool rightButttonPressed() const;
+    bool rightButtonPressed() const;
 
     /// @brief Will return the relative X-movement.
     /// @return The relative X-movement.
@@ -90,15 +88,15 @@ private:
     MouseInputState mMouseInputState;
 };
 
-inline bool MouseEventListener::leftButttonPressed() const {
+inline bool MouseEventListener::leftButtonPressed() const {
     return mMouseInputState.MouseButtonState.getBit(LeftButton);
 }
 
-inline bool MouseEventListener::middleButttonPressed() const {
+inline bool MouseEventListener::middleButtonPressed() const {
     return mMouseInputState.MouseButtonState.getBit(MiddleButton);
 }
 
-inline bool MouseEventListener::rightButttonPressed() const {
+inline bool MouseEventListener::rightButtonPressed() const {
     return mMouseInputState.MouseButtonState.getBit(RightButton);
 }
 
@@ -126,5 +124,4 @@ inline void MouseEventListener::clearButtons() {
     mMouseInputState.MouseButtonState.clear();
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App
