@@ -368,7 +368,6 @@ Texture *TextureLoader::getDefaultTexture() {
     }
 
     constexpr ui32 Size = 256u;
-    constexpr ui32 FullColorChannel = 255u;
     auto *texture = new Texture("default");
     texture->TargetType = TextureTargetType::Texture2D;
     texture->Width = Size;
@@ -376,8 +375,6 @@ Texture *TextureLoader::getDefaultTexture() {
     texture->Channels = 4;
     const size_t data_size = Size * Size;
     texture->Data = new unsigned char[data_size * texture->Channels];
-    unsigned char rgba_fg[4] = { FullColorChannel, FullColorChannel, 0, FullColorChannel }; // yellow
-    unsigned char rgba_bg[4] = { FullColorChannel, 0, 0, FullColorChannel }; // red
     for (auto it = texture->Data; it < texture->Data + data_size; it += 20) {
         memset(it, 0, 20);
         if (((it - texture->Data) + 40) % (20 * 400) == 0) {
@@ -389,6 +386,12 @@ Texture *TextureLoader::getDefaultTexture() {
 
     return DefaultTexture;
 }
+
+void TextureLoader::releaseDefaultTexture() {
+    delete DefaultTexture;
+    DefaultTexture = nullptr;
+}   
+
 
 bool TextureLoader::unload(Texture *tex) {
     if (nullptr == tex) {

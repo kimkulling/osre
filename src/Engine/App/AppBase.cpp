@@ -345,6 +345,8 @@ bool AppBase::onDestroy() {
         mPlatformInterface = nullptr;
     }
 
+    TextureLoader::releaseDefaultTexture();
+
     MaterialBuilder::destroy();
 
     delete mIds;
