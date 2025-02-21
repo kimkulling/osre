@@ -362,13 +362,14 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
 
 static Texture *DefaultTexture = nullptr;
 
-RenderBackend::Texture *TextureLoader::getDefaultTexture() {
+Texture *TextureLoader::getDefaultTexture() {
     if (DefaultTexture != nullptr) {
         return DefaultTexture;
     }
-    const ui32 Size = 256u;
-    const ui32 FullColorChannel = 255u;
-    Texture *texture = new Texture("default");
+
+    constexpr ui32 Size = 256u;
+    constexpr ui32 FullColorChannel = 255u;
+    auto *texture = new Texture("default");
     texture->TargetType = TextureTargetType::Texture2D;
     texture->Width = Size;
     texture->Height = Size;
