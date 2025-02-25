@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -172,9 +172,9 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     vertices[7].position.y = y1;
     vertices[7].position.z = z1;
 
-    const size_t vertexSize(sizeof(ColorVert) * NumVertices);
+    constexpr size_t vertexSize = sizeof(ColorVert) * NumVertices;
     mesh->createVertexBuffer(&vertices[0], vertexSize, BufferAccessType::ReadOnly);
-    const size_t indexSize(sizeof(ui16) * NumIndices);
+    constexpr size_t indexSize = sizeof(ui16) * NumIndices;
     mesh->createIndexBuffer(&indices[0], indexSize, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
@@ -186,7 +186,7 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
+    mRbSrv->beginRenderBatch(getDebugRenderBatchName());
 
     mRbSrv->setMatrix(MatrixType::Model, transform);
     mRbSrv->addMesh(mesh, 0);

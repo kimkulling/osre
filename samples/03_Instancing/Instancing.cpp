@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -65,22 +65,23 @@ protected:
         if (nullptr == rootWindow) {
             return false;
         }
-        Scene *world = AppBase::getActiveScene();
-        mEntity = new App::Entity("instance", world->getIds(), world);
-        Entity *camEntity = new App::Entity("camera", world->getIds(), world);
+
+        Scene *scene = AppBase::getActiveScene();
+        mEntity = new App::Entity("instance", scene->getIds(), scene);
+        Entity *camEntity = new Entity("camera", scene->getIds(), scene);
         App::CameraComponent *camera = (App::CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
-        world->setActiveCamera(camera);
+        scene->setActiveCamera(camera);
 
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
         camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         MeshBuilder meshBuilder;
-        world->addEntity(mEntity);
-        RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
+        scene->addEntity(mEntity);
+        Mesh *mesh = meshBuilder.createCube(VertexType::RenderVertex, 2,2,2, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            world->init();
+            scene->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
 

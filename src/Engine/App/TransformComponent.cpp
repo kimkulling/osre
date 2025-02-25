@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -216,7 +216,7 @@ bool TransformComponent::onRender(RenderBackendService *) {
 }
 
 void TransformComponent::addMeshReference(size_t entityMeshIdx) {
-    MeshReferenceArray::Iterator it = mMeshRefererenceArray.find(entityMeshIdx);
+    MeshReferenceArray::Iterator it = mMeshRefererenceArray.linearSearch(entityMeshIdx);
     if (mMeshRefererenceArray.end() == it) {
         mMeshRefererenceArray.add(entityMeshIdx);
     }

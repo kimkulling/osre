@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -84,7 +84,7 @@ protected:
     virtual bool onStateLeave(T oldState);
 
 private:
-    typedef typename cppcore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ListenerIt;
+    using ListenerIt = typename cppcore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ;
     cppcore::TArray<TAbstractCtrlStateListener<T> *> mListener;
     T mState;
 };
@@ -112,7 +112,7 @@ inline bool TAbstractCtrlBase<T>::unregisterListener(TAbstractCtrlStateListener<
         return false;
     }
 
-    ListenerIt it = mListener.find(listener);
+    ListenerIt it = mListener.linearSearch(listener);
     if (it == mListener.end()) {
         return false;
     }

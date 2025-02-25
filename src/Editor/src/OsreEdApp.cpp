@@ -36,8 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderView/MainRenderView.h"
 
-namespace OSRE {
-namespace Editor {
+namespace OSRE::Editor {
 
 static constexpr char Tag[] = "OsreEdApp";
 
@@ -53,7 +52,7 @@ static void createTitleString(const String &projectName, String &titleString) {
 }
 
 static Project *createProject(const String &name) {
-    auto *project = new App::Project();
+    auto *project = new Project();
     project->setProjectName(name);
 
     return project;
@@ -78,7 +77,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
     auto *camera = static_cast<CameraComponent *>(camEntity->createComponent(ComponentType::CameraComponentType));
     scene->addEntity(camEntity);
     scene->setActiveCamera(camera);
-    ui32 w{0u}, h{0u};
+    ui32 w{ 0u }, h{ 0u };
     AppBase::getResolution(w, h);
     camera->setProjectionParameters(mConfig.mFov, (f32)w, (f32)h, mConfig.mNear, mConfig.mFar);
 
@@ -106,7 +105,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     ProgressReporter reporter(rootWindow);
     reporter.start();
     reporter.update(10);
-    
+
     Scene *scene = getActiveScene();
     if (scene == nullptr) {
         scene = new Scene(modelLoc.getResource());
@@ -245,5 +244,4 @@ void OsreEdApp::onUpdate() {
     AppBase::onUpdate();
 }
 
-} // namespace Editor
-} // namespace OSRE
+} // namespace OSRE::Editor
