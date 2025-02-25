@@ -63,7 +63,7 @@ Material *MaterialBuilder::create2DMaterial() {
     mat = materialCache->create(Render2DMat);
     const String shaderName = "2d.sh";
     const String vertex_2d =
-            getGLSLVersionString_400() +
+            getDefaultGLSLVersion() +
             getGLSLRenderVertexLayout() +
             "out vec3 v_color0;\n"
             "out vec2 v_texindex;\n"
@@ -78,7 +78,7 @@ Material *MaterialBuilder::create2DMaterial() {
             "}\n";
 
     const String fragment_2d = 
-            "#version 330 core\n"
+            getDefaultGLSLVersion() +
             "in vec2 v_texindex;\n"
             "in vec3 v_color0;\n"
             "out vec4 f_color;\n"
@@ -128,7 +128,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
     mat->mTextures[0] = texRes->getRes();
 
     const String vertex_2d =
-            getGLSLVersionString_400() +
+            getDefaultGLSLVersion() +
             getGLSLRenderVertexLayout() +
             "out vec3 v_color0;\n"
             "out vec2 v_texindex;\n"
@@ -143,7 +143,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
             "}\n";
     
     const String fragment_2d = 
-        "#version 330 core\n"
+        getDefaultGLSLVersion() +
         "in vec2 v_texindex;\n"
         "in vec3 v_color0;\n"
         "out vec4 f_color;\n"
@@ -158,7 +158,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
 }
 
 static const String GLSLVsSrc =
-        getGLSLVersionString_400() +
+        getDefaultGLSLVersion() +
         getNewLine() +
         getGLSLColorVertexLayout() +
         getNewLine() +
@@ -178,7 +178,7 @@ static const String GLSLVsSrc =
         "}\n";
 
 const String GLSLFsSrc =
-        getGLSLVersionString_400() +
+        getDefaultGLSLVersion() +
         getNewLine() +
         "layout(location=0) out vec4 vFragColor; //fragment shader output\n" +
         getNewLine() +
@@ -191,7 +191,7 @@ const String GLSLFsSrc =
         "}\n";
 
 const String GLSLVertexShaderSrcRV =
-        getGLSLVersionString_400() +
+        getDefaultGLSLVersion() +
         "\n" + getGLSLRenderVertexLayout() +
         getNewLine() +
         "out vec3 position_eye, normal_eye;\n"
@@ -242,7 +242,7 @@ const String GLSLVertexShaderSrcRV =
         "}\n";
 
 const String GLSLFragmentShaderSrcRV =
-        getGLSLVersionString_400() +
+        getDefaultGLSLVersion() +
         getNewLine() +
         "in vec3 position_eye, normal_eye;\n"
         "layout(location=0) out vec4 frag_color; //fragment shader output\n" +

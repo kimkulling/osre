@@ -25,6 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+String getDefaultGLSLVersion() {
+    return getGLSLVersionString_330();
+}
+
 String getGLSLVersionString_330()  {
     static const String GLSLVersionString_330 =
             "#version 330 core\n";

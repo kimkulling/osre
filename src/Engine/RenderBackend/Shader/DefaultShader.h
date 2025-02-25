@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+String getDefaultGLSLVersion();
 String getGLSLVersionString_330();
 String getGLSLVersionString_400();
 String getNewLine();
