@@ -62,6 +62,15 @@ public:
     /// @param entity   The entity to remove.
     bool removeEntity(Entity *entity);
 
+    /// @brief Will return the number of entities in the scene.
+    /// @return Number of entities.
+    size_t getNumEntities() const;
+
+    /// @brief Will return the entity instance at the given index.
+    /// @param index    The requested index.
+    /// @return The entity instance or nullptr for invalid indices.
+    Entity *getEntityAt(size_t index) const;
+
     /// @brief Will search, if the entity is already part of the world instance.
     /// @param[in] name  The entity name to look for.
     /// @return A pointer showing ot the entity or nullptr, if nothing was found.

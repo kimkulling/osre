@@ -23,13 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "MouseEventListener.h"
 #include "Platform/PlatformInterface.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-MouseEventListener::MouseEventListener() : OSEventListener("App/MouseEventListener") {
+MouseEventListener::MouseEventListener() :
+        OSEventListener("App/MouseEventListener") {
     // empty
 }
 
@@ -72,5 +72,4 @@ void MouseEventListener::onOSEvent(const Event &ev, const EventData *data) {
     mMouseInputState.RelY = mMouseInputState.LastY - mMouseInputState.AbsY;
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App

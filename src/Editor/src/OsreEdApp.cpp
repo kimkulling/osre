@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "OSREEdApp.h"
+#include "Scripting/PythonInterface.h"
 #include "Actions/ImportAction.h"
 #include "App/ServiceProvider.h"
 #include "App/TransformController.h"
@@ -58,11 +59,12 @@ static Project *createProject(const String &name) {
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
-        AppBase(argc, const_cast<const char **>(argv), "api", "The render API"),
+        AppBase(argc, const_cast<const char **>(argv), "api:script", "The render API:Python startup script"),
         mProject(nullptr),
         mEntity(nullptr),
         mGuiEntity(nullptr),
-        mKeyboardTransCtrl(nullptr) {
+        mKeyboardTransCtrl(nullptr),
+        mPythonInterface(nullptr) {
     // empty
 }
 
@@ -85,7 +87,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
 void OsreEdApp::newProjectCmd(ui32, void *data) {
     String name = "New project";
     if (data != nullptr) {
-        cppcore::Variant *v = (cppcore::Variant *)data;
+        cppcore::Variant *v = static_cast<cppcore::Variant *>(data);
         name = v->getString();
     }
     mProject = createProject(name);
@@ -153,7 +155,8 @@ bool setupEditorGimmics(Entity *guiEntity) {
     if (guiEntity == nullptr) {
         return false;
     }
-    RenderComponent *rc = (RenderComponent *)guiEntity->getComponent(ComponentType::RenderComponentType);
+
+    RenderComponent *rc = (RenderComponent*) guiEntity->getComponent(ComponentType::RenderComponentType);
     if (rc == nullptr) {
         return false;
     }
@@ -188,7 +191,27 @@ bool OsreEdApp::onCreate() {
     mSceneData.mCamera = setupCamera(scene);
     mSceneData.mCamera->observeBoundingBox(mGuiEntity->getAABB());
 
+    mPythonInterface = new PythonInterface();
+    if (!mPythonInterface->create(this)) {
+        osre_error(Tag, "Could not create python interface.");
+        delete mPythonInterface;
+        return false;
+    }
+
     osre_info(Tag, "Creation finished.");
+
+    if (getArgumentParser().hasArgument("script")) {
+        String scriptPath = getArgumentParser().getArgument("script");
+        mPythonInterface->runScript(scriptPath);
+    }
+
+    return true;
+}
+
+bool OsreEdApp::onDestroy() {
+    mPythonInterface->destroy();
+    delete mPythonInterface;
+    mPythonInterface = nullptr;
 
     return true;
 }

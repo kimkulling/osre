@@ -41,6 +41,10 @@ using namespace ::OSRE::App;
 // To identify local log entries
 static constexpr c8 Tag[] = "ModelLoadingApp";
 
+struct Entity2D {
+
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///

@@ -442,6 +442,7 @@ public:
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
     static Texture *getDefaultTexture();
+    static void releaseDefaultTexture();
 };
 
 ///	@brief  This class is used to represent a texture resource.

@@ -29,7 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Scene.h"
 #include "App/TransformController.h"
 #include "Common/Environment.h"
-#include "Common/TObjPtr.h"
 #include "Debugging/osre_debugging.h"
 #include "IO/IOService.h"
 #include "Platform/AbstractPlatformEventQueue.h"
@@ -39,7 +38,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Properties/Settings.h"
 #include "RenderBackend/Pipeline.h"
 #include "RenderBackend/RenderBackendService.h"
-#include "RenderBackend/TransformMatrixBlock.h"
 #include "RenderBackend/2D/CanvasRenderer.h"
 #include "App/CameraComponent.h"
 #include "RenderBackend/MaterialBuilder.h"
@@ -47,8 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/MouseEventListener.h"
 #include "Platform/PlatformPluginFactory.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
@@ -75,17 +72,16 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mLastTime(0l),
         mArgParser(argc, argv, supportedArgs, desc),
         mEnvironment(nullptr),
-        mSettings(new Properties::Settings),
+        mSettings(new Settings),
         mPlatformInterface(nullptr),
         mTimer(nullptr),
         mRbService(nullptr),
-        mScenes(),
         mActiveScene(nullptr),
         mMouseEvListener(nullptr),
         mKeyboardEvListener(nullptr),
         mIds(nullptr) {
-    mSettings->setString(Properties::Settings::RenderAPI, "opengl");
-    mSettings->setBool(Properties::Settings::PollingMode, true);
+    mSettings->setString(Settings::RenderAPI, "opengl");
+    mSettings->setBool(Settings::PollingMode, true);
 }
 
 AppBase::~AppBase() {
@@ -109,7 +105,7 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
         mSettings->setString(Settings::RenderAPI, "vulkan");
     }
 
-    return onCreate(); 
+    return onCreate();
 }
 
 bool AppBase::create(Settings *config) {
@@ -287,7 +283,7 @@ bool AppBase::onCreate() {
     MaterialBuilder::create(GLSLVersion::GLSL_400);
     ResourceCacheService *rcSrv = new ResourceCacheService;
     ServiceProvider::setService(ServiceType::ResourceService, rcSrv);
-    
+
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
@@ -348,6 +344,8 @@ bool AppBase::onDestroy() {
         mPlatformInterface = nullptr;
     }
 
+    TextureLoader::releaseDefaultTexture();
+
     MaterialBuilder::destroy();
 
     delete mIds;
@@ -405,5 +403,4 @@ void AppBase::getResolution(ui32 &width, ui32 &height) {
     height = windowsRect.getHeight();
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App
