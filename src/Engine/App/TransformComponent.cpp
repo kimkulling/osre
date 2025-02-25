@@ -216,7 +216,7 @@ bool TransformComponent::onRender(RenderBackendService *) {
 }
 
 void TransformComponent::addMeshReference(size_t entityMeshIdx) {
-    MeshReferenceArray::Iterator it = mMeshRefererenceArray.find(entityMeshIdx);
+    MeshReferenceArray::Iterator it = mMeshRefererenceArray.linearSearch(entityMeshIdx);
     if (mMeshRefererenceArray.end() == it) {
         mMeshRefererenceArray.add(entityMeshIdx);
     }

@@ -80,7 +80,7 @@ bool ModuleRegistry::unregisterModule(ModuleBase *mod) {
         return false;
     }
 
-    const ModuleArray::Iterator it = mModules.find(mod);
+    const ModuleArray::Iterator it = mModules.linearSearch(mod);
     if (it == mModules.end()) {
         return false;
     }

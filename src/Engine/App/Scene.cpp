@@ -79,7 +79,7 @@ bool Scene::removeEntity(Entity *entity) {
     }
     
     bool found = false;
-    TArray<Entity*>::Iterator it = mEntities.find(entity);
+    TArray<Entity*>::Iterator it = mEntities.linearSearch(entity);
     if (mEntities.end() != it) {
         mEntities.remove(it);
         found = true;

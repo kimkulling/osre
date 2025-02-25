@@ -84,7 +84,7 @@ protected:
     virtual bool onStateLeave(T oldState);
 
 private:
-    typedef typename cppcore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ListenerIt;
+    using ListenerIt = typename cppcore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ;
     cppcore::TArray<TAbstractCtrlStateListener<T> *> mListener;
     T mState;
 };
@@ -112,7 +112,7 @@ inline bool TAbstractCtrlBase<T>::unregisterListener(TAbstractCtrlStateListener<
         return false;
     }
 
-    ListenerIt it = mListener.find(listener);
+    ListenerIt it = mListener.linearSearch(listener);
     if (it == mListener.end()) {
         return false;
     }

@@ -93,7 +93,7 @@ inline void AssetBundle::add(const String &file) {
 }
 
 inline void AssetBundle::remove(const String &file) {
-    AssetArray::Iterator i = mAssetArray.find(file);
+    AssetArray::Iterator i = mAssetArray.linearSearch(file);
     if (i !=mAssetArray.end()) {
         mAssetArray.remove(i);
     }
