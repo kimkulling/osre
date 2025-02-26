@@ -75,7 +75,6 @@ bool OGLShader::loadFromSource(ShaderType type, const String &src) {
 
     GLuint shader = glCreateShader(OGLEnum::getOGLShaderType(type));
     mShaders[static_cast<int>(type)] = shader;
-
     const char *tmp = src.c_str();
     glShaderSource(shader, 1, &tmp, nullptr);
     glCompileShader(shader);

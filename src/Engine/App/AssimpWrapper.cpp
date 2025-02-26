@@ -481,36 +481,40 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     }
 
     mAssetContext.mMatArray.add(osreMat);
-
+    Color4 color;
     const aiColor4D defaultColor(1, 1, 1, 1);
     aiColor4D diffuse = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
-        setColor4(diffuse, osreMat->m_color[(ui32)MaterialColorType::Mat_Diffuse]);
+        setColor4(diffuse, color);
+        osreMat->setColor(MaterialColorType::Mat_Diffuse, color);
     }
 
     aiColor4D specular = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) {
-        setColor4(specular, osreMat->m_color[(ui32)MaterialColorType::Mat_Specular]);
+        setColor4(diffuse, color);
+        osreMat->setColor(MaterialColorType::Mat_Specular, color);
     }
 
     aiColor4D ambient = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
-        setColor4(ambient, osreMat->m_color[(ui32)MaterialColorType::Mat_Ambient]);
+        setColor4(diffuse, color);
+        osreMat->setColor(MaterialColorType::Mat_Ambient, color);
     }
 
     aiColor4D emission = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission)) {
-        setColor4(emission, osreMat->m_color[(ui32)MaterialColorType::Mat_Emission]);
+        setColor4(diffuse, color);
+        osreMat->setColor(MaterialColorType::Mat_Emission, color);
     }
 
-    ai_real shininess = 1.0, strength=1.0;
+    ai_real shininess = 1.0, strength = 1.0;
     unsigned int max; // changed: to unsigned
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS, &shininess, &max)) {
-        osreMat->mShineness = shininess;
+        osreMat->setFloatParameter(MaterialParameterType::Shineness, shininess);
     }
 
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max)) {
-        osreMat->mShinenessStrength = strength;
+        osreMat->setFloatParameter(MaterialParameterType::ShinenessStrength, strength);
     }
 }
 
