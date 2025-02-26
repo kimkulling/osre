@@ -32,7 +32,7 @@ enum class MaterialColorType : i32 {
     Count               ///< Number of enums.
 };
 
-using TextureResourceArray = cppcore::TArray<RenderBackend::TextureResource *>;
+using TextureResourceArray = cppcore::TArray<RenderBackend::TextureResource*>;
 
 static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::Count);
 
@@ -43,7 +43,6 @@ static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::Cou
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Material {
 public:
-    //String mName;
     FastString mName;
     MaterialType mType;
     size_t mNumTextures;

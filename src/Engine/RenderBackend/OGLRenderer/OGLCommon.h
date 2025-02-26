@@ -249,6 +249,7 @@ struct OGLCapabilities {
     i32 mMaxTextureUnits;       ///< The maximal number of texture units.
     i32 mMaxTextureImageUnits;  ///< The maximal number of texture image units.
     i32 mMaxTextureCoords;      ///< The maximal number of texture coordinates.
+    i32 mMaxVertexAttributes;   ///< The maximum number of vertex attributes.
     bool mInstancing;           ///< Instancing is supported.
     const c8 *mGLSLVersionAsStr;      ///< The GLSL version as a string
     GLSLVersion mGLSLVersion;   ///< The GLSL version as an enum
@@ -261,6 +262,7 @@ struct OGLCapabilities {
             mMaxTextureUnits(-1),
             mMaxTextureImageUnits(-1),
             mMaxTextureCoords(-1),
+            mMaxVertexAttributes(-1),
             mInstancing(true),
             mGLSLVersionAsStr(nullptr),
             mGLSLVersion(GLSLVersion::Invalid) {

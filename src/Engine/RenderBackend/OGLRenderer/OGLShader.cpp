@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/osre_debugging.h"
 #include "IO/Stream.h"
 
+#include <iostream>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -56,13 +58,11 @@ OGLShader::~OGLShader() {
     for (ui32 i = 0; i < static_cast<ui32>(ShaderType::Count); ++i) {
         if (0 != mShaders[i]) {
             glDeleteShader(mShaders[i]);
-            mShaders[i] = 0;
         }
     }
 
     if (0 != mShaderprog) {
         glDeleteProgram(mShaderprog);
-        mShaderprog = 0;
     }
 }
 
@@ -75,7 +75,15 @@ bool OGLShader::loadFromSource(ShaderType type, const String &src) {
 
     const char *tmp = src.c_str();
     glShaderSource(shader, 1, &tmp, nullptr);
-
+    glCompileShader(shader);
+    int success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        char infoLog[512] = {'\0'};
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    
     return true;
 }
 
@@ -98,7 +106,7 @@ bool OGLShader::loadFromStream(ShaderType type, IO::Stream &stream) {
 
 bool OGLShader::createAndLink() {
     if (isCompiled()) {
-        osre_info(Tag, "Trying to compile shader program, which was compiled before.");
+        osre_warn(Tag, "Trying to compile shader program, which was compiled before.");
         return true;
     }
 

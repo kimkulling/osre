@@ -45,7 +45,6 @@ void Material::setMaterialType(MaterialType matType) {
 }
 
 Material::~Material() {
-    delete mShader;
     delete[] mTextures;
 }
 
