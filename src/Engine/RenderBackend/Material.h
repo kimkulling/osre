@@ -49,7 +49,7 @@ public:
     Texture **mTextures;
     Shader *mShader;
     ui32 mNumParameters;
-    UniformVar *m_parameters;
+    UniformVar *mParameters;
     Color4 m_color[MaxMatColorType];
     f32 mShineness;
     f32 mShinenessStrength;

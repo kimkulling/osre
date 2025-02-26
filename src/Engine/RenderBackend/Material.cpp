@@ -33,7 +33,7 @@ Material::Material(const String &name, const IO::Uri &uri) :
         mTextures(nullptr),
         mShader(nullptr),
         mNumParameters(0),
-        m_parameters(nullptr),
+        mParameters(nullptr),
         mShineness(0.0f),
         mShinenessStrength(0.0f),
         mUri(uri) {

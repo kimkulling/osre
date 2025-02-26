@@ -33,12 +33,10 @@ namespace UnitTest {
 
 using namespace ::OSRE::RenderBackend;
 
-class RenderCommonTest : public ::testing::Test {
-    // empty
-};
+class RenderCommonTest : public ::testing::Test {};
 
 TEST_F( RenderCommonTest, createVertComponentTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
         VertComponent comp1;
         VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
@@ -127,7 +125,7 @@ TEST_F(RenderCommonTest, viewportTest) {
 }
 
 TEST_F( RenderCommonTest, allocBufferDataTest ) {
-    BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
+    BufferData *data = BufferData::alloc(BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite);
     EXPECT_NE(data, nullptr);
     EXPECT_EQ(data->m_access, BufferAccessType::ReadWrite);
     EXPECT_EQ(data->getSize(), 100u);
@@ -173,7 +171,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
     try {
         Material *mat( new Material( "test", IO::Uri() ) );
         EXPECT_EQ( MaterialType::ShaderMaterial, mat->mType );
-        EXPECT_EQ( mat->m_parameters, nullptr );
+        EXPECT_EQ( mat->mParameters, nullptr );
         EXPECT_EQ( mat->mNumParameters, 0u );
     } catch ( ... ) {
         ok = false;
