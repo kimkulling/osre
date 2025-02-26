@@ -491,19 +491,19 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
 
     aiColor4D specular = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) {
-        setColor4(diffuse, color);
+        setColor4(specular, color);
         osreMat->setColor(MaterialColorType::Mat_Specular, color);
     }
 
     aiColor4D ambient = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
-        setColor4(diffuse, color);
+        setColor4(ambient, color);
         osreMat->setColor(MaterialColorType::Mat_Ambient, color);
     }
 
     aiColor4D emission = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission)) {
-        setColor4(diffuse, color);
+        setColor4(emission, color);
         osreMat->setColor(MaterialColorType::Mat_Emission, color);
     }
 
