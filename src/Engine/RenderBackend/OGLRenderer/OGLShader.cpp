@@ -51,6 +51,7 @@ OGLShader::OGLShader(const String &name) :
 OGLShader::~OGLShader() {
     if (mIsInUse) {
         osre_warn(Tag, "Destroying shader which is still in use.");
+        mIsInUse = false;
     }
 
     ContainerClear(mAttribParams);
@@ -68,8 +69,10 @@ OGLShader::~OGLShader() {
 
 bool OGLShader::loadFromSource(ShaderType type, const String &src) {
     if (src.empty()) {
+        osre_error(Tag, "Compilation failed: Shader source is empty.");
         return false;
     }
+
     GLuint shader = glCreateShader(OGLEnum::getOGLShaderType(type));
     mShaders[static_cast<int>(type)] = shader;
 
@@ -81,7 +84,8 @@ bool OGLShader::loadFromSource(ShaderType type, const String &src) {
     if (!success) {
         char infoLog[512] = {'\0'};
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        osre_error(Tag, "Compilation failed: " + String(infoLog));
+        return false;
     }
     
     return true;

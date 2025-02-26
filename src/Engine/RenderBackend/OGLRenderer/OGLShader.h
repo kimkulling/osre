@@ -68,8 +68,8 @@ public:
     using ParameterArray = ::cppcore::TArray<ActiveParameter *>;
 
     /// @brief  The class constructor.
-    /// @param  name    [in] The name for the shader.
-    OGLShader( const String &name );
+    /// @param[in] name     The name for the shader.
+    explicit OGLShader( const String &name );
 
     /// @brief  The class destructor.
     ~OGLShader() override;
