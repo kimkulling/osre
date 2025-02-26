@@ -135,9 +135,10 @@ inline void Material::setFloatParameter(MaterialParameterType type, f32 value) {
 
 inline f32 Material::getFloatParameter(MaterialParameterType type) const {
     switch (type) {
+        case MaterialParameterType::Shineness:
+            return mShineness;
         case MaterialParameterType::ShinenessStrength:
             return mShinenessStrength;
-            break;
         case MaterialParameterType::Invalid:
         case MaterialParameterType::Count:
         default:
