@@ -75,7 +75,7 @@ void OGLRenderBackend::enumerateGPUCaps() {
     glGetIntegerv(GL_MAX_TEXTURE_UNITS, &mOglCapabilities.mMaxTextureUnits);
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
     glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
-
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &mOglCapabilities.mMaxVertexAttributes);
     mOglCapabilities.mGLSLVersionAsStr = (const c8*) (glGetString(GL_SHADING_LANGUAGE_VERSION));
     mOglCapabilities.mGLSLVersion = getGlslVersionFromeString(mOglCapabilities.mGLSLVersionAsStr);
 }

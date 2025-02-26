@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/osre_debugging.h"
 #include "IO/Stream.h"
 
+#include <iostream>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -49,6 +51,7 @@ OGLShader::OGLShader(const String &name) :
 OGLShader::~OGLShader() {
     if (mIsInUse) {
         osre_warn(Tag, "Destroying shader which is still in use.");
+        mIsInUse = false;
     }
 
     ContainerClear(mAttribParams);
@@ -56,26 +59,34 @@ OGLShader::~OGLShader() {
     for (ui32 i = 0; i < static_cast<ui32>(ShaderType::Count); ++i) {
         if (0 != mShaders[i]) {
             glDeleteShader(mShaders[i]);
-            mShaders[i] = 0;
         }
     }
 
     if (0 != mShaderprog) {
         glDeleteProgram(mShaderprog);
-        mShaderprog = 0;
     }
 }
 
 bool OGLShader::loadFromSource(ShaderType type, const String &src) {
     if (src.empty()) {
+        osre_error(Tag, "Compilation failed: Shader source is empty.");
         return false;
     }
+
     GLuint shader = glCreateShader(OGLEnum::getOGLShaderType(type));
     mShaders[static_cast<int>(type)] = shader;
-
     const char *tmp = src.c_str();
     glShaderSource(shader, 1, &tmp, nullptr);
-
+    glCompileShader(shader);
+    int success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        char infoLog[512] = {'\0'};
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        osre_error(Tag, "Compilation failed: " + String(infoLog));
+        return false;
+    }
+    
     return true;
 }
 
@@ -98,7 +109,7 @@ bool OGLShader::loadFromStream(ShaderType type, IO::Stream &stream) {
 
 bool OGLShader::createAndLink() {
     if (isCompiled()) {
-        osre_info(Tag, "Trying to compile shader program, which was compiled before.");
+        osre_warn(Tag, "Trying to compile shader program, which was compiled before.");
         return true;
     }
 

@@ -40,7 +40,7 @@ static void addMaterialParameter(Material *mat) {
         return;
     }
 
-    Shader *shader = mat->mShader;
+    Shader *shader = mat->getShader();
     if (shader == nullptr) {
         osre_assert(false);
         return;
@@ -96,8 +96,9 @@ Material *MaterialBuilder::create2DMaterial() {
     mat->createShader(shaderName, shArray);
 
     // Setup shader attributes and variables
-    if (nullptr != mat->mShader) {
-        mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+    if (mat->hasShader()) {
+        Shader *shader = mat->getShader();
+        shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         addMaterialParameter(mat);
     }
 
@@ -387,11 +388,12 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
     }
 
     // Setup shader attributes and variables
-    if (nullptr != mat->mShader) {
+    if (mat->hasShader()) {
+        Shader *shader = mat->getShader();
         if (type == VertexType::ColorVertex) {
-            mat->mShader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+            shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+            shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
