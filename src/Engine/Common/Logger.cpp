@@ -62,11 +62,6 @@ static String stripFilename(const String &filename) {
     return strippedName;
 }
 
-AbstractLogStream::AbstractLogStream() :
-        mIsActive(true) {
-    // empty
-}
-
 void AbstractLogStream::activate() {
     mIsActive = true;
 }

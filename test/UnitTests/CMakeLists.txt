@@ -27,13 +27,14 @@ SET ( unittest_common_src
     src/Common/AbstractProcessTest.cpp
     src/Common/ArgumentParserTest.cpp
     src/Common/AbstractServiceTest.cpp
+    src/Common/BaseMathTest.cpp
     src/Common/CommonTest.cpp
     src/Common/ObjectTest.cpp
     src/Common/EventTest.cpp
     src/Common/EventBusTest.cpp
     src/Common/IdsTest.cpp
     src/Common/FrustumTest.cpp
-    src/Common/BaseMathTest.cpp
+    src/Common/LoggerTest.cpp
     src/Common/TRayTest.cpp
 )
 

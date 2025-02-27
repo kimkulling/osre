@@ -63,10 +63,10 @@ public:
 
 protected:
     ///	@brief	The default class constructor.
-    AbstractLogStream();
+    AbstractLogStream() = default;
 
 private:
-    bool mIsActive;
+    bool mIsActive = true;
 };
 
 //-------------------------------------------------------------------------------------------------
