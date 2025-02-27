@@ -62,6 +62,18 @@ static String stripFilename(const String &filename) {
     return strippedName;
 }
 
+static void addTraceInfo(const String &file, int line, String &msg) {
+    if (Logger::getInstance()->getVerboseMode() == Logger::VerboseMode::Trace) {
+        msg += " (";
+        msg += stripFilename(file);
+        msg += ", ";
+        std::stringstream ss;
+        ss << line;
+        msg += ss.str();
+        msg += ")";
+    }
+}
+
 void AbstractLogStream::activate() {
     mIsActive = true;
 }
@@ -270,24 +282,8 @@ String Logger::getDateTime() {
     return stream.str();
 }
 
-Logger::StdLogStream::StdLogStream() {
-    // empty
-}
-
 void Logger::StdLogStream::write(const String &msg) {
     std::cout << msg;
-}
-
-static void addTraceInfo(const String &file, int line, String &msg) {
-    if (Logger::getInstance()->getVerboseMode() == Logger::VerboseMode::Trace) {
-        msg += " (";
-        msg += stripFilename(file);
-        msg += ", ";
-        std::stringstream ss;
-        ss << line;
-        msg += ss.str();
-        msg += ")";
-    }
 }
  
 void tracePrint(const String &domain, const String &file, int line, const String &msg) {

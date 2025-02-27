@@ -204,8 +204,8 @@ bool Project::save(const String &name) {
         return false;
     }
 
-        
-    return true;
+    WorldData wd;
+    return saveScene(nullptr, wd);
 }
 
 } // Namespace App

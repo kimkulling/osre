@@ -28,13 +28,20 @@ namespace OSRE::UnitTest {
 
 using namespace ::OSRE::Common;
 
-class IdsTest : public ::testing::Test {};
+class LoggerTest : public ::testing::Test {};
 
 class TestLogStream : public AbstractLogStream {
 public:
+    String mText;
+
     TestLogStream() = default;
     ~TestLogStream() override = default;
-}
+    
+    void write( const String &message ) override {
+        mText.append(message);
+        mText.append("\n");
+    }
+};
 
 TEST_F(LoggerTest, logStreamTest) {
     TestLogStream logStream;

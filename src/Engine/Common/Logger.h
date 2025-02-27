@@ -45,7 +45,7 @@ public:
 
     ///	@brief	Will write a message into the attached log stream.
     ///	@param	message	The message to log.
-    virtual void write( const String &message ) = 0;
+    virtual void write(const String &message) = 0;
 
     ///	@brief	The stream will be activated.
     virtual void activate();
@@ -171,7 +171,7 @@ private:
     class StdLogStream : public AbstractLogStream {
     public:
         /// @brief  The class constructor.
-        StdLogStream();
+        StdLogStream() = default;
 
         /// @brief  The class destructor.
         ~StdLogStream() override = default;
