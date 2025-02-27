@@ -20,39 +20,34 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "Common/Ids.h"
+#include "osre_testcommon.h"
 
-namespace OSRE {
-namespace Common {
+#include "Common/Logger.h"
 
-Ids::Ids() :
-        m_freeIds(),
-        m_last(0) {
-    // empty
-}
+namespace OSRE::UnitTest {
 
-Ids::Ids(guid startId) :
-        m_freeIds(),
-        m_last(startId) {
-    // empty
-}
+using namespace ::OSRE::Common;
 
-guid Ids::getUniqueId() {
-    if (m_freeIds.isEmpty()) {
-        const guid id = m_last;
-        ++m_last;
-        return id;
+class LoggerTest : public ::testing::Test {};
+
+class TestLogStream : public AbstractLogStream {
+public:
+    String mText;
+
+    TestLogStream() = default;
+    ~TestLogStream() override = default;
+    
+    void write( const String &message ) override {
+        mText.append(message);
+        mText.append("\n");
     }
+};
 
-    const guid id = m_freeIds.back();
-    m_freeIds.removeBack();
-
-    return id;
+TEST_F(LoggerTest, logStreamTest) {
+    TestLogStream logStream;
+    EXPECT_TRUE(logStream.isActive());
+    logStream.desactivate();
+    EXPECT_FALSE(logStream.isActive());
 }
-
-void Ids::releaseId(guid id) {
-    m_freeIds.add(id);
-}
-
-} // Namespace Common
-} // Namespace OSRE
+    
+} // namespace OSRE::UnitTest

@@ -62,21 +62,28 @@ static String stripFilename(const String &filename) {
     return strippedName;
 }
 
-AbstractLogStream::AbstractLogStream() :
-        m_IsActive(true) {
-    // empty
+static void addTraceInfo(const String &file, int line, String &msg) {
+    if (Logger::getInstance()->getVerboseMode() == Logger::VerboseMode::Trace) {
+        msg += " (";
+        msg += stripFilename(file);
+        msg += ", ";
+        std::stringstream ss;
+        ss << line;
+        msg += ss.str();
+        msg += ")";
+    }
 }
 
 void AbstractLogStream::activate() {
-    m_IsActive = true;
+    mIsActive = true;
 }
 
 void AbstractLogStream::desactivate() {
-    m_IsActive = false;
+    mIsActive = false;
 }
 
 bool AbstractLogStream::isActive() const {
-    return m_IsActive;
+    return mIsActive;
 }
 
 Logger *Logger::sLogger = nullptr;
@@ -275,24 +282,8 @@ String Logger::getDateTime() {
     return stream.str();
 }
 
-Logger::StdLogStream::StdLogStream() {
-    // empty
-}
-
 void Logger::StdLogStream::write(const String &msg) {
     std::cout << msg;
-}
-
-static void addTraceInfo(const String &file, int line, String &msg) {
-    if (Logger::getInstance()->getVerboseMode() == Logger::VerboseMode::Trace) {
-        msg += " (";
-        msg += stripFilename(file);
-        msg += ", ";
-        std::stringstream ss;
-        ss << line;
-        msg += ss.str();
-        msg += ")";
-    }
 }
  
 void tracePrint(const String &domain, const String &file, int line, const String &msg) {
@@ -314,13 +305,6 @@ void infoPrint(const String &domain, const String &file, int line, const String 
     message += msg;
     addTraceInfo(file, line, message);
     Logger::getInstance()->info(domain, message);
-}
-
-void logPrint(const String &domain, const String &file, int line, const String &message) {
-    String msg;
-    msg += message;
-    addTraceInfo(file, line, msg);
-    Logger::getInstance()->print(msg);
 }
 
 void warnPrint(const String &domain, const String &file, int line, const String &message) {

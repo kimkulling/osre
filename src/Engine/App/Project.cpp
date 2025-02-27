@@ -65,6 +65,7 @@ const String &Project::getProjectName() const {
 }
 
 void Project::clear() {
+    // todo
 }
 
 bool Project::load(const String &name) {
@@ -128,7 +129,6 @@ static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &in
 }
 
 static void storeMeshes(MeshArray &meshes, MeshData *md) {
-    osre_assert(md != nullptr);
     if (meshes.isEmpty()) {
         return;
     }
@@ -181,6 +181,9 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
 }
 
 static bool saveScene(const Scene *scene, WorldData &wd) {
+    if (scene == nullptr) {
+        return false;
+    }
     setNameChunk(scene->getName(), wd.mWorldName);
 
     TransformComponent *root = scene->getRootNode();
@@ -204,8 +207,8 @@ bool Project::save(const String &name) {
         return false;
     }
 
-        
-    return true;
+    WorldData wd;
+    return saveScene(nullptr, wd);
 }
 
 } // Namespace App

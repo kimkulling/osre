@@ -203,6 +203,7 @@ private:
     ProjectDirtyState mProjectDirtyState;
     String mProjectName;
     StringArray mAssetArray;
+    ProjectData mProjectData;
 };
 
 inline bool Project::dataNeedsSave() const {

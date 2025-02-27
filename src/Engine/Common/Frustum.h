@@ -133,4 +133,3 @@ inline void Frustum::clear() {
 
 } // namespace Common
 } // namespace OSRE
-  //

@@ -45,7 +45,7 @@ public:
 
     ///	@brief	Will write a message into the attached log stream.
     ///	@param	message	The message to log.
-    virtual void write( const String &message ) = 0;
+    virtual void write(const String &message) = 0;
 
     ///	@brief	The stream will be activated.
     virtual void activate();
@@ -63,10 +63,10 @@ public:
 
 protected:
     ///	@brief	The default class constructor.
-    AbstractLogStream();
+    AbstractLogStream() = default;
 
 private:
-    bool m_IsActive;
+    bool mIsActive = true;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -171,7 +171,7 @@ private:
     class StdLogStream : public AbstractLogStream {
     public:
         /// @brief  The class constructor.
-        StdLogStream();
+        StdLogStream() = default;
 
         /// @brief  The class destructor.
         ~StdLogStream() override = default;
@@ -196,7 +196,6 @@ void OSRE_EXPORT infoPrint( const String &domain, const String &file, int line, 
 void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line, const String &msg );
-
 
 } // Namespace Common
 
@@ -225,7 +224,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 #define osre_info(domain, msg)  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg)
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_warn
+///	@fn		osre_warn
 ///	@brief	This helper macro will write a warning into the logger.
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
@@ -241,7 +240,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 #define osre_error(domain, message) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message)
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_fatal
+///	@fn		osre_fatal
 ///	@brief	This helper macro will write a fatal error into the logger.
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
