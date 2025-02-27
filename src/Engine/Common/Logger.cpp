@@ -63,20 +63,20 @@ static String stripFilename(const String &filename) {
 }
 
 AbstractLogStream::AbstractLogStream() :
-        m_IsActive(true) {
+        mIsActive(true) {
     // empty
 }
 
 void AbstractLogStream::activate() {
-    m_IsActive = true;
+    mIsActive = true;
 }
 
 void AbstractLogStream::desactivate() {
-    m_IsActive = false;
+    mIsActive = false;
 }
 
 bool AbstractLogStream::isActive() const {
-    return m_IsActive;
+    return mIsActive;
 }
 
 Logger *Logger::sLogger = nullptr;
@@ -314,13 +314,6 @@ void infoPrint(const String &domain, const String &file, int line, const String 
     message += msg;
     addTraceInfo(file, line, message);
     Logger::getInstance()->info(domain, message);
-}
-
-void logPrint(const String &domain, const String &file, int line, const String &message) {
-    String msg;
-    msg += message;
-    addTraceInfo(file, line, msg);
-    Logger::getInstance()->print(msg);
 }
 
 void warnPrint(const String &domain, const String &file, int line, const String &message) {

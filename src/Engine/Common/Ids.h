@@ -44,7 +44,7 @@ public:
     Ids(guid startId);
 
     /// @brief  The class destructor.
-    ~Ids();
+    ~Ids() = default;
 
     /// @brief  Returns an unique id.
     /// @return The unique id.

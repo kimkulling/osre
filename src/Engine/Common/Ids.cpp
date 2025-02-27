@@ -37,10 +37,6 @@ Ids::Ids(guid startId) :
     // empty
 }
 
-Ids::~Ids() {
-    // empty
-}
-
 guid Ids::getUniqueId() {
     if (m_freeIds.isEmpty()) {
         const guid id = m_last;

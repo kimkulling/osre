@@ -66,7 +66,7 @@ protected:
     AbstractLogStream();
 
 private:
-    bool m_IsActive;
+    bool mIsActive;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -197,7 +197,6 @@ void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, 
 void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line, const String &msg );
 
-
 } // Namespace Common
 
 //-------------------------------------------------------------------------------------------------
@@ -225,7 +224,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 #define osre_info(domain, msg)  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg)
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_warn
+///	@fn		osre_warn
 ///	@brief	This helper macro will write a warning into the logger.
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
@@ -241,7 +240,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 #define osre_error(domain, message) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message)
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_fatal
+///	@fn		osre_fatal
 ///	@brief	This helper macro will write a fatal error into the logger.
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
