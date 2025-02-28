@@ -155,6 +155,18 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
         "         f_color = vec4(v_color0,1);\n"
         "}\n";
 
+    ShaderSourceArray shArray;
+    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    mat->createShader("textshader", shArray);
+    
+    // Setup shader attributes and variables
+    if (mat->hasShader()) {
+        Shader *shader = mat->getShader();
+        shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+        addMaterialParameter(mat);
+    }
+
     return mat;
 }
 

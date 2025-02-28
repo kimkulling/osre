@@ -155,7 +155,8 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mActiveLayer(0),
         mNumLayers(numLayers),
         mFont(nullptr),
-        mMesh(nullptr) {
+        mMesh(nullptr),
+        mText(nullptr) {
     setResolution(x, y, w, h);
 }
 
@@ -197,6 +198,16 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->setMaterial(mat2D);
     }
 
+    if (mText == nullptr) {
+        mText = new Mesh("text_2d", VertexType::RenderVertex, IndexType::UnsignedShort);
+        Material *matText = MaterialBuilder::createTextMaterial(mFont->Name);
+        if (matText == nullptr) {
+            osre_debug(Tag, "Invalid material instance detected.");
+            return;
+        }
+        mText->setMaterial(matText);
+    }
+
     PrimitiveType prim = PrimitiveType::TriangleList;
     size_t numVertices = 0l, numIndices = 0l;
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
@@ -221,8 +232,33 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     rbSrv->addMesh(mMesh, 0);
     
     mDrawCmdArray.resize(0);
+    
+    numVertices = 0l;
+    numIndices = 0l;
+    for (size_t i = 0; i < mFontCmdArray.size(); ++i) {
+        const auto &dc = *mFontCmdArray[i];
+        if (dc.Vertices == nullptr) {
+            osre_debug(Tag, "Invalid draw command detecetd.");
+            continue;
+        }
+
+        const ui32 lastIndex = mText->getLastIndex();
+        renumberIndices(dc, numVertices);
+
+        mText->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
+        mText->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
+        prim = dc.PrimType;
+        mText->setLastIndex(lastIndex + static_cast<ui16>(dc.NumIndices));
+        numVertices += dc.NumVertices;
+        numIndices += dc.NumIndices;
+    }
+    mText->addPrimitiveGroup(numIndices, prim, 0);
+    rbSrv->addMesh(mText, 0);
+    mFontCmdArray.resize(0);
+
     setClean();
 }
+
 
 void CanvasRenderer::postRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
@@ -409,6 +445,7 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
     const size_t numIndices = MeshUtilities::getNumTextIndices(text);
     drawCmd->NumIndices = numIndices;
     drawCmd->Indices = new ui16[drawCmd->NumIndices];
+    drawCmd->UseFont = mFont;
 
     for (size_t posIndex = 0; posIndex < positions.size(); ++posIndex) {
         drawCmd->Vertices[posIndex].color0 = mPenColor.toVec3();
@@ -421,7 +458,7 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
         drawCmd->Indices[idxIndex] = indices[idxIndex];
     }
 
-    mDrawCmdArray.add(drawCmd);
+    mFontCmdArray.add(drawCmd);
 
     setDirty();
 }

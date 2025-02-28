@@ -157,12 +157,14 @@ protected:
 private:
     bool mDirty;
     DrawCmdArray mDrawCmdArray;
+    DrawCmdArray mFontCmdArray;
     Color4 mPenColor;
     Rect2i mResolution;
     i32 mActiveLayer;
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
+    Mesh *mText;
 };
 
 inline void CanvasRenderer::setDirty() {
