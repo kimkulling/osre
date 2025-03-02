@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Mesh.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/MaterialBuilder.h"
-#include "RenderBackend/Shader.h"
 #include "RenderBackend/FontService.h"
 #include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
@@ -148,10 +147,8 @@ void dealloc(DrawCmd *cmd) {
 }
 
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
-        IRenderPath(),
         mDirty(true),
         mPenColor(1, 1, 1, 0),
-        mResolution(),
         mActiveLayer(0),
         mNumLayers(numLayers),
         mFont(nullptr),

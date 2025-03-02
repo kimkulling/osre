@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace OSRE::Common;
 
@@ -37,15 +36,11 @@ static constexpr c8 Tag[] = "OGLShader";
 
 OGLShader::OGLShader(const String &name) :
         Object(name),
-        mAttribParams(),
-        mUniformParams(),
         mShaderprog(0),
         mNumShader(0),
-        mAttributeMap(),
-        mUniformLocationMap(),
         mIsCompiledAndLinked(false),
         mIsInUse(false) {
-    ::memset(mShaders, 0, sizeof(ui32) * static_cast<ui32>(ShaderType::Count));
+    memset(mShaders, 0, sizeof(ui32) * static_cast<ui32>(ShaderType::Count));
 }
 
 OGLShader::~OGLShader() {
@@ -81,12 +76,13 @@ bool OGLShader::loadFromSource(ShaderType type, const String &src) {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        char infoLog[512] = {'\0'};
+        osre_info(Tag, "Shadr source:\n" + src);
+        char infoLog[512] = { '\0' };
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         osre_error(Tag, "Compilation failed: " + String(infoLog));
         return false;
     }
-    
+
     return true;
 }
 
@@ -255,7 +251,7 @@ void OGLShader::getActiveUniformList() {
 }
 
 void OGLShader::logCompileOrLinkError(ui32 shaderprog) {
-    GLint infoLogLength{0};
+    GLint infoLogLength{ 0 };
     glGetProgramiv(shaderprog, GL_INFO_LOG_LENGTH, &infoLogLength);
     GLchar *infoLog = new GLchar[infoLogLength];
     ::memset(infoLog, 0, infoLogLength);
@@ -287,5 +283,4 @@ GLint OGLShader::getUniformLocation(const String &uniform) {
     return loc;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

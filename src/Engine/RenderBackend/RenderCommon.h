@@ -1068,13 +1068,8 @@ struct DrawCmd {
     Font *UseFont;          ///< The used font
 
     /// @brief The class constructor.
-    DrawCmd() :
-            PrimType(PrimitiveType::Invalid),
-            NumVertices(0u),
-            Vertices(nullptr),
-            NumIndices(0u),
-            Indices(nullptr),
-            UseFont(nullptr) {
+    DrawCmd() : PrimType(PrimitiveType::Invalid), NumVertices(0u), Vertices(nullptr), NumIndices(0u),
+            Indices(nullptr), UseFont(nullptr) {
         // empty
     }
 };
