@@ -149,11 +149,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
             "out vec4 frag_color;\n"
             "uniform sampler2D u_texture;\n"
             "void main() {\n"
-            "    vec4 tex_color = texture(u_texture, v_texindex);\n"
-            "    if (tex_color.r == 0.0 || tex_color.g == 0.0 || tex_color.b == 0.0)\n"
-            "        frag_color = vec4(v_color0, 1.0);\n"
-            "    else\n"
-            "        frag_color = tex_color/* * vec4(v_color0, 1.0)*/;\n"
+            "    frag_color = texture(u_texture, v_texindex) * vec4(v_color0, 1.0);\n"
             "}\n";
 
     ShaderSourceArray shArray;
