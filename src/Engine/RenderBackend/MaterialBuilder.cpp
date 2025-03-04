@@ -381,8 +381,8 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
     }
 
     ShaderSourceArray arr;
-    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vs;
-    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fs;
+    arr[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vs;
+    arr[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fs;
     ShaderResource *shaderRes = sData->mShaderCache->find(shaderName);
     if (shaderRes == nullptr) {
         mat->createShader(shaderName, arr);
@@ -422,10 +422,8 @@ Material *MaterialBuilder::createDebugRenderTextMaterial() {
     const String shaderName = "debug_text.sh";
     mat = materialCache->create(DefaultDebugTestMat);
     ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] =
-            "\n";
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] =
-            "\n";
+    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = "\n";
+    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = "\n";
     mat->createShader(shaderName, shArray);
 
     return mat;
