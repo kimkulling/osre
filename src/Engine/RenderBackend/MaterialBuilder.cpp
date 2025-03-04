@@ -357,7 +357,7 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
 
         Common::ResourceState state = texRes->load(loader);
         if (state != Common::ResourceState::Loaded) {
-            osre_error(Tag, "Cannot load texture.");
+            osre_error(Tag, "Cannot load texture: " + texRes->getUri().getResource());
             mat->mTextures[i] = nullptr;
         } else {
             mat->mTextures[i] = texRes->getRes();

@@ -418,7 +418,7 @@ void CanvasRenderer::selectFont(Font *font) {
     setDirty();
 }
 
-void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
+void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
     if (text.empty()) {
         return;
     }
@@ -427,7 +427,12 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
         osre_debug(Tag, "No font selected.");
         return;
     }
-    f32 x_model, y_model, fontSize = static_cast<f32>(mFont->Size)/static_cast<f32>(mResolution.getWidth());
+    i32 usedSize = size;
+    if (usedSize == -1) {
+        usedSize = mFont->Size;
+    }
+
+    f32 x_model, y_model, fontSize = static_cast<f32>(usedSize) / static_cast<f32>(mResolution.getWidth());
     mapCoordinates(mResolution, x, y, x_model, y_model);
     Vec3Array positions;
     Vec3Array colors;
@@ -449,6 +454,8 @@ void CanvasRenderer::drawText(i32 x, i32 y, const String &text) {
         drawCmd->Vertices[posIndex].position.x = positions[posIndex].x;
         drawCmd->Vertices[posIndex].position.y = positions[posIndex].y;
         drawCmd->Vertices[posIndex].position.z = static_cast<f32>(-mActiveLayer);
+        drawCmd->Vertices[posIndex].tex0.x = tex0[posIndex].x;
+        drawCmd->Vertices[posIndex].tex0.y = tex0[posIndex].y;
     }
 
     for (size_t idxIndex = 0; idxIndex < numIndices; ++idxIndex) {

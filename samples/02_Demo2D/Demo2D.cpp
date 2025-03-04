@@ -106,7 +106,7 @@ protected:
         Color4 green(0, 1, 0, 1);
         
         mCanvasRenderer->setColor(Red);
-        /* mCanvasRenderer->drawRect(1, 1, 1000, 760, false);
+        mCanvasRenderer->drawRect(1, 1, 1000, 760, false);
 
         mCanvasRenderer->setColor(green);
         mCanvasRenderer->drawRect(100, 100, 100, 40, true);
@@ -128,9 +128,9 @@ protected:
 
         mCanvasRenderer->drawRect(100, 700, 110, 124, true);
         
-        mCanvasRenderer->drawRect(100, 1000, 110, 124, true);*/
-
-        mCanvasRenderer->drawText(300, 100, "Test");
+        mCanvasRenderer->drawRect(100, 1000, 110, 124, true);
+        mCanvasRenderer->getActiveFont()->Size = 50;
+        mCanvasRenderer->drawText(300, 100, 50, "Test\nAnother Test");
 
         auto *scene = new Scene("hello_world");
         addScene(scene, true);
