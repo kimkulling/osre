@@ -230,8 +230,8 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     
     mDrawCmdArray.resize(0);
     
-    numVertices = 0l;
-    numIndices = 0l;
+    numVertices = 0;
+    numIndices = 0;
     for (size_t i = 0; i < mFontCmdArray.size(); ++i) {
         const auto &dc = *mFontCmdArray[i];
         if (dc.Vertices == nullptr) {
@@ -433,12 +433,14 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
         usedSize = mFont->Size;
     }
 
-    f32 x_model, y_model, fontSize = static_cast<f32>(usedSize) / static_cast<f32>(mResolution.getWidth());
+    f32 x_model = 0.0f;
+    f32 y_model = 0.0f;
     mapCoordinates(mResolution, x, y, x_model, y_model);
     Vec3Array positions;
     Vec3Array colors;
     Vec2Array tex0;
     TArray<ui16> indices;
+    const f32 fontSize = static_cast<f32>(usedSize) / static_cast<f32>(mResolution.getWidth());
     MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, indices);
 
     DrawCmd *drawCmd = alloc();

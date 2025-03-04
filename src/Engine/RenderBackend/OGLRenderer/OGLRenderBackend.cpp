@@ -1157,10 +1157,10 @@ void OGLRenderBackend::render(size_t primpGrpIdx) {
     OGLPrimGroup *grp = mPrimitives[primpGrpIdx];
     if (grp != nullptr) {
         glDrawRangeElements(grp->m_primitive, 
-            (GLuint)  grp->m_startIndex, 
+            grp->m_startIndex, 
             (GLuint)  (grp->m_startIndex + grp->m_numIndices),
             (GLsizei) grp->m_numIndices, 
-            (GLuint)  grp->m_indexType, 
+            grp->m_indexType, 
             nullptr);        
     }
 }

@@ -40,7 +40,7 @@ OGLShader::OGLShader(const String &name) :
         mNumShader(0),
         mIsCompiledAndLinked(false),
         mIsInUse(false) {
-    memset(mShaders, 0, sizeof(ui32) * static_cast<ui32>(ShaderType::Count));
+    memset(mShaders, 0, sizeof(ui32) * static_cast<size_t>(ShaderType::Count));
 }
 
 OGLShader::~OGLShader() {
@@ -114,13 +114,13 @@ bool OGLShader::createAndLink() {
         osre_error(Tag, "Error while creating shader program.");
         return false;
     }
-    if (0 != mShaders[static_cast<i32>(ShaderType::SH_VertexShaderType)]) {
+    if (0 != mShaders[static_cast<size_t>(ShaderType::SH_VertexShaderType)]) {
         glAttachShader(mShaderprog, mShaders[static_cast<i32>(ShaderType::SH_VertexShaderType)]);
     }
-    if (0 != mShaders[static_cast<i32>(ShaderType::SH_FragmentShaderType)]) {
+    if (0 != mShaders[static_cast<size_t>(ShaderType::SH_FragmentShaderType)]) {
         glAttachShader(mShaderprog, mShaders[static_cast<i32>(ShaderType::SH_FragmentShaderType)]);
     }
-    if (0 != mShaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]) {
+    if (0 != mShaders[static_cast<size_t>(ShaderType::SH_GeometryShaderType)]) {
         glAttachShader(mShaderprog, mShaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]);
     }
 

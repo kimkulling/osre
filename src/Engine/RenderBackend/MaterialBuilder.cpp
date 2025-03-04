@@ -90,8 +90,8 @@ Material *MaterialBuilder::create2DMaterial() {
             "}\n";
 
     ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
     mat->createShader(shaderName, shArray);
 
     // Setup shader attributes and variables
@@ -153,8 +153,8 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
             "}\n";
 
     ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
     mat->createShader("textshader", shArray);
 
     // Setup shader attributes and variables

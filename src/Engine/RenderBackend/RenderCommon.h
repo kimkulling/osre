@@ -1060,18 +1060,16 @@ struct Font {
 
 /// This struct is used to store all 2d draw commands.
 struct DrawCmd {
-    PrimitiveType PrimType; ///< The primitive type
-    size_t NumVertices;     ///< The number of vertices
-    RenderVert *Vertices;   ///< The vertex buffer
-    size_t NumIndices;      ///< Number of indices
-    ui16 *Indices;          ///< The number of indices
-    Font *UseFont;          ///< The used font
+    PrimitiveType PrimType = 
+        PrimitiveType::Invalid;         ///< The primitive type
+    size_t NumVertices = 0;             ///< The number of vertices
+    RenderVert *Vertices = nullptr;     ///< The vertex buffer
+    size_t NumIndices = 0;              ///< Number of indices
+    ui16 *Indices = nullptr;            ///< The number of indices
+    Font *UseFont = nullptr;            ///< The used font
 
     /// @brief The class constructor.
-    DrawCmd() : PrimType(PrimitiveType::Invalid), NumVertices(0u), Vertices(nullptr), NumIndices(0u),
-            Indices(nullptr), UseFont(nullptr) {
-        // empty
-    }
+    DrawCmd() = default;
 };
 
 /// @brief The draw command array.
