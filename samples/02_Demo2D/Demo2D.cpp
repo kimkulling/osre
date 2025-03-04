@@ -132,6 +132,8 @@ protected:
         mCanvasRenderer->getActiveFont()->Size = 50;
         mCanvasRenderer->drawText(300, 100, 50, "Test\nAnother Test");
 
+        mCanvasRenderer->drawText(300, 500, 50, "Test\nAnother Test");
+
         auto *scene = new Scene("hello_world");
         addScene(scene, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);

@@ -1048,7 +1048,8 @@ struct Point2Di {
 
 /// @brief The 2D point structure for floats.
 struct Point2Df {
-    f32 x, y; ///< Coordinate components
+    f32 x = 0.0f; ///< Coordinate y component
+    f32 y = 0.0f; ///< Coordinate y component
 };
 
 /// @brief The font structure.
