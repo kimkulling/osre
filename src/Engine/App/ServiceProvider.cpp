@@ -20,25 +20,22 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "App/ResourceCacheService.h"
 #include "App/ServiceProvider.h"
 #include "RenderBackend/RenderBackendService.h"
-#include "Debugging/osre_debugging.h"
 #include "IO/IOService.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 
 ServiceProvider *ServiceProvider::s_instance = nullptr;
-        
+
 ServiceProvider *ServiceProvider::create() {
     if (nullptr == s_instance) {
         s_instance = new ServiceProvider;
     }
-    
+
     return s_instance;
 }
 
@@ -59,5 +56,4 @@ ServiceProvider::ServiceProvider() :
     mServiceArray.set(nullptr);
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App

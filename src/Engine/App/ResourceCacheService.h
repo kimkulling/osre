@@ -23,12 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/AbstractService.h"
-#include "Common/TResource.h"
 #include "Common/TResourceCache.h"
 #include "RenderBackend/RenderCommon.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using TextureResourceFactory = Common::TResourceFactory<RenderBackend::TextureResource>;
 using TextureResourceCache = Common::TResourceCache<TextureResourceFactory, RenderBackend::TextureResource>;
@@ -36,12 +34,18 @@ using TextureResourceCache = Common::TResourceCache<TextureResourceFactory, Rend
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-/// @brief
+/// @brief The resource cache service.
 //-------------------------------------------------------------------------------------------------
 class ResourceCacheService : public Common::AbstractService {
 public:
+    /// @brief The class constructor.
     ResourceCacheService();
+
+    /// @brief The class destructor.
     ~ResourceCacheService();
+
+    /// @brief Will return thr texture resource cache.
+    /// @return The resource cache for textures.
     TextureResourceCache *getTextureResourceCache() const;
 
 protected:
@@ -67,12 +71,10 @@ inline ResourceCacheService::ResourceCacheService() :
 
 inline ResourceCacheService::~ResourceCacheService() {
     delete m_texResCache;
-    m_texResCache = nullptr;
 }
 
 inline TextureResourceCache *ResourceCacheService::getTextureResourceCache() const {
     return m_texResCache;
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App

@@ -36,7 +36,7 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries we will define this tag.
-static constexpr c8 Tag[] = "HelloWorldApp";
+DECL_OSRE_LOG_MODULE(HelloWorldApp)
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
@@ -49,16 +49,14 @@ class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;
     /// The entity to render
-    Entity *mEntity;
+    Entity *mEntity = nullptr;
     /// The keyboard controller instance.
     Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv),
-            mTransformMatrix(),
-            mEntity(nullptr) {
+            AppBase(argc, const_cast<const char **>(argv)) {
         // empty
     }
 
@@ -67,9 +65,9 @@ public:
 
 protected:
     CameraComponent *setupCamera(Scene *scene) {
-        Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        auto *camEntity = new Entity("camera", *getIdContainer(), scene);
         scene->addEntity(camEntity);
-        CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
+        auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
         scene->setActiveCamera(camera);
         
         ui32 w, h;
@@ -91,7 +89,7 @@ protected:
         MeshBuilder meshBuilder;
         Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (mesh != nullptr) {
-            RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
+            auto *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
             CameraComponent *camera = setupCamera(scene);
@@ -106,12 +104,11 @@ protected:
     }
 
     void onUpdate() override {
-        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-        if (key != Platform::KEY_UNKNOWN) {
+        if (const Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey(); key != Platform::KEY_UNKNOWN) {
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
@@ -138,4 +135,3 @@ int main( int argc, char *argv[] )  {
     myApp.destroy();
     return 0;
 }
-

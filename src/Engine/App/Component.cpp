@@ -25,13 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::cppcore;
-
-static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 
 Component::Component(Entity *owner, ComponentType type) :
         mOwner(owner),
@@ -78,7 +75,7 @@ Mesh *RenderComponent::getMeshAt(size_t idx) const {
     return m_newGeo[idx];
 }
 
-void RenderComponent::getMeshArray(RenderBackend::MeshArray &meshArray) {
+void RenderComponent::getMeshArray(MeshArray &meshArray) {
     meshArray = m_newGeo;
 }
 
@@ -97,5 +94,4 @@ bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
     return true;
 }
 
-} // namespace App
-} // namespace OSRE
+} // namespace OSRE::App

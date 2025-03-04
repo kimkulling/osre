@@ -29,7 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Common/StringUtils.h"
 #include "Common/TAABB.h"
-#include "Debugging/MeshDiagnostic.h"
 #include "IO/AbstractFileSystem.h"
 #include "IO/Directory.h"
 #include "IO/IOService.h"
@@ -37,10 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Mesh.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/Material.h"
-#include "RenderBackend/Shader.h"
 #include "RenderBackend/MaterialBuilder.h"
-#include "RenderBackend/MeshBuilder.h"
-#include "RenderBackend/MeshProcessor.h"
 #include "App/TransformComponent.h"
 
 #include <assimp/postprocess.h>
@@ -50,8 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::Assimp;
 using namespace ::OSRE::Common;
@@ -59,27 +54,27 @@ using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 Tag[] = "AssimpWrapper";
+DECL_OSRE_LOG_MODULE(AssimpWrapper)
 
 constexpr unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
-                                        aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
-                                        aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
+                                            aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
+                                            aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
 
-inline static void setColor4(const aiColor4D &aiCol, Color4 &col) {
+static void setColor4(const aiColor4D &aiCol, Color4 &col) {
     col.m_r = aiCol.r;
     col.m_g = aiCol.g;
     col.m_b = aiCol.b;
     col.m_a = aiCol.a;
 }
 
-static void setTexture(const String &resolvedPath, const aiString &texPath, 
+static void setTexture(const String &resolvedPath, const aiString &texPath,
         TextureResourceArray &texResArray, TextureStageType stage) {
     // Check for an embedded texture
     if (resolvedPath[0] == '*') {
         // todo!
         return;
     }
-    
+
     String texname;
     texname += "file://";
     texname += resolvedPath;
@@ -91,7 +86,7 @@ static void setTexture(const String &resolvedPath, const aiString &texPath,
     }
     texname += temp1;
 
-    TextureResource *texRes = new TextureResource(texname, Uri(texname));
+    auto *texRes = new TextureResource(texname, Uri(texname));
     texRes->setTextureStage(stage);
     texResArray.add(texRes);
 }
@@ -107,7 +102,7 @@ AssimpWrapper::AssetContext::AssetContext(Ids &ids, Scene *world) :
     // empty
 }
 
-AssimpWrapper::AssimpWrapper( Common::Ids &ids, Scene *world ) :
+AssimpWrapper::AssimpWrapper(Ids &ids, Scene *world) :
         mImporter(nullptr),
         mAssetContext(ids, world) {
     // empty
@@ -143,9 +138,9 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     if (mImporter != nullptr) {
         delete mImporter;
     }
-    
-    mStream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
-	aiAttachLogStream(&mStream);
+
+    mStream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
+    aiAttachLogStream(&mStream);
 
     mImporter = new Importer;
     osre_debug(Tag, "Start importing " + filename + ".");
@@ -209,9 +204,9 @@ Entity *AssimpWrapper::convertScene() {
     }
 
     importAnimations(mAssetContext.mScene);
-    
+
     if (!mAssetContext.mMeshArray.isEmpty()) {
-        RenderComponent *rc = (RenderComponent*) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
+        RenderComponent *rc = (RenderComponent *)mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
         rc->addStaticMeshArray(mAssetContext.mMeshArray);
     }
 
@@ -276,7 +271,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         if (nullptr == mat) {
             continue;
         }
-        
+
         Mat2MeshMap::const_iterator it = mat2MeshMap.find(mat);
         MeshIdxArray *miArray = nullptr;
         if (mat2MeshMap.end() == it) {
@@ -295,7 +290,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     size_t i = 0;
     aiMesh *currentMesh = nullptr;
     ::cppcore::TArray<RenderVert> vertices;
-    for (auto & it : mat2MeshMap) {
+    for (auto &it : mat2MeshMap) {
         cppcore::TArray<ui32> indexArray;
         MeshIdxArray *miArray = it.second;
         if (nullptr == miArray) {
@@ -364,7 +359,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                         bone.mName = currentBone->mName.C_Str();
                         copyAiMatrix4x4(currentBone->mOffsetMatrix, bone.m_offsetMatrix);
                         VertexWeight *wArray = new VertexWeight[currentBone->mNumWeights];
-                        
+
                         for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
                             aiVertexWeight &aiVW = currentBone->mWeights[l];
                             VertexWeight &w = wArray[weightIdx];
@@ -467,7 +462,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     TextureResourceArray texResArray;
     if (AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath)) {
         setTexture(mAssetContext.mRoot, texPath, texResArray, TextureStageType::TextureStage0);
-    } 
+    }
 
     String matName = texPath.C_Str();
     if (matName.empty()) {
@@ -518,13 +513,13 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     }
 }
 
-using Bone2NodeMap = cppcore::THashMap<int, TransformComponent*>;
+using Bone2NodeMap = cppcore::THashMap<int, TransformComponent *>;
 
 void AssimpWrapper::importAnimations(const aiScene *scene) {
     if (scene == nullptr) {
         return;
     }
-    
+
     for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
         const aiMesh *mesh = scene->mMeshes[i];
         for (unsigned int n = 0; n < mesh->mNumBones; ++n) {
@@ -548,15 +543,13 @@ void AssimpWrapper::importAnimations(const aiScene *scene) {
                     continue;
                 }
                 channel.PositionKeys.resize(nodeAnim->mNumPositionKeys);
-                
+
                 channel.RotationKeys.resize(nodeAnim->mNumRotationKeys);
-                
+
                 channel.RotationKeys.resize(nodeAnim->mNumScalingKeys);
-             
             }
         }
     }
 }
 
-} // namespace App
-} // namespace OSRE
+} // namespace OSRE::App

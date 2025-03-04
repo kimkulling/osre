@@ -31,7 +31,8 @@ using namespace ::cppcore;
 static constexpr c8 option[] = "--";
 static constexpr c8 tokenArgIn = '<';
 static constexpr c8 tokenArgOut = '>';
-static constexpr c8 Tag[] = "ArgumentParser";
+
+DECL_OSRE_LOG_MODULE(ArgumentParser)
 
 ArgumentParser::Argument::Argument() :
         mArgument(""), mDesc(""), mNumArgs(0) {

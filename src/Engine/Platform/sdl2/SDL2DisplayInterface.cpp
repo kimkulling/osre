@@ -24,17 +24,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "SDL.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
-static constexpr c8 Tag[] = "SDL2DisplayInterface";
+DECL_OSRE_LOG_MODULE(SDL2DisplayInterface)
 
 static void logError() {
     osre_debug(Tag, "Error occurred : " + String(SDL_GetError()) + ".");
 }
 
 i32 SDL2DisplayInterface::getNumDisplays() {
-    i32 numDisplays = SDL_GetNumVideoDisplays();
+    const i32 numDisplays = SDL_GetNumVideoDisplays();
     return numDisplays;
 }
 
@@ -70,5 +69,4 @@ bool SDL2DisplayInterface::getDisplayDPI( ui32 displayIndex, DisplayDPIInfo *ddp
     return true;
 }
 
-} // namespace Platform
-} // namespace OSRE
+} // namespace OSRE::Platform

@@ -22,15 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Common/StringUtils.h"
 #include "Common/TFunctor.h"
 
 // Container
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TList.h>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 // Forward declarations ---------------------------------------------------------------------------
 class EventTriggerer;
@@ -155,4 +153,4 @@ using EventDataList = cppcore::TList<Common::EventData *>;
 using EventPtrArray = cppcore::TArray<const Common::Event *>;
 
 } // Namespace Common
-} // Namespace OSRE
+// Namespace OSRE

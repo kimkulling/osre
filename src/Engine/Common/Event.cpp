@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 
 #include "Common/Event.h"
+#include "Common/StringUtils.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 Event::Event(const c8 *id) :
         mNumRefs(1),
@@ -62,7 +62,7 @@ void Event::release() {
     }
 }
 
-bool Event::operator == (const Event &rhs) const {
+bool Event::operator==(const Event &rhs) const {
     return (mHash == rhs.mHash);
 }
 
@@ -99,5 +99,4 @@ bool EventData::operator==(const EventData &other) const {
     return (mEvent == other.mEvent && mSource == other.mSource);
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // namespace OSRE::Common

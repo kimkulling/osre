@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-static constexpr c8 Tag[] = "Common";
+DECL_OSRE_LOG_MODULE(Common)
 
 size_t MemoryStatistics::sAllocated = 0;
 size_t MemoryStatistics::sNumNew = 0;

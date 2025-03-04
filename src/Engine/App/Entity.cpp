@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Animation/AnimatorComponent.h"
 #include "RenderBackend/MeshProcessor.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Animation;
@@ -44,15 +43,15 @@ Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
         mOwner(world) {
     mComponentArray.resize(Component::getIndex(ComponentType::Count));
     mComponentArray.set(nullptr);
-    mRenderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
+    mRenderComponent = (RenderComponent *)createComponent(ComponentType::RenderComponentType);
     if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
 }
 
 Entity::~Entity() {
-    for (size_t i=0; i<mComponentArray.size(); ++i) {
-        delete mComponentArray[i];
+    for (auto & i : mComponentArray) {
+        delete i;
     }
     mRenderComponent = nullptr;
     if (nullptr != mOwner) {
@@ -98,10 +97,9 @@ Component *Entity::createComponent(ComponentType type) {
             component = new RenderComponent(this);
             break;
         case OSRE::App::ComponentType::TransformComponentType: {
-                const String name = getName() + "_transform";
-                component = new TransformComponent(name, this, mIds, nullptr); 
-            }
-            break;
+            const String name = getName() + "_transform";
+            component = new TransformComponent(name, this, mIds, nullptr);
+        } break;
         case OSRE::App::ComponentType::CameraComponentType:
             component = new CameraComponent(this);
             break;
@@ -134,5 +132,4 @@ const AABB &Entity::getAABB() const {
     return mAabb;
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App

@@ -37,11 +37,11 @@ void MouseEventListener::onOSEvent(const Event &ev, const EventData *data) {
     mMouseInputState.LastX = mMouseInputState.AbsX;
     mMouseInputState.LastY = mMouseInputState.AbsY;
     if (!(ev == MouseButtonDownEvent) && !(ev == MouseButtonUpEvent)) {
-        MouseMoveEventData *evData = (MouseMoveEventData *)data;
+        auto *evData = (MouseMoveEventData *)data;
         mMouseInputState.AbsX = evData->m_absX;
         mMouseInputState.AbsY = evData->m_absY;
     } else {
-        MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
+        auto *mouseEventData = (MouseButtonEventData *)data;
         mMouseInputState.AbsX = mouseEventData->m_AbsX;
         mMouseInputState.AbsY = mouseEventData->m_AbsY;
         if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {

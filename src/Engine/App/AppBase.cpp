@@ -54,7 +54,7 @@ using namespace ::OSRE::Animation;
 using namespace ::OSRE::Properties;
 using namespace ::OSRE::IO;
 
-static constexpr c8 Tag[] = "AppBase";
+DECL_OSRE_LOG_MODULE(AppBase)
 
 static void attachMouseEventPtrs(EventPtrArray &eventArray) {
     eventArray.add(&MouseButtonDownEvent);

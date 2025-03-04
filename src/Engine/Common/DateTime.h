@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -121,4 +120,4 @@ private:
 };
 
 } // Namespace Common
-} // Namespace OSRE
+// Namespace OSRE

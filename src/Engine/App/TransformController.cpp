@@ -27,14 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "App/MouseEventListener.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
-static constexpr c8 Tag[] = "TransformController";
+DECL_OSRE_LOG_MODULE(TransformControlle)
 
 TransformController::TransformController(TransformMatrixBlock &tmb) :
         mTransform(tmb) {
@@ -142,7 +141,7 @@ void TransformController::update(TransformCommandType cmdType) {
         case TransformCommandType::TransformCommandZPositive:
         case TransformCommandType::TransformCommandZNegative:
             // ignored
-            break;  
+            break;
         case TransformCommandType::Invalid:
             break;
 
@@ -152,5 +151,4 @@ void TransformController::update(TransformCommandType cmdType) {
     }
 }
 
-} // namespace App
-} // namespace OSRE
+} // namespace OSRE::App
