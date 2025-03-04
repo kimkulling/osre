@@ -44,7 +44,7 @@ using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "BasetexturerenderTest";
 
-    //-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
 ///	@brief  This class implements a simple texture render test.
@@ -91,11 +91,7 @@ public:
                 mesh->setMaterial(material);
                 Shader *shader = material->getShader();
                 if (shader != nullptr) {
-                    shader->addVertexAttribute("position");
-                    shader->addVertexAttribute("normal");
-                    shader->addVertexAttribute("color0");
-                    shader->addVertexAttribute("texcoord0");
-
+                    shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
                     shader->addUniformBuffer("MVP");
                 }
 

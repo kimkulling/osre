@@ -129,8 +129,10 @@ protected:
         mCanvasRenderer->drawRect(100, 700, 110, 124, true);
         
         mCanvasRenderer->drawRect(100, 1000, 110, 124, true);
+        mCanvasRenderer->getActiveFont()->Size = 50;
+        mCanvasRenderer->drawText(300, 100, 50, "Test\nAnother Test");
 
-        mCanvasRenderer->drawText(300, 100, "Test");
+        mCanvasRenderer->drawText(300, 500, 50, "Test\nAnother Test");
 
         auto *scene = new Scene("hello_world");
         addScene(scene, true);

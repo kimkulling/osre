@@ -98,7 +98,7 @@ Logger *Logger::create() {
 
 Logger *Logger::getInstance() {
     if (nullptr == sLogger) {
-        static_cast<void>(Logger::create());
+        static_cast<void>(create());
     }
 
     return sLogger;

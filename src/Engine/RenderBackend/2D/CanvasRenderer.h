@@ -135,11 +135,13 @@ public:
     /// @param font The font to select.
     void selectFont(Font *font);
 
+    Font *getActiveFont() const;
+
     /// @brief Will draw a text using the current font.
     /// @param x    The x position.
     /// @param y    The y position.
     /// @param text The text to draw.
-    void drawText(i32 x, i32 y, const String &text);
+    void drawText(i32 x, i32 y, i32 size, const String &text);
 
     /// @brief Will set the dirty flag.
     void setDirty();
@@ -157,13 +159,19 @@ protected:
 private:
     bool mDirty;
     DrawCmdArray mDrawCmdArray;
+    DrawCmdArray mFontCmdArray;
     Color4 mPenColor;
     Rect2i mResolution;
     i32 mActiveLayer;
     i32 mNumLayers;
     Font *mFont;
     Mesh *mMesh;
+    Mesh *mText;
 };
+
+inline Font* CanvasRenderer::getActiveFont() const {
+    return mFont;
+}
 
 inline void CanvasRenderer::setDirty() {
     mDirty = true;

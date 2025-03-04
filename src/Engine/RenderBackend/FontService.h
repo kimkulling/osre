@@ -38,8 +38,8 @@ struct FontService {
     /// @return The default font.
     static Font *getDefaultFont() {
         static Font defaultFont;
-        defaultFont.Name = "buildin_arial";
-        defaultFont.Size = 10;
+        defaultFont.Name = "file://buildin_arial.bmp";
+        defaultFont.Size = 20;
         defaultFont.Style = 0;
 
         return &defaultFont;

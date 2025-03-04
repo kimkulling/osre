@@ -22,20 +22,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/Shader/DefaultShader.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 String getDefaultGLSLVersion() {
     return getGLSLVersionString_330();
 }
 
-String getGLSLVersionString_330()  {
+String getGLSLVersionString_330() {
     static const String GLSLVersionString_330 =
             "#version 330 core\n";
     return GLSLVersionString_330;
 }
 
-String  getGLSLVersionString_400() {
+String getGLSLVersionString_400() {
     static const String GLSLVersionString_400 =
             "#version 400 core\n";
     return GLSLVersionString_400;
@@ -59,11 +58,11 @@ String getGLSLRenderVertexLayout() {
 
 String getGLSLColorVertexLayout() {
     static const String GLSLColorVertexLayout =
-        "// Colorvertex layout\n"
-        "layout(location = 0) in vec3 position;	 // object space vertex position\n"
-        "layout(location = 1) in vec3 normal;    // object space vertex normal\n"
-        "layout(location = 2) in vec3 color0;    // per-vertex colour\n" +
-        getNewLine();
+            "// Colorvertex layout\n"
+            "layout(location = 0) in vec3 position;	 // object space vertex position\n"
+            "layout(location = 1) in vec3 normal;    // object space vertex normal\n"
+            "layout(location = 2) in vec3 color0;    // per-vertex colour\n" +
+            getNewLine();
     return GLSLColorVertexLayout;
 }
 
@@ -76,5 +75,4 @@ String getGLSLCombinedMVPUniformSrc() {
     return GLSLCombinedMVPUniformSrc;
 }
 
-}
-}
+} // namespace OSRE::RenderBackend

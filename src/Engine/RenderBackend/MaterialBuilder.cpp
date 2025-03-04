@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/osre_debugging.h"
 #include "IO/Uri.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
 
@@ -77,7 +76,7 @@ Material *MaterialBuilder::create2DMaterial() {
             "    v_texindex = texcoord0;\n"
             "}\n";
 
-    const String fragment_2d = 
+    const String fragment_2d =
             getDefaultGLSLVersion() +
             "in vec2 v_texindex;\n"
             "in vec3 v_color0;\n"
@@ -85,14 +84,14 @@ Material *MaterialBuilder::create2DMaterial() {
             "uniform sampler2D u_texture;\n"
             "void main() {\n"
             "    f_color = texture(u_texture, v_texindex);\n"
-            "    if (f_color.r == 0.0 || f_color.g == 0.0 || f_color.b == 0.0) {\n"
+            "    if (f_color.r == 0.0 && f_color.g == 0.0 && f_color.b == 0.0) {\n"
             "         f_color = vec4(v_color0,1);\n"
             "    }\n"
             "}\n";
 
     ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
     mat->createShader(shaderName, shArray);
 
     // Setup shader attributes and variables
@@ -123,7 +122,7 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
     mat->mNumTextures = 1;
     mat->mTextures = new Texture *[mat->mNumTextures];
     TextureResource *texRes = new TextureResource(fontName, IO::Uri(fontName));
-    
+
     TextureLoader loader;
     texRes->load(loader);
     mat->mTextures[0] = texRes->getRes();
@@ -138,22 +137,32 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
             "uniform mat4 Projection;\n"
             "void main() {\n"
             "    v_color0 = color0;\n"
-            "    mat4 u_mvp = Projection * View * Model;\n"
-            "    gl_Position = u_mvp * vec4(position, 1.0);\n"
+            "    mat4 mvp = Projection * View * Model;\n"
+            "    gl_Position = mvp * vec4(position, 1.0);\n"
             "    v_texindex = texcoord0;\n"
             "}\n";
-    
-    const String fragment_2d = 
-        getDefaultGLSLVersion() +
-        "in vec2 v_texindex;\n"
-        "in vec3 v_color0;\n"
-        "out vec4 f_color;\n"
-        "uniform sampler2D u_texture;\n"
-        "void main() {\n"
-        "    f_color = texture(u_texture, v_texindex);\n"
-        "    if (f_color.r==0.0 || f_color.g ==0.0 || f_color.b==0.0)\n"
-        "         f_color = vec4(v_color0,1);\n"
-        "}\n";
+
+    const String fragment_2d =
+            getDefaultGLSLVersion() +
+            "in vec3 v_color0;\n"
+            "in vec2 v_texindex;\n"
+            "out vec4 frag_color;\n"
+            "uniform sampler2D u_texture;\n"
+            "void main() {\n"
+            "    frag_color = texture(u_texture, v_texindex) * vec4(v_color0, 1.0);\n"
+            "}\n";
+
+    ShaderSourceArray shArray;
+    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    mat->createShader("textshader", shArray);
+
+    // Setup shader attributes and variables
+    if (mat->hasShader()) {
+        Shader *shader = mat->getShader();
+        shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+        addMaterialParameter(mat);
+    }
 
     return mat;
 }
@@ -214,19 +223,19 @@ const String GLSLVertexShaderSrcRV =
         getGLSLCombinedMVPUniformSrc() +
         getNewLine() +
         "void main()\n"
-        "{\n" 
+        "{\n"
         "    position_eye = vec3(View * Model * vec4(position, 1.0));\n"
         "    normal_eye = vec3(View * Model * vec4(normal, 0.0));\n"
         "    vec3 Ia = La * Ka;\n"
-        "    // get the clip space position by multiplying the combined MVP matrix with the object space\n" 
+        "    // get the clip space position by multiplying the combined MVP matrix with the object space\n"
         "    vec3 light_position_eye = vec3(View * vec4(light_pos, 1.0));\n"
-        "    vec3 distance_to_light_eye = light_position_eye - position_eye;\n" 
-        "    float distance = length(distance_to_light_eye);\n" 
+        "    vec3 distance_to_light_eye = light_position_eye - position_eye;\n"
+        "    float distance = length(distance_to_light_eye);\n"
         "    float intensity = cos(90 / (radius * distance));\n"
         "    vec3 direction_to_light_eye = normalize(distance_to_light_eye);\n"
         "    vec3 reflection_eye = reflect(-direction_to_light_eye, normal_eye);\n"
         "    vec3 surface_to_viewer_eye = normalize(-position_eye);\n"
-        "    float dot_prod_specular = dot(reflection_eye, surface_to_viewer_eye);\n" 
+        "    float dot_prod_specular = dot(reflection_eye, surface_to_viewer_eye);\n"
         "    dot_prod_specular = max(dot_prod_specular, 0.0);\n" +
         getNewLine() +
         "    float dot_prod = dot (direction_to_light_eye, normal_eye);\n"
@@ -236,7 +245,7 @@ const String GLSLVertexShaderSrcRV =
         "    vec3 Is = Ls * Ks * specular_factor; // final specular intensity\n"
         "    vec3 Id = Ld * Kd * dot_prod;\n" +
         getNewLine() +
-        "    //vertex position\n" 
+        "    //vertex position\n"
         "    gl_Position = Projection * vec4(position_eye, 1.0);\n"
         "    vSmoothColor = vec4(Is + Id + Ia, 1.0) * intensity;\n"
         "    vUV = texcoord0;\n"
@@ -311,7 +320,7 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
         if (type == VertexType::ColorVertex) {
             mat->mShader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->mShader->addVertexAttributes(RenderVert::getAttributes(),RenderVert::getNumAttributes());
+            mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
@@ -348,7 +357,7 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
 
         Common::ResourceState state = texRes->load(loader);
         if (state != Common::ResourceState::Loaded) {
-            osre_error(Tag, "Cannot load texture.");
+            osre_error(Tag, "Cannot load texture: " + texRes->getUri().getResource());
             mat->mTextures[i] = nullptr;
         } else {
             mat->mTextures[i] = texRes->getRes();
@@ -372,8 +381,8 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
     }
 
     ShaderSourceArray arr;
-    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vs;
-    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fs;
+    arr[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vs;
+    arr[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fs;
     ShaderResource *shaderRes = sData->mShaderCache->find(shaderName);
     if (shaderRes == nullptr) {
         mat->createShader(shaderName, arr);
@@ -413,14 +422,11 @@ Material *MaterialBuilder::createDebugRenderTextMaterial() {
     const String shaderName = "debug_text.sh";
     mat = materialCache->create(DefaultDebugTestMat);
     ShaderSourceArray shArray;
-    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = 
-            "\n";
-    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] =
-            "\n";
+    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = "\n";
+    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = "\n";
     mat->createShader(shaderName, shArray);
 
     return mat;
 }
 
-} // Namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

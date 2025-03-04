@@ -1154,12 +1154,12 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
 #endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx) {
-    OGLPrimGroup *grp(mPrimitives[primpGrpIdx]);
-    if (nullptr != grp) {
+    OGLPrimGroup *grp = mPrimitives[primpGrpIdx];
+    if (grp != nullptr) {
         glDrawRangeElements(grp->m_primitive, 
             grp->m_startIndex, 
-            grp->m_startIndex + grp->m_numIndices, 
-            grp->m_numIndices, 
+            (GLuint)  (grp->m_startIndex + grp->m_numIndices),
+            (GLsizei) grp->m_numIndices, 
             grp->m_indexType, 
             nullptr);        
     }
@@ -1174,8 +1174,8 @@ void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
     if (nullptr != grp) {
         glDrawArraysInstanced(grp->m_primitive,
                 grp->m_startIndex,
-                (GLsizei)grp->m_numIndices,
-                (GLsizei)numInstances);
+                (GLsizei) grp->m_numIndices,
+                (GLsizei) numInstances);
     }
 }
 

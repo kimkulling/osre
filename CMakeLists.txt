@@ -109,7 +109,7 @@ IF (OSRE_BUILD_SAMPLES)
     ADD_SUBDIRECTORY( samples )
 ENDIF(OSRE_BUILD_SAMPLES)
 
-set(cppcore_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
+option(cppcore_BUILD_UNITTESTS OFF)
 ADD_SUBDIRECTORY( contrib/cppcore )
 
 # Config for assimp
