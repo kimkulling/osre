@@ -92,13 +92,6 @@ public:
                 Shader *shader = material->getShader();
                 if (shader != nullptr) {
                     shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
-
-
-                    /* shader->addVertexAttribute("position");
-                    shader->addVertexAttribute("normal");
-                    shader->addVertexAttribute("color0");
-                    shader->addVertexAttribute("texcoord0");*/
-
                     shader->addUniformBuffer("MVP");
                 }
 
