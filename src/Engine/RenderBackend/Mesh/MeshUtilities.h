@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "Debugging/osre_debugging.h"
 #include "Common/Tokenizer.h"
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -68,9 +69,7 @@ public:
     /// @param tex0         The diffuse texture coordinates for all glyphes.
     /// @param textIndices  The index array for all glyphes.
     static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text,
-             Vec3Array &positions, Vec3Array &colors, Vec2Array &tex0, ui16 **textIndices) {
-        osre_assert(nullptr != textIndices);
-
+            Vec3Array &positions, Vec3Array &colors, Vec2Array &tex0, cppcore::TArray<ui16> &textIndices) {
         using namespace ::OSRE::Common;
         glm::vec3 col[NumQuadVert] = {};
         col[0] = glm::vec3(0, 0, 0);
@@ -88,7 +87,7 @@ public:
         positions.resize(NumTextVerts);
         colors.resize(NumTextVerts);
         tex0.resize(NumTextVerts);
-        *textIndices = new ui16[getNumTextIndices(text)];
+        textIndices.resize(getNumTextIndices(text));
 
         const f32 invCol = 1.f / 16.f;
         const f32 invRow = 1.f / 16.f;
@@ -141,13 +140,13 @@ public:
             colors[VertexOffset + 2] = col[2];
             colors[VertexOffset + 3] = col[3];
             const ui32 IndexOffset(i * NumQuadIndices);
-            (*textIndices)[0 + IndexOffset] = 0 + VertexOffset;
-            (*textIndices)[1 + IndexOffset] = 2 + VertexOffset;
-            (*textIndices)[2 + IndexOffset] = 1 + VertexOffset;
+            textIndices[0 + IndexOffset] = 0 + VertexOffset;
+            textIndices[1 + IndexOffset] = 2 + VertexOffset;
+            textIndices[2 + IndexOffset] = 1 + VertexOffset;
 
-            (*textIndices)[3 + IndexOffset] = 1 + VertexOffset;
-            (*textIndices)[4 + IndexOffset] = 2 + VertexOffset;
-            (*textIndices)[5 + IndexOffset] = 3 + VertexOffset;
+            textIndices[3 + IndexOffset] = 1 + VertexOffset;
+            textIndices[4 + IndexOffset] = 2 + VertexOffset;
+            textIndices[5 + IndexOffset] = 3 + VertexOffset;
             ++textCol;
         }
     }

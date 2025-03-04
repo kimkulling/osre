@@ -427,6 +427,7 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
         osre_debug(Tag, "No font selected.");
         return;
     }
+
     i32 usedSize = size;
     if (usedSize == -1) {
         usedSize = mFont->Size;
@@ -437,8 +438,8 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
     Vec3Array positions;
     Vec3Array colors;
     Vec2Array tex0;
-    ui16 *indices = nullptr;
-    MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, &indices);
+    TArray<ui16> indices;
+    MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, indices);
 
     DrawCmd *drawCmd = alloc();
     drawCmd->PrimType = PrimitiveType::TriangleList;

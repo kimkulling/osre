@@ -298,8 +298,8 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
     Vec3Array positions;
     Vec3Array colors;
     Vec2Array tex0;
-    ui16 *textIndices(nullptr);
-    MeshUtilities::generateTextBoxVerticesAndIndices(x, y, textSize, text, positions, colors, tex0, &textIndices);
+    cppcore::TArray<ui16> textIndices;
+    MeshUtilities::generateTextBoxVerticesAndIndices(x, y, textSize, text, positions, colors, tex0, textIndices);
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
@@ -307,7 +307,7 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
 
     // setup triangle indices
     size_t size = sizeof(ui16) * 6 * text.size();
-    mesh->createIndexBuffer(textIndices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
+    mesh->createIndexBuffer(&textIndices[0], size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
     mesh->addPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
