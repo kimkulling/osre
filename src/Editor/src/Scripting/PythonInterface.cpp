@@ -42,7 +42,7 @@ typedef struct Osre_Scene {
     PyObject_HEAD Scene *mScene;
 } Osre_World;
 
-typedef struct Osre_Entity {
+struct Osre_Entity {
     PyObject_HEAD Entity *mEntity;
 };
 

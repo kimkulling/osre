@@ -59,13 +59,14 @@ struct OSRE_EXPORT Resolution {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct WindowsProperties {
-    Rect2ui mRect;          ///< The window rectangle.
-    uc8 m_colordepth;       ///< Color depth.
-    uc8 m_depthbufferdepth; ///< Z-Depth.
-    uc8 m_stencildepth;     ///< Stencil depth.
-    String m_title;         ///< Window title.
-    bool m_fullscreen;      ///< true for full screen.
-    bool m_resizable;       ///< true, if window wan be resized.
+    Rect2ui mRect;          ///< The window rectangle
+    uc8 m_colordepth;       ///< Color depth
+    uc8 m_depthbufferdepth; ///< Z-Depth
+    uc8 m_stencildepth;     ///< Stencil depth
+    String m_title;         ///< Window title
+    bool m_fullscreen;      ///< true for full screen
+    bool m_resizable;       ///< true, if the window shall be resizable
+    bool m_maximized;       ///< treu, if the windows shall be maximized
     bool m_childWindow;     ///< true, if the window is a child window, for embedding
     bool m_open;            ///< Window is open flag.
 

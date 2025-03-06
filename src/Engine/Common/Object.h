@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -83,5 +82,4 @@ private:
     ui32 mRefcount;
 };
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

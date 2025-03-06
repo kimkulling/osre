@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 const f32 COL_SHIFT = 255.0f;
 
@@ -176,5 +175,4 @@ inline ColorRGBA &ColorRGBA::operator = ( const ColorRGBA &other ) {
     return *this;
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

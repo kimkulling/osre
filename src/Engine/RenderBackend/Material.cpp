@@ -22,9 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/Material.h"
 #include "RenderBackend/RenderCommon.h"
+#include "Common/Logger.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
+
+DECL_OSRE_LOG_MODULE(Material)
 
 Material::Material(const String &name, const IO::Uri &uri) :
         mName(name),
@@ -40,12 +42,19 @@ Material::Material(const String &name, const IO::Uri &uri) :
     // empty
 }
 
+
 void Material::setMaterialType(MaterialType matType) {
     mType = matType;
 }
 
 Material::~Material() {
-    delete[] mTextures;
+    clear();
+}
+
+void Material::clear() {
+    delete [] mTextures;
+    mNumTextures = 0;
+    mTextures = nullptr;    
 }
 
 MaterialType Material::getMaterialType() const {
@@ -61,5 +70,45 @@ void Material::createShader(const String &name, ShaderSourceArray &shaders) {
     }
 }
 
-} // namespace RenderBackend
-} // namespace OSRE
+bool Material::createTextures(size_t numTextures) {
+    if (numTextures == 0) {
+        clear();
+        osre_error(Tag, "Number of textures is zero");
+        return false;
+    }
+    mNumTextures = numTextures;
+    mTextures = new Texture *[numTextures];
+
+    return true;
+}
+
+void Material::clearTextures() {
+    delete mTextures;
+    mTextures = nullptr;
+    mNumTextures = 0;
+}
+
+void Material::setTextureStage(size_t textureIndex, Texture *tex)  {
+    if (textureIndex >= mNumTextures) {
+        return;
+    }
+    mTextures[textureIndex] = tex;
+}
+
+size_t Material::getNumTextures() const {
+    return mNumTextures;
+}
+
+Texture *Material::getTextureStageAt(size_t textureIndex) const {
+    if (textureIndex >= mNumTextures) {
+        return nullptr;
+    }
+
+    return mTextures[textureIndex];
+}
+
+size_t Material::getNumParameter() const {
+    return mNumParameters;
+}
+
+} // namespace OSRE::RenderBackend

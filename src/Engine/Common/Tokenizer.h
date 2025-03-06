@@ -47,7 +47,7 @@ namespace Common {
 class OSRE_EXPORT Tokenizer {
 public:
     ///	@brief	The class default constructor.
-    Tokenizer();
+    Tokenizer() = default;
     
     ///	@brief	The class destructor.
     ~Tokenizer() = default;

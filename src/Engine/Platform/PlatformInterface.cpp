@@ -36,8 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <GL/glew.h>
 #include <SDL.h>
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Properties;
@@ -193,6 +192,7 @@ bool PlatformInterface::onOpen() {
         props->m_stencildepth = config->get(Settings::StencilBufferDepth).getByte();
         props->m_fullscreen = fullscreen;
         props->m_resizable = config->get(Settings::WindowsResizable).getBool();
+        props->m_maximized = config->get(Settings::WindowsMaximized).getBool();
         props->m_childWindow = config->get(Settings::ChildWindow).getBool();
         props->m_title = config->get(Settings::WindowsTitle).getString();
         polls = config->get(Settings::PollingMode).getBool();
@@ -219,6 +219,11 @@ bool PlatformInterface::onOpen() {
 
 bool PlatformInterface::onClose() {
     PlatformPluginFactory::release();
+
+    if (mContext == nullptr) {
+        osre_error(Tag, "Invalid context.");
+        return false;
+    }
 
     delete mContext->m_oseventHandler;
     mContext->m_oseventHandler = nullptr;
@@ -268,5 +273,4 @@ bool PlatformInterface::setupGfx(WindowsProperties *props, bool polls) {
     return true;
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform

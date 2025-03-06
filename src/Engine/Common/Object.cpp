@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) Kim Kulling
+Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Object.h"
 #include "Common/StringUtils.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 Object::Object(const String &objName) :
         mObjectName(objName), 
@@ -68,6 +67,4 @@ guid Object::getGuid() const {
     return mId;
 }
 
-} // Namespace Common
-} // Namespace OSRE
-
+} // Namespace OSRE::Common

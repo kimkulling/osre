@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Platform/PlatformCommon.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -107,5 +106,4 @@ inline AbstractWindow *AbstractOGLRenderContext::getRenderSurface() const {
     return mRootRenderSurface;
 }
 
-} // namespace Platform
-} // namespace OSRE
+} // namespace OSRE::Platform

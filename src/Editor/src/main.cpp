@@ -25,8 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/App.h"
 #include "Common/Logger.h"
 #include "RenderBackend/TransformMatrixBlock.h"
-#include "Platform/win32/Win32Window.h"
-#include "OSREEdApp.h"
+#include "OsreEdApp.h"
 
 #include <iostream>
 
@@ -36,7 +35,7 @@ using namespace OSRE::App;
 using namespace OSRE::Platform;
 using namespace OSRE::Editor;
 
-static constexpr c8 Tag[] = "HelloWorldApp";
+DECL_OSRE_LOG_MODULE(osre_ed);
 
 static constexpr i32 AppOk = 0;
 static constexpr i32 AppError = -1;
@@ -49,7 +48,7 @@ static String getVersion() {
 int main(int argc, char *argv[]) {
     OsreEdApp osreApp(argc, argv);
     if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed version " + getVersion(),
-            WindowMode::Windowed,
+            WindowMode::WindowedMaximize,
             WindowType::Root,
             RenderBackendType::OpenGLRenderBackend)) {
         osre_error(Tag, "Cannot open the window.");
@@ -63,6 +62,7 @@ int main(int argc, char *argv[]) {
         osreApp.update();
         osreApp.requestNextFrame();
     }
+    osreApp.onDestroy();
 
     return AppOk;
 }

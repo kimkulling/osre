@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -201,5 +200,4 @@ inline bool TObjPtr<T>::operator != ( const TObjPtr<T> &rhs ) const {
 	return !( m_ptr == rhs.m_ptr );
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

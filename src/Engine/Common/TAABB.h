@@ -25,8 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "Common/glm_common.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -205,5 +204,4 @@ inline bool AABB::operator != (const AABB &rhs) const {
     return !(*this == rhs);
 }
 
-} // namespace Common
-} // Namespace OSRE
+} // namespace OSRE::Common

@@ -54,8 +54,8 @@ class MainRenderView {
 public:
     MainRenderView();
     ~MainRenderView();
-    static RenderBackend::Mesh *MainRenderView::createCoordAxis(ui32 size);
-    static RenderBackend::Mesh *MainRenderView::createGrid(ui32 numLines);
+    static RenderBackend::Mesh *createCoordAxis(ui32 size);
+    static RenderBackend::Mesh *createGrid(ui32 numLines);
     static void createRect2D(const Rect2ui &r, RenderBackend::Mesh *mesh2D, Style &style);
     static void createBonesFromSkeleton(Animation::Skeleton *skeleton);
     void createEditorElements(App::RenderComponent *rc);

@@ -25,8 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Object.h"
 #include "Debugging/osre_debugging.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -161,5 +160,4 @@ private:
     osre_assert(nullptr != s_instance);        \
     s_instance = nullptr;         
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

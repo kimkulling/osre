@@ -22,16 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Common/Tokenizer.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 using namespace ::cppcore;
 
 static const String EmptyToken = "";
-
-Tokenizer::Tokenizer() : m_Token() {
-    // empty
-}
 
 size_t Tokenizer::getNumOfToken() const {
     return m_Token.size();
@@ -94,5 +89,4 @@ bool Tokenizer::isLineBreak( c8 c ) {
     }
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common
