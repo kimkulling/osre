@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/RenderStates.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 //  Forward declarations --------------------------------------------------------------------------
 class OGLShader;
@@ -291,5 +290,4 @@ struct OGLFrameBuffer {
     ~OGLFrameBuffer() = default;
 };
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

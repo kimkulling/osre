@@ -27,8 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Common/Variant.h>
 #include <cppcore/Container/THashMap.h>
 
-namespace OSRE {
-namespace Common {
+
+namespace OSRE::Common {
 
 /// @brief A struct to store variables.
 struct EnvVar {
@@ -126,4 +126,4 @@ private:
 };
 
 } // Namespace Common
-} // Namespace OSRE
+// Namespace OSRE

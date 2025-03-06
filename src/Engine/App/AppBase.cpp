@@ -54,7 +54,7 @@ using namespace ::OSRE::Animation;
 using namespace ::OSRE::Properties;
 using namespace ::OSRE::IO;
 
-static constexpr c8 Tag[] = "AppBase";
+DECL_OSRE_LOG_MODULE(AppBase)
 
 static void attachMouseEventPtrs(EventPtrArray &eventArray) {
     eventArray.add(&MouseButtonDownEvent);
@@ -97,6 +97,7 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
     mSettings->setInt(Settings::WinWidth, width);
     mSettings->setInt(Settings::WinHeight, height);
     mSettings->setBool(Settings::FullScreen, mode == WindowMode::Fullscreen);
+    mSettings->setBool(Settings::WindowsMaximized, mode == WindowMode::WindowedMaximize);
     mSettings->setBool(Settings::ChildWindow, type == WindowType::Child);
     mSettings->setString(Settings::WindowsTitle, title);
     if (renderer == RenderBackendType::OpenGLRenderBackend) {

@@ -22,8 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Common/BaseMath.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 f32 BaseMath::getSPEPS() {
     return 0.000001f;
@@ -33,5 +32,4 @@ f32 BaseMath::getPI() {
     return 3.141592653589f;
 }
 
-} // namespace Common
-} // namespace OSRE
+} // namespace OSRE::Common

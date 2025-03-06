@@ -29,13 +29,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "App/CameraComponent.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 Tag[] = "Scene";
+DECL_OSRE_LOG_MODULE(Scene)
 
 Scene::Scene(const String &worldName) :
         Object(worldName),
@@ -61,7 +60,7 @@ Entity *Scene::findEntity(const String &name) {
     }
 
     Entity *currentEntity{ nullptr };
-    for (size_t i=0; i<mEntities.size(); ++i ) {
+    for (size_t i = 0; i < mEntities.size(); ++i) {
         currentEntity = mEntities[i];
         if (currentEntity != nullptr) {
             if (currentEntity->getName() == name) {
@@ -77,9 +76,9 @@ bool Scene::removeEntity(Entity *entity) {
     if (nullptr == entity) {
         return false;
     }
-    
+
     bool found = false;
-    TArray<Entity*>::Iterator it = mEntities.linearSearch(entity);
+    TArray<Entity *>::Iterator it = mEntities.linearSearch(entity);
     if (mEntities.end() != it) {
         mEntities.remove(it);
         found = true;
@@ -129,7 +128,7 @@ Entity *Scene::getEntityByName(const String &name) const {
     return entity;
 }
 
-void Scene::setSceneRoot(TransformComponent *root ) {
+void Scene::setSceneRoot(TransformComponent *root) {
     mRoot = root;
     mDirtry = true;
 }
@@ -193,5 +192,4 @@ void Scene::updateBoundingTrees() {
     mDirtry = false;
 }
 
-} // Namespace App
-} // namespace OSRE
+} // namespace OSRE::App

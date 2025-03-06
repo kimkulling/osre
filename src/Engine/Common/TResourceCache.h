@@ -28,9 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
-namespace OSRE {
-
-namespace Common {
+namespace OSRE::Common {
 
 static constexpr c8 ResTag[] = "TResourceCache";
 
@@ -67,45 +65,44 @@ public:
 
 private:
     using ResourceMap = std::map<String, TResource*>;
-    ResourceMap m_resourceMap;
-    TResourceFactory *m_factory;
-    bool m_owner;
+    ResourceMap mResourceMap;
+    TResourceFactory *mFactory;
+    bool mOwner;
 };
 
 template <class TResourceFactory, class TResource>
 inline TResourceCache<TResourceFactory, TResource>::TResourceCache() :
-        m_resourceMap(), m_factory(new TResourceFactory), m_owner(true) {
+        mResourceMap(), mFactory(new TResourceFactory), mOwner(true) {
     // empty
 }
 
 template <class TResourceFactory, class TResource>
 inline TResourceCache<TResourceFactory, TResource>::~TResourceCache() {
     clear();
-    if (m_owner) {
-        delete m_factory;
+    if (mOwner) {
+        delete mFactory;
     }
-    m_factory = nullptr;
 }
 
 template <class TResourceFactory, class TResource>
 inline void TResourceCache<TResourceFactory, TResource>::registerFactory(TResourceFactory &factory, bool owning) {
-    if (nullptr != m_factory) {
-        if (m_owner) {
-            delete m_factory;
-            m_owner = false;
+    if (nullptr != mFactory) {
+        if (mOwner) {
+            delete mFactory;
+            mOwner = false;
         }
     }
-    m_factory = &factory;
-    m_owner = owning;
+    mFactory = &factory;
+    mOwner = owning;
 }
 
 template <class TResourceFactory, class TResource>
 inline TResource *TResourceCache<TResourceFactory, TResource>::create(const String &name, const IO::Uri &uri) {
-    TResource *resource = m_factory->create(name, uri);
+    TResource *resource = mFactory->create(name, uri);
     if (nullptr == resource) {
         return nullptr;
     }
-    m_resourceMap[name] = resource;
+    mResourceMap[name] = resource;
 
     return resource;
 }
@@ -116,8 +113,8 @@ inline TResource *TResourceCache<TResourceFactory, TResource>::find(const String
         return nullptr;
     }
 
-    typename ResourceMap::const_iterator it = m_resourceMap.find(name);
-    if (m_resourceMap.end() == it) {
+    typename ResourceMap::const_iterator it = mResourceMap.find(name);
+    if (mResourceMap.end() == it) {
         return nullptr;
     }
 
@@ -129,21 +126,20 @@ inline void TResourceCache<TResourceFactory, TResource>::set(const String &name,
     if (name.empty()) {
         return;
     }
-    auto it = m_resourceMap.find(name);
-    if (it != m_resourceMap.end()) {
+    auto it = mResourceMap.find(name);
+    if (it != mResourceMap.end()) {
         delete it->second;
     }
-    m_resourceMap[name] = resource;
+    mResourceMap[name] = resource;
 }
 
 template <class TResourceFactory, class TResource>
 inline void TResourceCache<TResourceFactory, TResource>::clear() {
-    typename ResourceMap::iterator it(m_resourceMap.begin());
-    for (; it != m_resourceMap.end(); ++it) {
+    typename ResourceMap::iterator it(mResourceMap.begin());
+    for (; it != mResourceMap.end(); ++it) {
         delete it->second;
     }
-    m_resourceMap.clear();
+    mResourceMap.clear();
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

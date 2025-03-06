@@ -25,14 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "Common/glm_common.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::glm;
 
-static constexpr c8 Tag[] = "Camera";
+DECL_OSRE_LOG_MODULE(Camera)
 
 static const String CameraModelName[3] = {
     "Perspective ",
@@ -59,8 +58,8 @@ CameraComponent::CameraComponent(Entity *owner) :
         mBottom(1.0f),
         mEye(1, 1, 1),
         mCenter(0, 0, 0),
+        mRightVec(0, 1, 0),
         mUp(0, 0, 1),
-        mRightVec(0,1,0),
         mView(1),
         mProjection(1) {
     // empty
@@ -100,8 +99,8 @@ void CameraComponent::observeBoundingBox(const AABB &aabb) {
     }
 
     const glm::vec3 center = aabb.getCenter();
-    
-    glm::vec3 eye(-diam *0.5f, -diam *0.5f, diam *0.5f), up(0, 0, 1);
+
+    glm::vec3 eye(-diam * 0.5f, -diam * 0.5f, diam * 0.5f), up(0, 0, 1);
 
     setLookAt(eye, center, up);
 }
@@ -158,7 +157,7 @@ bool CameraComponent::onUpdate(Time) {
     mView = glm::lookAt(mEye, mCenter, mUp);
     mViewProjection = mProjection * mView;
     mFrustum.extractFrom(mViewProjection);
-     
+
     return true;
 }
 
@@ -173,5 +172,4 @@ bool CameraComponent::onRender(RenderBackendService *rbSrv) {
     return true;
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App

@@ -24,10 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/Logger.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
-static constexpr c8 Tag[] = "OGLRenderBackend";
+DECL_OSRE_LOG_MODULE(OGLRenderBackend)
 
 static String LastError;
 
@@ -82,5 +81,5 @@ void checkOGLErrorState( const c8 *file, ui32 line ) {
 	LastError = error_message;
 }
 
-} // Namespace RendeBackend
-} // Namespace OSRE
+} // Namespace OSRE::RendeBackend
+

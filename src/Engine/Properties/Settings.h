@@ -64,7 +64,8 @@ public:
         ClearColor,				///< The clear color.
         FullScreen,             ///< The option for full screen.
         WindowsResizable,       ///< Specific windows flags for the root surface.
-        ChildWindow,            ///<
+        WindowsMaximized,       ///< Windows shall be maximized
+        ChildWindow,            ///< Window is a child window
         PollingMode,            ///< Polling mode, true for polling requested.
         DefaultFont,            ///< The default font for rendering.
         RenderMode,             ///< The requested render mode (2D or 3D, default 3D).

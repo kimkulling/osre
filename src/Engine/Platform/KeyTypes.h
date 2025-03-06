@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Platform/PlatformCommon.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 ///	@brief  This enum type is used to describe a key.
 enum Key {
@@ -211,5 +210,4 @@ enum Key {
     KEY_LAST
 };
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform

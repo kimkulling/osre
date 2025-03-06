@@ -114,8 +114,9 @@ private:
 };
 
 enum class WindowMode {
-    Invalid,
+    Invalid = -1,
     Windowed,
+    WindowedMaximize,
     Fullscreen,
     Count
 };

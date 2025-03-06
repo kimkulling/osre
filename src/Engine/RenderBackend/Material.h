@@ -52,6 +52,7 @@ class OSRE_EXPORT Material {
 public:
     Material(const String &name, const IO::Uri &uri);
     ~Material();
+    void clear();
     void setMaterialType(MaterialType matType);
     MaterialType getMaterialType() const;
     void createShader(const String &name, ShaderSourceArray &shaders);
@@ -62,9 +63,15 @@ public:
     const Color4 &getColor(MaterialColorType colorType) const;
     void setFloatParameter(MaterialParameterType, f32 value);
     f32 getFloatParameter(MaterialParameterType) const;
-
+    bool createTextures(size_t numTextures);
+    void clearTextures();
+    void setTextureStage(size_t textureIndex, Texture *tex);
+    size_t getNumTextures() const;
+    Texture *getTextureStageAt(size_t textureIndex) const;
+    size_t getNumParameter() const;
     OSRE_NON_COPYABLE(Material)
 
+private:
     FastString mName;
     MaterialType mType;
     size_t mNumTextures;

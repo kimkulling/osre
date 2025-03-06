@@ -170,9 +170,9 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
     bool ok = true;
     try {
         Material *mat( new Material( "test", IO::Uri() ) );
-        EXPECT_EQ( MaterialType::ShaderMaterial, mat->mType );
-        EXPECT_EQ( mat->mParameters, nullptr );
-        EXPECT_EQ( mat->mNumParameters, 0u );
+        
+        EXPECT_EQ( MaterialType::ShaderMaterial, mat->getMaterialType());
+        EXPECT_EQ( mat->getNumParameter(), 0u );
     } catch ( ... ) {
         ok = false;
     }
@@ -180,11 +180,13 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 }
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
-    Material *mat( new Material( "test", IO::Uri() ) );
-    mat->mShader = new Shader("test.sh");
-    mat->mShader->addUniformBuffer("MVP");
-
-    EXPECT_EQ(1u, mat->mShader->getNumUniformBuffer());
+    ShaderSourceArray shArray;
+    Material *mat = new Material( "test", IO::Uri());
+    mat->createShader("test.sh", shArray);
+    Shader *shader = mat->getShader();
+    EXPECT_NE(shader, nullptr);
+    shader->addUniformBuffer("MVP");
+    EXPECT_EQ(1u, shader->getNumUniformBuffer());
     delete mat;
 }
 

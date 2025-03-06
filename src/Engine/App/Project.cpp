@@ -25,28 +25,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Entity.h"
 #include "App/TransformComponent.h"
 #include "Common/Logger.h"
-#include "Common/TAABB.h"
-#include "Debugging/osre_debugging.h"
 #include "Properties/Property.h"
-#include "IO/Uri.h"
 #include "RenderBackend/Mesh.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::IO;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 Tag[] = "Project";
+DECL_OSRE_LOG_MODULE(Project)
+
 static constexpr ui32 MajorProjectVerion = 0;
 static constexpr ui32 MinorProjectVerion = 1;
 static constexpr c8 Ext[] = "osre";
 
 Project::Project() :
         Object("App/Project"),
-        mProjectDirtyState(0),
-        mProjectName() {
+        mProjectDirtyState(0) {
     // empty
 }
 
@@ -86,11 +82,11 @@ static void setNameChunk(const String &name, ChunkName &cn) {
         return;
     }
 
-    cn.mLenChunkName = (i32) name.size();
+    cn.mLenChunkName = (i32)name.size();
     cn.mChunkName = new c8[cn.mLenChunkName];
     ::memcpy(cn.mChunkName, name.c_str(), cn.mLenChunkName);
 }
-    
+
 static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
     if (node->getNumChildren() == 0) {
         return currentNodeCount;
@@ -98,7 +94,7 @@ static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
     size_t numChildren = node->getNumChildren();
     currentNodeCount += numChildren;
     for (size_t i = 0; i < numChildren; ++i) {
-        TransformComponent *child = node->getChildAt(i);        
+        TransformComponent *child = node->getChildAt(i);
         if (child != nullptr) {
             currentNodeCount = getNumNodes(child, currentNodeCount);
         }
@@ -106,22 +102,22 @@ static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
 
     return currentNodeCount;
 }
- 
+
 static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &index) {
     if (currentNode == nullptr || nd == nullptr) {
         return;
     }
 
-    NodeData &curNodeData = nd[index];    
+    NodeData &curNodeData = nd[index];
     setNameChunk(currentNode->getName(), curNodeData.mNodeName);
     ::cppcore::TArray<Properties::Property *> propArray;
- 
-    curNodeData.mNumChildren = (i32) currentNode->getNumChildren();
+
+    curNodeData.mNumChildren = (i32)currentNode->getNumChildren();
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;
     for (int i = 0; i < curNodeData.mNumChildren; i++) {
         TransformComponent *child = currentNode->getChildAt(i);
-        curNodeData.mChildrenIndices[current_child] = (i32) i;
+        curNodeData.mChildrenIndices[current_child] = (i32)i;
         current_child++;
         ++index;
         storeNodes(child, nd, index);
@@ -132,7 +128,7 @@ static void storeMeshes(MeshArray &meshes, MeshData *md) {
     if (meshes.isEmpty()) {
         return;
     }
-    
+
     if (md == nullptr) {
         return;
     }
@@ -143,7 +139,7 @@ static void storeMeshes(MeshArray &meshes, MeshData *md) {
             continue;
         }
         setNameChunk(mesh->getName(), md->mMeshName);
-        
+
         // Todo!
     }
 }
@@ -152,7 +148,7 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
     if (entities.isEmpty()) {
         return;
     }
-    
+
     size_t numMeshes = 0;
     wd.mNumEntities = (i32)entities.size();
     wd.mEntityData = new EntityData[wd.mNumEntities];
@@ -192,7 +188,7 @@ static bool saveScene(const Scene *scene, WorldData &wd) {
     }
 
     size_t numNodes = 1;
-    wd.mNumNodes = (i32) getNumNodes(root, numNodes);
+    wd.mNumNodes = (i32)getNumNodes(root, numNodes);
     wd.mNodes = new NodeData[wd.mNumNodes];
     size_t index = 0;
     storeNodes(root, wd.mNodes, index);
@@ -211,5 +207,4 @@ bool Project::save(const String &name) {
     return saveScene(nullptr, wd);
 }
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::App

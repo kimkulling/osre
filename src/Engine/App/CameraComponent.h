@@ -23,8 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
-#include "Common/Ids.h"
-#include "Common/Object.h"
 #include "Common/glm_common.h"
 #include "App/TransformComponent.h"
 #include "Common/TAABB.h"
@@ -148,7 +146,7 @@ public:
     /// @return The right vector.
     const glm::vec3 &getRight() const;
 
-    /// @brief Will reutrn the up vector.
+    /// @brief Will return the up vector.
     /// @return the up-vector.
     const glm::vec3 &getUp() const;
 

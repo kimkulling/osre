@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -168,5 +167,4 @@ inline void ArgumentParser::reset() {
     mCurrentIndex = 0;
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

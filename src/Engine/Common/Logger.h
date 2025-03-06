@@ -30,6 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
+#define DECL_OSRE_LOG_MODULE(name) static constexpr c8 Tag[] = #name;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///

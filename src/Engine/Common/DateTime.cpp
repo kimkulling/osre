@@ -28,20 +28,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  include "Platform/Windows/MinWindows.h"
 #endif // OSRE_WINDOWS
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
-DateTime::DateTime() 
-        : m_Year( 0 ), m_Month( 0 ), m_Day( 0 ), m_Hour( 0 ), m_Minute( 0 ), m_Seconds( 0 ), m_Milliseconds( 0 ) {
+DateTime::DateTime() :
+        m_Year(0), m_Month(0), m_Day(0), m_Hour(0), m_Minute(0), m_Seconds(0), m_Milliseconds(0) {
     // empty
 }
 
-DateTime::DateTime( ui32 year, ui32 month, ui32 day, ui32 hour, ui32 minute, ui32 seconds, ui32 ms )
-: m_Year( year ), m_Month( month ), m_Day( day ), m_Hour( hour ), m_Minute( minute ), m_Seconds( seconds ), m_Milliseconds( ms ) {
+DateTime::DateTime(ui32 year, ui32 month, ui32 day, ui32 hour, ui32 minute, ui32 seconds, ui32 ms) :
+        m_Year(year), m_Month(month), m_Day(day), m_Hour(hour), m_Minute(minute), m_Seconds(seconds), m_Milliseconds(ms) {
     // empty
 }
 
-void DateTime::setCurrentYear( ui32 year ) {
+void DateTime::setCurrentYear(ui32 year) {
     m_Year = year;
 }
 
@@ -49,7 +48,7 @@ ui32 DateTime::getCurrentYear() const {
     return m_Year;
 }
 
-void DateTime::setCurrentMonth( ui32 month ) {
+void DateTime::setCurrentMonth(ui32 month) {
     m_Month = month;
 }
 
@@ -57,7 +56,7 @@ ui32 DateTime::getCurrentMonth() const {
     return m_Month;
 }
 
-void DateTime::setCurrentDay( ui32 day ) {
+void DateTime::setCurrentDay(ui32 day) {
     m_Day = day;
 }
 
@@ -65,7 +64,7 @@ ui32 DateTime::getCurrentDay() const {
     return m_Day;
 }
 
-void DateTime::setCurrentHour( ui32 hour ) {
+void DateTime::setCurrentHour(ui32 hour) {
     m_Hour = hour;
 }
 
@@ -73,7 +72,7 @@ ui32 DateTime::getCurrentHour() const {
     return m_Hour;
 }
 
-void DateTime::setCurrentMinute( ui32 minute ) {
+void DateTime::setCurrentMinute(ui32 minute) {
     m_Minute = minute;
 }
 
@@ -81,7 +80,7 @@ ui32 DateTime::getCurrentMinute() const {
     return m_Minute;
 }
 
-void DateTime::setCurrentSeconds( ui32 seconds ) {
+void DateTime::setCurrentSeconds(ui32 seconds) {
     m_Seconds = seconds;
 }
 
@@ -89,7 +88,7 @@ ui32 DateTime::getCurrentSeconds() const {
     return m_Seconds;
 }
 
-void DateTime::setCurrentMilliseconds( ui32 ms ) {
+void DateTime::setCurrentMilliseconds(ui32 ms) {
     m_Milliseconds = ms;
 }
 
@@ -102,7 +101,7 @@ DateTime DateTime::getCurrentUTCTime() {
 
 #ifdef OSRE_WINDOWS
     SYSTEMTIME systemtime;
-    ::GetSystemTime( &systemtime );
+    ::GetSystemTime(&systemtime);
 
     currentDateTime.m_Year = systemtime.wYear;
     currentDateTime.m_Month = systemtime.wMonth;
@@ -113,8 +112,8 @@ DateTime DateTime::getCurrentUTCTime() {
     currentDateTime.m_Milliseconds = systemtime.wMilliseconds;
 #else
 
-    time_t t = time( 0 );   // get time now
-    tm * now = localtime( & t );
+    time_t t = time(0); // get time now
+    tm *now = localtime(&t);
     currentDateTime.m_Year = now->tm_year + 1900;
     currentDateTime.m_Month = now->tm_mon + 1;
     currentDateTime.m_Day = now->tm_mday;
@@ -128,5 +127,4 @@ DateTime DateTime::getCurrentUTCTime() {
     return currentDateTime;
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // namespace OSRE::Common

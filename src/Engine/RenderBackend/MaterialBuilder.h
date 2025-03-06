@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderCommon.h"
 #include "Common/TResourceCache.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -99,5 +98,4 @@ private:
     static Data *sData;
 };
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend

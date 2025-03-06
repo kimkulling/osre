@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "IO/Uri.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 struct ResourceStatistics {
     size_t m_memory;
@@ -137,5 +136,4 @@ inline void TResource<TResType, TResLoader>::setState(ResourceState newState) {
     mState = newState;
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

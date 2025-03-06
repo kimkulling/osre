@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/OGLRenderer/OGLEnum.h"
 #include "Debugging/osre_debugging.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 GLenum OGLEnum::getGLBufferType( BufferType type ) {
     switch( type ) {
@@ -278,5 +277,5 @@ GLuint OGLEnum::getOGLShaderType( ShaderType type ) {
     return 0;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend
+

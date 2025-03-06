@@ -41,10 +41,6 @@ using namespace ::OSRE::App;
 // To identify local log entries
 static constexpr c8 Tag[] = "ModelLoadingApp";
 
-struct Entity2D {
-
-};
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
@@ -53,15 +49,12 @@ struct Entity2D {
 class Demo2DApp : public App::AppBase {
     TransformMatrixBlock  mTransformMatrix;
     /// The 2D renderer for the ui overlay
-    CanvasRenderer *mCanvasRenderer;
+    CanvasRenderer *mCanvasRenderer = nullptr;
     /// The entity to render the 3d-scene
-    Entity *mEntity;
+    Entity *mEntity = nullptr;
 
 public:
-    Demo2DApp(int argc, char *argv[]) :
-            AppBase(argc, const_cast<const char **>(argv)),
-            mCanvasRenderer(nullptr),
-            mEntity(nullptr) {
+    Demo2DApp(int argc, char *argv[]) : AppBase(argc, const_cast<const char **>(argv)){
         // empty
     }
 
@@ -75,7 +68,7 @@ protected:
     CameraComponent *setupCamera(Scene *scene) {
         auto *camEntity = new Entity("camera", *getIdContainer(), scene);
         scene->addEntity(camEntity);
-        CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+        auto *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
         scene->setActiveCamera(camera);
 
         ui32 w, h;
@@ -102,8 +95,8 @@ protected:
         const Color4 Red(1, 0, 0, 0);
         mCanvasRenderer->setColor(Red);
         mCanvasRenderer->drawRect(10, 10, 500, 40, true);
-        
-        Color4 green(0, 1, 0, 1);
+
+        const Color4 green(0, 1, 0, 1);
         
         mCanvasRenderer->setColor(Red);
         mCanvasRenderer->drawRect(1, 1, 1000, 760, false);
@@ -120,7 +113,7 @@ protected:
         mCanvasRenderer->drawRect(100, 500, 60, 60, false);
 
         mCanvasRenderer->selectLayer(2);
-        Color4 yellow(1, 1, 0, 1);
+        const Color4 yellow(1, 1, 0, 1);
         mCanvasRenderer->setColor(yellow);
         mCanvasRenderer->drawRect(100, 100, 110, 30, true);
 
@@ -138,9 +131,9 @@ protected:
         addScene(scene, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         MeshBuilder meshBuilder;
-        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
+        auto *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
         if (mesh != nullptr) {
-            RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+            auto *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
             CameraComponent *camera = setupCamera(scene);
@@ -150,16 +143,9 @@ protected:
 
         return true;
     }
-
-    bool onDestroy() override {
-        delete mCanvasRenderer;
-        mCanvasRenderer = nullptr;
-
-        return true;
-    }
-
+    
     void onUpdate() override {
-        RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         
         rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSerive->beginRenderBatch("b1");

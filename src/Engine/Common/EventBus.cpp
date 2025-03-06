@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Memory/TStackAllocator.h>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 ::cppcore::TStackAllocator<QueueEntry> QueueEntryAlloctor;
 
@@ -142,5 +141,4 @@ void EventBus::publish( const Event &ev, const EventData *eventData ) {
     mQueueEntryArray.add(entry);
 }
 
-} // namespace Common
-} // namespace OSRE
+} // namespace OSRE::Common

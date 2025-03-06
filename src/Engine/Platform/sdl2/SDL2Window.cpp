@@ -66,7 +66,7 @@ SDL_Window *SDL2Surface::getSDLSurface() const {
 
 bool SDL2Surface::onCreate() {
     WindowsProperties *prop = getProperties();
-    if(prop == nullptr) {
+    if (prop == nullptr) {
         return false;
     }
 
@@ -81,7 +81,12 @@ bool SDL2Surface::onCreate() {
     if ( prop->m_resizable ) {
         sdl2Flags |= SDL_WINDOW_RESIZABLE;
     }
-        
+
+    if (prop->m_maximized) {
+        sdl2Flags |= SDL_WINDOW_MAXIMIZED;
+    }
+
+    // Create the window
     mSurface = ::SDL_CreateWindow(prop->m_title.c_str(),
                                   SDL_WINDOWPOS_CENTERED, 
                                   SDL_WINDOWPOS_CENTERED, 
@@ -89,6 +94,13 @@ bool SDL2Surface::onCreate() {
     if( nullptr == mSurface ) {
         osre_error(Tag, "Error while creating window, error: " + std::string(SDL_GetError()));
         return false;
+    }
+    int top, left, bottom, right;
+    if (SDL_GetWindowBordersSize(mSurface, &top, &left, &bottom, &right ) == 0) {
+        prop->mRect.x1 = left;
+        prop->mRect.y1 = top;
+        prop->mRect.x2 = right;
+        prop->mRect.y2 = bottom;
     }
     ::SDL_ShowWindow(mSurface);
 

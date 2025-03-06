@@ -23,15 +23,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "App/AppBase.h"
 
-#include <windows.h>
-#include <shellapi.h>
-#include <commctrl.h>
-
 namespace OSRE {
 namespace Editor {
 
 using namespace OSRE::App;
 using namespace OSRE::Modules;
+
+struct TreeItem {
+
+};
 
 class InspectorView final : public IModuleView {
 public:
@@ -49,7 +49,7 @@ protected:
     void onDestroy() override {}
 
 private:
-    HTREEITEM mRoot;
+    TreeItem *mRoot;
 };
 
 InspectorModule::InspectorModule(AppBase *parentApp) :

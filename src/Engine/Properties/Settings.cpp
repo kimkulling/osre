@@ -53,6 +53,7 @@ static const c8 *ConfigKeyStringTable[Settings::MaxKonfigKey] = {
     "ClearColor",
     "Fullscreen",
     "WindowsResizable",
+    "WindowsMaximized",
     "ChildWindow",
     "PollingMode",
     "DefaultFont",
@@ -208,6 +209,8 @@ void Settings::initDefaults() {
 
     value.setBool( true );
     mPropertyMap->setProperty( WindowsResizable, ConfigKeyStringTable[ WindowsResizable ], value );
+    value.setBool( false );
+    mPropertyMap->setProperty( WindowsMaximized, ConfigKeyStringTable[ WindowsMaximized ], value );
     value.setBool( false );
     mPropertyMap->setProperty( ChildWindow, ConfigKeyStringTable[ ChildWindow ], value );
     value.setInt( 2 );

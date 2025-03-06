@@ -22,24 +22,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "App/Component.h"
 #include "App/TransformComponent.h"
-#include "Common/Ids.h"
 #include "Common/StringUtils.h"
 #include "Common/glm_common.h"
 #include "Properties/Property.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 namespace {
-    static void releaseTransformComponent(TransformComponent *child) {
-        osre_assert(child != nullptr);
+static void releaseTransformComponent(TransformComponent *child) {
+    osre_assert(child != nullptr);
 
-        child->setParent(nullptr);
-        child->release();
-    }
+    child->setParent(nullptr);
+    child->release();
 }
+} // namespace
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
@@ -48,13 +46,11 @@ static constexpr size_t NotFound = 99999999;
 TransformComponent::TransformComponent(const String &name, Entity *owner, Ids &ids, TransformComponent *parent) :
         Object(name),
         Component(owner, ComponentType::TransformComponentType),
-        mChildren(),
         mParent(parent),
-        mMeshRefererenceArray(),
         mIsActive(true),
         mIds(&ids),
         mLocalTransform(1.0f),
-        mWorldTransform(1.0f)  {
+        mWorldTransform(1.0f) {
     if (nullptr != mParent) {
         mParent->addChild(this);
     }
@@ -79,7 +75,7 @@ TransformComponent *TransformComponent::getParent() const {
 }
 
 TransformComponent *TransformComponent::createChild(const String &name) {
-    TransformComponent *child = new TransformComponent(name, getOwner(), * mIds, this);
+    TransformComponent *child = new TransformComponent(name, getOwner(), *mIds, this);
     mChildren.add(child);
     child->get();
 
@@ -234,5 +230,4 @@ size_t TransformComponent::getMeshReferenceAt(size_t index) const {
     return mMeshRefererenceArray[index];
 }
 
-} // Namespace App
-} // namespace OSRE
+} // namespace OSRE::App

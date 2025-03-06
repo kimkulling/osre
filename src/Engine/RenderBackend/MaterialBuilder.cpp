@@ -118,14 +118,14 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
     }
 
     mat = materialCache->create(fontMatName);
-
-    mat->mNumTextures = 1;
-    mat->mTextures = new Texture *[mat->mNumTextures];
     TextureResource *texRes = new TextureResource(fontName, IO::Uri(fontName));
 
     TextureLoader loader;
-    texRes->load(loader);
-    mat->mTextures[0] = texRes->getRes();
+    auto state = texRes->load(loader);
+    if (state == Common::ResourceState::Loaded) {
+        mat->createTextures(1);
+        mat->setTextureStage(0, texRes->getRes());
+    }
 
     const String vertex_2d =
             getDefaultGLSLVersion() +
@@ -315,12 +315,12 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     mat->createShader(shaderName, arr);
 
     // Setup shader attributes and variables
-    Shader *shader = mat->mShader;
+    Shader *shader = mat->getShader();
     if (shader != nullptr) {
         if (type == VertexType::ColorVertex) {
-            mat->mShader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+            shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->mShader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+            shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
@@ -345,22 +345,19 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
         return nullptr;
     }
 
-    mat->mNumTextures = texResArray.size();
-    mat->mTextures = new Texture *[texResArray.size()];
+    mat->createTextures(texResArray.size());
     for (size_t i = 0; i < texResArray.size(); ++i) {
         TextureResource *texRes = texResArray[i];
         if (texRes == nullptr) {
             continue;
         }
         TextureLoader loader;
-        texRes->load(loader);
-
         Common::ResourceState state = texRes->load(loader);
         if (state != Common::ResourceState::Loaded) {
             osre_error(Tag, "Cannot load texture: " + texRes->getUri().getResource());
-            mat->mTextures[i] = nullptr;
+            mat->setTextureStage(i, nullptr);
         } else {
-            mat->mTextures[i] = texRes->getRes();
+            mat->setTextureStage(i, texRes->getRes());
         }
     }
 

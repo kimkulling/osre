@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cmath>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -92,5 +91,4 @@ inline T osre_lerp(T v0, T v1, T t) {
     return (1 - t) * v0 + t * v1;
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common

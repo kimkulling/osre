@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ProgressReporter.h"
 
 #include "Platform/AbstractWindow.h"
-#include "Platform/win32/Win32Window.h"
 #ifdef _WIN32
 #   include "Platform/Windows/MinWindows.h"
 #endif
@@ -62,10 +61,6 @@ void ProgressReporter::start() {
     ui32 x = width / 2u - 50u;
     ui32 y = heihgt / 2u - 10u;
     Rect2ui r(x, y, 300u, 20u);
-    Platform::Win32Window *w = (Platform::Win32Window*) mWindow;
-    if (nullptr == w) {
-        return;
-    }
 }
 
 void ProgressReporter::stop() {

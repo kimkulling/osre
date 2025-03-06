@@ -24,20 +24,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Common/StringUtils.h"
 #include "IO/Uri.h"
-#include "IO/Stream.h"
 
-namespace OSRE {
-namespace App {
+namespace OSRE::App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
 AssetRegistry *AssetRegistry::sInstance = nullptr;
 
-static constexpr c8 Tag[] = "AssetRegistry";
+DECL_OSRE_LOG_MODULE(AssetRegistry)
 
 AssetRegistry *AssetRegistry::create() {
-    if ( nullptr == sInstance ) {
+    if (nullptr == sInstance) {
         sInstance = new AssetRegistry;
     }
 
@@ -45,7 +43,7 @@ AssetRegistry *AssetRegistry::create() {
 }
 
 void AssetRegistry::destroy() {
-    if ( nullptr == sInstance ) {
+    if (nullptr == sInstance) {
         return;
     }
 
@@ -57,7 +55,7 @@ bool AssetRegistry::registerAssetPath(const String &mount, const String &path) {
     if (nullptr == sInstance) {
         return false;
     }
-    
+
     const HashId hashId = StringUtils::hashName(mount);
     PathNode pn;
     pn.mountPoint = mount;
@@ -67,31 +65,31 @@ bool AssetRegistry::registerAssetPath(const String &mount, const String &path) {
     return true;
 }
 
-bool AssetRegistry::hasPath( const String &mount ) {
-    if ( nullptr == sInstance ) {
+bool AssetRegistry::hasPath(const String &mount) {
+    if (nullptr == sInstance) {
         return false;
     }
-    
+
     if (mount.empty()) {
         return false;
     }
 
     const HashId hashId = StringUtils::hashName(mount);
-    if ( !sInstance->mName2pathMap.hasKey( hashId ) ) {
+    if (!sInstance->mName2pathMap.hasKey(hashId)) {
         return false;
     }
 
     return true;
 }
 
-String AssetRegistry::getPath( const String &mount ) {
+String AssetRegistry::getPath(const String &mount) {
     static const String Dummy("");
     if (nullptr == sInstance) {
         return Dummy;
     }
 
     const HashId hashId = StringUtils::hashName(mount);
-    if ( !sInstance->mName2pathMap.hasKey(hashId)) {
+    if (!sInstance->mName2pathMap.hasKey(hashId)) {
         return Dummy;
     }
 
@@ -112,19 +110,19 @@ String AssetRegistry::resolvePathFromUri(const IO::Uri &location) {
 
     const String pathToCheck = location.getAbsPath();
     String absPath(pathToCheck);
-    const String::size_type pos = pathToCheck.find( "/" );
-    String mountPoint = pathToCheck.substr( 0, pos );
+    const String::size_type pos = pathToCheck.find("/");
+    String mountPoint = pathToCheck.substr(0, pos);
     String::size_type offset = pos + mountPoint.size() + 1;
-    if (hasPath( mountPoint )) {
-        absPath = getPath( mountPoint );
-        if ( absPath[ absPath.size()-1 ] != '/') {
+    if (hasPath(mountPoint)) {
+        absPath = getPath(mountPoint);
+        if (absPath[absPath.size() - 1] != '/') {
             absPath += '/';
             ++offset;
         }
-        const String rest = pathToCheck.substr(pos+1, pathToCheck.size() - pos-1);
+        const String rest = pathToCheck.substr(pos + 1, pathToCheck.size() - pos - 1);
         absPath += rest;
     }
-    
+
     return absPath;
 }
 
@@ -140,17 +138,17 @@ bool AssetRegistry::registerAssetPathInBinFolder(const String &mount, const Stri
     }
 
     bool ok = true;
-    #ifdef OSRE_WINDOWS
-        ok = AssetRegistry::registerAssetPath(mount, "../../" + foldername);
-    #else
-        ok = AssetRegistry::registerAssetPath(mount, "../" + foldername);
-    #endif
+#ifdef OSRE_WINDOWS
+    ok = AssetRegistry::registerAssetPath(mount, "../../" + foldername);
+#else
+    ok = AssetRegistry::registerAssetPath(mount, "../" + foldername);
+#endif
 
     return ok;
 }
 
 bool AssetRegistry::clear() {
-    if ( nullptr == sInstance ) {
+    if (nullptr == sInstance) {
         return false;
     }
 
@@ -159,5 +157,4 @@ bool AssetRegistry::clear() {
     return true;
 }
 
-} // Namespace Assets
-} // Namespace OSRE
+} // namespace OSRE::App

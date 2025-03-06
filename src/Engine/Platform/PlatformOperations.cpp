@@ -82,9 +82,8 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
 }
 
 void PlatformOperations::getFileSaveDialog(const String &title, const c8 *extensions, IO::Uri &location) {
-    char szFile[PlatformOperations::BufferSize] = { '\0' };
-
 #ifdef OSRE_WINDOWS
+    char szFile[PlatformOperations::BufferSize] = { '\0' };
     // Initialize OPENFILENAME
     OPENFILENAME ofn;
     cppcore::MemUtils::clearMemory(&ofn, sizeof(ofn));

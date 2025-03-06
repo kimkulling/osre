@@ -45,8 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 static constexpr c8 Tag[] = "OGLRenderCommands";
 
@@ -55,18 +54,17 @@ using namespace ::OSRE::Platform;
 using namespace ::cppcore;
 
 bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
-    const i32 numberOfPixels = w * h * 3;
-    unsigned char *pixels = new uc8[numberOfPixels];
+    const size_t numberOfPixels = w * h * 3;
+    TArray<uc8> pixels;
+    pixels.resize(numberOfPixels);
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
+    glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, &pixels[0]);
     bool result = true;
-    if (stbi_write_jpg(filename, w, h, 3, pixels, numberOfPixels) != 0){
+    if (stbi_write_jpg(filename, w, h, 3, &pixels[0], numberOfPixels) != 0){
         result = false;
     }
-
-    delete [] pixels;
 
     return result;
 }
@@ -82,13 +80,13 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
         return false;
     }
 
-    const size_t numTextures(mat->mNumTextures);
-    if (0 == numTextures) {
+    const size_t numTextures = mat->getNumTextures();
+    if (numTextures == 0) {
         return true;
     }
 
     for (ui32 i = 0; i < numTextures; ++i) {
-        Texture *tex = mat->mTextures[i];
+        Texture *tex = mat->getTextureStageAt(i);
         if (!tex->TextureName.empty()) {
             OGLTexture *oglTexture = rb->createTexture(tex->TextureName, tex);
             if (nullptr != oglTexture) {
@@ -103,16 +101,12 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
 }
 
 SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
-    osre_assert(nullptr != eh);
-    osre_assert(nullptr != material);
-    osre_assert(nullptr != rb);
-
     if (nullptr == material || nullptr == rb || nullptr == eh) {
         return nullptr;
     }
     
     auto *matData = new SetMaterialStageCmdData;
-    switch (material->mType) {
+    switch (material->getMaterialType()) {
         case MaterialType::ShaderMaterial: {
             TArray<OGLTexture *> textures;
             setupTextures(material, rb, textures);
@@ -121,15 +115,16 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
                 matData->m_textures = textures;
             }
             const String name = material->getShader()->getName();
-            OGLShader *shader = rb->createShader(name, material->mShader);
+            Shader *matShader = material->getShader();
+            OGLShader *shader = rb->createShader(name, matShader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
-                for (size_t i = 0; i < material->mShader->getNumVertexAttributes(); ++i) {
-                    shader->addAttribute(material->mShader->getVertexAttributeAt(i));
+                for (size_t i = 0; i < matShader->getNumVertexAttributes(); ++i) {
+                    shader->addAttribute(matShader->getVertexAttributeAt(i));
                 }
 
-                for (size_t i = 0; i < material->mShader->getNumUniformBuffer(); ++i) {
-                    shader->addUniform(material->mShader->getUniformBufferAt(i));
+                for (size_t i = 0; i < matShader->getNumUniformBuffer(); ++i) {
+                    shader->addUniform(matShader->getUniformBufferAt(i));
                 }
 
                 // for setting up all buffer objects
@@ -148,15 +143,11 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
 }
 
 void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandler *ev) {
-    osre_assert(nullptr != param);
-    osre_assert(nullptr != rb);
-    osre_assert(nullptr != ev);
-
     if (nullptr == param || nullptr == rb || nullptr == ev) {
         return;
     }
 
-    ::cppcore::TArray<OGLParameter *> paramArray;
+    TArray<OGLParameter *> paramArray;
     OGLParameter *oglParam = rb->getParameter(param->m_name);
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);
@@ -265,4 +256,3 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
 }
 
 } // Namespace RenderBackend
-} // Namespace OSRE

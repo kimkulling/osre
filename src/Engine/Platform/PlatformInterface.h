@@ -33,8 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TList.h>
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -263,5 +262,4 @@ private:
     ApplicationContext *mContext;
 };
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform

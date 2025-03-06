@@ -98,8 +98,8 @@ Material *AbstractRenderTest::createMaterial(const String &matName, const String
     }
 
     Material *mat = new Material(matName, IO::Uri());
-    mat->mNumTextures = 0;
-    mat->mType = MaterialType::ShaderMaterial;
+    mat->createTextures(0);
+    mat->setMaterialType(MaterialType::ShaderMaterial);
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;

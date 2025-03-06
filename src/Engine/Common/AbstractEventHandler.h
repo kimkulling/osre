@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 // Forward declarations ---------------------------------------------------------------------------
 struct Event;
@@ -83,5 +82,4 @@ inline bool AbstractEventHandler::detach(const EventData *eventData) {
     return onDetached( eventData );
 }
 
-} // Namespace Common
-} // Namespace OSRE
+} // Namespace OSRE::Common
