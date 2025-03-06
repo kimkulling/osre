@@ -118,9 +118,6 @@ Material *MaterialBuilder::createTextMaterial(const String &fontName) {
     }
 
     mat = materialCache->create(fontMatName);
-
-    //mat->mNumTextures = 1;
-    //mat->mTextures = new Texture *[mat->mNumTextures];
     TextureResource *texRes = new TextureResource(fontName, IO::Uri(fontName));
 
     TextureLoader loader;
@@ -349,16 +346,12 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
     }
 
     mat->createTextures(texResArray.size());
-    //mat->mNumTextures = texResArray.size();
-    //mat->mTextures = new Texture *[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
         TextureResource *texRes = texResArray[i];
         if (texRes == nullptr) {
             continue;
         }
         TextureLoader loader;
-        //texRes->load(loader);
-
         Common::ResourceState state = texRes->load(loader);
         if (state != Common::ResourceState::Loaded) {
             osre_error(Tag, "Cannot load texture: " + texRes->getUri().getResource());
