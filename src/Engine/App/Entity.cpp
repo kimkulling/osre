@@ -26,12 +26,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/Scene.h"
 #include "Animation/AnimatorComponent.h"
 #include "RenderBackend/MeshProcessor.h"
+#include "Common/Logger.h"
 
 namespace OSRE::App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
+
+DECL_OSRE_LOG_MODULE(Entity)
 
 Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
         Object(name),
@@ -44,6 +47,9 @@ Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
     mComponentArray.resize(Component::getIndex(ComponentType::Count));
     mComponentArray.set(nullptr);
     mRenderComponent = (RenderComponent *)createComponent(ComponentType::RenderComponentType);
+    if (mRenderComponent == nullptr) {
+        osre_error(Tag, "Error while creating render component.");
+    }
     if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
