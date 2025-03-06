@@ -256,4 +256,3 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
 }
 
 } // Namespace RenderBackend
-} // Namespace OSRE
