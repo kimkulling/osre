@@ -33,7 +33,7 @@ using namespace ::OSRE::Animation;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
-DECL_OSRE_LOG_MODULE(TransformControlle)
+DECL_OSRE_LOG_MODULE(TransformController)
 
 TransformController::TransformController(TransformMatrixBlock &tmb) :
         mTransform(tmb) {
