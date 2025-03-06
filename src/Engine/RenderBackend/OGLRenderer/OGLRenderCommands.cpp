@@ -60,7 +60,7 @@ bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
+    glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, &pixels[0]);
     bool result = true;
     if (stbi_write_jpg(filename, w, h, 3, &pixels[0], numberOfPixels) != 0){
         result = false;
