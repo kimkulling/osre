@@ -74,7 +74,7 @@ public:
     bool isOpen() const override;
 
 private:
-    FILE *m_file;
+    FILE *mFile;
 };
 
 } // Namespace IO

@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <algorithm>
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 static bool isWindowsRootFolder(const String &filename) {
     if (filename.empty()) {
@@ -51,32 +50,15 @@ static String converRootFolder2Uri(const String &filename) {
     return uri;
 }
 
-Uri::Uri() : m_URI( "" ), m_Scheme( "" ), m_Path( "" ), m_AbsPath( "" ), m_Resource( "" ) {
-	// empty
-}
-
-Uri::Uri( const String &uri ) :
-		m_URI(uri), m_Scheme( "" ), m_Path( "" ), m_AbsPath( "" ), m_Resource( "" ) {
+Uri::Uri(const String &uri) :
+		mURI(uri), mScheme( "" ), mPath( "" ), mAbsPath( "" ), mResource( "" ) {
     String normailizedStr;
     if (Uri::normalizePath( uri, '\\', normailizedStr )) {
         if (isWindowsRootFolder( normailizedStr )) {
-            m_URI = converRootFolder2Uri( normailizedStr );
+            mURI = converRootFolder2Uri( normailizedStr );
         }
         static_cast<void>(parse());
     }
-}
-
-Uri::Uri( const Uri &rhs ) :
-		m_URI( rhs.m_URI ),
-		m_Scheme( rhs.m_Scheme ),
-		m_Path( rhs.m_Path ),
-		m_AbsPath( rhs.m_AbsPath ),
-		m_Resource( rhs.m_Resource ) {
-	// empty
-}
-
-Uri::~Uri() {
-	// empty
 }
 
 String Uri::constructFromComps( const String &scheme, const String &path, const String &resName ) {
@@ -89,69 +71,69 @@ String Uri::constructFromComps( const String &scheme, const String &path, const 
 }
 
 void Uri::setUri(  const String &uri ) {
-	if ( uri == m_URI ) {
+	if ( uri == mURI ) {
 		return;
 	}
 
 	clear();
-	m_URI = uri;
-	static_cast<void>( parse() );
+	mURI = uri;
+	static_cast<void>(parse());
 }
 
 const String &Uri::getUri() const {
-	return m_URI;
+	return mURI;
 }
 
 const String &Uri::getScheme() const {
-	return m_Scheme;
+	return mScheme;
 }
 
 void Uri::setScheme( const String &scheme ) {
-    if ( m_Scheme != scheme ) {
-        m_Scheme = scheme;
-        m_URI = constructFromComps( m_Scheme, m_Path, m_Resource );
+    if ( mScheme != scheme ) {
+        mScheme = scheme;
+        mURI = constructFromComps( mScheme, mPath, mResource );
     }
 }
 
 const String &Uri::getPath() const {
-	return m_Path;
+	return mPath;
 }
 
 void Uri::setPath( const String &path ) {
-    if ( m_Path != path ) {
-        m_Path = path;
-        m_AbsPath = path;
-        m_URI = constructFromComps( m_Scheme, m_Path, m_Resource );
+    if ( mPath != path ) {
+        mPath = path;
+        mAbsPath = path;
+        mURI = constructFromComps( mScheme, mPath, mResource );
     }
 }
 
 const String &Uri::getAbsPath() const {
-	return m_AbsPath;
+	return mAbsPath;
 }
 
 const String &Uri::getResource() const {
-	return m_Resource;
+	return mResource;
 }
 
 void Uri::setResource( const String &res ) {
-    if ( m_Resource != res ) {
-        m_Resource = res;
-        m_URI = constructFromComps( m_Scheme, m_Path, m_Resource );
+    if ( mResource != res ) {
+        mResource = res;
+        mURI = constructFromComps( mScheme, mPath, mResource );
     }
 }
 
 bool Uri::isEmpty() const {
-	return m_URI.empty();
+	return mURI.empty();
 }
 
 bool Uri::parse() {
-	if ( m_URI.empty() ) {
+	if ( mURI.empty() ) {
 		clear();
 		return false;
 	}
 
 	// validate the URI syntax
-	String::size_type pos0 = m_URI.find( "://" );
+	String::size_type pos0 = mURI.find( "://" );
 	if ( String::npos == pos0 ) {
 		clear();
 		return false;
@@ -159,34 +141,34 @@ bool Uri::parse() {
 
 
 	// extract the schema type
-	m_Scheme = m_URI.substr( 0, pos0 );
-	String::size_type pos1 = m_URI.rfind( "/" );
+	mScheme = mURI.substr( 0, pos0 );
+	String::size_type pos1 = mURI.rfind( "/" );
 	if ( String::npos == pos1 ) {
 		return false;
 	}
 
 	// get the length
-	const size_t resLen = m_URI.size() - pos1;
-	const size_t len    = m_URI.size() - pos0 - resLen - 2;
+	const size_t resLen = mURI.size() - pos1;
+	const size_t len    = mURI.size() - pos0 - resLen - 2;
 	
 	// get the components
-	m_Path     = m_URI.substr( pos0 + 3, len );
-	m_Resource = m_URI.substr( pos1 + 1, m_URI.size() - pos1 );
-	m_AbsPath  = m_Path + m_Resource;
+	mPath     = mURI.substr( pos0 + 3, len );
+	mResource = mURI.substr( pos1 + 1, mURI.size() - pos1 );
+	mAbsPath  = mPath + mResource;
 
 	return true;
 }
 
 bool Uri::isValid() const {
-	return !m_AbsPath.empty();
+	return !mAbsPath.empty();
 }
 
 void Uri::clear() {
-	m_Scheme.clear();
-	m_Path.clear();
-	m_AbsPath.clear();
-	m_Resource.clear();
-    m_URI.clear();
+	mScheme.clear();
+	mPath.clear();
+	mAbsPath.clear();
+	mResource.clear();
+    mURI.clear();
 }
 
 String Uri::getExtension() const {
@@ -195,12 +177,12 @@ String Uri::getExtension() const {
         return ext;
 	}
 
-	String ::size_type pos = m_Resource.rfind('.');
+	String ::size_type pos = mResource.rfind('.');
     if (pos == String::npos) {
         return ext;
 	}
 
-	ext = m_Resource.substr(pos + 1, m_Resource.size() - pos - 1);
+	ext = mResource.substr(pos + 1, mResource.size() - pos - 1);
     return ext;
 }
 
@@ -215,29 +197,8 @@ bool Uri::normalizePath(const String &path, const c8 sep, String &normalized) {
     return true;
 }
 
-Uri &Uri::operator = ( const Uri &rhs ) {
-	if ( !( *this == rhs ) ) {
-		m_URI      = rhs.m_URI;
-		m_Scheme   = rhs.m_Scheme;
-		m_Path     = rhs.m_Path;
-		m_AbsPath  = rhs.m_AbsPath;
-		m_Resource = rhs.m_Resource;
-	}
-
-	return *this;
+bool Uri::operator==(const Uri& rhs) const {
+    return mURI == rhs.mURI;
 }
 
-bool Uri::operator == ( const Uri &rhs ) const {
-	return (m_URI      == rhs.m_URI && 
-			m_Scheme   == rhs.m_Scheme && 
-			m_Path     == rhs.m_Path && 
-			m_AbsPath  == rhs.m_AbsPath && 
-			m_Resource == rhs.m_Resource );
-}
-
-bool Uri::operator != ( const Uri &rhs ) const {
-    return !( *this == rhs );
-}
-
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

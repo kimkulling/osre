@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "IO/IOCommon.h"
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -40,22 +39,18 @@ namespace IO {
 /// For this example the path is c:/.
 /// For this example the resource name is texture.jpg.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Uri {
+class OSRE_EXPORT Uri final {
 public:
     ///	@brief	The default class constructor.
-    Uri();
+    Uri() = default;
 
     ///	@brief	The class constructor with a string containing a valid URI. If the string description
     ///			is not ok the URI representation will be empty.
     ///	@param	uri			[in] The string with the URI.
-    explicit Uri( const String &uri );
-
-    ///	@brief	The copy class constructor.
-    ///	@param	rhs		[in] Instance to copy.
-    Uri( const Uri &rhs );
+    explicit Uri(const String &uri);
 
     ///	@brief	The class destructor.
-    ~Uri();
+    ~Uri() = default;
 
     /// @brief  Will construct a valid uri from the given scheme, path and resource name.
     /// @param  scheme  [in] The scheme to use.
@@ -126,22 +121,15 @@ public:
     /// @return false in case of an error.
     static bool normalizePath(const String &path, const c8 sep, String &normalized);
 
-    ///	@brief	The assignment operator.
-    Uri &operator = ( const Uri &rhs );
-
-    ///	@brief	The compare operator.
-    bool operator == ( const Uri &rhs ) const;
-
-    /// @brief  The not-equal operator.
-    bool operator != ( const Uri &rhs ) const;
+    // Needed operators
+    bool operator==(const Uri &rhs) const;
 
 private:
-    String m_URI;
-    String m_Scheme;
-    String m_Path;
-    String m_AbsPath;
-    String m_Resource;
+    String mURI;
+    String mScheme;
+    String mPath;
+    String mAbsPath;
+    String mResource;
 };
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

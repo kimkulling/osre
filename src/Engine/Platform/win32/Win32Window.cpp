@@ -184,6 +184,16 @@ HWND Win32Window::getParentHandle() const {
     return mParent;
 }
 
+bool getCenterOfWindow(WindowsProperties *prop, ui32 &cx, ui32 &cy) {
+    if (prop == nullptr) {
+        return false;
+    }
+    cx = prop->mRect.width / 2;
+    cy = prop->mRect.height / 2;
+
+    return true;
+}
+
 bool Win32Window::onCreate() {
     WindowsProperties *prop = getProperties();
     if (nullptr == prop) {
@@ -209,8 +219,8 @@ bool Win32Window::onCreate() {
     const ui32 realWidth = clientSize.right - clientSize.left;
     const ui32 realHeight = clientSize.bottom - clientSize.top;
 
-    ui32 cx = prop->mRect.width / 2;
-    ui32 cy = prop->mRect.height / 2;
+    ui32 cx, cy;
+    getCenterOfWindow(prop, cx, cy);
     mInstance = ::GetModuleHandle(NULL);
     sWC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     sWC.lpfnWndProc = (WNDPROC)Win32EventQueue::winproc;
@@ -235,7 +245,7 @@ bool Win32Window::onCreate() {
         dmScreenSettings.dmBitsPerPel = prop->m_colordepth;
         dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
         if (::ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
-            ::MessageBox(NULL, "Cannot change to full-screen mode",
+            ::MessageBox(nullptr, "Cannot change to full-screen mode",
                     "Error", MB_OK | MB_ICONEXCLAMATION);
             prop->m_fullscreen = false;
         } else {
@@ -258,18 +268,18 @@ bool Win32Window::onCreate() {
         }
     }
 
-    mWnd = ::CreateWindowEx(dwExStyle,
-            prop->m_title.c_str(),
-            prop->m_title.c_str(),
-            dwStyle,
-            prop->mRect.x1,
-            prop->mRect.y1,
-            realWidth,
-            realHeight,
-            NULL,
-            NULL,
-            mInstance,
-            NULL);
+    mWnd = CreateWindowEx(dwExStyle,
+                prop->m_title.c_str(),
+                prop->m_title.c_str(),
+                dwStyle,
+                prop->mRect.x1,
+                prop->mRect.y1,
+                realWidth,
+                realHeight,
+                nullptr,
+                nullptr,
+                mInstance,
+                nullptr);
 
     if (nullptr == mWnd) {
         MessageBox(NULL, "Cannot create the application window.", "Abort application",
@@ -286,11 +296,22 @@ bool Win32Window::onCreate() {
                 MB_OK | MB_ICONEXCLAMATION);
         return false;
     }
+    int showFlags = SW_SHOW;
+    if (prop->m_maximized) {
+        showFlags = SW_SHOWMAXIMIZED;
+    }
+                    
+    ShowWindow(mWnd, showFlags);
+    SetForegroundWindow(mWnd);
+    SetFocus(mWnd);
+    if (prop->m_maximized) {
+        RECT rect;
+        GetWindowRect(mWnd, &rect);
+        getProperties()->mRect.set(rect.left, rect.top, rect.right, rect.bottom);
+        getCenterOfWindow(prop, cx, cy);
+    }
 
-    ::ShowWindow(mWnd, SW_SHOW);
-    ::SetForegroundWindow(mWnd);
-    ::SetFocus(mWnd);
-    ::SetCursorPos(cx, cy);
+    SetCursorPos(cx, cy);
     prop->m_open = true;
 
     return true;
@@ -307,13 +328,13 @@ bool Win32Window::onDestroy() {
     }
 
     if (!prop->m_fullscreen) {
-        ::ChangeDisplaySettings(NULL, 0);
+        ::ChangeDisplaySettings(nullptr, 0);
     }
 
     if (mDC && !::ReleaseDC(mWnd, mDC)) {
         ::MessageBox(NULL, "Cannot release the device context.",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
-        mDC = NULL;
+        mDC = nullptr;
     }
 
     if (nullptr != mHandleStatusBar) {
@@ -324,13 +345,13 @@ bool Win32Window::onDestroy() {
     if (mWnd && !::DestroyWindow(mWnd)) {
         ::MessageBox(NULL, "Cannot destroy the window.",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
-        mWnd = NULL;
+        mWnd = nullptr;
     }
 
     if (!::UnregisterClass(prop->m_title.c_str(), mInstance)) {
         ::MessageBox(NULL, "Cannot unregister the application .",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
-        mInstance = NULL;
+        mInstance = nullptr;
     }
 
     prop->m_open = false;

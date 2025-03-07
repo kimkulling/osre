@@ -26,25 +26,21 @@ namespace OSRE {
 namespace IO {
 
 Stream::Stream() noexcept :
-        m_Uri(), m_AccessMode() {
+        mUri(), mAccessMode() {
     // empty
 }
 
 Stream::Stream(const Uri &uri, AccessMode mode) :
-        m_Uri(uri), m_AccessMode(mode) {
-    // empty
-}
-
-Stream::~Stream() {
+        mUri(uri), mAccessMode(mode) {
     // empty
 }
 
 void Stream::setUri(const Uri &rURI) {
-    m_Uri = rURI;
+    mUri = rURI;
 }
 
 const Uri &Stream::getUri() const {
-    return m_Uri;
+    return mUri;
 }
 
 bool Stream::canRead() const {
@@ -64,11 +60,11 @@ bool Stream::canBeMapped() const {
 }
 
 void Stream::setAccessMode(AccessMode accessMode) {
-    m_AccessMode = accessMode;
+    mAccessMode = accessMode;
 }
 
 Stream::AccessMode Stream::getAccessMode() const {
-    return m_AccessMode;
+    return mAccessMode;
 }
 
 size_t Stream::getSize() const {
