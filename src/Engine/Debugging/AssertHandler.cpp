@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Debugging/Debug.h"
 
-namespace OSRE {
-namespace Debugging {
+namespace OSRE::Debugging {
         
 void handleFatal( const String &file, int line, const OSRE::String &msg ) {
     Common::fatalPrint( "Assertion", file, line, msg );
@@ -38,5 +37,4 @@ void handleAssert( const String &file, int line, const char *msg ) {
     ::exit(1);
 }
 
-} // Namespace Debugging
-} // Namespace Common
+} // Namespace OSRE::Debugging

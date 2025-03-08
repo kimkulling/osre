@@ -24,12 +24,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 
-namespace OSRE {
-namespace Debugging {
+namespace OSRE::Debugging {
+    /**
+     * @brief Triggers a programmatic debug break.
+     *
+     * This function is used to invoke a debug break in the running application.
+     * The behavior is platform-specific:
+     * - On Windows (_MSC_VER), it uses the `__debugbreak` intrinsic.
+     * - On ARM CPUs (BX_CPU_ARM), it uses an assembly interrupt `int $3`.
+     *
+     * Typically used for debugging scenarios to halt the program and allow the debugger
+     * to interrupt execution at the point of invocation.
+     */
+    OSRE_EXPORT void debugBreak();
 
-OSRE_EXPORT void debugBreak();
-OSRE_EXPORT bool isDebuggerAttached();
+    /**
+     * @brief Checks if a debugger is currently attached to the running process.
+     *
+     * This function determines whether a debugger is attached to the application.
+     * On Windows platforms, it uses the `IsDebuggerPresent` function to check for the presence of a debugger.
+     * On non-Windows platforms, it always returns false as the functionality is not implemented.
+     *
+     * @return Returns true if a debugger is attached; otherwise, returns false.
+     */
+    OSRE_EXPORT bool isDebuggerAttached();
 
-} // Namespace Debugging
-} // Namespace Common
+} // Namespace OSRE::Debugging
 
