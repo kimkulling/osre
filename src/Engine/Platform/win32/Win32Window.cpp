@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/Platform/win32/Win32Window.h>
 #include "commctrl.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 static constexpr c8 Tag[] = "Win32Window";
 
@@ -71,11 +70,11 @@ void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
 
     HCURSOR c;
     if (ct == DefaultMouseCursorType::WaitCursor) {
-        c = ::LoadCursorA(nullptr, IDC_APPSTARTING);
+        c = LoadCursorA(nullptr, IDC_APPSTARTING);
     } else if ( ct == DefaultMouseCursorType::SelectCursor) {
-        c = ::LoadCursorA(nullptr, IDC_CROSS);
+        c = LoadCursorA(nullptr, IDC_CROSS);
     } else {
-        c = ::LoadCursorA(nullptr, IDC_ARROW);
+        c = LoadCursorA(nullptr, IDC_ARROW);
     }
     ::SetCursor(c);
 }
@@ -219,7 +218,8 @@ bool Win32Window::onCreate() {
     const ui32 realWidth = clientSize.right - clientSize.left;
     const ui32 realHeight = clientSize.bottom - clientSize.top;
 
-    ui32 cx, cy;
+    ui32 cx = 0;
+    ui32 cy = 0;
     getCenterOfWindow(prop, cx, cy);
     mInstance = ::GetModuleHandle(NULL);
     sWC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
