@@ -29,13 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-FileStream::FileStream() noexcept :
-        Stream(), mFile(nullptr) {
-    // empty
-}
-
-FileStream::FileStream(const Uri &uri, AccessMode reqAccess) :
-        Stream(uri, reqAccess), mFile(nullptr) {
+FileStream::FileStream(const Uri &uri, AccessMode reqAccess) : Stream(uri, reqAccess) {
     // empty
 }
 
