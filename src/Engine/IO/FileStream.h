@@ -37,7 +37,7 @@ namespace IO {
 class FileStream final : public Stream {
 public:
     /// The default class constructor.
-    FileStream() noexcept;
+    FileStream() = default;
     /// The class constructor with URI and access mode.
     FileStream(const Uri &uri, AccessMode requestedAccess);
     /// The class destructor.
