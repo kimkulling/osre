@@ -80,7 +80,7 @@ bool FileStream::open() {
     err = ::fopen_s(&mFile, abspath.c_str(), modestr.c_str());
     osre_assert(0 == err);
 #else
-    mfile = ::fopen(abspath.c_str(), modestr.c_str());
+    mFile = ::fopen(abspath.c_str(), modestr.c_str());
 #endif
 
     return (nullptr != mFile);
@@ -133,7 +133,6 @@ size_t FileStream::read(void *buffer, size_t size) {
 }
 
 size_t FileStream::write(const void *buffer, size_t size) {
-    osre_assert(nullptr != buffer);
     if (!isOpen() || 0 == size || !buffer) {
         return 0;
     }
