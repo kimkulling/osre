@@ -217,7 +217,7 @@ void MainRenderView::createEditorElements(RenderComponent *rc) {
         return;
     }
 
-    Mesh *grid = MainRenderView::createGrid(60);
+    Mesh *grid = MainRenderView::createGrid(100);
     rc->addStaticMesh(grid);
     mEditorElements.add(grid);
     Mesh *axis = MainRenderView::createCoordAxis(100);

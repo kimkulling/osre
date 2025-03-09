@@ -68,7 +68,7 @@ public:
     Stream( const Uri &uri, AccessMode mode );
 
     ///	@brief	The class destructor, virtual.
-    virtual ~Stream();
+    virtual ~Stream() = default;
 
     ///	@brief	Set the uri manually.
     ///	@param	uri		[in] Describes the location of the object to access.
@@ -181,8 +181,8 @@ public:
     virtual bool isOpen() const;
 
 public:
-    Uri m_Uri;
-    AccessMode m_AccessMode;
+    Uri mUri;
+    AccessMode mAccessMode;
 };
 
 } // Namespace IO

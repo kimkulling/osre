@@ -29,14 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-FileStream::FileStream() noexcept :
-        Stream(),
-        m_file(nullptr) {
-    // empty
-}
-
-FileStream::FileStream(const Uri &uri, AccessMode requestedAccess) :
-        Stream(uri, requestedAccess), m_file(nullptr) {
+FileStream::FileStream(const Uri &uri, AccessMode reqAccess) : Stream(uri, reqAccess) {
     // empty
 }
 
@@ -63,8 +56,8 @@ bool FileStream::open() {
         return false;
     }
 
-    osre_assert(nullptr == m_file);
-    const String &abspath = m_Uri.getAbsPath();
+    osre_assert(nullptr == mFile);
+    const String &abspath = mUri.getAbsPath();
     String modestr;
     AccessMode mode = getAccessMode();
     if (AccessMode::ReadAccessBinary == mode) {
@@ -84,13 +77,13 @@ bool FileStream::open() {
 
 #if defined(OSRE_WINDOWS) && !defined(__MINGW32__) && !defined(__MINGW64__)
     errno_t err;
-    err = ::fopen_s(&m_file, abspath.c_str(), modestr.c_str());
+    err = ::fopen_s(&mFile, abspath.c_str(), modestr.c_str());
     osre_assert(0 == err);
 #else
-    m_file = ::fopen(abspath.c_str(), modestr.c_str());
+    mFile = ::fopen(abspath.c_str(), modestr.c_str());
 #endif
 
-    return (nullptr != m_file);
+    return (nullptr != mFile);
 }
 
 bool FileStream::close() {
@@ -98,20 +91,15 @@ bool FileStream::close() {
         return false;
     }
 
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        ::fclose(m_file);
-        m_file = nullptr;
-        return true;
-    }
-
-    return false;
+    ::fclose(mFile);
+    mFile = nullptr;
+    return true;
 }
 
 size_t FileStream::getSize() const {
-    osre_assert(!m_Uri.getAbsPath().empty());
+    osre_assert(!mUri.getAbsPath().empty());
 
-    const String &abspath(m_Uri.getAbsPath());
+    const String &abspath(mUri.getAbsPath());
 #ifdef OSRE_WINDOWS
     // Get the windows specific file-size
     struct __stat64 fileStat;
@@ -141,90 +129,73 @@ size_t FileStream::read(void *buffer, size_t size) {
         return 0;
     }
 
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return ::fread(buffer, sizeof(uc8), size, m_file);
-    }
-    return 0;
+    return ::fread(buffer, sizeof(uc8), size, mFile);
 }
 
 size_t FileStream::write(const void *buffer, size_t size) {
-    osre_assert(nullptr != buffer);
     if (!isOpen() || 0 == size || !buffer) {
         return 0;
     }
 
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return ::fwrite(buffer, sizeof(c8), size, m_file);
-    }
-
-    return 0;
+    return ::fwrite(buffer, sizeof(c8), size, mFile);
 }
 
 size_t FileStream::readI32(i32 &value) {
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return ::fread(&value, sizeof(i32), 1, m_file);
+    if (isOpen()) {
+        return ::fread(&value, sizeof(i32), 1, mFile);
     }
 
     return 0;
 }
 
 size_t FileStream::writeI32(i32 value) {
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return ::fwrite(&value, sizeof(i32), 1, m_file);
+    if (isOpen()) {
+        return ::fwrite(&value, sizeof(i32), 1, mFile);
     }
 
     return 0;
 }
 
 size_t FileStream::readUI32(ui32 &value) {
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return ::fread(&value, sizeof(ui32), 1, m_file);
+    if (isOpen()) {
+        return ::fread(&value, sizeof(ui32), 1, mFile);
     }
 
     return 0;
 }
 
 size_t FileStream::writeUI32(ui32 value) {
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return ::fwrite(&value, sizeof(ui32), 1, m_file);
+    if (isOpen()) {
+        return ::fwrite(&value, sizeof(ui32), 1, mFile);
     }
 
     return 0;
 }
 
 FileStream::Position FileStream::seek(Offset offset, Origin origin) {
-    osre_assert(nullptr != m_file);
-
     i32 originValue(0);
     if (origin == Stream::Origin::Current) {
         originValue = SEEK_CUR;
     } else {
         originValue = SEEK_SET;
     }
-    if (m_file) {
-        return ::fseek(m_file, offset, originValue);
+    if (isOpen()) {
+        return ::fseek(mFile, offset, originValue);
     }
 
     return 0;
 }
 
 FileStream::Position FileStream::tell() {
-    osre_assert(nullptr != m_file);
-    if (m_file) {
-        return (::ftell(m_file));
+    if (isOpen()) {
+        return (::ftell(mFile));
     }
 
     return 0;
 }
 
 bool FileStream::isOpen() const {
-    return (m_file != nullptr);
+    return (mFile != nullptr);
 }
 
 } // Namespace IO
