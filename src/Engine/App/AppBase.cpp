@@ -363,6 +363,10 @@ bool AppBase::onDestroy() {
 
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
+
+#ifdef _DEBUG
+    MemoryStatistics::showStatistics();
+#endif
     Logger::kill();
 
     return true;

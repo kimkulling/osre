@@ -39,16 +39,17 @@ using namespace ::OSRE::RenderBackend;
 DECL_OSRE_LOG_MODULE(HelloWorldApp)
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Samples
+/// @ingroup    Samples
 ///
-/// @brief This is
+/// @brief This is the simple HelloWorld-App to get familiar with the base concept of the
+///        OSRE engine.
 //-------------------------------------------------------------------------------------------------
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;
-    /// The entity to render
+    /// The entity to render.
     Entity *mEntity = nullptr;
     /// The keyboard controller instance.
     Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;
@@ -64,19 +65,22 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
+    /// @brief Will setup the camera of the scene.
+    /// @param scene   The scene to render.
     CameraComponent *setupCamera(Scene *scene) {
         auto *camEntity = new Entity("camera", *getIdContainer(), scene);
         scene->addEntity(camEntity);
         auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
         scene->setActiveCamera(camera);
         
-        ui32 w, h;
+        ui32 w{0}, h{0};
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
 
         return camera;
     }
 
+    /// @brief The onCreate callback.
     bool onCreate() override {
         if (!AppBase::onCreate()) {
             return false;
@@ -103,6 +107,7 @@ protected:
         return true;
     }
 
+    /// @brief The update callback.
     void onUpdate() override {
         if (const Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey(); key != Platform::KEY_UNKNOWN) {
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
@@ -135,3 +140,4 @@ int main( int argc, char *argv[] )  {
     myApp.destroy();
     return 0;
 }
+

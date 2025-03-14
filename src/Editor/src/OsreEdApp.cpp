@@ -211,7 +211,7 @@ bool OsreEdApp::onDestroy() {
     delete mPythonInterface;
     mPythonInterface = nullptr;
 
-    return true;
+    return AppBase::onDestroy();
 }
 
 void OsreEdApp::onUpdate() {
