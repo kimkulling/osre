@@ -73,7 +73,7 @@ protected:
         auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
         scene->setActiveCamera(camera);
         
-        ui32 w{0}
+        ui32 w{0};
         ui32 h{0};
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
