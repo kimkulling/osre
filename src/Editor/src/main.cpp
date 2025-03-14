@@ -40,14 +40,14 @@ DECL_OSRE_LOG_MODULE(osre_ed);
 static constexpr i32 AppOk = 0;
 static constexpr i32 AppError = -1;
 
-static String getVersion() {
-    String v = "0.0.1";
-    return v;
+static const c8* getVersion() {
+    static constexpr char v[] = "0.0.1";
+    return &v[0];
 }
 
 int main(int argc, char *argv[]) {
     OsreEdApp osreApp(argc, argv);
-    if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed version " + getVersion(),
+    if (!osreApp.initWindow(100, 100, 1024, 768, "OSRE-Ed version " + String(getVersion()),
             WindowMode::WindowedMaximize,
             WindowType::Root,
             RenderBackendType::OpenGLRenderBackend)) {
@@ -56,9 +56,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Main loop
-    bool running = true;
-    while (running) {
-        running = osreApp.handleEvents();
+    while (osreApp.handleEvents()) {
         osreApp.update();
         osreApp.requestNextFrame();
     }
