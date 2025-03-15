@@ -24,20 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Mesh.h"
 #include "RenderBackend/LineBuilder.h"
 
-namespace OSRE {
-namespace Scene {
+namespace OSRE::Scene {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 LineBuilder::LineBuilder() :
-        mPosCache(),
-        mDiffuseColCache(),
-        mNormalCache(),
-        mTex0Cache(),
         mActivePrimGroup(nullptr),
-        mIndexCache(),
-        mPrimGroupCache(),
         mIsDirty(),
         mActiveMesh(nullptr) {
     // empty
@@ -52,7 +45,7 @@ LineBuilder &LineBuilder::addLine(const glm::vec3 &pos0, const glm::vec3 &pos1) 
     mActivePrimGroup->m_startIndex = mIndexCache.size();
     mActivePrimGroup->m_numIndices += 2;
 
-    mIndexCache.add((ui32) mActivePrimGroup->m_startIndex);
+    mIndexCache.add((ui32)mActivePrimGroup->m_startIndex);
     mIsDirty = true;
 
     return *this;
@@ -94,7 +87,7 @@ Mesh *LineBuilder::getMesh() {
         size = sizeof(ColorVert) * mPosCache.size();
     }
 
-    c8 *ptr  = (c8*) mActiveMesh->mapVertexBuffer(size, BufferAccessType::ReadOnly);
+    c8 *ptr = (c8 *)mActiveMesh->mapVertexBuffer(size, BufferAccessType::ReadOnly);
     ui32 offset = 0u;
     for (ui32 i = 0; i < mPosCache.size(); ++i) {
         RenderVert v;
@@ -143,5 +136,4 @@ void LineBuilder::preparePrimGroups() {
     }
 }
 
-} // Namespace Scene
-} // Namespace OSRE
+} // namespace OSRE::Scene

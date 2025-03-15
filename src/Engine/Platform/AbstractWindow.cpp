@@ -29,35 +29,36 @@ namespace Platform {
 static constexpr c8 Tag[] = "AbstractSurface";
 
 Resolution::Resolution(ResRequest req) :
-        m_width(0), m_height(0) {
+        width(0), height(0) {
     if (ResRequest::Res640x480 == req) {
-        m_width = 640;
-        m_height = 480;
+        width = 640;
+        height = 480;
     } else if (ResRequest::Res800x600 == req) {
-        m_width = 800;
-        m_height = 600;
+        width = 800;
+        height = 600;
     } else if (ResRequest::Res1024x768 == req) {
-        m_width = 1024;
-        m_height = 768;
+        width = 1024;
+        height = 768;
     } else if (ResRequest::Res1176x664 == req) {
-        m_width = 1176;
-        m_height = 664;
+        width = 1176;
+        height = 664;
     } else if (ResRequest::Res1768x992 == req) {
-        m_width = 1768;
-        m_height = 992;
+        width = 1768;
+        height = 992;
     } else if (ResRequest::Res1920x1080 == req) {
-        m_width = 1920;
-        m_height = 1080;
+        width = 1920;
+        height = 1080;
     }
 }
 
 Resolution::Resolution() :
-        m_width(0), m_height(0) {
+        width(0), height(0) {
     // empty
 }
 
-AbstractWindow::AbstractWindow(WindowsProperties *properties, AbstractWindow *parent) :
-        mParent(parent),    
+AbstractWindow::AbstractWindow(guid id, WindowsProperties *properties, AbstractWindow *parent) :
+        mId(id),
+        mParent(parent),
         mFlags((ui32)SurfaceFlagType::SF_PropertiesClean),
         mShowState(ShowState::Hidden),
         mProperties(properties),

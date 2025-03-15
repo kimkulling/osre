@@ -32,7 +32,7 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-/// @brief Implaments system info queries.
+/// @brief Implements all os-specific system info queries by using SDL2.
 //-------------------------------------------------------------------------------------------------
 class SDL2SystemInfo final : public AbstractSystemInfo {
 public:
@@ -58,8 +58,8 @@ inline void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
     if ( SDL_GetDesktopDisplayMode( 0, &dm ) != 0 ) {
         return;
     }
-    resolution.m_width = dm.w;
-    resolution.m_height = dm.h;
+    resolution.width = dm.w;
+    resolution.height = dm.h;
 }
 
 inline bool SDL2SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {

@@ -33,23 +33,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "IO/Uri.h"
 #include "Platform/AbstractOGLRenderContext.h"
 #include "Platform/AbstractWindow.h"
-#include "Platform/AbstractTimer.h"
 #include "Platform/PlatformInterface.h"
 #include "Profiling/PerformanceCounterRegistry.h"
 #include "RenderBackend/Mesh.h"
 #include "RenderBackend/RenderCommon.h"
-#include "RenderBackend/Shader.h"
 
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::cppcore;
 
-static constexpr c8 Tag[] = "OGLRenderEventHandler";
+DECL_OSRE_LOG_MODULE(OGLRenderEventHandler)
 
 OGLRenderEventHandler::OGLRenderEventHandler() :
         AbstractEventHandler(),
@@ -250,7 +247,7 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
     return true;
 }
 
-bool OGLRenderEventHandler::onRenderFrame(const EventData*) {
+bool OGLRenderEventHandler::onRenderFrame(const EventData *) {
     osre_assert(nullptr != m_oglBackend);
     osre_assert(nullptr != m_renderCmdBuffer);
     osre_assert(m_renderCtx != nullptr);
@@ -305,7 +302,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
-    InitPassesEventData *frameToCommitData = (InitPassesEventData*) eventData;
+    InitPassesEventData *frameToCommitData = (InitPassesEventData *)eventData;
     if (nullptr == frameToCommitData) {
         return false;
     }
@@ -323,17 +320,17 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
         }
 
         // ToDo: create pipeline pass for the name.
-        for (RenderBatchData * currentBatchData : currentPass->mMeshBatches) {
+        for (RenderBatchData *currentBatchData : currentPass->mMeshBatches) {
             if (nullptr == currentBatchData) {
                 continue;
             }
 
             // set the matrix
             MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
-            getRenderCmdBuffer()->setMatrixes(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj);
+            getRenderCmdBuffer()->setMatrixes(matrixBuffer.model, matrixBuffer.view, matrixBuffer.proj);
 
             // set uniforms
-            for (auto & uniform : currentBatchData->m_uniforms) {
+            for (auto &uniform : currentBatchData->m_uniforms) {
                 setupParameter(uniform, m_oglBackend, this);
             }
 
@@ -352,10 +349,9 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                 for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
                     Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
                     if (nullptr == currentMesh) {
-                        osre_assert(nullptr != currentMesh);
+                        osre_error(Tag, "Mesh instance in nullptr.");
                         continue;
                     }
-
 
                     // register primitive groups to render
                     for (size_t i = 0; i < currentMesh->getNumberOfPrimitiveGroups(); ++i) {
@@ -369,7 +365,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     // setup vertex array, vertex and index buffers
                     m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
                     if (nullptr == m_vertexArray) {
-                        osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
+                        osre_error(Tag, "Vertex-Array-pointer is a nullptr.");
                         return false;
                     }
                     data->m_vertexArray = m_vertexArray;
@@ -401,7 +397,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
     ::memset(name, '\0', bufferSize);
     size_t bufferLen = cmd->m_data[0];
-    if (bufferLen > bufferSize-1) {
+    if (bufferLen > bufferSize - 1) {
         bufferLen = bufferSize - 1;
     }
     ::strncpy(name, &cmd->m_data[1], bufferLen);
@@ -468,15 +464,16 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     return true;
 }
 
-bool OGLRenderEventHandler::onShutdownRequest(const EventData*) {
+bool OGLRenderEventHandler::onShutdownRequest(const EventData *) {
     m_isRunning = false;
 
     return true;
 }
 
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
-    ResizeEventData *data = (ResizeEventData*) eventData;
+    ResizeEventData *data = (ResizeEventData *)eventData;
     if (data != nullptr) {
+        mActivePipeline->resizeRenderTargets(data->targetId, data->X, data->Y, data->W, data->H);
         m_oglBackend->setViewport(data->X, data->Y, data->W, data->H);
     }
 
@@ -485,13 +482,12 @@ bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
 
 bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
     bool result = false;
-    ScreenshotEventData *data = (ScreenshotEventData*) eventData;
-    if (data != nullptr){
+    ScreenshotEventData *data = (ScreenshotEventData *)eventData;
+    if (data != nullptr) {
         result = makeScreenShot(data->Filename.c_str(), data->Width, data->Height);
     }
 
     return result;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

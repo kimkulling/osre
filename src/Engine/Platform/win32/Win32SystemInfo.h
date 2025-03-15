@@ -55,8 +55,8 @@ inline
 void Win32SystemInfo::getDesktopResolution( Resolution &resolution ) {
     RECT actualDesktop;
     if ( TRUE == ::GetWindowRect( GetDesktopWindow(), &actualDesktop ) ) {
-        resolution.m_width = actualDesktop.right - actualDesktop.left;
-        resolution.m_height = actualDesktop.bottom - actualDesktop.top;
+        resolution.width = actualDesktop.right - actualDesktop.left;
+        resolution.height = actualDesktop.bottom - actualDesktop.top;
     }
 }
 

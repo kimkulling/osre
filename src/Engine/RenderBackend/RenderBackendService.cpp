@@ -33,20 +33,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include "Platform/Windows/MinWindows.h"
 #endif
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Threading;
 using namespace ::OSRE::Properties;
 
-static constexpr c8 Tag[] = "RenderBackendService";
+DECL_OSRE_LOG_MODULE(RenderBackendService)
 
 static constexpr c8 OGL_API[] = "opengl";
 static constexpr c8 Vulkan_API[] = "vulkan";
 static constexpr i32 IdxNotFound = -1;
 
-static i32 hasPass(const c8 *id, const ::cppcore::TArray<PassData *> &passDataArray) {
+static i32 hasPass(const c8 *id, const TArray<PassData *> &passDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -60,7 +59,7 @@ static i32 hasPass(const c8 *id, const ::cppcore::TArray<PassData *> &passDataAr
     return IdxNotFound;
 }
 
-static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const TArray<RenderBatchData *> &batchDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -70,21 +69,18 @@ static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &bat
             return i;
         }
     }
-    
+
     return IdxNotFound;
 }
 
 RenderBackendService::RenderBackendService() :
         AbstractService("renderbackend/renderbackendserver"),
-        mRenderTaskPtr(),
         mSettings(nullptr),
-        mViewport(),
         mOwnsSettingsConfig(false),
         mFrameCreated(false),
         mRenderFrame(&mFrames[0]),
         mSubmitFrame(&mFrames[1]),
         mDirty(false),
-        mPasses(),
         mPipeline(nullptr),
         mCurrentPass(nullptr),
         mCurrentBatch(nullptr) {
@@ -108,7 +104,6 @@ bool RenderBackendService::onOpen() {
         mOwnsSettingsConfig = true;
     }
 
-    
     // Spawn the thread for our render task
     if (!mRenderTaskPtr.isValid()) {
         mRenderTaskPtr.init(SystemTask::create("render_task"));
@@ -149,7 +144,7 @@ bool RenderBackendService::onClose() {
     if (!DbgRenderer::destroy()) {
         osre_error(Tag, "Cannot destroy Debug renderer");
     }
-    
+
     if (mRenderTaskPtr->isRunning()) {
         mRenderTaskPtr->detachEventHandler();
         mRenderTaskPtr->stop();
@@ -191,7 +186,6 @@ void RenderBackendService::setSettings(const Settings *config, bool moveOwnershi
     }
     mSettings = config;
     mOwnsSettingsConfig = moveOwnership;
-    setViewport(0, 0, mSettings->getInt(Properties::Settings::WinWidth),  mSettings->getInt(Properties::Settings::WinHeight));
 }
 
 const Settings *RenderBackendService::getSettings() const {
@@ -231,10 +225,10 @@ void RenderBackendService::commitNextFrame() {
 
             if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
                 FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
-                currentBatch->m_matrixBuffer.m_view = currentPass->mView;
-                currentBatch->m_matrixBuffer.m_proj = currentPass->mProj;
+                currentBatch->m_matrixBuffer.view = currentPass->mView;
+                currentBatch->m_matrixBuffer.proj = currentPass->mProj;
                 assert(cmd->m_batchId != nullptr);
-                cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
+                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
 
@@ -260,9 +254,9 @@ void RenderBackendService::commitNextFrame() {
                     size_t offset = 0;
                     cmd->m_data[offset] = var->m_name.size() > 255 ? 255 : static_cast<c8>(var->m_name.size());
                     ++offset;
-                    ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
+                    memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
                     offset += var->m_name.size();
-                    ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
+                    memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
             }
 
@@ -305,25 +299,23 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
     }
 }
 
-Pipeline *RenderBackendService::createDefault3DPipeline() {
+Pipeline *RenderBackendService::createDefault3DPipeline(guid framebufferId) {
     Pipeline *pipeline = new Pipeline(DefaultPipelines::get3DPipelineDefault());
     RenderPass *renderPass = nullptr;
-    renderPass = RenderPassFactory::create(RenderPassId);
+    renderPass = RenderPassFactory::create(RenderPassId, framebufferId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
-    renderPass->setViewport(mViewport);
     pipeline->addPass(renderPass);
 
     return pipeline;
 }
 
-Pipeline* RenderBackendService::createDefault2DPipeline() {
+Pipeline *RenderBackendService::createDefault2DPipeline(guid framebufferId) {
     Pipeline *pipeline = new Pipeline(DefaultPipelines::get2DPipelineDefault());
     RenderPass *renderPass = nullptr;
-    renderPass = RenderPassFactory::create(UiPassId);
+    renderPass = RenderPassFactory::create(UiPassId, framebufferId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
-    renderPass->setViewport(mViewport);
     pipeline->addPass(renderPass);
 
     return pipeline;
@@ -339,13 +331,13 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     }
 
     if (nullptr != mCurrentPass) {
-        if (0 == ::strncmp(mCurrentPass->m_id, id, strlen(id))) {
+        if (0 == strncmp(mCurrentPass->m_id, id, strlen(id))) {
             return mCurrentPass;
         }
     }
 
     for (ui32 i = 0; i < mPasses.size(); ++i) {
-        if (0 == ::strncmp(mPasses[i]->m_id, id, strlen(id))) {
+        if (0 == strncmp(mPasses[i]->m_id, id, strlen(id))) {
             return mPasses[i];
         }
     }
@@ -362,8 +354,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     mCurrentPass = getPassById(id);
     if (nullptr == mCurrentPass) {
         mCurrentPass = new PassData(id, nullptr);
-        mCurrentPass->mViewport = mViewport;
-    }
+     }
     mDirty = true;
 
     return mCurrentPass;
@@ -388,7 +379,7 @@ void RenderBackendService::setRenderTarget(FrameBuffer *fb) {
         osre_warn(Tag, "No active pass, cannot add render target.");
         return;
     }
-    
+
     if (fb == nullptr) {
         osre_error(Tag, "Framebuffer is nullptr, aborted.");
         return;
@@ -405,17 +396,17 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
 
     switch (type) {
         case MatrixType::Model:
-            mCurrentBatch->m_matrixBuffer.m_model = m;
+            mCurrentBatch->m_matrixBuffer.model = m;
             mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         case MatrixType::View:
             mCurrentPass->mView = m;
-            mCurrentBatch->m_matrixBuffer.m_view = m;
+            mCurrentBatch->m_matrixBuffer.view = m;
             mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         case MatrixType::Projection:
             mCurrentPass->mProj = m;
-            mCurrentBatch->m_matrixBuffer.m_proj = m;
+            mCurrentBatch->m_matrixBuffer.proj = m;
             mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         default:
@@ -437,7 +428,7 @@ void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix
     }
 
     mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
-    ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
+    memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
 void RenderBackendService::addUniform(UniformVar *uniformVar) {
@@ -567,10 +558,9 @@ void RenderBackendService::attachView() {
     // empty
 }
 
-void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
+void RenderBackendService::resize(guid targetId, ui32 x, ui32 y, ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
-        setViewport(x, y, w, h);
-        ResizeEventData *data = new ResizeEventData(x, y, w, h);
+        ResizeEventData *data = new ResizeEventData(targetId, x, y, w, h);
         mRenderTaskPtr->sendEvent(&OnResizeEvent, data);
     }
 }
@@ -582,22 +572,10 @@ void RenderBackendService::focusLost() {
 void RenderBackendService::syncRenderThread() {
     // Synchronizing event with render back-end
     auto result = mRenderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
-    if(!result) {
+    if (!result) {
         osre_debug(Tag, "Error while requesting next frame.");
     }
     mRenderTaskPtr->awaitUpdate();
 }
 
-void RenderBackendService::setViewport( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    mViewport.m_x = x;
-    mViewport.m_y = y;
-    mViewport.m_w = w;
-    mViewport.m_h = h;
-}
-
-const Viewport &RenderBackendService::getViewport() const {
-    return mViewport;
-}
-
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

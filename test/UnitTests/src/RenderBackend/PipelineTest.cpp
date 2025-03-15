@@ -29,17 +29,17 @@ namespace UnitTest {
 
 using namespace ::OSRE::RenderBackend;
 
+static constexpr guid FrameBufferId = 0;
 class PipelineTest : public ::testing::Test {
 protected:
     RenderBackendService *mRbService;
     RenderPass *mPass1;
     RenderPass *mPass2;
 
-protected:
     void SetUp() override {
         mRbService = new RenderBackendService;
-        mPass1 = RenderPassFactory::create(RenderPassId);
-        mPass2 = RenderPassFactory::create(DbgPassId);
+        mPass1 = RenderPassFactory::create(RenderPassId, FrameBufferId);
+        mPass2 = RenderPassFactory::create(DbgPassId, FrameBufferId);
     }
 
     void TearDown() override {
@@ -77,7 +77,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
     pipeline->addPass(mPass1);
     pipeline->addPass(mPass2);
 
-    size_t numPasses = pipeline->beginFrame();
+    const size_t numPasses = pipeline->beginFrame();
     EXPECT_EQ( 2u, numPasses );
     for ( ui32 i = 0; i < numPasses; i++ ) {
         RenderPass *pass = pipeline->beginPass(i);

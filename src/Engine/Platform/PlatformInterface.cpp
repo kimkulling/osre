@@ -206,7 +206,7 @@ bool PlatformInterface::onOpen() {
 #else
     osre_info(Tag, "Platform plugin created for Linux.");
 #endif
-    mContext->m_dynLoader = PlatformPluginFactory::createDynmicLoader();
+    mContext->m_dynLoader = PlatformPluginFactory::createDynamicLoader();
     bool result(true);
     if (appType == Settings::GfxApp) {
         result = setupGfx(props, polls);
@@ -245,9 +245,11 @@ bool PlatformInterface::onUpdate() {
     return mContext->m_oseventHandler->update();
 }
 
+static constexpr guid RootWindowId = 0;
+
 bool PlatformInterface::setupGfx(WindowsProperties *props, bool polls) {
     // create the root surface
-    mContext->m_rootSurface = PlatformPluginFactory::createSurface(props);
+    mContext->m_rootSurface = PlatformPluginFactory::createWindow(RootWindowId, props);
     if (!mContext->m_rootSurface->create()) {
         delete mContext->m_rootSurface;
         osre_error(Tag, "Error while creating platform root surface.");

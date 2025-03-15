@@ -30,21 +30,24 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements the 2D render pass.
 //-------------------------------------------------------------------------------------------------
 class RenderPass2D {
 public:
-    RenderPass2D();
-    ~RenderPass2D();
-    static RenderPass *build(guid id);
+    /// @brief The class constructor.
+    RenderPass2D() = default;
+
+    /// @brief The class destructor.
+    ~RenderPass2D() = default;
+
+    /// @brief Builds a 2D render pass
+    /// @param[in] id               The pass id
+    /// @param[in] framebufferId    The framebuffer id
+    static RenderPass *build(guid id, guid framebufferId);
 };
 
-inline RenderPass2D::RenderPass2D() {}
-
-inline RenderPass2D::~RenderPass2D() {}
-
-inline RenderPass *RenderPass2D::build(guid id) {
-    RenderPass *pass = new RenderPass(id, nullptr);
+inline RenderPass *RenderPass2D::build(guid id, guid framebufferId) {
+    RenderPass *pass = new RenderPass(id, framebufferId, nullptr);
 
     return pass;
 }

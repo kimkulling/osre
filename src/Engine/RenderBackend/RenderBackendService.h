@@ -154,10 +154,11 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT ResizeEventData : Common::EventData {
-    ResizeEventData(ui32 x, ui32 y, ui32 w, ui32 h) :
-            EventData(OnResizeEvent, nullptr),  X(x), Y(y), W(w), H(h) {
+    ResizeEventData(guid targetId_, ui32 x_, ui32 y_, ui32 w_, ui32 h_) :
+            EventData(OnResizeEvent, nullptr),  targetId(targetId_), X(x_), Y(y_), W(w_), H(h_) {
         // empty
     }
+    guid targetId;
     ui32 X, Y, W, H;
 };
 
@@ -194,11 +195,11 @@ public:
 
     /// @brief  Will create the default render pipeline.
     /// @return Pointer showing to the default render pipeline.
-    Pipeline *createDefault3DPipeline();
+    Pipeline *createDefault3DPipeline(guid framebufferId);
 
     ///	@brief
     ///	@return 
-    Pipeline *createDefault2DPipeline();
+    Pipeline *createDefault2DPipeline(guid framebufferId);
 
     ///	@brief
     /// @param
@@ -253,17 +254,13 @@ public:
 
     void attachView();
 
-    void resize(ui32 x, ui32 y, ui32 w, ui32 h);
+    void resize(guid targetId, ui32 x, ui32 y, ui32 w, ui32 h);
 
     void enableAutoResizing(bool enabled);
 
     void focusLost();
 
     void syncRenderThread();
-
-    void setViewport(ui32 x, ui32 y, ui32 w, ui32 h);
-
-    const Viewport &getViewport() const;
 
 protected:
     /// @brief  The open callback.
@@ -284,14 +281,13 @@ protected:
 private:
     Threading::SystemTaskPtr mRenderTaskPtr;
     const Properties::Settings *mSettings;
-    Viewport mViewport;
     bool mOwnsSettingsConfig;
     bool mFrameCreated;
     Frame mFrames[2];
     Frame *mRenderFrame;
     Frame *mSubmitFrame;
     bool mDirty;
-    cppcore::TArray<PassData*> mPasses;
+    TArray<PassData*> mPasses;
     Pipeline *mPipeline;
     PassData *mCurrentPass;
     RenderBatchData *mCurrentBatch;

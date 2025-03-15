@@ -21,33 +21,23 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/OGLRenderer/RenderCmdBuffer.h"
-#include "RenderBackend/Shader.h"
 #include "RenderBackend/OGLRenderer/OGLCommon.h"
 #include "RenderBackend/OGLRenderer/OGLRenderBackend.h"
 #include "Debugging/osre_debugging.h"
 #include "Platform/AbstractOGLRenderContext.h"
-#include "Platform/AbstractTimer.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 
-static constexpr c8 Tag[] = "RenderCmdBuffer";
+DECL_OSRE_LOG_MODULE(RenderCmdBuffer)
 
 RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRenderContext *ctx) :
         mRBService(renderBackend),
         mRenderCtx(ctx),
         mActiveShader(nullptr),
-        mPrimitives(),
-        mMaterials(),
-        mParamArray(),
-        mMatrixBuffer(),
         mPipeline(nullptr) {
-    osre_assert(nullptr != mRBService);
-    osre_assert(nullptr != mRenderCtx);
-
     mClearState.m_state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
 }
 
@@ -154,7 +144,7 @@ void RenderCmdBuffer::onRenderFrame() {
 }
 
 void RenderCmdBuffer::onPostRenderFrame() {
-    
+
     // unbind the active shader
     mRBService->useShader(nullptr);
     mRBService->unbindVertexArray();
@@ -195,7 +185,7 @@ void RenderCmdBuffer::setParameter(const ::cppcore::TArray<OGLParameter *> &para
         if (!hasParam(paramArray[i]->m_name, mParamArray, index)) {
             mParamArray.add(param);
             return;
-        } 
+        }
         mParamArray[index] = param;
     }
 }
@@ -229,22 +219,24 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         return false;
     }
 
-    assert(data->m_id != nullptr);
-    auto it = mMatrixBuffer.find(data->m_id);
-    if (it != mMatrixBuffer.end()) {
-        MatrixBuffer *buffer = it->second;
-        setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
+    if (data->id == nullptr) {
+        return false;
     }
 
-    mRBService->bindVertexArray(data->m_vertexArray);
-    if (data->m_localMatrix) {
+    if (auto it = mMatrixBuffer.find(data->id); it != mMatrixBuffer.end()) {
+        const MatrixBuffer *buffer = it->second;
+        setMatrixes(buffer->model, buffer->view, buffer->proj);
+    }
+
+    mRBService->bindVertexArray(data->vertexArray);
+    if (data->localMatrix) {
         glm::mat4 model = mRBService->getMatrix(MatrixType::Model);
-        mRBService->setMatrix(MatrixType::Model, data->m_model*model);
+        mRBService->setMatrix(MatrixType::Model, data->model * model);
         mRBService->applyMatrix();
     }
 
-    for (size_t i = 0; i < data->m_primitives.size(); ++i) {
-        mRBService->render(data->m_primitives[i]);
+    for (size_t i = 0; i < data->primitives.size(); ++i) {
+        mRBService->render(data->primitives[i]);
     }
 
     return true;
@@ -292,5 +284,4 @@ bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
     return true;
 }
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

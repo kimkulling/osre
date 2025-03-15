@@ -29,15 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 #include "RenderCmdBuffer.h"
 
-#include "App/AssetRegistry.h"
 #include "Common/Logger.h"
 #include "Debugging/osre_debugging.h"
-#include "IO/Uri.h"
-#include "Platform/AbstractOGLRenderContext.h"
-#include "Platform/AbstractWindow.h"
-#include "Platform/AbstractTimer.h"
-#include "Platform/PlatformInterface.h"
-#include "Profiling/PerformanceCounterRegistry.h"
 #include "RenderBackend/Mesh.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/Shader.h"
@@ -47,7 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE::RenderBackend {
 
-static constexpr c8 Tag[] = "OGLRenderCommands";
+DECL_OSRE_LOG_MODULE(OGLRenderCommands)
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
@@ -135,8 +128,8 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
         }                                  
         break;
     default:
-            osre_debug(Tag, "Unsupported material type.");
-            break;
+        osre_debug(Tag, "Unsupported material type.");
+        break;
     }
 
     return matData;
@@ -152,7 +145,7 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);
     } else {
-        ::memcpy(oglParam->m_data->getData(), param->m_data.getData(), param->m_data.m_size);
+        memcpy(oglParam->m_data->getData(), param->m_data.getData(), param->m_data.m_size);
     }
 
     paramArray.add(oglParam);
@@ -170,13 +163,13 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     rb->bindVertexArray(vertexArray);
     BufferData *vertices = mesh->getVertexBuffer();
     if (vertices == nullptr) {
-        osre_debug(Tag, "No vertex buffer data for setting up data.");
+        osre_error(Tag, "No vertex buffer data for setting up data.");
         return nullptr;
     }
 
     BufferData *indices = mesh->getIndexBuffer();
     if (indices == nullptr) {
-        osre_debug(Tag, "No index buffer data for setting up data.");
+        osre_error(Tag, "No index buffer data for setting up data.");
         return nullptr;
     }
 
@@ -207,25 +200,26 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
         const TArray<size_t> &primGroups, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va) {
-    assert(id != nullptr);
-    if (rb == nullptr || eh == nullptr || va == nullptr) {
+    if (id == nullptr || rb == nullptr || eh == nullptr || va == nullptr) {
+        osre_error(Tag, "Invalid parameter.");
         return;
     }
     if (primGroups.isEmpty()) {
+        osre_error(Tag, "Primitive group is empty.");
         return;
     }
 
     auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
     auto *drawPrimitiveCmdData = new DrawPrimitivesCmdData;
     if (useLocalMatrix) {
-        drawPrimitiveCmdData->m_model = model;
-        drawPrimitiveCmdData->m_localMatrix = useLocalMatrix;
+        drawPrimitiveCmdData->model = model;
+        drawPrimitiveCmdData->localMatrix = useLocalMatrix;
     }
-    drawPrimitiveCmdData->m_id = id;
-    drawPrimitiveCmdData->m_vertexArray = va;
-    drawPrimitiveCmdData->m_primitives.reserve(primGroups.size());
+    drawPrimitiveCmdData->id = id;
+    drawPrimitiveCmdData->vertexArray = va;
+    drawPrimitiveCmdData->primitives.reserve(primGroups.size());
     for (ui32 i = 0; i < primGroups.size(); ++i) {
-        drawPrimitiveCmdData->m_primitives.add(primGroups[i]);
+        drawPrimitiveCmdData->primitives.add(primGroups[i]);
     }
     renderCmd->m_data = static_cast<void*>(drawPrimitiveCmdData);
 

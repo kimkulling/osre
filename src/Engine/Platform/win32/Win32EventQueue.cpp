@@ -206,20 +206,20 @@ bool Win32EventQueue::update() {
             case WM_SIZE: {
                 WindowsResizeEventData *data = new WindowsResizeEventData(m_eventTriggerer);
                 RECT rcClient;
-                Win32Window *s = (Win32Window *)m_rootWindow;
+                Win32Window *win = (Win32Window *)m_rootWindow;
                 RECT rSB;
-                if (nullptr != s) {
-                    auto handle = s->getStatusBarHandle();
+                if (win != nullptr) {
+                    auto handle = win->getHWnd();
                     if (nullptr != handle) {
-                        GetWindowRect(s->getStatusBarHandle(), &rSB);
-                        SendMessage(s->getStatusBarHandle(), WM_SIZE, 0, 0);
+                        GetWindowRect(win->getStatusBarHandle(), &rSB);
+                        SendMessage(win->getStatusBarHandle(), WM_SIZE, 0, 0);
                     }
-                    GetClientRect(s->getHWnd(), &rcClient);
+                    GetClientRect(handle, &rcClient);
                     const ui32 w = rcClient.right - rcClient.left;
                     const ui32 h = rcClient.bottom - rcClient.top;
                     RenderBackend::RenderBackendService *rbSrv = getRenderBackendService();
                     if (nullptr != rbSrv) {
-                        rbSrv->resize(rcClient.left, rcClient.top, w, h);
+                        rbSrv->resize(win->getId(), rcClient.left, rcClient.top, w, h);
                     }
                     activeEventQueue->addBack(data);
                 }

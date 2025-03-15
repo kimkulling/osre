@@ -23,11 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Mesh.h"
 #include "Common/Ids.h"
 #include "Common/Logger.h"
-#include "Debugging/osre_debugging.h"
 #include "RenderBackend/Material.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 
@@ -35,7 +33,7 @@ using namespace ::OSRE::Common;
 static Ids s_Ids;
 
 // The log tag for messages
-static constexpr c8 Tag[] = "Mesh";
+DECL_OSRE_LOG_MODULE(Mesh)
 
 Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
         mName(name),
@@ -46,10 +44,7 @@ Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
         mVertexBuffer(nullptr),
         mIndexType(indextype),
         mIndexBuffer(nullptr),
-        mPrimGroups(),
         mId(99999999),
-        mVertexData(),
-        mIndexData(),
         mLastIndex(0) {
     mId = s_Ids.getUniqueId();
 }
@@ -81,15 +76,14 @@ void Mesh::resizeVertexBuffer(size_t vbSize) {
         osre_debug(Tag, "Vertex buffer is nullptr.");
         return;
     }
-    
+
     if (vbSize == 0) {
         osre_debug(Tag, "Invalid buffer size");
         return;
     }
-        
+
     mVertexBuffer->m_buffer.resize(vbSize);
 }
-
 
 BufferData *Mesh::getVertexBuffer() const {
     return mVertexBuffer;
@@ -140,7 +134,6 @@ void Mesh::addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, Primitiv
         mPrimGroups[index + i]->m_primitive = primTypes[i];
         mPrimGroups[index + i]->m_startIndex = startIndices[i];
     }
-
 }
 
 void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
@@ -157,7 +150,7 @@ void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 sta
     mPrimGroups[index]->m_startIndex = startIndex;
 }
 
-void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {
+void Mesh::addPrimitiveGroup(PrimitiveGroup *group) {
     if (group == nullptr) {
         return;
     }
@@ -165,5 +158,4 @@ void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {
     mPrimGroups.add(group);
 }
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

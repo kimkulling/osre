@@ -39,7 +39,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/Pipeline.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/2D/CanvasRenderer.h"
-#include "App/CameraComponent.h"
 #include "RenderBackend/MaterialBuilder.h"
 
 #include "App/MouseEventListener.h"
@@ -146,8 +145,10 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
     }
 
     rootWindow->resize(x, y, w, h);
+
+    // We need to update the render framebuffer as well
     if (mRbService != nullptr) {
-        mRbService->resize(x, y, w, h);
+        mRbService->resize(rootWindow->getId(), x, y, w, h);
     }
 }
 
@@ -275,11 +276,12 @@ bool AppBase::onCreate() {
     mPlatformInterface->getPlatformEventHandler()->setRenderBackendService(mRbService);
 
     // Enable render-back-end
-    RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
-    data->RequestedPipeline = mRbService->createDefault3DPipeline();
-    mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
+    AbstractWindow *rootWindow = mPlatformInterface->getRootWindow();
+    CreateRendererEventData *data = new CreateRendererEventData(rootWindow);
+    data->RequestedPipeline = mRbService->createDefault3DPipeline(rootWindow->getId());
+    mRbService->sendEvent(&OnCreateRendererEvent, data);
 
-    mTimer = Platform::PlatformInterface::getInstance()->getTimer();
+    mTimer = PlatformInterface::getInstance()->getTimer();
 
     MaterialBuilder::create(GLSLVersion::GLSL_400);
     ResourceCacheService *rcSrv = new ResourceCacheService;

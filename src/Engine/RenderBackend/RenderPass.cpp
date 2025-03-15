@@ -18,9 +18,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/RenderPass.h"
 #include "RenderBackend/2D/RenderPass2D.h"
-namespace OSRE {
-namespace RenderBackend {
 
+
+namespace OSRE::RenderBackend {
 
 namespace Details {
 
@@ -30,19 +30,19 @@ static const c8 *RenderPassNames[] = {
     "DbgPass"
 };
 
-static void initRenderPasses() {
-    RenderPassFactory::registerPass(RenderPassId, new RenderPass(RenderPassId, nullptr));
-    RenderPassFactory::registerPass(UiPassId, RenderPass2D::build(UiPassId));
-    RenderPassFactory::registerPass(DbgPassId, new RenderPass(DbgPassId, nullptr));
+static void initRenderPasses(guid framebufferId) {
+    RenderPassFactory::registerPass(RenderPassId, new RenderPass(RenderPassId, framebufferId, nullptr));
+    RenderPassFactory::registerPass(UiPassId, RenderPass2D::build(UiPassId, framebufferId));
+    RenderPassFactory::registerPass(DbgPassId, new RenderPass(DbgPassId, framebufferId, nullptr));
 }
 
 } // Namespace Details
 
 cppcore::TArray<RenderPass*> RenderPassFactory::sPasses;
 
-RenderPass *RenderPassFactory::create(guid id) {
+RenderPass *RenderPassFactory::create(guid id, guid framebufferId) {
     if (sPasses.isEmpty()) {
-        Details::initRenderPasses();
+        Details::initRenderPasses(framebufferId);
     }
     for (size_t i = 0; i < sPasses.size(); ++i) {
         if (sPasses[i]->getId() == id) {
@@ -75,8 +75,9 @@ void RenderPassFactory::unregisterPass(guid id ) {
     }
 }
 
-RenderPass::RenderPass(guid id, Shader *shader) :
+RenderPass::RenderPass(guid id, guid famebufferId, Shader *shader) :
         mId(id),
+        mFrameBufferId(famebufferId),
         mViewport(),
         mRenderTarget(),
         mStates(),
@@ -188,5 +189,5 @@ bool RenderPass::operator!=(const RenderPass &rhs) const {
     return !(*this == rhs);
 }
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend
+

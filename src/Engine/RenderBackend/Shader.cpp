@@ -24,15 +24,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "IO/IOService.h"
 #include "IO/Stream.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
 Shader::Shader(const String &name) :
-        mName(), mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
-    ::memset(mCompileState, 0, sizeof(CompileState) * Count);
+        mName(), mSrc{}, mCompileState{} {
+    memset(mCompileState, 0, sizeof(CompileState) * Count);
     setName(name);
 }
 
@@ -106,7 +105,7 @@ const c8 *Shader::getSource(ShaderType type) const {
 
 static constexpr size_t InvalidLocation = 9999;
 
-size_t Shader::getLocation( const c8 *vertexAttribute ) const {
+size_t Shader::getLocation(const c8 *vertexAttribute) const {
     if (mVertexAttributes.isEmpty()) {
         return InvalidLocation;
     }
@@ -156,7 +155,7 @@ size_t ShaderLoader::load(const Uri &uri, Shader *shader) {
     size_t size = stream->getSize();
     cppcore::TArray<c8> buffer;
     buffer.resize(size);
-    size_t readSize = stream->read( &buffer[0], size);
+    size_t readSize = stream->read(&buffer[0], size);
     if (readSize == 0) {
         return 0;
     }
@@ -191,7 +190,7 @@ ShaderResource::ShaderResource(const String &shaderName, const Uri &uri) :
     // empty
 }
 
-ResourceState ShaderResource::onLoad( const Uri &uri, ShaderLoader &loader ) {
+ResourceState ShaderResource::onLoad(const Uri &uri, ShaderLoader &loader) {
     if (getState() == ResourceState::Loaded) {
         return getState();
     }
@@ -205,7 +204,7 @@ ResourceState ShaderResource::onLoad( const Uri &uri, ShaderLoader &loader ) {
     return getState();
 }
 
-ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
+ResourceState ShaderResource::onUnload(ShaderLoader &loader) {
     if (getState() == ResourceState::Unloaded) {
         return getState();
     }
@@ -215,5 +214,4 @@ ResourceState ShaderResource::onUnload( ShaderLoader &loader) {
     return getState();
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

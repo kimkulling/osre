@@ -32,7 +32,7 @@ namespace OSRE::RenderBackend {
 
 using namespace OSRE::Common;
 
-static constexpr c8 Tag[] = "OGLShader";
+DECL_OSRE_LOG_MODULE(OGLShader)
 
 OGLShader::OGLShader(const String &name) :
         Object(name),

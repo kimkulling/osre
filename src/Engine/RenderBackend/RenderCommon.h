@@ -661,14 +661,14 @@ using UiIndexCache = RenderBackend::TIndexCache<ui16>;
 
 /// @brief 
 struct MatrixBuffer {
-    glm::mat4 m_model;
-    glm::mat4 m_view;
-    glm::mat4 m_proj;
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
 
     MatrixBuffer() :
-            m_model(1.0f),
-            m_view(1.0f),
-            m_proj(1.0f) {
+            model(1.0f),
+            view(1.0f),
+            proj(1.0f) {
         // empty
     }
     ~MatrixBuffer() = default;

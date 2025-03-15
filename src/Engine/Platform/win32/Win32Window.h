@@ -56,7 +56,7 @@ struct OSRE_EXPORT StatusBarContent {
 class OSRE_EXPORT Win32Window : public AbstractWindow {
 public:
     /// The class constructor.
-    Win32Window(WindowsProperties *properties);
+    Win32Window(guid id, WindowsProperties *properties);
     /// The class destructor, virtual.
     ~Win32Window() override = default;
     /// Will manage the visibility of the window.

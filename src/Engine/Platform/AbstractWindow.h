@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 class AbstractPlatformEventQueue;
 
@@ -45,8 +44,8 @@ struct OSRE_EXPORT Resolution {
         Res1920x1080
     };
 
-    ui32 m_width;   ///< The resolution in x.
-    ui32 m_height;  ///< The resolution in y.
+    ui32 width; ///< The resolution in x.
+    ui32 height; ///< The resolution in y.
 
     explicit Resolution(ResRequest req);
     Resolution();
@@ -59,16 +58,16 @@ struct OSRE_EXPORT Resolution {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct WindowsProperties {
-    Rect2ui mRect;          ///< The window rectangle
-    uc8 m_colordepth;       ///< Color depth
+    Rect2ui mRect; ///< The window rectangle
+    uc8 m_colordepth; ///< Color depth
     uc8 m_depthbufferdepth; ///< Z-Depth
-    uc8 m_stencildepth;     ///< Stencil depth
-    String m_title;         ///< Window title
-    bool m_fullscreen;      ///< true for full screen
-    bool m_resizable;       ///< true, if the window shall be resizable
-    bool m_maximized;       ///< treu, if the windows shall be maximized
-    bool m_childWindow;     ///< true, if the window is a child window, for embedding
-    bool m_open;            ///< Window is open flag.
+    uc8 m_stencildepth; ///< Stencil depth
+    String m_title; ///< Window title
+    bool m_fullscreen; ///< true for full screen
+    bool m_resizable; ///< true, if the window shall be resizable
+    bool m_maximized; ///< treu, if the windows shall be maximized
+    bool m_childWindow; ///< true, if the window is a child window, for embedding
+    bool m_open; ///< Window is open flag.
 
     /// @brief Will return the dimension as a rectangle.
     /// @param[out] rect  The window rect.
@@ -83,7 +82,7 @@ inline void WindowsProperties::getDimension(Rect2ui &rect) {
     rect = mRect;
 }
 
-inline void WindowsProperties::setRect(const Rect2ui& rect) {
+inline void WindowsProperties::setRect(const Rect2ui &rect) {
     mRect = rect;
 }
 
@@ -108,24 +107,26 @@ class OSRE_EXPORT AbstractWindow {
 public:
     /// @brief  The Windows flags.
     enum class SurfaceFlagType {
-        Invalid,                        ///< Marks an invalid enum
-        SF_PropertiesClean = 0,         ///<
-        SF_WinTitleDirty = (1 << 1),    ///<
-        SF_WinResize = (1 << 2),        ///<
-        SF_ChildWindow = (1 << 3)       ///<
+        Invalid, ///< Marks an invalid enum
+        SF_PropertiesClean = 0, ///<
+        SF_WinTitleDirty = (1 << 1), ///<
+        SF_WinResize = (1 << 2), ///<
+        SF_ChildWindow = (1 << 3) ///<
     };
 
     /// @brief  Will describe the show-state for the window.
     enum class ShowState {
-        Invalid = -1,                   ///< Marks an invalid enum
-        Visible,                        ///< Window is visible.
-        Hidden,                         ///< Window is hidden.
-        Count                           ///< Number of enums
+        Invalid = -1, ///< Marks an invalid enum
+        Visible, ///< Window is visible.
+        Hidden, ///< Window is hidden.
+        Count ///< Number of enums
     };
 
     /// @brief  The class constructor.
-    /// @param  props       [in] The surface properties.
-    explicit AbstractWindow(WindowsProperties *props, AbstractWindow *parent = nullptr);
+    /// @oaram[in]  id      The window id.
+    /// @param[in]  props   The surface properties.
+    /// @param[in]  parent  The parent window, nullptr for root.
+    explicit AbstractWindow(guid id, WindowsProperties *props, AbstractWindow *parent = nullptr);
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractWindow();
@@ -198,24 +199,41 @@ public:
     /// @param ct The mouse cursor type to use.
     virtual void setWindowsMouseCursor(DefaultMouseCursorType ct) = 0;
 
+    /// @brief Will return the windows id.
+    /// @return The windows id.
+    guid getId() const;
+
     // Not used
     AbstractWindow() = delete;
 
 protected:
     /// @brief  Callback to override on creation.
     virtual bool onCreate() = 0;
+
     /// @brief  Callback to override on destroying.
     virtual bool onDestroy() = 0;
+
     /// @brief  Callback to override on updates.
+    /// @return true if successful, false if not.
     virtual bool onUpdateProperies() = 0;
+
     /// @brief  The onResize callback.
+    /// @param[in] x    The x coordinate of the upper left position.
+    /// @param[in] y    The y coordinate of the upper left position.
+    /// @param[in] w    The width
+    /// @param[in] h    The height
     virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h) = 0;
-    /// @brief 
+
+    /// @brief Will set the show state.
+    /// @param[in] showState    The new show state
     void setShowState(ShowState showState);
-    /// @brief 
+
+    /// @brief Will return the show state.
+    /// @return The show state.
     ShowState getShowState() const;
 
 private:
+    guid mId;
     AbstractWindow *mParent;
     AbstractPlatformEventQueue *mQueue;
     ui32 mFlags;
@@ -224,23 +242,23 @@ private:
     bool mIsCreated;
 };
 
-inline void AbstractWindow::setParent(AbstractWindow* parent) {
+inline void AbstractWindow::setParent(AbstractWindow *parent) {
     mParent = parent;
 }
 
-inline AbstractWindow* AbstractWindow::getParent() const {
+inline AbstractWindow *AbstractWindow::getParent() const {
     return mParent;
 }
 
-inline void AbstractWindow::setEventQueue(AbstractPlatformEventQueue* queue) {
+inline void AbstractWindow::setEventQueue(AbstractPlatformEventQueue *queue) {
     mQueue = queue;
 }
 
-inline AbstractPlatformEventQueue* AbstractWindow::getEventQueue() const {
+inline AbstractPlatformEventQueue *AbstractWindow::getEventQueue() const {
     return mQueue;
 }
 
-inline void AbstractWindow::setShowState( ShowState showState ) {
+inline void AbstractWindow::setShowState(ShowState showState) {
     mShowState = showState;
 }
 
@@ -248,5 +266,8 @@ inline AbstractWindow::ShowState AbstractWindow::getShowState() const {
     return mShowState;
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+inline guid AbstractWindow::getId() const {
+    return mId;
+}
+
+} // namespace OSRE::Platform
