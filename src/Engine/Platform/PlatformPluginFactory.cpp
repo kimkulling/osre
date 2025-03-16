@@ -85,7 +85,7 @@ AbstractWindow *PlatformPluginFactory::createWindow(guid id, WindowsProperties *
 #ifdef OSRE_WINDOWS
     surface = new Win32Window(id, props);
 #else
-    surface = new SDL2Surface(props);
+    surface = new SDL2Surface(id, props);
 #endif // OSRE_WINDOWS
     osre_assert(nullptr != surface);
 

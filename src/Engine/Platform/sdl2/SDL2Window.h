@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Forward declarations ---------------------------------------------------------------------------
 struct SDL_Window;
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -39,7 +38,7 @@ class SDL2Surface final : public AbstractWindow {
 public:
     /// @brief The class constructor.
     /// @param[in] props    The windows title.
-    SDL2Surface( WindowsProperties *props );
+    SDL2Surface(guid id, WindowsProperties *props );
 
     ///	@brief  The class destructor.
     ~SDL2Surface() override = default;
@@ -75,4 +74,4 @@ private:
 };
 
 } // Namespace Platform
-} // Namespace OSRE
+// Namespace OSRE

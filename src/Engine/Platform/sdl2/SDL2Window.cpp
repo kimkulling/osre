@@ -25,13 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <SDL.h>
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 static constexpr c8 Tag[] = "SDL2Surface";
 
-SDL2Surface::SDL2Surface(WindowsProperties *props) :
-        AbstractWindow(props),
+SDL2Surface::SDL2Surface(guid id, WindowsProperties *props) :
+        AbstractWindow(id, props),
         mSurface(nullptr) {
     // empty
 }
@@ -140,4 +139,4 @@ void SDL2Surface::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
 }
 
 } // Namespace Platform
-} // Namespace OSRE
+// Namespace OSRE
