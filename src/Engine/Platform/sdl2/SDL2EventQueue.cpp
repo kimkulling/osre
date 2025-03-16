@@ -194,7 +194,7 @@ bool SDL2EventHandler::update() {
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
                             const ui32 w = static_cast<ui32>(ev.window.data1);
                             const ui32 h = static_cast<ui32>(ev.window.data2);
-                            getRenderBackendService()->resize(mWindow->getId(), 0,0,w, h);
+                            getRenderBackendService()->resize(mWindow->getId(), 0, 0, w, h);
                         } break;
                     }
                 }
