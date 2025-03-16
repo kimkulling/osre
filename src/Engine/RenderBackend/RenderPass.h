@@ -38,7 +38,7 @@ class RenderPass;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderPassFactory {
 public:
-    static RenderPass *create(guid id);
+    static RenderPass *create(guid id, guid framebufferId);
     static void registerPass(guid id, RenderPass *renderPass);
     static void unregisterPass(guid id);
 
@@ -60,11 +60,12 @@ static constexpr ui32 MaxDbgPasses = 3;
 class OSRE_EXPORT RenderPass {
 public:
     RenderPass() = default;
-    RenderPass(guid id, Shader *shader);
+    RenderPass(guid id, guid framebufferId, Shader *shader);
     ~RenderPass() = default;
     void setViewProjection(const glm::mat4 &view, const glm::mat4 &projection);
     const glm::mat4 &getView() const;
     const glm::mat4 &getProjection() const;
+    void setViewport(ui32 x, ui32 y, ui32 w, ui32 h);
     void setViewport(const Viewport &viewport);
     const Viewport &getViewport() const;
     RenderPass &set(RenderTarget &rt, RenderStates &states);
@@ -83,12 +84,14 @@ public:
     RenderPass &setShader(Shader *shader);
     Shader *getShader() const;
     guid getId() const;
+    guid getFrameBufferId() const;
     static const c8 *getPassNameById(guid id);
     bool operator == (const RenderPass &rhs) const;
     bool operator != (const RenderPass &rhs) const;
 
 private:
     guid mId;
+    guid mFrameBufferId;
     glm::mat4 mProjection;
     glm::mat4 mView;
     Viewport mViewport;
@@ -96,6 +99,13 @@ private:
     RenderStates mStates;
     Shader *mShader;
 };
+
+inline void RenderPass::setViewport(ui32 x, ui32 y, ui32 w, ui32 h) {
+    mViewport.m_x = x;
+    mViewport.m_y = y;
+    mViewport.m_w = w;
+    mViewport.m_h = h;
+}
 
 inline void RenderPass::setViewProjection(const glm::mat4& view, const glm::mat4& projection) {
     mView = view;
@@ -112,6 +122,10 @@ inline const glm::mat4& RenderPass::getProjection() const {
 
 inline guid RenderPass::getId() const {
     return mId;
+}
+
+inline guid RenderPass::getFrameBufferId() const {
+    return mFrameBufferId;
 }
 
 } // namespace RenderBackend

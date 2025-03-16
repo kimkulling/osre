@@ -34,8 +34,6 @@ static const i32 NeedsUpdate = 1;
 
 MeshProcessor::MeshProcessor() :
         AbstractProcessor(),
-        mMeshArray(),
-        mAabb(),
         mDirty(0) {
     // empty
 }

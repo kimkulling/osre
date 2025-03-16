@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/RenderCommon.h"
 #include "App/AssetRegistry.h"
-#include "Common/Ids.h"
 #include "Common/Logger.h"
 #include "IO/Uri.h"
 #include "RenderBackend/Mesh.h"
@@ -32,8 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::cppcore;
 using namespace ::OSRE::Common;
@@ -42,27 +40,27 @@ using namespace ::glm;
 VertComponent VertexLayout::ErrorComp;
 
 // The log tag for messages
-static const c8 *Tag = "RenderCommon";
+DECL_OSRE_LOG_MODULE(RenderCommon)
 
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String
         VertCompName[static_cast<ui32>(VertexAttribute::Count)] = {
-            "position",  ///< Position
-            "normal",    ///< Normal
+            "position", ///< Position
+            "normal", ///< Normal
             "texcoord0", ///< TexCoord0
             "texcoord1", ///< TexCoord1
             "texcoord2", ///< TexCoord2
             "texcoord3", ///< TexCoord3
-            "tangent",   ///< Tangent
-            "binormal",  ///< Binormal
-            "weights",   ///< Weights
-            "indices",   ///< Indices
-            "color0",    ///< Color0
-            "color1",    ///< Color1
+            "tangent", ///< Tangent
+            "binormal", ///< Binormal
+            "weights", ///< Weights
+            "indices", ///< Indices
+            "color0", ///< Color0
+            "color1", ///< Color1
             "instance0", ///< Instance0
             "instance1", ///< Instance1
             "instance2", ///< Instance2
-            "instance3"  ///< Instance3
+            "instance3" ///< Instance3
         };
 
 static const String ErrorCmpName = "Error";
@@ -90,9 +88,9 @@ const String *ColorVert::getAttributes() {
 static constexpr ui32 NumRenderVertAttributes = 4;
 
 static const String RenderVertAttributes[NumRenderVertAttributes] = {
-    "position", 
-    "normal", 
-    "color0", 
+    "position",
+    "normal",
+    "color0",
     "texcoord0"
 };
 
@@ -122,7 +120,7 @@ const String *RenderVert::getAttributes() {
 }
 
 const String &getVertCompName(VertexAttribute attrib) {
-    if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::Invalid) {
+    if (attrib > VertexAttribute::Instance3 || attrib == VertexAttribute::Invalid) {
         return ErrorCmpName;
     }
     return VertCompName[static_cast<size_t>(attrib)];
@@ -269,7 +267,7 @@ void BufferData::attach(const void *data, size_t size) {
         return;
     }
     osre_assert(data != nullptr);
-    
+
     const size_t oldSize = m_buffer.size();
     m_buffer.resize(oldSize + size);
     ::memcpy(&m_buffer[oldSize], data, size);
@@ -332,7 +330,7 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
     String path = App::AssetRegistry::resolvePathFromUri(uri);
 
     i32 width = 0, height = 0, channels = 0;
-    
+
     tex->Data = stbi_load(path.c_str(), &width, &height, &channels, 0);
     if (nullptr == tex->Data) {
         osre_debug(Tag, "Cannot load texture " + filename);
@@ -390,8 +388,7 @@ Texture *TextureLoader::getDefaultTexture() {
 void TextureLoader::releaseDefaultTexture() {
     delete DefaultTexture;
     DefaultTexture = nullptr;
-}   
-
+}
 
 bool TextureLoader::unload(Texture *tex) {
     if (nullptr == tex) {
@@ -524,7 +521,7 @@ Viewport::Viewport(const Viewport &rhs) :
         m_x(rhs.m_x), m_y(rhs.m_y), m_w(rhs.m_w), m_h(rhs.m_h) {
     // empty
 }
-        
+
 bool Viewport::operator==(const Viewport &rhs) const {
     return (m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h);
 }
@@ -605,7 +602,7 @@ Frame::~Frame() {
     m_uniforBuffers = nullptr;
 }
 
-void Frame::init(TArray<PassData*> &newPasses) {
+void Frame::init(TArray<PassData *> &newPasses) {
     if (newPasses.isEmpty()) {
         return;
     }
@@ -780,5 +777,4 @@ GLSLVersion getGlslVersionFromeString(const c8 *versionString) {
     return version;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

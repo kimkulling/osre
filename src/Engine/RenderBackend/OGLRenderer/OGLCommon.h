@@ -214,14 +214,16 @@ struct DrawInstancePrimitivesCmdData {
 
 ///	@brief  Thsi struct declares the data for a simple render call.
 struct DrawPrimitivesCmdData {
-    bool m_localMatrix;                     ///< true for a local model matrix. TODO: Remove me
-    glm::mat4 m_model;                      ///< The model matrix. TODO: Remove me
-    OGLVertexArray *m_vertexArray;          ///< The vertex array to use.
-    cppcore::TArray<size_t> m_primitives;   ///< The primitives to render.
-    const char *m_id;                       ///< The id.
+    bool localMatrix;                     ///< true for a local model matrix. TODO: Remove me
+    glm::mat4 model;                      ///< The model matrix. TODO: Remove me
+    OGLVertexArray *vertexArray;          ///< The vertex array to use.
+    cppcore::TArray<size_t> primitives;   ///< The primitives to render.
+    const char *id;                       ///< The id.
 
     /// @brief The default class constructor.
-    DrawPrimitivesCmdData() : m_localMatrix(false), m_model(), m_vertexArray(nullptr), m_primitives(), m_id(nullptr) {}
+    DrawPrimitivesCmdData() : localMatrix(false), model(), vertexArray(nullptr), primitives(), id(nullptr) {
+        // empty
+    }
 
     /// @brief  The class destructor, default implementation.
     ~DrawPrimitivesCmdData() = default;

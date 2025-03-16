@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
-#include "RenderBackend/RenderCommon.h"
+#include "Common/TResource.h"
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TStaticArray.h>

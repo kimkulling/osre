@@ -98,6 +98,8 @@ public:
     /// @brief  Will clear the pipeline, all assigned render-passes will be removed.
     void clear();
 
+    void resizeRenderTargets(guid id, ui32 x, ui32 y, ui32 w, ui32 h);
+
 private:
     using PipelinePassArray = TArray<RenderPass*>;
     PipelinePassArray mPasses;

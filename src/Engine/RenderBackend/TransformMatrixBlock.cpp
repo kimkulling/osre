@@ -22,8 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/TransformMatrixBlock.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 TransformMatrixBlock::TransformMatrixBlock() {
     init();
@@ -72,5 +71,4 @@ const float *TransformMatrixBlock::getMVP() {
     return glm::value_ptr(mMvp);
 }
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

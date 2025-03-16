@@ -129,7 +129,7 @@ bool RenderTestSuite::setup(const String &API) {
     if (m_pPlatformInterface) {
         CreateRendererEventData *data = new CreateRendererEventData(m_pPlatformInterface->getRootWindow());
         data->DefaultFont = m_pPlatformInterface->getDefaultFontName();
-        data->RequestedPipeline = m_pRenderBackendServer->createDefault3DPipeline();
+        data->RequestedPipeline = m_pRenderBackendServer->createDefault3DPipeline(0);
         m_pRenderBackendServer->sendEvent(&OnCreateRendererEvent, data);
     }
 

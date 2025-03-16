@@ -27,8 +27,8 @@ namespace OSRE::Platform {
 
 static constexpr c8 Tag[] = "Win32Window";
 
-Win32Window::Win32Window(WindowsProperties *properties) :
-        AbstractWindow(properties),
+Win32Window::Win32Window(guid id, WindowsProperties *properties) :
+        AbstractWindow(id, properties),
         mInstance(nullptr),
         mWnd(nullptr),
         mHandleStatusBar(nullptr),

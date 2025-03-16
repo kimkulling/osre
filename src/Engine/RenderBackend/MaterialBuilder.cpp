@@ -31,7 +31,7 @@ namespace OSRE::RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
 
-static constexpr c8 Tag[] = "MaterialBuilder";
+DECL_OSRE_LOG_MODULE(MaterialBuilder)
 
 static void addMaterialParameter(Material *mat) {
     if (mat == nullptr) {

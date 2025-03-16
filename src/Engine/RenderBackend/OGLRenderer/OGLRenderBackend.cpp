@@ -40,13 +40,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Platform;
 using namespace cppcore;
 
-static constexpr c8 Tag[] = "OGLRenderBackend";
+DECL_OSRE_LOG_MODULE(OGLRenderBackend)
+
 static constexpr ui32 NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend() :
@@ -76,11 +76,11 @@ void OGLRenderBackend::enumerateGPUCaps() {
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
     glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &mOglCapabilities.mMaxVertexAttributes);
-    mOglCapabilities.mGLSLVersionAsStr = (const c8*) (glGetString(GL_SHADING_LANGUAGE_VERSION));
+    mOglCapabilities.mGLSLVersionAsStr = (const c8 *)(glGetString(GL_SHADING_LANGUAGE_VERSION));
     mOglCapabilities.mGLSLVersion = getGlslVersionFromeString(mOglCapabilities.mGLSLVersionAsStr);
 }
 
-void OGLRenderBackend::setClearColor(const Color4& clearColor) {
+void OGLRenderBackend::setClearColor(const Color4 &clearColor) {
     mClearColor = clearColor;
 }
 
@@ -176,7 +176,7 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
         const String version(mOGLDriverInfo.mGLVersionString);
         osre_info(Tag, version);
     }
-    const char *GLExtensions = (const c8*) glGetString(GL_EXTENSIONS);
+    const char *GLExtensions = (const c8 *)glGetString(GL_EXTENSIONS);
     if (GLExtensions) {
         const String extensions(GLExtensions);
         setExtensions(extensions);
@@ -185,7 +185,7 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
     glGetIntegerv(GL_MAJOR_VERSION, &mOGLDriverInfo.mOpenGLVersion[0]);
     glGetIntegerv(GL_MINOR_VERSION, &mOGLDriverInfo.mOpenGLVersion[1]);
 
-    c8 *slv = (c8 *) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    c8 *slv = (c8 *)glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_info(Tag, "Supported GLSL language " + String(slv));
 
     glEnable(GL_TEXTURE_2D);
@@ -227,7 +227,7 @@ void OGLRenderBackend::setRenderContext(AbstractOGLRenderContext *renderCtx) {
     if (mRenderCtx == renderCtx) {
         return;
     }
-        
+
     mRenderCtx = renderCtx;
     if (nullptr != mRenderCtx) {
         mRenderCtx->activate();
@@ -244,7 +244,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
     if (clear & (int)ClearState::ClearBitType::StencilBit) {
-        glTarget |= GL_STENCIL_BUFFER_BIT; 
+        glTarget |= GL_STENCIL_BUFFER_BIT;
     }
 
     glClear(glTarget);
@@ -297,7 +297,7 @@ void OGLRenderBackend::bindBuffer(OGLBuffer *buffer) {
     GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
     glBindBuffer(target, buffer->m_oglId);
 
-    //CHECKOGLERRORSTATE();
+    // CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::bindBuffer(ui32 handle) {
@@ -861,7 +861,7 @@ bool OGLRenderBackend::bindTexture(OGLTexture *oglTexture, TextureStageType stag
     return true;
 }
 
-bool OGLRenderBackend::unbindTexture( TextureStageType stageType ) {
+bool OGLRenderBackend::unbindTexture(TextureStageType stageType) {
     const size_t index = (size_t)stageType;
     if (index >= mBindedTextures.size()) {
         return false;
@@ -1068,7 +1068,7 @@ void OGLRenderBackend::releaseAllPrimitiveGroups() {
     ContainerClear(mPrimitives);
 }
 
-OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, 
+OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height,
         PixelFormatType pixelFormat, bool depthBuffer) {
     OGLFrameBuffer *oglFB = new OGLFrameBuffer(name.c_str(), width, height);
     glGenFramebuffers(1, &oglFB->m_bufferId);
@@ -1087,8 +1087,8 @@ OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 wid
         glGenRenderbuffers(1, &oglFB->m_depthrenderbufferId);
         glBindRenderbuffer(GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 
-            oglFB->m_depthrenderbufferId);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                oglFB->m_depthrenderbufferId);
     }
 
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, oglFB->m_renderedTexture, 0);
@@ -1149,24 +1149,24 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
 }
 
 #if _MSC_VER > 1920 && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4312)
+#pragma warning(push)
+#pragma warning(disable : 4312)
 #endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx) {
     OGLPrimGroup *grp = mPrimitives[primpGrpIdx];
     if (grp != nullptr) {
-        glDrawRangeElements(grp->m_primitive, 
-            grp->m_startIndex, 
-            (GLuint)  (grp->m_startIndex + grp->m_numIndices),
-            (GLsizei) grp->m_numIndices, 
-            grp->m_indexType, 
-            nullptr);        
+        glDrawRangeElements(grp->m_primitive,
+                grp->m_startIndex,
+                (GLuint)(grp->m_startIndex + grp->m_numIndices),
+                (GLsizei)grp->m_numIndices,
+                grp->m_indexType,
+                nullptr);
     }
 }
 
 #if _MSC_VER > 1920 && !defined(__clang__)
-#   pragma warning(pop)
+#pragma warning(pop)
 #endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
@@ -1174,8 +1174,8 @@ void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
     if (nullptr != grp) {
         glDrawArraysInstanced(grp->m_primitive,
                 grp->m_startIndex,
-                (GLsizei) grp->m_numIndices,
-                (GLsizei) numInstances);
+                (GLsizei)grp->m_numIndices,
+                (GLsizei)numInstances);
     }
 }
 
@@ -1231,5 +1231,4 @@ const String &OGLRenderBackend::getExtensions() const {
     return mOGLDriverInfo.mExtensions;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

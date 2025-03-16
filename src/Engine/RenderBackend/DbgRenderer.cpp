@@ -30,8 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/MeshBuilder.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 
@@ -40,7 +39,6 @@ DbgRenderer *DbgRenderer::sInstance = nullptr;
 DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
         mDebugMesh(nullptr),
-        mDebugTextMeshes(),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 }
@@ -50,7 +48,6 @@ DbgRenderer::~DbgRenderer() {
 }
 
 void DbgRenderer::render() {
-
 }
 
 bool DbgRenderer::create(RenderBackendService *rbSrv) {
@@ -245,5 +242,4 @@ DbgRenderer::DebugText *DbgRenderer::getDebugText(guid id) const {
     return found;
 }
 
-} // Namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

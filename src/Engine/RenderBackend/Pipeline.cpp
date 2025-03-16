@@ -26,24 +26,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace RenderBackend {
-
 namespace DefaultPipelines {
-    const c8 *get3DPipelineDefault() {
-        static constexpr c8 Name[] = "pipeline.default.3d";
-        return Name;
-    }
 
-    const c8* get2DPipelineDefault() {
-        static constexpr c8 Name[] = "pipeline.default.2d";
-        return Name;
-    }
+const c8 *get3DPipelineDefault() {
+    static constexpr c8 Name[] = "pipeline.default.3d";
+    return Name;
+}
+
+const c8* get2DPipelineDefault() {
+    static constexpr c8 Name[] = "pipeline.default.2d";
+    return Name;
+}
 }
 
 constexpr guid InvalidPassIdx = 99999999u;
 
 Pipeline::Pipeline(const String &pipelineName) :
         Object(pipelineName),
-        mPasses(),
         mRbService(),
         mCurrentPassId(InvalidPassIdx),
         mInFrame(false) {
@@ -122,6 +121,19 @@ void Pipeline::clear() {
     mCurrentPassId = InvalidPassIdx;
     mInFrame = false;
     mPasses.resize(0);
+}
+
+void Pipeline::resizeRenderTargets(guid id, ui32 x, ui32 y, ui32 w, ui32 h) {
+    for (size_t passId=0; passId<mPasses.size(); passId++) {
+        RenderPass *pass = mPasses[passId];
+        if (pass == nullptr) {
+            continue;
+        }
+
+        if (mPasses[passId]->getFrameBufferId() == id) {
+            mPasses[passId]->setViewport(x, y, w, h);
+        }
+    }
 }
 
 } // Namespace RenderBackend

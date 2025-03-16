@@ -54,30 +54,39 @@ struct WindowsProperties;
 //-------------------------------------------------------------------------------------------------
 struct PlatformPluginFactory {
     /// @brief  Will init the factory.
+    /// @return true if successful, false if not.
     static bool init();
 
     /// @brief  Will release the factory.
+    /// @return true if successful, false if not.
     static bool release();
 
     /// @brief  Creates a platform-specific event handler instance.
+    /// @return The event queue instance.
     static AbstractPlatformEventQueue *createPlatformEventHandler( AbstractWindow *rootSurface );
 
     /// @brief  Creates a platform-specific surface instance.
-    static AbstractWindow *createSurface(WindowsProperties *pProps );
+    /// @return The created window.
+    static AbstractWindow *createWindow(guid id, WindowsProperties *pProps );
 
     /// @brief  Creates a platform-specific render context.
+    /// @return The render context instance.
     static AbstractOGLRenderContext *createRenderContext();
 
     /// @brief  Creates a platform-specific timer instance.
+    /// @return The timer instance.
     static AbstractTimer *createTimer();
 
     ///	@brief  Creates a platform-specific log stream, if any available.
+    /// @return The platform-specific log stream instance.
     static Common::AbstractLogStream *createPlatformLogStream();
 
     ///	@brief  Creates a platform-specific dynamic-library loader.
-    static AbstractDynamicLoader *createDynmicLoader();
+    /// @return The dynloader instance.
+    static AbstractDynamicLoader *createDynamicLoader();
 
-    /// @brief  CReates the platform-specific system, info instance.
+    /// @brief  Creates the platform-specific system, info instance.
+    /// @return The system info instance.
     static AbstractSystemInfo *createSystemInfo();
 
     ///	@brief  Will create the OS-Service.

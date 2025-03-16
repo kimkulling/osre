@@ -80,12 +80,12 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler(Ab
     return eventHandler;
 }
 
-AbstractWindow *PlatformPluginFactory::createSurface(WindowsProperties *props) {
-    AbstractWindow *surface(nullptr);
+AbstractWindow *PlatformPluginFactory::createWindow(guid id, WindowsProperties *props) {
+    AbstractWindow *surface = nullptr;
 #ifdef OSRE_WINDOWS
-    surface = new Win32Window(props);
+    surface = new Win32Window(id, props);
 #else
-    surface = new SDL2Surface(props);
+    surface = new SDL2Surface(id, props);
 #endif // OSRE_WINDOWS
     osre_assert(nullptr != surface);
 
@@ -124,7 +124,7 @@ Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
     return stream;
 }
 
-AbstractDynamicLoader *PlatformPluginFactory::createDynmicLoader() {
+AbstractDynamicLoader *PlatformPluginFactory::createDynamicLoader() {
     AbstractDynamicLoader *dynloader(nullptr);
 #ifdef OSRE_WINDOWS
     dynloader = new Win32DynamicLoader;
