@@ -266,8 +266,8 @@ MeshBuilder &MeshBuilder::allocPoints(VertexType type, BufferAccessType access, 
     // colors
     cppcore::TArray<ui16> indices;
     indices.resize(numPoints);
-    for (ui16 i = 0; i < numPoints; i++) {
-        indices[i] = i;
+    for (ui32 i = 0; i < numPoints; i++) {
+        indices[i] = static_cast<ui16>(i);
     }
 
     mActiveMesh = new Mesh("", type, IndexType::UnsignedShort);
