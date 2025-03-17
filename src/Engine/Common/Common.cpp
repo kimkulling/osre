@@ -54,9 +54,9 @@ void MemoryStatistics::releaseAlloc() {
 void MemoryStatistics::showStatistics() {
     osre_info(Tag, "Memory-Statistics\n=================");
     std::stringstream stream;
-    stream << "\nSum Allocs      : " << sNumNew << "\n";
-    stream << "\nMemory used     : " << sAllocated << "\n";
-    stream << "Number of leaks : " << sActiveAllocs << "\n";
+    stream << "\nSum Allocs               : " << sNumNew << "\n";
+    stream << "All Memory used in bytes : " << sAllocated << "\n";
+    stream << "Number of leaks          : " << sActiveAllocs << "\n";
     osre_info(Tag, stream.str());
 }
 
