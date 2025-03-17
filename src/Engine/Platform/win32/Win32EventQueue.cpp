@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <Windowsx.h>
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 using namespace ::OSRE::Common;
 
@@ -107,14 +106,8 @@ Win32EventQueue::Win32EventQueue(AbstractWindow *rootWindow) :
 
 Win32EventQueue::~Win32EventQueue() {
     unregisterAllMenuCommands();
-
-    m_rootWindow = nullptr;
-
     delete m_eventTriggerer;
-    m_eventTriggerer = nullptr;
-
     delete m_updateInstance;
-    m_updateInstance = nullptr;
 }
 
 bool Win32EventQueue::update() {
@@ -140,8 +133,6 @@ bool Win32EventQueue::update() {
                 switch (Program.wParam) {
                     case SC_SCREENSAVE:
                     case SC_MONITORPOWER:
-                        return true;
-
                     default:
                         return true;
                 }
@@ -388,5 +379,4 @@ void Win32EventQueue::unregisterAllMenuCommands() {
     s_MenuFunctorMap.clear();
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform
