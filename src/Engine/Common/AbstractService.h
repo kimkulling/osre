@@ -75,11 +75,11 @@ protected:
     virtual bool onUpdate() = 0;
 
 private:
-    bool mIsOpen;
+    bool mIsOpen = false;
 };
 
 inline AbstractService::AbstractService(const String &serviceName) :
-        Object(serviceName), mIsOpen(false) {
+        Object(serviceName) {
     // empty
 }
 
