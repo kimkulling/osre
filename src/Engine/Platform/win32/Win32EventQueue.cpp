@@ -143,7 +143,7 @@ bool Win32EventQueue::update() {
                         return true;
 
                     default:
-                        return false;
+                        return true;
                 }
             } break;
 
@@ -207,10 +207,10 @@ bool Win32EventQueue::update() {
                 WindowsResizeEventData *data = new WindowsResizeEventData(m_eventTriggerer);
                 RECT rcClient;
                 Win32Window *win = (Win32Window *)m_rootWindow;
-                RECT rSB;
                 if (win != nullptr) {
                     auto handle = win->getHWnd();
                     if (nullptr != handle) {
+                        RECT rSB;
                         GetWindowRect(win->getStatusBarHandle(), &rSB);
                         SendMessage(win->getStatusBarHandle(), WM_SIZE, 0, 0);
                     }
@@ -228,8 +228,8 @@ bool Win32EventQueue::update() {
 
         processEvents(m_eventTriggerer);
 
-        ::TranslateMessage(&Program);
-        ::DispatchMessage(&Program);
+        TranslateMessage(&Program);
+        DispatchMessage(&Program);
     }
 
     return !mShutdownRequested;
@@ -273,7 +273,7 @@ LRESULT Win32EventQueue::winproc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM 
             break;
     }
 
-    return ::DefWindowProc(hWnd, Message, wParam, lParam);
+    return DefWindowProc(hWnd, Message, wParam, lParam);
 }
 
 void Win32EventQueue::registerEventQueue(Win32EventQueue *server, HWND hWnd) {
