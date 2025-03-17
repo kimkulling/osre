@@ -75,10 +75,11 @@ protected:
     virtual bool onUpdate() = 0;
 
 private:
-    bool mIsOpen;
+    bool mIsOpen = false;
 };
 
-inline AbstractService::AbstractService( const String &serverName ) : Object( serverName ), mIsOpen( false ) {
+inline AbstractService::AbstractService(const String &serviceName) :
+        Object(serviceName) {
     // empty
 }
 
@@ -112,7 +113,7 @@ inline bool AbstractService::isOpen() {
 
 inline bool AbstractService::update() {
     if ( !isOpen() ) {
-        osre_debug( getName(), "Cannot update, service not open." );
+        osre_error(getName(), "Cannot update, service not open.");
         return false;
     }
 

@@ -46,7 +46,7 @@ BOOL CALLBACK GetMonitorByIndex(HMONITOR hMonitor, HDC, LPRECT, LPARAM dwData) {
 
 static i32 monitorCount() {
     DISPLAY_DEVICE displayDevice;
-    ::memset(&displayDevice, 0, sizeof(displayDevice));
+    memset(&displayDevice, 0, sizeof(displayDevice));
     displayDevice.cb = sizeof(DISPLAY_DEVICE);
     i32 deviceNum = 0;
     while (EnumDisplayDevices(NULL, deviceNum, &displayDevice, 0)) {
@@ -114,7 +114,7 @@ bool Win32DisplayInterface::getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddp
         return false;
     }
 
-    ddpiinfo->ddpi = static_cast<f32>(::sqrt(dpiX * dpiX + dpiY * dpiY));
+    ddpiinfo->ddpi = static_cast<f32>(sqrt(dpiX * dpiX + dpiY * dpiY));
     ddpiinfo->hdpi = static_cast<f32>(dpiX);
     ddpiinfo->vdpi = static_cast<f32>(dpiY);
 

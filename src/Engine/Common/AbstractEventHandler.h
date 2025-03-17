@@ -75,11 +75,11 @@ protected:
 };
 
 inline bool AbstractEventHandler::attach(const EventData *eventData) {
-    return onAttached( eventData );
+    return onAttached(eventData);
 }
 
 inline bool AbstractEventHandler::detach(const EventData *eventData) {
-    return onDetached( eventData );
+    return onDetached(eventData);
 }
 
 } // Namespace OSRE::Common

@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <Windowsx.h>
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 using namespace ::OSRE::Common;
 
@@ -107,14 +106,8 @@ Win32EventQueue::Win32EventQueue(AbstractWindow *rootWindow) :
 
 Win32EventQueue::~Win32EventQueue() {
     unregisterAllMenuCommands();
-
-    m_rootWindow = nullptr;
-
     delete m_eventTriggerer;
-    m_eventTriggerer = nullptr;
-
     delete m_updateInstance;
-    m_updateInstance = nullptr;
 }
 
 bool Win32EventQueue::update() {
@@ -140,10 +133,8 @@ bool Win32EventQueue::update() {
                 switch (Program.wParam) {
                     case SC_SCREENSAVE:
                     case SC_MONITORPOWER:
-                        return true;
-
                     default:
-                        return false;
+                        return true;
                 }
             } break;
 
@@ -207,10 +198,10 @@ bool Win32EventQueue::update() {
                 WindowsResizeEventData *data = new WindowsResizeEventData(m_eventTriggerer);
                 RECT rcClient;
                 Win32Window *win = (Win32Window *)m_rootWindow;
-                RECT rSB;
                 if (win != nullptr) {
                     auto handle = win->getHWnd();
                     if (nullptr != handle) {
+                        RECT rSB;
                         GetWindowRect(win->getStatusBarHandle(), &rSB);
                         SendMessage(win->getStatusBarHandle(), WM_SIZE, 0, 0);
                     }
@@ -228,8 +219,8 @@ bool Win32EventQueue::update() {
 
         processEvents(m_eventTriggerer);
 
-        ::TranslateMessage(&Program);
-        ::DispatchMessage(&Program);
+        TranslateMessage(&Program);
+        DispatchMessage(&Program);
     }
 
     return !mShutdownRequested;
@@ -273,7 +264,7 @@ LRESULT Win32EventQueue::winproc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM 
             break;
     }
 
-    return ::DefWindowProc(hWnd, Message, wParam, lParam);
+    return DefWindowProc(hWnd, Message, wParam, lParam);
 }
 
 void Win32EventQueue::registerEventQueue(Win32EventQueue *server, HWND hWnd) {
@@ -388,5 +379,4 @@ void Win32EventQueue::unregisterAllMenuCommands() {
     s_MenuFunctorMap.clear();
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform
