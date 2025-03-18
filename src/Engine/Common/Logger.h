@@ -25,10 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 
 #include <cppcore/Container/TArray.h>
-#include <sstream>
 
-namespace OSRE {
-namespace Common {
+namespace OSRE::Common {
 
 #define DECL_OSRE_LOG_MODULE(name) static constexpr c8 Tag[] = #name;
 
@@ -249,4 +247,4 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 //-------------------------------------------------------------------------------------------------
 #define osre_fatal( domain, message ) ::OSRE::Common::fatalPrint( domain,__FILE__, __LINE__, message)
 
-} // Namespace OSRE
+// Namespace OSRE

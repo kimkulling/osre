@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/TransformMatrixBlock.h"
-
+#include "App/MouseEventListener.h"
 #include <assimp/scene.h>
 
 #include <iostream>
@@ -39,7 +39,52 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 Tag[] = "ModelLoadingApp";
+DECL_OSRE_LOG_MODULE(ModelLoadingApp)
+
+struct OrbitalMouseControl {
+    glm::i32vec2 mMousePos;
+    glm::i32vec2 mLastMousePos;
+    TransformMatrixBlock *mTransformMatrix;
+
+    explicit OrbitalMouseControl(TransformMatrixBlock *tmb) :
+            mMousePos(), mLastMousePos(), mTransformMatrix(tmb) {
+    }
+
+    void zoom() {
+
+    }
+
+    void update(MouseEventListener *mouseListener, const glm::vec3 &right, const glm::vec3 &up) {
+        if (mouseListener == nullptr) {
+            return;
+        }
+        mMousePos.x = mouseListener->getAbsoluteX();
+        mMousePos.y = mouseListener->getAbsoluteY();
+
+        glm::mat4 localModel = glm::mat4(1.0);
+        if (mouseListener->leftButtonPressed()) {
+            const int diffX = (mMousePos.x - mLastMousePos.x);
+            const int diffY = (mMousePos.y - mLastMousePos.y);
+            if (diffX != 0) {
+                const f32 angle = glm::radians(((f32)diffX)/6);
+                localModel = rotate(localModel, angle, right);
+            }
+
+            if (diffY != 0) {
+                const f32 angle = glm::radians(((f32)diffY)/6);
+                localModel = rotate(localModel, angle, up);
+            }
+            mTransformMatrix->mModel *= localModel;
+        }
+
+        if (mouseListener->middleButtonPressed()) {
+            zoom();
+        }
+
+        mLastMousePos.x = mMousePos.x;
+        mLastMousePos.y = mMousePos.y;
+    }
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
@@ -56,6 +101,7 @@ class ModelLoadingApp : public App::AppBase {
     TransformComponent::NodePtr mModelNode;                             ///< The mode node.
     int mIntention = 0;                                                 ///< The intention. 
     Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;   ///< The controller for the keyboard.
+    OrbitalMouseControl *mOrbitalMouseControl;
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
@@ -126,6 +172,7 @@ protected:
             return false;
         }
 
+        mOrbitalMouseControl = new OrbitalMouseControl(&mTransformMatrix);
         return true;
     }
 
@@ -135,7 +182,7 @@ protected:
             return;
         }
 
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
             osre_error(Tag, "RenderBackendService not available.");
             return;
@@ -176,12 +223,13 @@ protected:
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
             osre_error(Tag, "RenderBackendService not available.");
             return;
         }
 
+        mOrbitalMouseControl->update(AppBase::getMouseEventListener(), mCamera->getRight(), mCamera->getUp());
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
