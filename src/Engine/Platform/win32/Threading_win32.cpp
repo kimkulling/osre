@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <process.h>
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 static const c8 *Tag = "Threading.win32";
 
@@ -40,11 +39,11 @@ CriticalSection::~CriticalSection() {
 }
 
 void CriticalSection::enter() {
-    ::EnterCriticalSection(const_cast<LPCRITICAL_SECTION>(&m_CriticalSection));
+    EnterCriticalSection(const_cast<LPCRITICAL_SECTION>(&m_CriticalSection));
 }
 
 bool CriticalSection::tryEnter() {
-    if (0 != ::TryEnterCriticalSection(&m_CriticalSection)) {
+    if (0 != TryEnterCriticalSection(&m_CriticalSection)) {
         return true;
     }
 
@@ -52,12 +51,12 @@ bool CriticalSection::tryEnter() {
 }
 
 void CriticalSection::leave() {
-    ::LeaveCriticalSection(const_cast<LPCRITICAL_SECTION>(&m_CriticalSection));
+    LeaveCriticalSection(const_cast<LPCRITICAL_SECTION>(&m_CriticalSection));
 }
 
 Mutex::Mutex(ui32 timeout) :
         m_handle(nullptr), m_timeout(timeout) {
-    m_handle = ::CreateMutex(nullptr, FALSE, nullptr);
+    m_handle = CreateMutex(nullptr, FALSE, nullptr);
 }
 
 Mutex::~Mutex() {
@@ -382,5 +381,4 @@ void ThreadLocalStorage::set(void *data) {
     ::TlsSetValue(m_index, data);
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // namespace OSRE::Platform

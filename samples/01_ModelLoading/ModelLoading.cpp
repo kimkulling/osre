@@ -29,7 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/TransformMatrixBlock.h"
-
+#include "App/MouseEventListener.h"
+#include "App/OrbitalMouseControl.h"
 #include <assimp/scene.h>
 
 #include <iostream>
@@ -39,7 +40,8 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 Tag[] = "ModelLoadingApp";
+DECL_OSRE_LOG_MODULE(ModelLoadingApp)
+
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
@@ -56,18 +58,18 @@ class ModelLoadingApp : public App::AppBase {
     TransformComponent::NodePtr mModelNode;                             ///< The mode node.
     int mIntention = 0;                                                 ///< The intention. 
     Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;   ///< The controller for the keyboard.
+    OrbitalMouseControl *mOrbitalMouseControl;
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api", "The render API"),
-            mAssetFolder(),
-            mCamera(nullptr),
-            mTransformMatrix(),
-            mModelNode() {
+            mCamera(nullptr) {
         // empty
     }
 
-    ~ModelLoadingApp() override = default;
+    ~ModelLoadingApp() override {
+        delete mOrbitalMouseControl;
+    }
 
     bool hasModel() const {
         return mModelNode.isValid();
@@ -126,6 +128,7 @@ protected:
             return false;
         }
 
+        mOrbitalMouseControl = new OrbitalMouseControl(&mTransformMatrix);
         return true;
     }
 
@@ -135,7 +138,7 @@ protected:
             return;
         }
 
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
             osre_error(Tag, "RenderBackendService not available.");
             return;
@@ -176,12 +179,15 @@ protected:
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
             osre_error(Tag, "RenderBackendService not available.");
             return;
         }
 
+        if (mCamera != nullptr) {
+            mOrbitalMouseControl->update(AppBase::getMouseEventListener(), mCamera->getRight(), mCamera->getUp());
+        }
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 

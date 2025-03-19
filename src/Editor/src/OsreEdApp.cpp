@@ -62,7 +62,8 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mEntity(nullptr),
         mGuiEntity(nullptr),
         mKeyboardTransCtrl(nullptr),
-        mPythonInterface(nullptr) {
+        mPythonInterface(nullptr),
+        mOrbitalMouseControl(nullptr) {
     // empty
 }
 
@@ -144,6 +145,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     String title;
     createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
+    mOrbitalMouseControl = new OrbitalMouseControl(&mTransformMatrix);
 
     reporter.update(70);
     reporter.stop();
@@ -210,6 +212,8 @@ bool OsreEdApp::onDestroy() {
     mPythonInterface->destroy();
     delete mPythonInterface;
     mPythonInterface = nullptr;
+    delete mOrbitalMouseControl;
+    mOrbitalMouseControl = nullptr;
 
     return AppBase::onDestroy();
 }
@@ -226,6 +230,9 @@ void OsreEdApp::onUpdate() {
     Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
     if (key != Platform::KEY_UNKNOWN && mKeyboardTransCtrl != nullptr) {
         mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
+    }
+    if (mOrbitalMouseControl != nullptr) {
+        mOrbitalMouseControl->update(AppBase::getMouseEventListener(), mSceneData.mCamera->getRight(), mSceneData.mCamera->getUp());
     }
 
     RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
