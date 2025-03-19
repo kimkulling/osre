@@ -75,6 +75,8 @@ SET( app_src
     App/TransformController.h
     App/TransformController.cpp
     App/ResourceCacheService.h
+    App/OrbitalMouseControl.h
+    App/OrbitalMouseControl.cpp
 )
 
 #==============================================================================

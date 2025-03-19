@@ -34,19 +34,18 @@ namespace Animation {
 
 /// @brief  
 struct AnimationTrack {
-    f32 Duration;
-    f32 mTicksPerSecond;
-    size_t NumVectorChannels;
-    AnimationChannel *AnimationChannels;
+    f32 duration;
+    f32 ticksPerSecond;
+    size_t numVectorChannels;
+    AnimationChannel *animationChannels;
 
     AnimationTrack() :
-            Duration(1.0f), mTicksPerSecond(1.0f), NumVectorChannels(0l), AnimationChannels(nullptr) {
+            duration(1.0f), ticksPerSecond(1.0f), numVectorChannels(0l), animationChannels(nullptr) {
         // empty
     }
 
     ~AnimationTrack() {
-        delete [] AnimationChannels;
-        AnimationChannels = nullptr;
+        delete [] animationChannels;
     }
 };
 

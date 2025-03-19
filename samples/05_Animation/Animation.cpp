@@ -71,14 +71,14 @@ protected:
         scene->setActiveCamera(camera);
 
         Animation::AnimatorComponent *animator = static_cast<Animation::AnimatorComponent *>(camEntity->createComponent(ComponentType::AnimationComponentType));
-        mTrack.NumVectorChannels = 1;
-        mTrack.AnimationChannels = new Animation::AnimationChannel[mTrack.NumVectorChannels];
-        mTrack.Duration = 1.0f;
+        mTrack.numVectorChannels = 1;
+        mTrack.animationChannels = new Animation::AnimationChannel[mTrack.numVectorChannels];
+        mTrack.duration = 1.0f;
         Animation::AnimationChannel channel;
         Animation::RotationKey rot;
-        rot.Quad = glm::angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
+        rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
         rot.Time = 1.0f;
-        mTrack.AnimationChannels[0].RotationKeys.add(rot);
+        mTrack.animationChannels[0].RotationKeys.add(rot);
         animator->addTrack(&mTrack);
 
         return true;

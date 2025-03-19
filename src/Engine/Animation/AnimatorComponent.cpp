@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Animation/AnimatorComponent.h"
 #include "Common/Logger.h"
 
-namespace OSRE{
-namespace Animation {
+
+namespace OSRE::Animation {
 
 using namespace OSRE::App;
 
@@ -32,7 +32,6 @@ static constexpr c8 Tag[] = "AnimatorComponent";
 
 AnimatorComponent::AnimatorComponent(Entity *owner) :
         Component(owner, ComponentType::AnimationComponentType),
-        mAnimationTrackArray(),
         mActiveTrack(),
         mTransformArray(),
         mLastPositions(),
@@ -93,19 +92,19 @@ bool AnimatorComponent::onUpdate(Time dt) {
 
     // calculate the time
     double time = static_cast<d32>(dt.asMilliSeconds()) / 1000.0f;
-    const double ticksPerSecond = track->mTicksPerSecond != 0.0 ? track->mTicksPerSecond : 25.0;
+    const double ticksPerSecond = track->ticksPerSecond != 0.0 ? track->ticksPerSecond : 25.0;
     
     // every following time calculation happens in ticks
     time *= ticksPerSecond;
 
     // map into animation track duration
-    if (track->Duration > 0.0) {
-        time = fmod(time, track->Duration);
+    if (track->duration > 0.0) {
+        time = fmod(time, track->duration);
     }
 
     const size_t currentAnimationTrack = getActiveTrack();
 
-    AnimationChannel &animChannel = track->AnimationChannels[currentAnimationTrack];
+    AnimationChannel &animChannel = track->animationChannels[currentAnimationTrack];
     glm::vec3 presentPosition(0, 0, 0);
     glm::quat q(0, 0, 0, 1);
     glm::vec3 presenceScale(1, 1, 1);
@@ -128,7 +127,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
             VectorKey &nextKey = animChannel.PositionKeys[nextFrame];
             double diffTime = nextKey.Time - key.Time;
             if (diffTime < 0.0) {
-                diffTime += track->Duration;
+                diffTime += track->duration;
             }
             if (diffTime > 0) {
                 float factor = float((time - key.Time) / diffTime);
@@ -159,7 +158,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
             RotationKey &nextKey = animChannel.RotationKeys[nextFrame];
             double diffTime = nextKey.Time - key.Time;
             if (diffTime < 0.0) {
-                diffTime += track->Duration;
+                diffTime += track->duration;
             }
             if (diffTime > 0) {
                 f32 factor = f32((time - key.Time) / diffTime);
@@ -189,7 +188,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
             ScalingKey &nextKey = animChannel.ScalingKeys[nextFrame];
             double diffTime = nextKey.Time - key.Time;
             if (diffTime < 0.0) {
-                diffTime += track->Duration;
+                diffTime += track->duration;
             }
             if (diffTime > 0) {
                 f32 factor = f32((time - key.Time) / diffTime);
@@ -202,9 +201,9 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     glm::mat4 &transform = mTransformArray[currentAnimationTrack];
-    transform = glm::toMat4(q);
-    transform = glm::scale(transform, presenceScale);
-    transform = glm::translate(transform, presentPosition);
+    transform = toMat4(q);
+    transform = scale(transform, presenceScale);
+    transform = translate(transform, presentPosition);
 
     return true;
 }
@@ -221,5 +220,5 @@ void AnimatorComponent::initAnimations() {
     }
 }
 
-} // namespace Animation
-} // namespace OSRE
+} // namespace OSRE::Animation
+

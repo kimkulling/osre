@@ -130,8 +130,8 @@ void Pipeline::resizeRenderTargets(guid id, ui32 x, ui32 y, ui32 w, ui32 h) {
             continue;
         }
 
-        if (mPasses[passId]->getFrameBufferId() == id) {
-            mPasses[passId]->setViewport(x, y, w, h);
+        if (pass->getFrameBufferId() == id) {
+            pass->setViewport(x, y, w, h);
         }
     }
 }

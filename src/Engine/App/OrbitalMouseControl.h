@@ -22,45 +22,41 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "SceneData.h"
-#include "App/AppBase.h"
-#include "App/Project.h"
-#include "App/CameraComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/OrbitalMouseControl.h"
 #include "RenderBackend/TransformMatrixBlock.h"
+#include "Common/BaseMath.h"
 
-namespace OSRE::Editor {
+namespace OSRE::App {
 
-class PythonInterface;
+// Forward declarations ---------------------------------------------------------------------------
+class MouseEventListener;
 
-class OsreEdApp final : public App::AppBase {
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief This class implements a simle orbital mouse control for a camera view.
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT OrbitalMouseControl {
 public:
-    OsreEdApp(int argc, char *argv[]);
-    ~OsreEdApp() override = default;
-    App::CameraComponent *setupCamera(App::Scene *world);
-    bool onCreate() override;
-    bool onDestroy() override;
-    void onUpdate() override;
-    void newProjectCmd(ui32, void *data);
-    void loadAsset(const IO::Uri &modelLoc);
+    /// @brief The class constructor.
+    /// @param[in] tmb    The transfor matrix block as the interface to the camera.
+    explicit OrbitalMouseControl(RenderBackend::TransformMatrixBlock *tmb);
+
+    /// @brief The class destructor.
+    OrbitalMouseControl() = default;
+
+    /// @brief  Will zoom the camera.
+    void zoom();
+
+    /// @brief  Will update the camera.
+    /// @param[in] mouseListener    The mouse input listener.
+    /// @param[in] right            The right orientation of the camera.
+    /// @param[in] up               Thee up orientation of the camera.
+    void update(MouseEventListener *mouseListener, const glm::vec3 &right, const glm::vec3 &up);
 
 private:
-    struct Config {
-        f32 mFov = 60.f;
-        f32 mNear = 0.01f;
-        f32 mFar = 10000.0f;
-    } mConfig;
-
-    App::Project *mProject;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    App::Entity *mEntity;
-    App::Entity *mGuiEntity;
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    SceneData mSceneData;
-    PythonInterface *mPythonInterface;
-    App::OrbitalMouseControl *mOrbitalMouseControl;
+    glm::i32vec2 mMousePos;
+    glm::i32vec2 mLastMousePos;
+    RenderBackend::TransformMatrixBlock *mTransformMatrix;
 };
 
-} // namespace OSRE::Editor
+}
