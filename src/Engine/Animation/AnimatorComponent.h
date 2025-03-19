@@ -32,23 +32,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Animation {
 
-/// @brief  
+/// @brief  This struct contains all the data for an animation track.
 struct AnimationTrack {
-    f32 duration;
-    f32 ticksPerSecond;
-    size_t numVectorChannels;
-    AnimationChannel *animationChannels;
+    f32 duration = 1.0f;
+    f32 ticksPerSecond = 1.0f;
+    size_t numVectorChannels = 0;
+    AnimationChannel *animationChannels = nullptr;
 
-    AnimationTrack() :
-            duration(1.0f), ticksPerSecond(1.0f), numVectorChannels(0l), animationChannels(nullptr) {
-        // empty
-    }
-
+    AnimationTrack() = default;
     ~AnimationTrack() {
         delete [] animationChannels;
     }
 };
 
+/// The animation track array.
 using AnimationTrackArray = cppcore::TArray<AnimationTrack *>;
 
 //-------------------------------------------------------------------------------------------------
