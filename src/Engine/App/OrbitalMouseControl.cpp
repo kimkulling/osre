@@ -54,7 +54,7 @@ void OrbitalMouseControl::update(MouseEventListener *mouseListener, const glm::v
     mMousePos.x = mouseListener->getAbsoluteX();
     mMousePos.y = mouseListener->getAbsoluteY();
 
-    glm::mat4 localModel = glm::mat4(1.0);
+    auto localModel = glm::mat4(1.0);
     if (mouseListener->leftButtonPressed()) {
         const int diffX = (mMousePos.x - mLastMousePos.x);
         const int diffY = (mMousePos.y - mLastMousePos.y);
