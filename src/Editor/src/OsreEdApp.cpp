@@ -212,6 +212,8 @@ bool OsreEdApp::onDestroy() {
     mPythonInterface->destroy();
     delete mPythonInterface;
     mPythonInterface = nullptr;
+    delete mOrbitalMouseControl;
+    mOrbitalMouseControl = nullptr;
 
     return AppBase::onDestroy();
 }

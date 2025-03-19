@@ -48,6 +48,9 @@ void OrbitalMouseControl::update(MouseEventListener *mouseListener, const glm::v
     if (mouseListener == nullptr) {
         return;
     }
+    if (mTransformMatrix == nullptr) {
+        return;
+    }
     mMousePos.x = mouseListener->getAbsoluteX();
     mMousePos.y = mouseListener->getAbsoluteY();
 

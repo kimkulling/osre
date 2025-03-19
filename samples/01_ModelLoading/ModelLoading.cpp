@@ -67,7 +67,9 @@ public:
         // empty
     }
 
-    ~ModelLoadingApp() override = default;
+    ~ModelLoadingApp() override {
+        delete mOrbitalMouseControl;
+    }
 
     bool hasModel() const {
         return mModelNode.isValid();
