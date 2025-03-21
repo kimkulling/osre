@@ -1,8 +1,9 @@
 {
   "dependencies": [
+    "freetype",
     "glew",
     "glm",
-    "sdl2",
-    "gtest"
+    "gtest",
+    "sdl2"
   ]
 }

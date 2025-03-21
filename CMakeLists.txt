@@ -19,6 +19,13 @@ OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(glm         REQUIRED)
 find_package(GLEW        REQUIRED)
+find_package(Freetype    REQUIRED)
+find_package(ZLIB        REQUIRED)
+message(STATUS "ZLIB found: ${ZLIB_LIBRARIES}")
+if (ZLIB_FOUND)
+  message(STATUS "ZLIB found: ${ZLIB_LIBRARIES}")
+  add_library(zlib ALIAS ZLIB)
+endif()
 
 # Cache these to allow the user to override them manually.
 SET( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are installed to." )
