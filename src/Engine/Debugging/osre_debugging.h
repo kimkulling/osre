@@ -45,13 +45,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //-------------------------------------------------------------------------------------------------
 #ifdef _DEBUG
 #  define osre_assert( statement )        if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement );
-#  define osre_assert2( statement, msg )  if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement###msg );
 #  define osre_validate( statement, msg ) if ( !(statement) ) ::OSRE::Debugging::handleFatal( __FILE__, __LINE__,  ( msg ) );
 #  define OSRE_CHECK_NOENTRY()                                ::OSRE::Debugging::handleAssert( __FILE__, __LINE__, "Happened!" );
 #  define OSRE_CHECK_NOENTRY2( msg )                          ::OSRE::Debugging::handleAssert( __FILE__, __LINE__, ( msg ) );
 #else
 #  define osre_assert( statement )
-#  define osre_assert2( statement, msg )   if ( !(statement) ) (::OSRE::Common::warnPrint( __FILE__ ,__FILE__, __LINE__, msg ) );
 #  define osre_validate( statement, msg )  if ( !(statement) ) (::OSRE::Common::warnPrint( __FILE__ ,__FILE__, __LINE__, msg ) );
 #  define OSRE_CHECK_NOENTRY()
 #  define OSRE_CHECK_NOENTRY2( msg )

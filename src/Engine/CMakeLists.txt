@@ -434,4 +434,9 @@ ADD_LIBRARY( osre SHARED
 )
 
 target_link_libraries ( osre cppcore zlibstatic GLEW::GLEW ${platform_libs} assimp )
+target_compile_definitions(osre PRIVATE
+        $<$<CONFIG:Debug>:
+        _DEBUG=1 >
+)
+
 set_target_properties(  osre PROPERTIES FOLDER Engine )
