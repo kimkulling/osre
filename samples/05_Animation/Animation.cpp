@@ -70,8 +70,7 @@ protected:
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         scene->addEntity(camEntity);
         MeshBuilder meshBuilder;
-        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
-        if (mesh != nullptr) {
+        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
             auto *rc = static_cast<RenderComponent*>(mEntity->getComponent(ComponentType::RenderComponentType));
             rc->addStaticMesh(mesh);
         }

@@ -42,8 +42,6 @@ DECL_OSRE_LOG_MODULE(HelloWorldApp)
 /// @brief This is the simple HelloWorld-App to get familiar with the base concept of the
 ///        OSRE engine.
 //-------------------------------------------------------------------------------------------------
-
-/// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;

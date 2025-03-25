@@ -28,11 +28,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+//-------------------------------------------------------------------------------------------------
+/// @ingroup    Samples
+///
+/// @brief Basic utilities for the samples.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT SampleAppBase {
 public:
+    /// @brief The class constructor.
     SampleAppBase() = default;
+
+    /// @brief The class destructor.
+    virtual
     ~SampleAppBase() = default;
 
+    /// @brief Will initialize the camera for the scene.
+    /// @param[in] name     The name for the camera entity.
+    /// @param[in] scene    The scene to look at.
+    /// @param[in] w        The width of the viewport.
+    /// @paran[in] ids      Id container for guids.
+    /// @param[in] h        The height of the viewport.
+    /// @return The new created camera instance.
     static App::CameraComponent *setupCamera(const String &name, App::Scene *scene, ui32 w, ui32 h, Common::Ids &ids);
 };
 

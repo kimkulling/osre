@@ -24,10 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-App::CameraComponent *SampleAppBase::setupCamera(const String &name, App::Scene *scene, ui32 w, ui32 h, Common::Ids &ids) {
-    auto *camEntity = new App::Entity(name, ids, scene);
+using namespace ::OSRE::Common;
+using namespace ::OSRE::App;
+
+CameraComponent *SampleAppBase::setupCamera(const String &name, Scene *scene, ui32 w, ui32 h, Ids &ids) {
+    auto *camEntity = new Entity(name, ids, scene);
     scene->addEntity(camEntity);
-    auto *camera = dynamic_cast<App::CameraComponent*>(camEntity->createComponent(App::ComponentType::CameraComponentType));
+    auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
     scene->setActiveCamera(camera);
     camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
 
