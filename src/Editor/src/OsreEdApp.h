@@ -35,6 +35,11 @@ namespace OSRE::Editor {
 
 class PythonInterface;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+///	@brief This class implements the main Application of the editor.
+//-------------------------------------------------------------------------------------------------
 class OsreEdApp final : public App::AppBase {
 public:
     OsreEdApp(int argc, char *argv[]);

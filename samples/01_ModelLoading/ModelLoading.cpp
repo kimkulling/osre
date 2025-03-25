@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "App/MouseEventListener.h"
 #include "App/OrbitalMouseControl.h"
+#include "SamplesBase/SamplesAppBase.h"
 #include <assimp/scene.h>
 
 #include <iostream>
@@ -42,7 +43,6 @@ using namespace ::OSRE::RenderBackend;
 
 DECL_OSRE_LOG_MODULE(ModelLoadingApp)
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
 ///
@@ -53,7 +53,7 @@ DECL_OSRE_LOG_MODULE(ModelLoadingApp)
 //-------------------------------------------------------------------------------------------------
 class ModelLoadingApp : public App::AppBase {
     String mAssetFolder;                                                ///< The asset folder, here we will locate our assets.
-    App::CameraComponent *mCamera;                                      ///< The camera component.
+    CameraComponent *mCamera;                                           ///< The camera component.
     TransformMatrixBlock mTransformMatrix;                              ///< The transform block.
     TransformComponent::NodePtr mModelNode;                             ///< The mode node.
     int mIntention = 0;                                                 ///< The intention. 
@@ -154,11 +154,7 @@ protected:
         auto *scene = new Scene("model");
         addScene(scene, true);
         auto *entity = assimpWrapper.getEntity();
-        auto *camEntity = new Entity("camera", *getIdContainer(), scene);
-        mCamera = (CameraComponent*)camEntity->createComponent(ComponentType::CameraComponentType);
-        mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
-        scene->setActiveCamera(mCamera);
-
+        SampleAppBase::setupCamera("camera", scene, windowsRect.width, windowsRect.height, *getIdContainer());
         scene->addEntity(entity);
         mCamera->observeBoundingBox(entity->getAABB());
         mModelNode = entity->getNode();

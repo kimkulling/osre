@@ -23,28 +23,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
-#include "App/TransformComponent.h"
-#include "App/Scene.h"
+#include "Common/Ids.h"
+#include "App/App.h"
 
-namespace OSRE::Editor {
+namespace OSRE {
 
-struct SceneData {
-    String Name;
-    String ProjectName;
-    App::TransformComponent::NodePtr m_modelNode;
-    App::CameraComponent *mCamera;
+class OSRE_EXPORT SampleAppBase {
+public:
+    SampleAppBase() = default;
+    ~SampleAppBase() = default;
 
-    SceneData();
-    ~SceneData() = default;
+    static App::CameraComponent *setupCamera(const String &name, App::Scene *scene, ui32 w, ui32 h, Common::Ids &ids);
 };
 
-inline SceneData::SceneData() :
-        Name(),
-        ProjectName("none"),
-        m_modelNode(),
-        mCamera(nullptr) {
-    // empty
 }
-
-} // namespace OSRE::Editor
-
