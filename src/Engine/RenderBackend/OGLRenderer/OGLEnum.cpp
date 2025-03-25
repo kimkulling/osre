@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderBackend/OGLRenderer/OGLEnum.h"
-#include "Debugging/osre_debugging.h"
 
 namespace OSRE::RenderBackend {
 
@@ -36,7 +35,6 @@ GLenum OGLEnum::getGLBufferType( BufferType type ) {
             return GL_UNIFORM_BUFFER;
         case BufferType::EmptyBuffer:
         default:
-            osre_assert2( false, "Unknown enum for BufferType." );
             break;
     }
 
@@ -52,7 +50,6 @@ GLenum OGLEnum::getGLBufferAccessType( BufferAccessType type ) {
         case BufferAccessType::ReadWrite:
             return GL_DYNAMIC_DRAW;
         default:
-            osre_assert2( false, "Unknown enum for buffer BufferAccessType." );
             break;
     }
 
@@ -74,7 +71,6 @@ GLenum OGLEnum::getGLPrimitiveType( PrimitiveType primType ) {
         case PrimitiveType::TriangleFan:
             return GL_TRIANGLE_FAN;
         default:
-            osre_assert2( false, "Unknown enum for PrimitiveType." );
             break;
     }
 
@@ -90,7 +86,6 @@ GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
         case IndexType::UnsignedInt:
             return GL_UNSIGNED_INT;
         default:
-            osre_assert2( false, "Unknown enum for IndexType." );
             break;
     }
 
@@ -106,7 +101,6 @@ GLenum OGLEnum::getGLTextureTarget( TextureTargetType type ) {
         case TextureTargetType::Texture3D:
             return GL_TEXTURE_3D;
         default:
-            osre_assert2( false, "Unknown enum for TextureTargetType." );
             break;
     }
 
@@ -124,7 +118,6 @@ GLenum OGLEnum::getGLTextureEnum( TextureParameterName name ) {
         case TextureParameterName::TextureParamWrapT:
             return GL_TEXTURE_WRAP_T;
         default:
-            osre_assert2( false, "Unknown enum for TextureParameterName." );
             break;
     }
 
@@ -139,7 +132,6 @@ GLenum  OGLEnum::getGLTextureFormat(PixelFormatType texFormat) {
             return GL_RGBA;
         case PixelFormatType::Invalid:
         default:
-            osre_assert2( false, "Unknown enum for TextureParameterName." );
             break;
     }
 
@@ -157,7 +149,6 @@ GLenum OGLEnum::getGLTextureStage( TextureStageType texType ) {
         case TextureStageType::TextureStage3:
             return GL_TEXTURE3;
         default:
-            osre_assert2( false, "Unknown enum for TextureStageType." );
             break;
     }
 
@@ -181,7 +172,6 @@ GLenum OGLEnum::getOGLTypeForFormat( VertexFormat format ) {
         case VertexFormat::Count:
         case VertexFormat::Invalid:
         default:
-            osre_assert2( false, "Unknown enum for VertexFormat." );
             break;
     }
 
@@ -206,7 +196,6 @@ ui32 OGLEnum::getOGLSizeForFormat( VertexFormat format ) {
         case VertexFormat::Invalid:
             return 0;
         default:
-            osre_assert2( false, "Unknown enum for VertexFormat." );
             break;
     }
 
@@ -220,7 +209,6 @@ GLenum OGLEnum::getOGLCullState( CullState::CullMode cullMode ) {
         case CullState::CullMode::CCW:
             return GL_CCW;
         default:
-            osre_assert2( false, "Unknown enum for CullState::CullMode." );
             break;
     }
 
@@ -236,7 +224,6 @@ GLenum OGLEnum::getOGLCullFace( CullState::CullFace cullFace ) {
         case CullState::CullFace::FrontAndBack:
             return GL_FRONT_AND_BACK;
         default:
-            osre_assert2( false, "Unknown enum for CullState::CullFace." );
             break;
     }
     
@@ -252,7 +239,6 @@ GLenum OGLEnum::getOGLPolygonMode( PolygonState::PolygonMode polyMode ) {
         case PolygonState::PolygonMode::Fill:
             return GL_FILL;
         default:
-            osre_assert2(false, "Unknown enum for PolygonState::PolygonMode.");
             break;
     }
 
@@ -270,7 +256,6 @@ GLuint OGLEnum::getOGLShaderType( ShaderType type ) {
     case ShaderType::SH_TesselationShaderType:
         return GL_TESS_EVALUATION_SHADER;
     default:
-        osre_assert2( false, "Unknown enum for ShaderType." );
         break;
     }
 

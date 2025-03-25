@@ -24,16 +24,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Platform/AbstractPlatformEventQueue.h"
 #include "Common/EventBus.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 using namespace OSRE::Common;
 
 AbstractPlatformEventQueue::AbstractPlatformEventQueue() :
-        Object("Platform/AbstractPlatformEventQueue"),
-        mActiveList(0),
-        mRenderBackendSrv(nullptr),
-        mEventBus(nullptr) {
+    Object("Platform/AbstractPlatformEventQueue"),
+    mActiveList(0),
+    mRenderBackendSrv(nullptr),
+    mEventBus(nullptr) {
     mEventBus = new Common::EventBus;
     mEventBus->create();
 }
@@ -99,5 +98,4 @@ void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::E
     }
 }
 
-} // namespace Platform
-} // namespace OSRE
+}

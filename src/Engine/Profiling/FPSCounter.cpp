@@ -24,14 +24,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Platform/AbstractTimer.h"
 
-namespace OSRE {
-namespace Profiling {
+namespace OSRE::Profiling {
 
 using namespace ::OSRE::Common;
 
 static constexpr c8 Tag[] = "FPSCounter";
 
-FPSCounter::FPSCounter( Platform::AbstractTimer *timer ) : m_timerPtr(timer), m_timeDiff(0), m_lastTime(0), m_fps(0), m_lastFPS(0) {
+FPSCounter::FPSCounter( Platform::AbstractTimer *timer ) :
+        m_timerPtr(timer), m_timeDiff(0), m_lastTime(0), m_fps(0), m_lastFPS(0) {
     if ( m_timerPtr.isValid() ) {
         m_timeDiff = m_timerPtr->getTimeDiff();
     }
@@ -42,7 +42,7 @@ ui32 FPSCounter::getFPS() {
         osre_debug(Tag, "No valid timer instance.");
         return 0;
     }
-    
+
     m_timeDiff = m_timerPtr->getTimeDiff();
     m_lastTime += m_timeDiff.Microseconds;
     m_fps++;
@@ -55,5 +55,4 @@ ui32 FPSCounter::getFPS() {
     return m_lastFPS;
 }
 
-} // Namespace Profiling
-} // Namespace OSRE
+}
