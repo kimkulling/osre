@@ -20,9 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "App/App.h"
 #include "Animation/AnimatorBase.h"
 #include "Animation/AnimatorComponent.h"
+#include "App/App.h"
+#include "RenderBackend/MeshBuilder.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/TransformMatrixBlock.h"
 
@@ -66,8 +67,14 @@ protected:
         addScene(scene, true);
 
         Entity *camEntity = new Entity("camera", *getIdContainer(), scene);
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         scene->addEntity(camEntity);
-        CameraComponent *camera = static_cast<CameraComponent *>(camEntity->createComponent(ComponentType::CameraComponentType));
+        MeshBuilder meshBuilder;
+        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
+            auto *rc = static_cast<RenderComponent*>(mEntity->getComponent(ComponentType::RenderComponentType));
+            rc->addStaticMesh(mesh);
+        }
+        CameraComponent *camera = static_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
         scene->setActiveCamera(camera);
 
         Animation::AnimatorComponent *animator = static_cast<Animation::AnimatorComponent *>(camEntity->createComponent(ComponentType::AnimationComponentType));

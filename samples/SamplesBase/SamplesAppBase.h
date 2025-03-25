@@ -22,50 +22,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "SceneData.h"
-#include "App/AppBase.h"
-#include "App/Project.h"
-#include "App/CameraComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/OrbitalMouseControl.h"
-#include "RenderBackend/TransformMatrixBlock.h"
+#include "Common/osre_common.h"
+#include "Common/Ids.h"
+#include "App/App.h"
 
-namespace OSRE::Editor {
-
-class PythonInterface;
+namespace OSRE {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+/// @ingroup    Samples
 ///
-///	@brief This class implements the main Application of the editor.
+/// @brief Basic utilities for the samples.
 //-------------------------------------------------------------------------------------------------
-class OsreEdApp final : public App::AppBase {
+class OSRE_EXPORT SampleAppBase {
 public:
-    OsreEdApp(int argc, char *argv[]);
-    ~OsreEdApp() override = default;
-    App::CameraComponent *setupCamera(App::Scene *world);
-    bool onCreate() override;
-    bool onDestroy() override;
-    void onUpdate() override;
-    void newProjectCmd(ui32, void *data);
-    void loadAsset(const IO::Uri &modelLoc);
+    /// @brief The class constructor.
+    SampleAppBase() = default;
 
-private:
-    struct Config {
-        f32 mFov = 60.f;
-        f32 mNear = 0.01f;
-        f32 mFar = 10000.0f;
-    } mConfig;
+    /// @brief The class destructor.
+    virtual
+    ~SampleAppBase() = default;
 
-    App::Project *mProject;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    App::Entity *mEntity;
-    App::Entity *mGuiEntity;
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    SceneData mSceneData;
-    PythonInterface *mPythonInterface;
-    App::OrbitalMouseControl *mOrbitalMouseControl;
+    /// @brief Will initialize the camera for the scene.
+    /// @param[in] name     The name for the camera entity.
+    /// @param[in] scene    The scene to look at.
+    /// @param[in] w        The width of the viewport.
+    /// @paran[in] ids      Id container for guids.
+    /// @param[in] h        The height of the viewport.
+    /// @return The new created camera instance.
+    static App::CameraComponent *setupCamera(const String &name, App::Scene *scene, ui32 w, ui32 h, Common::Ids &ids);
 };
 
-} // namespace OSRE::Editor
+}

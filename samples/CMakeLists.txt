@@ -1,6 +1,12 @@
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
+    ./
     ../
+)
+
+SET (SamplesBase
+    SamplesBase/SamplesAppBase.h
+    SamplesBase/SamplesAppBase.cpp
 )
 
 SET (00_helloworld_src
@@ -33,6 +39,10 @@ SET (05_animation_src
     05_Animation/README.md
 )
 
+ADD_LIBRARY(samplesbase
+    ${SamplesBase}
+)
+
 ADD_EXECUTABLE(helloworld
     ${00_helloworld_src}
 )
@@ -62,12 +72,13 @@ link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Release
 )
 
-target_link_libraries(helloworld   osre)
-target_link_libraries(modelloading osre)
-target_link_libraries(demo2d       osre)
-target_link_libraries(instancing   osre)
-target_link_libraries(terrain      osre)
-target_link_libraries(animation    osre)
+target_link_libraries(samplesbase  osre)
+target_link_libraries(helloworld   osre samplesbase)
+target_link_libraries(modelloading osre samplesbase)
+target_link_libraries(demo2d       osre samplesbase)
+target_link_libraries(instancing   osre samplesbase)
+target_link_libraries(terrain      osre samplesbase)
+target_link_libraries(animation    osre samplesbase)
 
 set_target_properties(helloworld   PROPERTIES FOLDER Samples)
 set_target_properties(modelloading PROPERTIES FOLDER Samples)

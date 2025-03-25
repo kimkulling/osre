@@ -20,31 +20,21 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "SamplesAppBase.h"
 
-#include "Common/osre_common.h"
-#include "App/TransformComponent.h"
-#include "App/Scene.h"
+namespace OSRE {
 
-namespace OSRE::Editor {
+using namespace ::OSRE::Common;
+using namespace ::OSRE::App;
 
-struct SceneData {
-    String Name;
-    String ProjectName;
-    App::TransformComponent::NodePtr m_modelNode;
-    App::CameraComponent *mCamera;
+CameraComponent *SampleAppBase::setupCamera(const String &name, Scene *scene, ui32 w, ui32 h, Ids &ids) {
+    auto *camEntity = new Entity(name, ids, scene);
+    scene->addEntity(camEntity);
+    auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
+    scene->setActiveCamera(camera);
+    camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
 
-    SceneData();
-    ~SceneData() = default;
-};
-
-inline SceneData::SceneData() :
-        Name(),
-        ProjectName("none"),
-        m_modelNode(),
-        mCamera(nullptr) {
-    // empty
+    return camera;
 }
 
-} // namespace OSRE::Editor
-
+}
