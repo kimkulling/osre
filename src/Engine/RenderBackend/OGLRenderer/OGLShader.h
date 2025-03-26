@@ -55,12 +55,12 @@ public:
 
     /// @brief Declares an active parameter.
     struct ActiveParameter {
-        c8 m_name[MaxLen];
-        GLint m_location;
+        c8    name[MaxLen];
+        GLint location;
 
         ActiveParameter() :
-                m_name(), m_location(InvalidLocationId) {
-            ::memset(m_name, '\0', sizeof(c8) * MaxLen);
+                name(), location(InvalidLocationId) {
+            ::memset(name, '\0', sizeof(c8) * MaxLen);
         }
     };
 
@@ -69,7 +69,7 @@ public:
 
     /// @brief  The class constructor.
     /// @param[in] name     The name for the shader.
-    explicit OGLShader( const String &name );
+    explicit OGLShader(const String &name);
 
     /// @brief  The class destructor.
     ~OGLShader() override;

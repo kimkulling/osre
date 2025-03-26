@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Threading/SystemTask.h"
 #include "Debugging/MeshDiagnostic.h"
 #include "OGLRenderer/OGLRenderEventHandler.h"
+#include "VulkanRenderer/VulkanRenderEventHandler.h"
 #ifdef OSRE_WINDOWS
 #   include "Platform/Windows/MinWindows.h"
 #endif
@@ -121,7 +122,7 @@ bool RenderBackendService::onOpen() {
     if (api == OGL_API) {
         mRenderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
     } else if (api == Vulkan_API) {
-        // todo!
+        mRenderTaskPtr->attachEventHandler(new VulkanRenderEventHandler);
     } else {
         osre_error(Tag, "Requested render-api unknown: " + api);
         ok = false;

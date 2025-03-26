@@ -83,8 +83,8 @@ public:
     virtual void awaitStop();
 
     ///	@brief	An event handler will be attached.
-    ///	@param	pEventHandler	[in] A pointer showing to the event handler to attach.
-    virtual void attachEventHandler( Common::AbstractEventHandler *pEventHandler );
+    ///	@param[in]  eventHandler    A pointer showing to the event handler to attach.
+    virtual void attachEventHandler( Common::AbstractEventHandler *eventHandler );
     
     ///	@brief	An event handler will be detached.
     virtual void detachEventHandler();

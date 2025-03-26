@@ -1,11 +1,10 @@
 #pragma once
 
-#include <osre/Common/AbstractEventHandler.h>
-#include <osre/Common/Event.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#include "Common/AbstractEventHandler.h"
+#include "Common/Event.h"
+#include "RenderBackend/RenderBackendService.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 class VulkanRenderBackend {
 public:
@@ -15,5 +14,4 @@ public:
     bool destroy();
 };
 
-}
-} // namespace OSRE
+} // namespace OSRE::RenderBackend
