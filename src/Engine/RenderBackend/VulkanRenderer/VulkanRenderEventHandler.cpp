@@ -1,7 +1,6 @@
 #include "VulkanRenderEventHandler.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
 
@@ -13,7 +12,7 @@ bool VulkanRenderEventHandler::onEvent(const Event &ev, const EventData *pEventD
     return true;
 }
 
-bool VulkanRenderEventHandler::onAttached(const EventData eventData ) {
+bool VulkanRenderEventHandler::onAttached(const EventData *eventData ) {
     return true;
 }
 
@@ -45,7 +44,7 @@ bool VulkanRenderEventHandler::onRenderFrame(const EventData *eventData) {
     return true;
 }
 
-bool VulkanRenderEventHandler::onInitRenderPasses(const EventData eventData) {
+bool VulkanRenderEventHandler::onInitRenderPasses(const EventData *eventData) {
     return true;
 }
 
@@ -61,5 +60,4 @@ bool VulkanRenderEventHandler::onResizeRenderTarget(const EventData *eventData) 
     return true;
 }
 
-}
 }

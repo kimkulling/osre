@@ -1,7 +1,6 @@
-#include "VulkanRenderer.h"
+#include "VulkanRenderBackend.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 VulkanRenderBackend::VulkanRenderBackend() {
 
@@ -11,7 +10,7 @@ VulkanRenderBackend::~VulkanRenderBackend() {
 
 }
 
-bool VulkanRenderBackendcreate() {
+bool VulkanRenderBackend::create() {
     return true;
 }
 
@@ -19,5 +18,4 @@ bool VulkanRenderBackend::destroy() {
     return true;
 }
 
-}
 }

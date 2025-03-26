@@ -218,14 +218,14 @@ void OGLShader::getActiveAttributeList() {
                 ActiveParameter *attribParam = new ActiveParameter;
                 std::stringstream stream;
                 stream << name << attribIdx;
-                strncpy(attribParam->m_name, stream.str().c_str(), stream.str().size());
-                attribParam->m_location = glGetAttribLocation(mShaderprog, attribParam->m_name);
+                strncpy(attribParam->name, stream.str().c_str(), stream.str().size());
+                attribParam->location = glGetAttribLocation(mShaderprog, attribParam->name);
                 mAttribParams.add(attribParam);
             }
         } else {
             ActiveParameter *attribParam = new ActiveParameter;
-            strncpy(attribParam->m_name, name, strlen(name));
-            attribParam->m_location = glGetAttribLocation(mShaderprog, attribParam->m_name);
+            strncpy(attribParam->name, name, strlen(name));
+            attribParam->location = glGetAttribLocation(mShaderprog, attribParam->name);
             mAttribParams.add(attribParam);
         }
     }
@@ -244,8 +244,8 @@ void OGLShader::getActiveUniformList() {
         ::memset(name, '\0', sizeof(c8) * MaxLen);
         glGetActiveUniform(mShaderprog, i, MaxLen, &actual_length, &size, &type, name);
         ActiveParameter *attribParam = new ActiveParameter;
-        strncpy(attribParam->m_name, name, strlen(name));
-        attribParam->m_location = glGetUniformLocation(mShaderprog, name);
+        strncpy(attribParam->name, name, strlen(name));
+        attribParam->location = glGetUniformLocation(mShaderprog, name);
         mAttribParams.add(attribParam);
     }
 }
