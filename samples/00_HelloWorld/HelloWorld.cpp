@@ -43,7 +43,7 @@ DECL_OSRE_LOG_MODULE(HelloWorldApp)
 ///        OSRE engine.
 //-------------------------------------------------------------------------------------------------
 class HelloWorldApp : public App::AppBase {
-    /// The transform block, contains the model-, view- and projection-matrix
+    /// The transform block, contains the model-, view- and projection-matrix.
     TransformMatrixBlock mTransformMatrix;
     /// The entity to render.
     Entity *mEntity = nullptr;
@@ -61,22 +61,6 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
-    /// @brief Will setup the camera of the scene.
-    /// @param scene   The scene to render.
-    CameraComponent *setupCamera(Scene *scene) {
-        auto *camEntity = new Entity("camera", *getIdContainer(), scene);
-        scene->addEntity(camEntity);
-        auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
-        scene->setActiveCamera(camera);
-        
-        ui32 w{0};
-        ui32 h{0};
-        AppBase::getResolution(w, h);
-        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-
-        return camera;
-    }
-
     /// @brief The onCreate callback.
     bool onCreate() override {
         if (!AppBase::onCreate()) {
@@ -93,7 +77,9 @@ protected:
             auto *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            CameraComponent *camera = setupCamera(scene);
+            Rect2ui windowsRect;
+            getRootWindow()->getWindowsRect(windowsRect);
+            CameraComponent *camera = AppBase::setupCamera("camera", scene, windowsRect, *getIdContainer());
             scene->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }

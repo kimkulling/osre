@@ -1,0 +1,11 @@
+/** 
+
+@mainpage The OSRE Documentation
+
+@section sec_groups The groups
+
+@defgroup Engine   The Engine documentation
+@defgroup Editor   The Editor documentation
+@defgroup Samples  The Samples documentation
+
+*/

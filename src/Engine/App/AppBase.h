@@ -265,6 +265,14 @@ public:
     /// @return The active world.
     virtual Scene *getActiveScene() const;
 
+    /// @brief Utility class to setup a camera.
+    /// @param name         The name for the camera.
+    /// @param scene        The scene to look at.
+    /// @param viewport     The requested viewport.
+    /// @param ids          The id container.
+    /// @return Thew new created camera.
+    CameraComponent *setupCamera(const String &name, Scene *scene, Rect2ui &viewport, Common::Ids &ids);
+
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -295,15 +303,15 @@ private:
     State mAppState;
     i64 mLastTime;
     Common::ArgumentParser mArgParser;
-    Common::Environment* mEnvironment;
-    Properties::Settings *mSettings;
-    Platform::PlatformInterface *mPlatformInterface;
+    Common::Environment *mEnvironment = nullptr;
+    Properties::Settings *mSettings = nullptr;
+    Platform::PlatformInterface *mPlatformInterface = nullptr;
     Platform::AbstractTimer *mTimer;
-    RenderBackend::RenderBackendService *mRbService;
+    RenderBackend::RenderBackendService *mRbService = nullptr;
     cppcore::TArray<Scene*> mScenes;
-    Scene *mActiveScene;
-    MouseEventListener *mMouseEvListener;
-    KeyboardEventListener *mKeyboardEvListener;
+    Scene *mActiveScene = nullptr;
+    MouseEventListener *mMouseEvListener = nullptr;
+    KeyboardEventListener *mKeyboardEvListener = nullptr;
     Common::Ids *mIds;
     bool mShutdownRequested = false;
     RenderBackend::IRenderPath *mCanvasRenderer = nullptr;
@@ -323,26 +331,6 @@ inline const Common::ArgumentParser &AppBase::getArgumentParser() const {
 
 inline Common::Ids *AppBase::getIdContainer() const {
     return mIds;
-}
-
-inline void AppBase::addScene(Scene *scene, bool enable) {
-    if (nullptr == scene) {
-        return;
-    }
-    mScenes.add(scene);
-    if (enable) {
-        mActiveScene = scene;
-    }
-}
-
-inline bool AppBase::activateScene(const String &worldName) {
-    for (ui32 i = 0; i < mScenes.size(); ++i) {
-        if (mScenes[i]->getName() == worldName) {
-            mActiveScene = mScenes[i];
-            return true;
-        }
-    }
-    return false;
 }
 
 inline Scene* AppBase::getActiveScene() const {

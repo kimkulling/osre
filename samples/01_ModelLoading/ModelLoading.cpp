@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "App/MouseEventListener.h"
 #include "App/OrbitalMouseControl.h"
-#include "SamplesBase/SamplesAppBase.h"
+
 #include <assimp/scene.h>
 
 #include <iostream>
@@ -43,52 +43,34 @@ using namespace ::OSRE::RenderBackend;
 
 DECL_OSRE_LOG_MODULE(ModelLoadingApp)
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Samples
-///
-/// @brief  This sample shows how to load a model using the Assimp wrapper.
-///  
-/// It will also show some statistics about the loaded model. The model will get loaded, the
-/// camera will be placed to get an optimal view onto the model. The model will be rendered.
-//-------------------------------------------------------------------------------------------------
-class ModelLoadingApp : public App::AppBase {
-    String mAssetFolder;                                                ///< The asset folder, here we will locate our assets.
-    CameraComponent *mCamera;                                           ///< The camera component.
-    TransformMatrixBlock mTransformMatrix;                              ///< The transform block.
-    TransformComponent::NodePtr mModelNode;                             ///< The mode node.
-    int mIntention = 0;                                                 ///< The intention. 
-    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;   ///< The controller for the keyboard.
-    OrbitalMouseControl *mOrbitalMouseControl;
-
+class SceneDumper {
+    /// The intention. 
+    int mIntention = 0;
+    
 public:
-    ModelLoadingApp(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv, "api", "The render API"),
-            mCamera(nullptr) {
-        // empty
-    }
+    /// @brief The class constructor.
+    SceneDumper() = default;
 
-    ~ModelLoadingApp() override {
-        delete mOrbitalMouseControl;
-    }
-
-    bool hasModel() const {
-        return mModelNode.isValid();
-    }
-
+    /// @brief Will push intention.
     void pushIntention() {
         mIntention++;
     }
-
+    
+    /// @brief Will pop intention.
     void popIntention() {
         mIntention--;
     }
 
+    /// @brief Evaluates the name of the node.
+    /// @param[in] name     The name to evaluate.
     void checkName(String &name) {
         if (name.empty()) {
             name = "No Name";
         }
     }
 
+    /// @brief Will dump the single name.
+    /// @param[in] node     The node to dump.
     void dumpNode(aiNode &node) {
         String name = node.mName.C_Str();
         checkName(name);
@@ -104,6 +86,8 @@ public:
         }
     }
 
+    /// @brief Will show the statistic.
+    /// @param[in] scene    The scene to show statistics.
     void showStatistics(const aiScene &scene) {
         std::cout << "Model name: " << scene.mName.C_Str() << "\n";
         std::cout << "=============================================================\n";
@@ -112,9 +96,55 @@ public:
             dumpNode(*scene.mRootNode);
         }
 
-        std::cout << "Number of meshes    : " << scene.mNumMeshes << "\n";
-        std::cout << "Number of materials : " << scene.mNumMaterials << "\n";
+        std::cout << "Number of meshes     : " << scene.mNumMeshes << "\n";
+        std::cout << "Number of materials  : " << scene.mNumMaterials << "\n";
+        std::cout << " +-Number of embedded textures : " << scene.mNumTextures << "\n";
+        std::cout << "Number of animations : " << scene.mNumAnimations << "\n";
     }
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Samples
+///
+/// @brief  This sample shows how to load a model using the Assimp wrapper.
+///  
+/// It will also show some statistics about the loaded model. The model will get loaded, the
+/// camera will be placed to get an optimal view onto the model. The model will be rendered.
+//-------------------------------------------------------------------------------------------------
+class ModelLoadingApp : public App::AppBase {
+    /// The asset folder, here we will locate our assets.
+    String mAssetFolder;
+    /// The camera component.
+    CameraComponent *mCamera = nullptr;
+    /// The transform block.
+    TransformMatrixBlock mTransformMatrix;
+    /// The mode node.
+    TransformComponent::NodePtr mModelNode;
+    /// The controller for the keyboard.
+    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;
+    /// The mouse controller for rotating the model.
+    OrbitalMouseControl *mOrbitalMouseControl = nullptr;
+
+public:
+    /// @brief The class constructor.
+    /// @param argc     The number of arguments.
+    /// @param argv     The argument array.
+    ModelLoadingApp(int argc, char *argv[]) :
+            AppBase(argc, (const char **)argv, "api", "The render API") {
+        // empty
+    }
+
+    /// @brief The class destructor.
+    ~ModelLoadingApp() override {
+        delete mOrbitalMouseControl;
+    }
+
+    /// @brief  Will return true, if a model was loaded.
+    /// @return true for model loaded.
+    bool hasModel() const {
+        return mModelNode.isValid();
+    }
+
 
 protected:
     bool onCreate() override {
@@ -153,13 +183,15 @@ protected:
         rootWindow->getWindowsRect(windowsRect);
         auto *scene = new Scene("model");
         addScene(scene, true);
+        mCamera = AppBase::setupCamera("camera", scene, windowsRect, *getIdContainer());
+
         auto *entity = assimpWrapper.getEntity();
-        SampleAppBase::setupCamera("camera", scene, windowsRect.width, windowsRect.height, *getIdContainer());
         scene->addEntity(entity);
         mCamera->observeBoundingBox(entity->getAABB());
         mModelNode = entity->getNode();
 
-        showStatistics(*assimpWrapper.getScene());
+        SceneDumper sd;
+        sd.showStatistics(*assimpWrapper.getScene());
     }
 
     void onUpdate() override {

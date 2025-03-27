@@ -36,7 +36,7 @@ void OrbitalMouseControl::zoom() {
     glm::mat4 localModel = glm::mat4(1.0);
     const int diff = (mMousePos.y - mLastMousePos.y);
     if (diff != 0) {
-        const f32 scaleFactor = 1.0 + (diff * 0.01);
+        const f32 scaleFactor = 1.0f + (static_cast<f32>(diff) * 0.01f);
 
         glm::vec3 s(scaleFactor, scaleFactor, scaleFactor);
         localModel = scale(localModel, s);
