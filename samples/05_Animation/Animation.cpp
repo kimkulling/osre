@@ -33,7 +33,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::App;
 
 // To identify local log entries we will define this tag.
-DECL_OSRE_LOG_MODULE(TerrainRenderingApp);
+DECL_OSRE_LOG_MODULE(AnimationApp);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
