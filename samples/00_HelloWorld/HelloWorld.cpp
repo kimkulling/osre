@@ -43,8 +43,8 @@ DECL_OSRE_LOG_MODULE(HelloWorldApp)
 ///        OSRE engine.
 //-------------------------------------------------------------------------------------------------
 class HelloWorldApp : public App::AppBase {
-    /// The transform block, contains the model-, view- and projection-matrix
-    TransformMatrixBlock mTransformMatrix;      
+    /// The transform block, contains the model-, view- and projection-matrix.
+    TransformMatrixBlock mTransformMatrix;
     /// The entity to render.
     Entity *mEntity = nullptr;
     /// The keyboard controller instance.
