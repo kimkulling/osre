@@ -46,26 +46,31 @@ DECL_OSRE_LOG_MODULE(ModelLoadingApp)
 class SceneDumper {
     /// The intention. 
     int mIntention = 0;
-
+    
 public:
-    SceneDumper() : mIntention(0) {
-        // empty
-    }
+    /// @brief The class constructor.
+    SceneDumper() = default;
 
+    /// @brief Will push intention.
     void pushIntention() {
         mIntention++;
     }
-
+    
+    /// @brief Will pop intention.
     void popIntention() {
         mIntention--;
     }
 
+    /// @brief Evaluates the name of the node.
+    /// @param[in] name     The name to evaluate.
     void checkName(String &name) {
         if (name.empty()) {
             name = "No Name";
         }
     }
 
+    /// @brief Will dump the single name.
+    /// @param[in] node     The node to dump.
     void dumpNode(aiNode &node) {
         String name = node.mName.C_Str();
         checkName(name);
@@ -81,6 +86,8 @@ public:
         }
     }
 
+    /// @brief Will show the statistic.
+    /// @param[in] scene    The scene to show statistics.
     void showStatistics(const aiScene &scene) {
         std::cout << "Model name: " << scene.mName.C_Str() << "\n";
         std::cout << "=============================================================\n";
@@ -89,8 +96,10 @@ public:
             dumpNode(*scene.mRootNode);
         }
 
-        std::cout << "Number of meshes    : " << scene.mNumMeshes << "\n";
-        std::cout << "Number of materials : " << scene.mNumMaterials << "\n";
+        std::cout << "Number of meshes     : " << scene.mNumMeshes << "\n";
+        std::cout << "Number of materials  : " << scene.mNumMaterials << "\n";
+        std::cout << " +-Number of embedded textures : " << scene.mNumTextures << "\n";
+        std::cout << "Number of animations : " << scene.mNumAnimations << "\n";
     }
 };
 
