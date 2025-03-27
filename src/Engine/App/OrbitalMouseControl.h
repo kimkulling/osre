@@ -56,7 +56,7 @@ public:
 private:
     glm::i32vec2 mMousePos;
     glm::i32vec2 mLastMousePos;
-    RenderBackend::TransformMatrixBlock *mTransformMatrix;
+    RenderBackend::TransformMatrixBlock *mTransformMatrix = nullptr;
 };
 
 }

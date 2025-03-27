@@ -43,30 +43,25 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::App;
 
 // To identify local log entries we will define this tag.
-static constexpr c8 Tag[] = "TerrainRenderingApp";
+DECL_OSRE_LOG_MODULE(TerrainRenderingApp);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
 ///
-/// @brief
+/// @brief This sample shows how to generate a rendered terrain from a given heightmap.
 //-------------------------------------------------------------------------------------------------
 class TerrainRenderingApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;
     /// The entity to render
-    Entity *mEntity;
+    Entity *mEntity = nullptr;
     /// The keyboard controller instance.
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
+    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;
     /// The number of pixels used for one sample.
-    ui32 mPixelPerSample;
+    ui32 mPixelPerSample = 1;
 
 public:
-    TerrainRenderingApp(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv),
-            mTransformMatrix(),
-            mEntity(nullptr),
-            mKeyboardTransCtrl(nullptr),
-            mPixelPerSample(1) {
+    TerrainRenderingApp(int argc, char *argv[]) : AppBase(argc, (const char **)argv) {
         // empty
     }
 
@@ -144,28 +139,25 @@ protected:
         return mesh;
     }
 
-    CameraComponent *setupCamera(Scene *world) {
-        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        world->addEntity(camEntity);
-        CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
-        world->setActiveCamera(camera);
-        ui32 w, h;
-        AppBase::getResolution(w, h);
-        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-
-        return camera;
-    }
-
     bool onCreate() override {
         if (!AppBase::onCreate()) {
             return false;
         }
 
-        AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
+        AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, zoom with q, e");
         Scene *world = new Scene("hello_world");
         addScene(world, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        CameraComponent *camera = setupCamera(world);
+
+        Platform::AbstractWindow *rootWindow = getRootWindow();
+        if (nullptr == rootWindow) {
+            osre_error(Tag, "Root window not available.");
+            return false;
+        }
+
+        Rect2ui windowsRect;
+        rootWindow->getWindowsRect(windowsRect);
+        CameraComponent *camera = AppBase::setupCamera("camera", world, windowsRect, *getIdContainer());
 
         String filename = "world_heightmap.png";
         RenderBackend::Mesh *mesh = loadHeightMap(filename);

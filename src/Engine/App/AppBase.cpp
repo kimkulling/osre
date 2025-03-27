@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/ServiceProvider.h"
 #include "App/Scene.h"
 #include "App/TransformController.h"
+#include "App/Entity.h"
+#include "App/CameraComponent.h"
 #include "Common/Environment.h"
 #include "Debugging/osre_debugging.h"
 #include "IO/IOService.h"
@@ -70,15 +72,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mAppState(State::Uninited),
         mLastTime(0l),
         mArgParser(argc, argv, supportedArgs, desc),
-        mEnvironment(nullptr),
-        mSettings(new Settings),
-        mPlatformInterface(nullptr),
-        mTimer(nullptr),
-        mRbService(nullptr),
-        mActiveScene(nullptr),
-        mMouseEvListener(nullptr),
-        mKeyboardEvListener(nullptr),
-        mIds(nullptr) {
+        mSettings(new Settings) {
     mSettings->setString(Settings::RenderAPI, "opengl");
     mSettings->setBool(Settings::PollingMode, true);
 }
@@ -220,6 +214,38 @@ void AppBase::setWindowsTitle(const String &title) {
 
 CanvasRenderer* AppBase::getCanvasRenderer() const {
     return static_cast<CanvasRenderer*>(mCanvasRenderer);
+}
+
+void AppBase::addScene(Scene *scene, bool enable) {
+    if (nullptr == scene) {
+        return;
+    }
+
+    mScenes.add(scene);
+    if (enable) {
+        mActiveScene = scene;
+    }
+}
+
+bool AppBase::activateScene(const String &worldName) {
+    for (ui32 i = 0; i < mScenes.size(); ++i) {
+        if (mScenes[i]->getName() == worldName) {
+            mActiveScene = mScenes[i];
+            return true;
+        }
+    }
+
+    return false;
+}
+
+CameraComponent *AppBase::setupCamera(const String &name, Scene *scene, Rect2ui &viewport, Ids &ids) {
+    auto *camEntity = new Entity(name, ids, scene);
+    scene->addEntity(camEntity);
+    auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
+    scene->setActiveCamera(camera);
+    camera->setProjectionParameters(60.f, (f32) viewport.getWidth(), (f32) viewport.getHeight(), 0.001f, 1000.f);
+
+    return camera;
 }
 
 bool AppBase::onCreate() {

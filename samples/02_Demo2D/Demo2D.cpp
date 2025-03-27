@@ -39,14 +39,15 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::App;
 
 // To identify local log entries
-static constexpr c8 Tag[] = "ModelLoadingApp";
+DECL_OSRE_LOG_MODULE(ModelLoadingApp);
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+///	@ingroup    Samples
 ///
-/// @brief 
+/// @brief This smaple shows how to render 2D scenes combinet with 3d scenes.
 //-------------------------------------------------------------------------------------------------
 class Demo2DApp : public App::AppBase {
+    /// The shader interface for all kind of transformations.
     TransformMatrixBlock  mTransformMatrix;
     /// The 2D renderer for the ui overlay
     CanvasRenderer *mCanvasRenderer = nullptr;
@@ -54,30 +55,16 @@ class Demo2DApp : public App::AppBase {
     Entity *mEntity = nullptr;
 
 public:
-    Demo2DApp(int argc, char *argv[]) : AppBase(argc, const_cast<const char **>(argv)){
+    /// @brief The class constructor with the incoming arguments from the command line.
+    Demo2DApp(int argc, char *argv[]) : AppBase(argc, const_cast<const char **>(argv)) {
         // empty
     }
-
+    
+    /// @brief The class destructor.
     ~Demo2DApp() override = default;
 
-    void quitCallback(ui32, void *) {
-        AppBase::requestShutdown();
-    }
-
 protected:
-    CameraComponent *setupCamera(Scene *scene) {
-        auto *camEntity = new Entity("camera", *getIdContainer(), scene);
-        scene->addEntity(camEntity);
-        auto *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
-        scene->setActiveCamera(camera);
-
-        ui32 w, h;
-        AppBase::getResolution(w, h);
-        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-
-        return camera;
-    }
-
+    /// @brief Will create the 2D scene and the 3D scene.
     bool onCreate() override {
         Properties::Settings *baseSettings  = AppBase::getSettings();
         if (baseSettings == nullptr) {
@@ -136,7 +123,10 @@ protected:
             auto *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            CameraComponent *camera = setupCamera(scene);
+            ui32 w = 0, h = 0;
+            AppBase::getResolution(w, h);
+            Rect2ui r(0,0,w,h);
+            CameraComponent *camera = AppBase::setupCamera("camera", scene, r, *getIdContainer());
             scene->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
@@ -144,6 +134,7 @@ protected:
         return true;
     }
     
+    /// @brief Our render update.
     void onUpdate() override {
         auto *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         

@@ -33,7 +33,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::App;
 
 // To identify local log entries we will define this tag.
-static constexpr c8 Tag[] = "TerrainRenderingApp";
+DECL_OSRE_LOG_MODULE(TerrainRenderingApp);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
@@ -62,7 +62,7 @@ protected:
             return false;
         }
 
-        AppBase::setWindowsTitle("Animation sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
+        AppBase::setWindowsTitle("Animation sample! Rotate with keyboard: w, a, s, d, zoom with q, e");
         Scene *scene = new Scene("hello_world");
         addScene(scene, true);
 
