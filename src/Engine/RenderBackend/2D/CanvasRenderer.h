@@ -25,8 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "RenderBackend/RenderCommon.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 // Forward declarations ---------------------------------------------------------------------------
 class RenderBackendService;
@@ -34,51 +33,49 @@ class Mesh;
 
 struct DrawCmd;
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief This class implements a canvas renderer.
+///	@brief This class implements the 2D canvas renderer.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT CanvasRenderer : public IRenderPath {
-public:    
-
+public:
     /// @brief The class constructor.
-    /// @param numLayers    The number of layers.
-    /// @param x            The x position. 
-    /// @param y            The y position.
-    /// @param w            The width.
-    /// @param h            The height.
+    /// @param[in] numLayers    The number of layers.
+    /// @param[in] x            The x position.
+    /// @param[in] y            The y position.
+    /// @param[in] w            The width.
+    /// @param[in] h            The height.
     CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h);
 
     /// @brief The class destructor.
     ~CanvasRenderer() override;
 
     /// @brief Will be called before rendering.
-    /// @param rbSrv    The render-backend service.
+    /// @param[in] rbSrv    The render-backend service.
     void preRender(RenderBackendService *rbSrv) override;
 
     /// @brief Will be called to render the frame.
-    /// @param rbSrv    The render-backend service.
+    /// @param[in] rbSrv    The render-backend service.
     void render(RenderBackendService *rbSrv) override;
 
     /// @brief Will be called after rendering.
-    /// @param rbSrv    The render-backend service.
+    /// @param[in] rbSrv    The render-backend service.
     void postRender(RenderBackendService *rbSrv) override;
     
     /// @brief Will set the resolution of the canvas area.
-    /// @param x    The x position.
-    /// @param y    The y position.
-    /// @param w    The width.
-    /// @param h    The height.
+    /// @param[in] x    The x position.
+    /// @param[in] y    The y position.
+    /// @param[in] w    The width.
+    /// @param[in] h    The height.
     void setResolution(i32 x, i32 y, i32 w, i32 h);
     
     /// @brief Will set the resolution of the canvas area. 
-    /// @param rect     The resolution as a rectangle.
+    /// @param[in] rect     The resolution as a rectangle.
     void setResolution(const Rect2i &rect);
 
     /// @brief Will return the resolution of the canvas area.
-    /// @param layer    The layer to select for rendering.
+    /// @param[in] layer    The layer to select for rendering.
     /// @return true if the layer is valid, false if not.
     bool selectLayer(i32 layer);
 
@@ -87,7 +84,7 @@ public:
     i32 getActiveLayer() const;
 
     /// @brief Will set the color for the pen.
-    /// @param color    The color to set.
+    /// @param[in] color    The color to set.
     void setColor(const Color4 &color);
 
     /// @brief Will return the current color.
@@ -95,52 +92,54 @@ public:
     const Color4 &getColor() const;
 
     /// @brief Will draw a 2D-line.
-    /// @param x1    The x position of the start point.
-    /// @param y1    The y position of the start point.
-    /// @param x2    The x position of the end point.
-    /// @param y2    The y position of the end point.
+    /// @param[in] x1    The x position of the start point.
+    /// @param[in] y1    The y position of the start point.
+    /// @param[in] x2    The x position of the end point.
+    /// @param[in] y2    The y position of the end point.
     void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
     
     /// @brief Will draw a 2D-line.
-    /// @param p1      The first point.
-    /// @param p2      The second point.
+    /// @param[in] p1      The first point.
+    /// @param[in] p2      The second point.
     void drawline(const Point2Di &p1, const Point2Di &p2);
 
     /// @brief Will draw a 2D-triangle.
-    /// @param x1       The x position of the first point.
-    /// @param y1       The y position of the first point.
-    /// @param x2       The x position of the second point.
-    /// @param y2       The y position of the second point.
-    /// @param x3       The x position of the third point.
-    /// @param y3       The y position of the third point.
-    /// @param filled   The flag to set the triangle filled or not.
+    /// @param[in] x1       The x position of the first point.
+    /// @param[in] y1       The y position of the first point.
+    /// @param[in] x2       The x position of the second point.
+    /// @param[in] y2       The y position of the second point.
+    /// @param[in] x3       The x position of the third point.
+    /// @param[in] y3       The y position of the third point.
+    /// @param[in] filled   The flag to set the triangle filled or not.
     void drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled);
     
     /// @brief Will draw a 2D-triangle.
-    /// @param p1  The first point.
-    /// @param p2  The second point.
-    /// @param p3  The third point.
-    /// @param filled The flag to set the triangle filled or not.
+    /// @param[in] p1  The first point.
+    /// @param[in] p2  The second point.
+    /// @param[in] p3  The third point.
+    /// @param[in] filled The flag to set the triangle filled or not.
     void drawTriangle(const Point2Di &p1, const Point2Di &p2, const Point2Di &p3, bool filled);
 
     /// @brief Will draw a 2D-rectangle.
-    /// @param x        The x position of the rectangle.
-    /// @param y        The y position of the rectangle.
-    /// @param w        The width of the rectangle.
-    /// @param h        The height of the rectangle.
-    /// @param filled   The flag to set the rectangle filled or not.
+    /// @param[in] x        The x position of the rectangle.
+    /// @param[in] y        The y position of the rectangle.
+    /// @param[in] w        The width of the rectangle.
+    /// @param[in] h        The height of the rectangle.
+    /// @param[in] filled   The flag to set the rectangle filled or not.
     void drawRect(i32 x, i32 y, i32 w, i32 h, bool filled);
 
     /// @brief Will select a font.
-    /// @param font The font to select.
+    /// @param[in] font The font to select.
     void selectFont(Font *font);
 
+    /// @brief Will return the active font.
+    /// @return The active font.
     Font *getActiveFont() const;
 
     /// @brief Will draw a text using the current font.
-    /// @param x    The x position.
-    /// @param y    The y position.
-    /// @param text The text to draw.
+    /// @param[in] x    The x position.
+    /// @param[in] y    The y position.
+    /// @param[in] text The text to draw.
     void drawText(i32 x, i32 y, i32 size, const String &text);
 
     /// @brief Will set the dirty flag.
@@ -185,5 +184,4 @@ inline bool CanvasRenderer::isDirty() const {
     return mDirty;
 }
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

@@ -28,17 +28,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TStaticArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 ///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
 enum class ShaderType {
-    Invalid = -1,               ///< Enum for invalid enum.
-    SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType,   ///< The tesselation evaluation shader.
-    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
-    Count                       ///< Number of enums.
+    Invalid = -1, ///< Enum for invalid enum.
+    SH_VertexShaderType = 0, ///< The shader is a vertex shader, used for each vertex.
+    SH_GeometryShaderType, ///< The shader is a geometry shader, used for tesselation.
+    SH_TesselationShaderType, ///< The tesselation evaluation shader.
+    SH_FragmentShaderType, ///< The shader is a fragment shader, used for rasterization.
+    Count ///< Number of enums.
 };
 
 /// @brief The type to store shader
@@ -162,16 +161,16 @@ class OSRE_EXPORT ShaderLoader {
 public:
     /// @brief  The default class constructor.
     ShaderLoader() = default;
-    
+
     /// @brief  The default class destructor.
     virtual ~ShaderLoader() = default;
-    
+
     /// @brief  Will load a shader from a given uri.
     /// @param  uri      The uri to load from.
     /// @param  shader   The shader instance to load in.
     /// @return The size in bytes.
     virtual size_t load(const IO::Uri &uri, Shader *shader);
-    
+
     /// @brief  Will unload a loaded shader-
     /// @param  shader   The shader to unload.
     /// @return true, if unloaded.
@@ -185,7 +184,7 @@ public:
     /// @param  shaderName  The name for the shader.
     /// @param  uri         The uri to load from.
     ShaderResource(const String &shaderName, const IO::Uri &uri);
-    
+
     ///	@brief  The default class destructor.
     ~ShaderResource() override = default;
 
@@ -195,12 +194,11 @@ protected:
     /// @param  loader  The shader loader instance.
     /// @return The resource state.
     Common::ResourceState onLoad(const IO::Uri &uri, ShaderLoader &loader) override;
-    
+
     /// @brief  The unload callback handler.
     /// @param  loader   The shader loader instance.
     /// @return The resource state.
     Common::ResourceState onUnload(ShaderLoader &loader) override;
 };
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend

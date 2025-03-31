@@ -33,6 +33,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderPass.h"
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderView/MainRenderView.h"
+#include "UI/Panel.h"
+#include "UI/Button.h"
 
 namespace OSRE::Editor {
 
@@ -54,6 +56,14 @@ static Project *createProject(const String &name) {
     project->setProjectName(name);
 
     return project;
+}
+
+static Ui::WidgetBase *createUi() {
+    Rect2i r1(10,10, 200,100);
+    Ui::Panel *panel = new Ui::Panel(r1, nullptr);
+    Rect2i r2(20,20, 50,20);
+    panel->addWidget(new Ui::Button("Quit", r2, panel));
+    return panel;
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
@@ -182,6 +192,7 @@ bool OsreEdApp::onCreate() {
     scene->addEntity(mGuiEntity);
     setupEditorGimmics(mGuiEntity);
     scene->init();
+    Ui::WidgetBase *p = createUi();
 
     Platform::AbstractWindow *rootWindow = getRootWindow();
     Rect2ui windowsRect;
