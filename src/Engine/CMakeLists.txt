@@ -60,6 +60,8 @@ SET( app_src
     App/Component.cpp
     App/Entity.h
     App/Entity.cpp
+    App/KeyboardEventListener.cpp
+    App/KeyboardEventListener.h
     App/ServiceProvider.h
     App/ServiceProvider.cpp
     App/Project.h

@@ -44,7 +44,7 @@ ui32 FPSCounter::getFPS() {
     }
 
     m_timeDiff = m_timerPtr->getTimeDiff();
-    m_lastTime += m_timeDiff.Microseconds;
+    m_lastTime += m_timeDiff.microSeconds;
     m_fps++;
     if (m_lastTime > 1000) {
         m_lastTime = 0;

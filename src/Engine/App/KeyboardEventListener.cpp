@@ -20,22 +20,37 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-// The public API from the App-layer
-#include "App/AppBase.h"
-#include "App/Component.h"
-#include "App/CameraComponent.h"
-#include "App/TransformComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/AppCommon.h"
-#include "App/Project.h"
-#include "App/ServiceProvider.h"
-#include "App/AssetRegistry.h"
-#include "App/AssetBundle.h"
-#include "App/AssimpWrapper.h"
-#include "App/TAbstractCtrlBase.h"
-#include "App/TransformController.h"
 #include "App/KeyboardEventListener.h"
-#include "App/MouseEventListener.h"
+
+namespace OSRE::App {
+
+KeyboardEventListener::KeyboardEventListener() :
+        OSEventListener("App/KeyboardEventListener"),
+        mKeyboardInputState() {
+    clearKeyMap();
+}
+
+void KeyboardEventListener::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
+    auto keyData = (Platform::KeyboardButtonEventData *)data;
+    if (osEvent == Platform::KeyboardButtonDownEvent) {
+        mKeyboardInputState.mKeymap[keyData->m_key] = 1;
+        mKeyboardInputState.mLast = keyData->m_key;
+    } else {
+        mKeyboardInputState.mKeymap[keyData->m_key] = 0;
+        mKeyboardInputState.mLast = Platform::KEY_UNKNOWN;
+    }
+}
+
+bool KeyboardEventListener::isKeyPressed(Platform::Key key) const {
+    return mKeyboardInputState.mKeymap[key] == 1;
+}
+
+Platform::Key KeyboardEventListener::getLastKey() const {
+    return mKeyboardInputState.mLast;
+}
+
+void KeyboardEventListener::clearKeyMap() {
+    mKeyboardInputState.clear();
+}
+
+} // namespace OSRE::App

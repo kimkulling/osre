@@ -22,50 +22,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "SceneData.h"
-#include "App/App.h"
-#include "App/Project.h"
-#include "App/CameraComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/OrbitalMouseControl.h"
-#include "RenderBackend/TransformMatrixBlock.h"
+#include "App/AppCommon.h"
+#include "Platform/PlatformInterface.h"
+#include "Platform/KeyTypes.h"
 
-namespace OSRE::Editor {
-
-class PythonInterface;
+namespace OSRE::App {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+///	@ingroup	Engine
 ///
-///	@brief This class implements the main Application of the editor.
+/// @brief This class implements the keyboard event listener.
 //-------------------------------------------------------------------------------------------------
-class OsreEdApp final : public App::AppBase {
+class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
 public:
-    OsreEdApp(int argc, char *argv[]);
-    ~OsreEdApp() override = default;
-    App::CameraComponent *setupCamera(App::Scene *world);
-    bool onCreate() override;
-    bool onDestroy() override;
-    void onUpdate() override;
-    void newProjectCmd(ui32, void *data);
-    void loadAsset(const IO::Uri &modelLoc);
+    /// @brief The class constructor.
+    KeyboardEventListener();
+
+    /// @brief The class destructor.
+    ~KeyboardEventListener() override = default;
+
+    /// @brief The event handler.
+    /// @param osEvent  The os-specific event.
+    /// @param data     The event-related data.
+    void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override;
+
+    /// @brief Returns true, when the key is pressed
+    /// @param key      The key to look for
+    /// @return true for is pressed.
+    bool isKeyPressed(Platform::Key key) const;
+
+    /// @brief Will return the latest pressed key.
+    /// @return The latest pressed key.
+    Platform::Key getLastKey() const;
+
+    /// @brief Clearn the map.
+    void clearKeyMap();
 
 private:
-    struct Config {
-        f32 mFov = 60.f;
-        f32 mNear = 0.01f;
-        f32 mFar = 10000.0f;
-    } mConfig;
+    KeyboardInputState mKeyboardInputState;
+}; 
 
-    App::Project *mProject;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    App::Entity *mEntity;
-    App::Entity *mGuiEntity;
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
-    SceneData mSceneData;
-    PythonInterface *mPythonInterface;
-    App::OrbitalMouseControl *mOrbitalMouseControl;
-};
-
-} // namespace OSRE::Editor
+} // namespace OSRE::App

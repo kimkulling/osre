@@ -28,7 +28,7 @@ namespace OSRE::Animation {
 
 using namespace OSRE::App;
 
-static constexpr c8 Tag[] = "AnimatorComponent";
+DECL_OSRE_LOG_MODULE(AnimatorComponent);
 
 AnimatorComponent::AnimatorComponent(Entity *owner) :
         Component(owner, ComponentType::AnimationComponentType),
