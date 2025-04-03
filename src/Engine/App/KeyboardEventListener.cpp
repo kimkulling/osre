@@ -24,13 +24,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE::App {
 
+using namespace OSRE::Common;
+using namespace OSRE::Platform;
+
 KeyboardEventListener::KeyboardEventListener() :
         OSEventListener("App/KeyboardEventListener") {
     clearKeyMap();
 }
 
-void KeyboardEventListener::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
-    auto keyData = (Platform::KeyboardButtonEventData *)data;
+void KeyboardEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
+    auto *keyData = static_cast<KeyboardButtonEventData *>(data);
     if (osEvent == Platform::KeyboardButtonDownEvent) {
         mKeyboardInputState.mKeymap[keyData->m_key] = 1;
         mKeyboardInputState.mLast = keyData->m_key;
