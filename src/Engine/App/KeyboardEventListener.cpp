@@ -25,8 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE::App {
 
 KeyboardEventListener::KeyboardEventListener() :
-        OSEventListener("App/KeyboardEventListener"),
-        mKeyboardInputState() {
+        OSEventListener("App/KeyboardEventListener") {
     clearKeyMap();
 }
 
