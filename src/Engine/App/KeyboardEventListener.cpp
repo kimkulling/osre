@@ -33,7 +33,7 @@ KeyboardEventListener::KeyboardEventListener() :
 }
 
 void KeyboardEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
-    auto *keyData = static_cast<KeyboardButtonEventData *>(data);
+    auto *keyData = static_cast<const KeyboardButtonEventData *>(data);
     if (osEvent == Platform::KeyboardButtonDownEvent) {
         mKeyboardInputState.mKeymap[keyData->m_key] = 1;
         mKeyboardInputState.mLast = keyData->m_key;
