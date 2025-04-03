@@ -59,59 +59,6 @@ class CameraComponent;
 class Scene;
 class AppBase;
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-/// @brief This class implements the keyboard event listener.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
-public:
-    /// @brief The class constructor.
-    KeyboardEventListener() :
-            OSEventListener("App/KeyboardEventListener"),
-            mLast(Platform::KEY_UNKNOWN) {
-        clearKeyMap();
-    }
-
-    /// @brief The class destructor.
-    ~KeyboardEventListener() override = default;
-
-    /// @brief The event handler.
-    /// @param osEvent  The os-specific event.
-    /// @param data     The event-related data.
-    void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override {
-        auto keyData = (Platform::KeyboardButtonEventData *)data;
-        if (osEvent == Platform::KeyboardButtonDownEvent) {
-            mKeymap[keyData->m_key] = 1;
-            mLast = keyData->m_key;
-        } else {
-            mKeymap[keyData->m_key] = 0;
-            mLast = Platform::KEY_UNKNOWN;
-        }
-    }
-
-    /// @brief Returns true, when the key is pressed
-    /// @param key      The key to look for
-    /// @return true for is pressed.
-    bool isKeyPressed(Platform::Key key) const {
-        return mKeymap[key] == 1;
-    }
-
-    /// @brief Will return the latest pressed key.
-    /// @return The latest pressed key.
-    Platform::Key getLastKey() const {
-        return mLast; 
-    }
-    
-    /// @brief Clearn the map.
-    void clearKeyMap() {
-        ::memset(mKeymap, 0, sizeof(char) * Platform::KEY_LAST);
-    }
-
-private:
-    Platform::Key mLast;
-    char mKeymap[Platform::KEY_LAST];
-};
 
 enum class WindowMode {
     Invalid = -1,

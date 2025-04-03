@@ -49,7 +49,7 @@ public:
     }
 };
 
-static const c8 *Tag = "SystemTaskThread";
+DECL_OSRE_LOG_MODULE(SystemTaskThread)
 
 static bool DebugQueueSize = false;
 

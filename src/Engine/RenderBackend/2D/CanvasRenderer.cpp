@@ -36,7 +36,7 @@ namespace RenderBackend {
 
 using namespace cppcore;
 
-static constexpr c8 Tag[] = "CanvasRenderer";
+DECL_OSRE_LOG_MODULE(CanvasRenderer)
 
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {

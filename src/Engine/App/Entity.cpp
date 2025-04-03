@@ -36,7 +36,7 @@ using namespace ::OSRE::RenderBackend;
 
 DECL_OSRE_LOG_MODULE(Entity)
 
-Entity::Entity(const String &name, Common::Ids &ids, Scene *world) :
+Entity::Entity(const String &name, Ids &ids, Scene *world) :
         Object(name),
         mRenderComponent(nullptr),
         mComponentArray(),

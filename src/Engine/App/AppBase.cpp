@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/TransformController.h"
 #include "App/Entity.h"
 #include "App/CameraComponent.h"
+#include "App/KeyboardEventListener.h"
 #include "Common/Environment.h"
 #include "Debugging/osre_debugging.h"
 #include "IO/IOService.h"

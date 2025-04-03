@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
+#include "Platform/KeyTypes.h"
 
 #include <cppcore/Common/TBitField.h>
 
@@ -61,6 +62,7 @@ enum class RenderBackendType {
     Count                       ///< Number of render APIs.
 };
 
+/// @brief A container struct to store all the mouse input states.
 struct MouseInputState {
     i32 RelX, RelY, AbsX, AbsY;
     ui32 LastX, LastY;
@@ -73,6 +75,20 @@ inline MouseInputState::MouseInputState() :
         RelX(0), RelY(0), AbsX(0), AbsY(0), LastX(0), LastY(0), MouseButtonState() {
     // empty
 }
+
+/// @brief A container struct to store all the keyboard input states.
+struct KeyboardInputState {
+    Platform::Key mLast = Platform::KEY_UNKNOWN;
+    char mKeymap[Platform::KEY_LAST];
+
+    KeyboardInputState() {
+        clear();
+    }
+
+    void clear() {
+        memset(mKeymap, 0, sizeof(char) * Platform::KEY_LAST);
+    }
+};
 
 } // Namespace App
 } // Namespace OSRE
