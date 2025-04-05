@@ -40,16 +40,6 @@ public:
     ///	@brief	The class destructor, virtual.
     virtual ~Object() = default;
 
-    ///	@brief	Increase reference counter by one.
-    void get();
-
-    ///	@brief	Will release a shared ownership, the reference count will be decreased by one.
-    void release();
-
-    ///	@brief	Returns the number of shared references.
-    ///	@return	The number of shared references.
-    ui32 getNumRefs() const;
-
     ///	@brief	A new object name will be assigned.
     ///	@param	objName     [in] The new object name for the instance.
     void setName(const String &objName);
@@ -79,7 +69,6 @@ protected:
 private:
     String mObjectName;
     guid mId;
-    ui32 mRefcount;
 };
 
 } // Namespace OSRE::Common

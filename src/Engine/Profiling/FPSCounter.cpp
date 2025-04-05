@@ -32,13 +32,15 @@ static constexpr c8 Tag[] = "FPSCounter";
 
 FPSCounter::FPSCounter( Platform::AbstractTimer *timer ) :
         m_timerPtr(timer), m_timeDiff(0), m_lastTime(0), m_fps(0), m_lastFPS(0) {
-    if ( m_timerPtr.isValid() ) {
+    if (m_timerPtr != nullptr) {
         m_timeDiff = m_timerPtr->getTimeDiff();
     }
 }
 
+static constexpr ui32 SecondsInMs = 1000;
+
 ui32 FPSCounter::getFPS() {
-    if ( !m_timerPtr.isValid() ) {
+    if (m_timerPtr== nullptr) {
         osre_debug(Tag, "No valid timer instance.");
         return 0;
     }
@@ -46,7 +48,7 @@ ui32 FPSCounter::getFPS() {
     m_timeDiff = m_timerPtr->getTimeDiff();
     m_lastTime += m_timeDiff.microSeconds;
     m_fps++;
-    if (m_lastTime > 1000) {
+    if (m_lastTime > SecondsInMs) {
         m_lastTime = 0;
         m_lastFPS = m_fps;
         m_fps = 0;

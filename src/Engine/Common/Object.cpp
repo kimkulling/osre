@@ -25,28 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE::Common {
 
-Object::Object(const String &objName) :
-        mObjectName(objName), 
-        mId(0),
-        mRefcount(1) {
+Object::Object(const String &objName) : mObjectName(objName),  mId(0) {
     // empty
-}
-
-void Object::get() {
-    ++mRefcount;
-}
-
-void Object::release() {
-    if( mRefcount > 0 ) {
-        --mRefcount;
-        if( 0 == mRefcount ) {
-            delete this;
-        }
-    }
-}
-
-ui32 Object::getNumRefs() const {
-    return mRefcount;
 }
 
 void Object::setName( const String &objName ) {

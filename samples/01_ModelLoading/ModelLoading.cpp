@@ -142,7 +142,7 @@ public:
     /// @brief  Will return true, if a model was loaded.
     /// @return true for model loaded.
     bool hasModel() const {
-        return mModelNode.isValid();
+        return mModelNode != nullptr;
     }
 
 

@@ -54,7 +54,7 @@ public:
     FPSCounter & operator = ( const FPSCounter & ) = delete;
 
 private:
-    Common::TObjPtr<Platform::AbstractTimer>  m_timerPtr;
+    Platform::AbstractTimer *m_timerPtr;
     Time m_timeDiff;
     i64 m_lastTime;
     ui32 m_fps, m_lastFPS;
