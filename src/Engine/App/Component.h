@@ -22,9 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Common/TObjPtr.h"
 #include "Common/BaseMath.h"
-#include "IO/Stream.h"
 #include "RenderBackend/RenderCommon.h"
 
 #include <cppcore/Container/TArray.h>

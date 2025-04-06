@@ -288,7 +288,7 @@ bool AppBase::onCreate() {
     ServiceProvider::setService(ServiceType::RenderService, mRbService);
     mRbService->setSettings(mSettings, false);
     if (!mRbService->open()) {
-        mRbService->release();
+        delete mRbService;
         mRbService = nullptr;
         return false;
     }

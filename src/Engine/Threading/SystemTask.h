@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Threading/AbstractTask.h"
 #include "Threading/TAsyncQueue.h"
-#include "Common/TObjPtr.h"
 
 namespace OSRE {
 
@@ -118,7 +117,7 @@ private:
     TaskQueue *m_asyncQueue;
 };
 
-using SystemTaskPtr = Common::TObjPtr<Threading::SystemTask>;
+using SystemTaskPtr = Threading::SystemTask*;
 
 } // Namespace Threading
 } // Namespace OSRE

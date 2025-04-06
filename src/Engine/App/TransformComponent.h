@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "App/Component.h"
 #include "Common/Object.h"
-#include "Common/TObjPtr.h"
 #include "RenderBackend/RenderCommon.h"
 #include "Common/TAABB.h"
 
@@ -59,13 +58,13 @@ namespace App {
 class OSRE_EXPORT TransformComponent : public Common::Object, public Component {
 public:
     /// @brief The node pointer type.
-    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::TransformComponent>;
+    using NodePtr = TransformComponent*;
     /// @brief The node array type.
     using NodeArray = cppcore::TArray<TransformComponent *>;
     /// @brief Used to declare mesh-array instances.
     using MeshReferenceArray = ::cppcore::TArray<size_t>;
     /// @brief Used to declare properties.
-    using PropertyMap = cppcore::THashMap<ui32, Properties::Property *>;
+    using PropertyMap = cppcore::THashMap<ui32, Properties::Property*>;
 
     ///	@brief  Describes the traversal mode.
     enum class TraverseMode {
