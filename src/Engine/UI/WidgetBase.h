@@ -20,7 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "WidgetBase.h"
+#pragma once
+
+#include "Common/osre_common.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
 namespace OSRE::Ui {
 
@@ -29,28 +32,66 @@ namespace OSRE::Ui {
 ///
 ///	@brief Todo!
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Button : public WidgetBase {
+class WidgetBase {
 public:
-    Button(const String &label, const Rect2i &rect, WidgetBase *parent = nullptr);
-    ~Button() override;
-    void setLabel(const String &text);
-    const String &getLabel() const;
+    WidgetBase(const Rect2i &rect, WidgetBase *parent);
+    virtual ~WidgetBase();
+    virtual void update();
+    virtual void render(RenderBackend::CanvasRenderer *renderer);
+    void setDirty();
+    void setClean();
+    bool isDirty() const;
+    void setRect(const Rect2i &rect);
+    const Rect2i &getRect() const;
 
 protected:
-    void onUpdate() override;
-    void onRender(RenderBackend::CanvasRenderer *renderer) override;
+    virtual void onUpdate() = 0;
+    virtual void onRender(RenderBackend::CanvasRenderer *renderer) = 0;
 
-    private:
-        String mLabel;
+private:
+    bool mDirty;
+    Rect2i mRect;
 };
 
-inline void Button::setLabel(const String &text) {
-    mLabel = text;
+inline WidgetBase::WidgetBase(const Rect2i &rect, WidgetBase *parent) : mDirty(true), mRect(rect) {
+    // empty
+}
+
+inline WidgetBase::~WidgetBase() {
+    // empty
+}
+
+inline void WidgetBase::update() {
+    onUpdate();
+}
+
+inline void WidgetBase::render(RenderBackend::CanvasRenderer *renderer) {
+    onRender(renderer);
+}
+
+inline void WidgetBase::setDirty() {
+    mDirty = true;
+}
+
+inline void WidgetBase::setClean() {
+    mDirty = false;
+}
+
+inline bool WidgetBase::isDirty() const {
+    return mDirty;
+}
+
+inline void WidgetBase::setRect(const Rect2i &rect) {
+    if (mRect == rect) {
+        return;
+    }
+
+    mRect = rect;
     setDirty();
 }
 
-inline const String &Button::getLabel() const {
-    return mLabel;
+inline const Rect2i &WidgetBase::getRect() const {
+    return mRect;
 }
 
-}
+} // namespace OSRE::Ui
