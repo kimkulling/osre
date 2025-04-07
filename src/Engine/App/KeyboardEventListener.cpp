@@ -20,21 +20,39 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "SamplesAppBase.h"
+#include "App/KeyboardEventListener.h"
 
-namespace OSRE {
+namespace OSRE::App {
 
-using namespace ::OSRE::Common;
-using namespace ::OSRE::App;
+using namespace OSRE::Common;
+using namespace OSRE::Platform;
 
-CameraComponent *SampleAppBase::setupCamera(const String &name, Scene *scene, ui32 w, ui32 h, Ids &ids) {
-    auto *camEntity = new Entity(name, ids, scene);
-    scene->addEntity(camEntity);
-    auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
-    scene->setActiveCamera(camera);
-    camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-
-    return camera;
+KeyboardEventListener::KeyboardEventListener() :
+        OSEventListener("App/KeyboardEventListener") {
+    clearKeyMap();
 }
 
+void KeyboardEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
+    auto *keyData = static_cast<const KeyboardButtonEventData *>(data);
+    if (osEvent == Platform::KeyboardButtonDownEvent) {
+        mKeyboardInputState.mKeymap[keyData->m_key] = 1;
+        mKeyboardInputState.mLast = keyData->m_key;
+    } else {
+        mKeyboardInputState.mKeymap[keyData->m_key] = 0;
+        mKeyboardInputState.mLast = Platform::KEY_UNKNOWN;
+    }
 }
+
+bool KeyboardEventListener::isKeyPressed(Platform::Key key) const {
+    return mKeyboardInputState.mKeymap[key] == 1;
+}
+
+Platform::Key KeyboardEventListener::getLastKey() const {
+    return mKeyboardInputState.mLast;
+}
+
+void KeyboardEventListener::clearKeyMap() {
+    mKeyboardInputState.clear();
+}
+
+} // namespace OSRE::App

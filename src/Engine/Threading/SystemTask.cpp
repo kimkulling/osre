@@ -30,8 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <sstream>
 
-namespace OSRE {
-namespace Threading {
+namespace OSRE::Threading {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
@@ -50,7 +49,7 @@ public:
     }
 };
 
-static const c8 *Tag = "SystemTaskThread";
+DECL_OSRE_LOG_MODULE(SystemTaskThread)
 
 static bool DebugQueueSize = false;
 
@@ -68,36 +67,33 @@ public:
 
     SystemTaskThread(const String &threadName, TAsyncQueue<const TaskJob *> *jobQueue) :
             Thread(threadName, StackSize),
-            m_updateEvent(nullptr),
-            m_stopEvent(nullptr),
-            m_activeJobQueue(jobQueue),
-            m_eventHandler(nullptr) {
+            mUpdateEvent(nullptr),
+            mStopEvent(nullptr),
+            mActiveJobQueue(jobQueue),
+            mEventHandler(nullptr) {
         osre_assert(nullptr != jobQueue);
 
-        m_updateEvent = new ThreadEvent();
-        m_stopEvent = new ThreadEvent();
+        mUpdateEvent = new ThreadEvent();
+        mStopEvent = new ThreadEvent();
     }
 
     ~SystemTaskThread() {
-        if (m_eventHandler) {
-            m_eventHandler->detach(nullptr);
+        if (mEventHandler) {
+            mEventHandler->detach(nullptr);
         }
 
-        delete m_updateEvent;
-        m_updateEvent = nullptr;
-
-        delete m_stopEvent;
-        m_stopEvent = nullptr;
+        delete mUpdateEvent;
+        delete mStopEvent;
     }
 
     void setEventHandler(AbstractEventHandler *eventHandler) {
-        m_eventHandler = eventHandler;
-        if (nullptr != m_eventHandler) {
-            m_eventHandler->attach(nullptr);
+        mEventHandler = eventHandler;
+        if (nullptr != mEventHandler) {
+            mEventHandler->attach(nullptr);
         }
 
-        if (nullptr == eventHandler && nullptr != m_eventHandler) {
-            m_eventHandler->detach(nullptr);
+        if (nullptr == eventHandler && nullptr != mEventHandler) {
+            mEventHandler->detach(nullptr);
         }
     }
 
@@ -108,43 +104,43 @@ public:
     }
 
     Common::AbstractEventHandler *getEventHandler() const {
-        return m_eventHandler;
+        return mEventHandler;
     }
 
     void setActiveJobQueue(Threading::TAsyncQueue<const TaskJob *> *pJobQueue) {
-        m_activeJobQueue = pJobQueue;
+        mActiveJobQueue = pJobQueue;
     }
 
     Threading::TAsyncQueue<const TaskJob *> *getActiveJobQueue() const {
-        return m_activeJobQueue;
+        return mActiveJobQueue;
     }
 
     Platform::ThreadEvent *getUpdateEvent() const {
-        return m_updateEvent;
+        return mUpdateEvent;
     }
 
     Platform::ThreadEvent *getStopEvent() const {
-        return m_stopEvent;
+        return mStopEvent;
     }
 
 protected:
     i32 run() override {
-        osre_assert(nullptr != m_activeJobQueue);
+        osre_assert(nullptr != mActiveJobQueue);
 
         osre_debug(Tag, "SystemThread::run");
         bool running = true;
         while (running) {
-            m_activeJobQueue->awaitEnqueuedItem();
-            while (!m_activeJobQueue->isEmpty()) {
+            mActiveJobQueue->awaitEnqueuedItem();
+            while (!mActiveJobQueue->isEmpty()) {
                 // for debugging
                 if (DebugQueueSize) {
-                    size_t size = m_activeJobQueue->size();
+                    const size_t size = mActiveJobQueue->size();
                     std::stringstream stream;
                     stream << "queue size = " << size << std::endl;
                     osre_debug(Tag, stream.str());
                 }
 
-                const TaskJob *job = m_activeJobQueue->dequeue();
+                const TaskJob *job = mActiveJobQueue->dequeue();
                 const Common::Event *ev = job->getEvent();
                 if (nullptr == ev) {
                     running = false;
@@ -157,28 +153,28 @@ protected:
                     running = false;
                 }
 
-                if (m_eventHandler) {
-                    m_eventHandler->onEvent(*ev, job->getEventData());
+                if (mEventHandler) {
+                    mEventHandler->onEvent(*ev, job->getEventData());
                 }
             }
 
-            if (m_updateEvent) {
-                m_updateEvent->signal();
+            if (mUpdateEvent) {
+                mUpdateEvent->signal();
             }
         }
 
-        if (m_stopEvent) {
-            m_stopEvent->signal();
+        if (mStopEvent) {
+            mStopEvent->signal();
         }
 
         return 0;
     }
 
 private:
-    Platform::ThreadEvent *m_updateEvent;
-    Platform::ThreadEvent *m_stopEvent;
-    Threading::TAsyncQueue<const TaskJob *> *m_activeJobQueue;
-    Common::AbstractEventHandler *m_eventHandler;
+    Platform::ThreadEvent *mUpdateEvent;
+    Platform::ThreadEvent *mStopEvent;
+    Threading::TAsyncQueue<const TaskJob *> *mActiveJobQueue;
+    Common::AbstractEventHandler *mEventHandler;
 };
 
 SystemTask::SystemTask(const String &taskName) :
@@ -349,5 +345,4 @@ SystemTask *SystemTask::create(const String &taskName) {
     return new SystemTask(taskName);
 }
 
-} // Namespace Threading
-} // Namespace OSRE
+} // Namespace OSRE::Threading

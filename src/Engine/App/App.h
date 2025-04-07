@@ -37,3 +37,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/AssimpWrapper.h"
 #include "App/TAbstractCtrlBase.h"
 #include "App/TransformController.h"
+#include "App/KeyboardEventListener.h"
+#include "App/MouseEventListener.h"

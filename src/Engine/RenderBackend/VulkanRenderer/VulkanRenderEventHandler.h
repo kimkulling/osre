@@ -1,7 +1,8 @@
 #pragma once
 
-namespace OSRE {
-namespace RenderBackend {
+#include "Common/AbstractEventHandler.h"
+
+namespace OSRE::RenderBackend {
 
 class Pipeline;
 
@@ -92,4 +93,4 @@ private:
 };
 
 }
-}
+

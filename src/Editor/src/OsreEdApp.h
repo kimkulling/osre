@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "SceneData.h"
-#include "App/AppBase.h"
+#include "App/App.h"
 #include "App/Project.h"
 #include "App/CameraComponent.h"
 #include "App/Entity.h"

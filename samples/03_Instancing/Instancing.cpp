@@ -38,7 +38,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries
-static constexpr c8 Tag[] = "InstancingApp";
+DECL_OSRE_LOG_MODULE(InstancingApp);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Samples
@@ -46,8 +46,10 @@ static constexpr c8 Tag[] = "InstancingApp";
 /// @brief
 //-------------------------------------------------------------------------------------------------
 class InstancingApp : public App::AppBase {
-    App::Entity *mEntity;
-    App::CameraComponent *mCamera;
+    /// The main entity
+    App::Entity *mEntity = nullptr;
+    /// The camera
+    App::CameraComponent *mCamera = nullptr;
 
 public:
     InstancingApp(int argc, char *argv[]) :

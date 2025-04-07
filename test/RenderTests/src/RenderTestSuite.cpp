@@ -113,7 +113,7 @@ bool RenderTestSuite::setup(const String &API) {
 
     IO::IOService *ioSrv = IO::IOService::create();
     if (!ioSrv->open()) {
-        ioSrv->release();
+        delete ioSrv;
         return false;
     }
     IO::IOService::setInstance(ioSrv);
@@ -121,7 +121,7 @@ bool RenderTestSuite::setup(const String &API) {
     m_pRenderBackendServer = new RenderBackendService();
     m_pRenderBackendServer->setSettings(settings, false);
     if (!m_pRenderBackendServer->open()) {
-        m_pRenderBackendServer->release();
+        delete m_pRenderBackendServer;
         m_pRenderBackendServer = nullptr;
     }
     m_pPlatformInterface->getPlatformEventHandler()->setRenderBackendService(m_pRenderBackendServer);
@@ -148,17 +148,16 @@ bool RenderTestSuite::setup(const String &API) {
 bool RenderTestSuite::teardown() {
     if (m_pRenderBackendServer) {
         m_pRenderBackendServer->close();
-        m_pRenderBackendServer->release();
+        delete m_pRenderBackendServer;
         m_pRenderBackendServer = nullptr;
     }
 
     MaterialBuilder::destroy();
 
     IO::IOService::getInstance()->close();
-    IO::IOService::getInstance()->release();
 
     if (m_pTimer) {
-        m_pTimer->release();
+        delete m_pTimer;
         m_pTimer = nullptr;
     }
 

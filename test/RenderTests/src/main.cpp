@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Properties/Settings.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/AbstractTimer.h"
-#include "Common/TObjPtr.h"
 #include "Common/ArgumentParser.h"
 #include "App/AssetRegistry.h"
 

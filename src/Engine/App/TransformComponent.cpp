@@ -31,12 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE::App {
 
 namespace {
-static void releaseTransformComponent(TransformComponent *child) {
-    osre_assert(child != nullptr);
+    void releaseTransformComponent(TransformComponent *child) {
+        osre_assert(child != nullptr);
 
-    child->setParent(nullptr);
-    child->release();
-}
+        child->setParent(nullptr);
+    }
 } // namespace
 
 using namespace ::OSRE::RenderBackend;
@@ -77,7 +76,6 @@ TransformComponent *TransformComponent::getParent() const {
 TransformComponent *TransformComponent::createChild(const String &name) {
     TransformComponent *child = new TransformComponent(name, getOwner(), *mIds, this);
     mChildren.add(child);
-    child->get();
 
     return child;
 }
@@ -85,7 +83,6 @@ TransformComponent *TransformComponent::createChild(const String &name) {
 void TransformComponent::addChild(TransformComponent *child) {
     if (nullptr != child) {
         mChildren.add(child);
-        child->get();
     }
 }
 

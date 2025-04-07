@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Threading/SystemTask.h"
 #include "Debugging/MeshDiagnostic.h"
 #include "OGLRenderer/OGLRenderEventHandler.h"
+#include "VulkanRenderer/VulkanRenderEventHandler.h"
 #ifdef OSRE_WINDOWS
 #   include "Platform/Windows/MinWindows.h"
 #endif
@@ -75,6 +76,7 @@ static i32 hasBatch(const c8 *id, const TArray<RenderBatchData *> &batchDataArra
 
 RenderBackendService::RenderBackendService() :
         AbstractService("renderbackend/renderbackendserver"),
+        mRenderTaskPtr(nullptr),
         mSettings(nullptr),
         mOwnsSettingsConfig(false),
         mFrameCreated(false),
@@ -105,8 +107,8 @@ bool RenderBackendService::onOpen() {
     }
 
     // Spawn the thread for our render task
-    if (!mRenderTaskPtr.isValid()) {
-        mRenderTaskPtr.init(SystemTask::create("render_task"));
+    if (mRenderTaskPtr == nullptr) {
+        mRenderTaskPtr = SystemTask::create("render_task");
     }
 
     // Run the render task
@@ -121,7 +123,7 @@ bool RenderBackendService::onOpen() {
     if (api == OGL_API) {
         mRenderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
     } else if (api == Vulkan_API) {
-        // todo!
+        mRenderTaskPtr->attachEventHandler(new VulkanRenderEventHandler);
     } else {
         osre_error(Tag, "Requested render-api unknown: " + api);
         ok = false;
@@ -137,7 +139,7 @@ bool RenderBackendService::onOpen() {
 }
 
 bool RenderBackendService::onClose() {
-    if (!mRenderTaskPtr.isValid()) {
+    if (mRenderTaskPtr == nullptr) {
         return false;
     }
 
@@ -160,7 +162,7 @@ bool RenderBackendService::onClose() {
 }
 
 bool RenderBackendService::onUpdate() {
-    if (!mRenderTaskPtr.isValid()) {
+    if (mRenderTaskPtr == nullptr) {
         return false;
     }
 
@@ -193,7 +195,7 @@ const Settings *RenderBackendService::getSettings() const {
 }
 
 void RenderBackendService::initPasses() {
-    if (!mRenderTaskPtr.isValid()) {
+    if (mRenderTaskPtr == nullptr) {
         return;
     }
 
@@ -205,7 +207,7 @@ void RenderBackendService::initPasses() {
 }
 
 void RenderBackendService::commitNextFrame() {
-    if (!mRenderTaskPtr.isValid()) {
+    if (mRenderTaskPtr == nullptr) {
         return;
     }
 
@@ -294,7 +296,7 @@ void RenderBackendService::commitNextFrame() {
 void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData) {
     osre_assert(ev != nullptr);
 
-    if (mRenderTaskPtr.isValid()) {
+    if (mRenderTaskPtr != nullptr) {
         mRenderTaskPtr->sendEvent(ev, eventData);
     }
 }

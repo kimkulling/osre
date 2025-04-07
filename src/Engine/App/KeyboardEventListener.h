@@ -22,34 +22,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Common/osre_common.h"
-#include "Common/Ids.h"
-#include "App/App.h"
+#include "App/AppCommon.h"
+#include "Platform/PlatformInterface.h"
+#include "Platform/KeyTypes.h"
 
-namespace OSRE {
+namespace OSRE::App {
 
 //-------------------------------------------------------------------------------------------------
-/// @ingroup    Samples
+///	@ingroup	Engine
 ///
-/// @brief Basic utilities for the samples.
+/// @brief This class implements the keyboard event listener.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT SampleAppBase {
+class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
 public:
     /// @brief The class constructor.
-    SampleAppBase() = default;
+    KeyboardEventListener();
 
     /// @brief The class destructor.
-    virtual
-    ~SampleAppBase() = default;
+    ~KeyboardEventListener() override = default;
 
-    /// @brief Will initialize the camera for the scene.
-    /// @param[in] name     The name for the camera entity.
-    /// @param[in] scene    The scene to look at.
-    /// @param[in] w        The width of the viewport.
-    /// @paran[in] ids      Id container for guids.
-    /// @param[in] h        The height of the viewport.
-    /// @return The new created camera instance.
-    static App::CameraComponent *setupCamera(const String &name, App::Scene *scene, ui32 w, ui32 h, Common::Ids &ids);
-};
+    /// @brief The event handler.
+    /// @param osEvent  The os-specific event.
+    /// @param data     The event-related data.
+    void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override;
 
-}
+    /// @brief Returns true, when the key is pressed
+    /// @param key      The key to look for
+    /// @return true for is pressed.
+    bool isKeyPressed(Platform::Key key) const;
+
+    /// @brief Will return the latest pressed key.
+    /// @return The latest pressed key.
+    Platform::Key getLastKey() const;
+
+    /// @brief Clearn the map.
+    void clearKeyMap();
+
+private:
+    KeyboardInputState mKeyboardInputState;
+}; 
+
+} // namespace OSRE::App

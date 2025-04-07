@@ -60,6 +60,8 @@ SET( app_src
     App/Component.cpp
     App/Entity.h
     App/Entity.cpp
+    App/KeyboardEventListener.cpp
+    App/KeyboardEventListener.h
     App/ServiceProvider.h
     App/ServiceProvider.cpp
     App/Project.h
@@ -111,7 +113,6 @@ SET( common_src
     Common/TFunctor.h
     Common/TResource.h
     Common/TResourceCache.h
-    Common/TObjPtr.h
     Common/Tokenizer.h
     Common/osre_common.h
     Common/glm_common.h
@@ -314,11 +315,11 @@ SET( renderbackend_2d_src
     RenderBackend/2D/CanvasRenderer.cpp
 )
 
-SET( renderbackend_vulkan_src
+SET( renderbackend_vulkanrenderer_src
     RenderBackend/VulkanRenderer/VulkanRenderEventHandler.cpp
     RenderBackend/VulkanRenderer/VulkanRenderEventHandler.h
-    RenderBackend/VulkanRenderer/VulkanRendererBackend.cpp
-    RenderBackend/VulkanRenderer/VulkanRendererBackend.h
+    RenderBackend/VulkanRenderer/VulkanRenderBackend.cpp
+    RenderBackend/VulkanRenderer/VulkanRenderBackend.h
 )
 
 SET( renderbackend_oglrenderer_src
@@ -433,7 +434,7 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-        ${renderbackend_volkanrenderer_src}
+        ${renderbackend_vulkanrenderer_src}
         ${renderbackend_2d_src}
         ${renderbackend_mesh_src}
         ${renderbackend_shader_src}
