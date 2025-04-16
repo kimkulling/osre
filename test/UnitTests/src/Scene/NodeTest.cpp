@@ -52,7 +52,7 @@ protected:
         mEntity = nullptr;
 
         for ( auto &current : mNodes ) {
-            current->release();
+            delete current;
         }
         mNodes.resize(0);
     }

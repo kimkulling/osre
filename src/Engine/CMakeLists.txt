@@ -113,7 +113,6 @@ SET( common_src
     Common/TFunctor.h
     Common/TResource.h
     Common/TResourceCache.h
-    Common/TObjPtr.h
     Common/Tokenizer.h
     Common/osre_common.h
     Common/glm_common.h
