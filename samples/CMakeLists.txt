@@ -34,6 +34,11 @@ SET (05_animation_src
     05_Animation/README.md
 )
 
+SET (06_widgets_src
+    06_Widgets/Widgets.cpp
+    06_Widgets/README.md
+)
+
 ADD_EXECUTABLE(helloworld
     ${00_helloworld_src}
 )
@@ -58,6 +63,10 @@ ADD_EXECUTABLE(animation
     ${05_animation_src}
 )
 
+ADD_EXECUTABLE(widgets
+    ${06_widgets_src}
+)
+
 link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Debug
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Release
@@ -69,6 +78,7 @@ target_link_libraries(demo2d       osre)
 target_link_libraries(instancing   osre)
 target_link_libraries(terrain      osre)
 target_link_libraries(animation    osre)
+target_link_libraries(widgets    osre)
 
 set_target_properties(helloworld   PROPERTIES FOLDER Samples)
 set_target_properties(modelloading PROPERTIES FOLDER Samples)

@@ -48,7 +48,9 @@ void Panel::onUpdate() {
 
 void Panel::onRender(CanvasRenderer *renderer) {
     osre_assert(renderer != nullptr);
+
     if (isDirty()) {
+        renderer->selectLayer(0);
         const Rect2i &r = getRect();
         renderer->drawRect(r.x1, r.y1, r.width, r.height, true);
         for (size_t i=0; i<mWidgets.size(); ++i) {

@@ -27,7 +27,8 @@ namespace OSRE::Ui {
 
 using namespace ::OSRE::RenderBackend;
 
-Button::Button(const String &label, const Rect2i &rect, WidgetBase *parent) : WidgetBase(rect, parent), mLabel(label) {
+Button::Button(const String &label, const Rect2i &rect, WidgetBase *parent) : 
+		WidgetBase(rect, parent), mLabel(label) {
     setDirty();
 }
 
@@ -36,19 +37,22 @@ Button::~Button() {
 }
 
 void Button::onUpdate() {
-    //empty
+    // empty
 }
 
 void Button::onRender(CanvasRenderer *renderer) {
     osre_assert(renderer != nullptr);
+
     if (isDirty()) {
+        renderer->selectLayer(1);
+        renderer->setColor(Color4(0.5f, 0.5f, 0.5f, 1.0f));
         const Rect2i &r = getRect();
         renderer->drawRect(r.x1, r.y1, r.width, r.height, true);
         if (!mLabel.empty()) {
-            renderer->drawText(r.x1+1, r.y1+1, r.height-2, mLabel);
+            renderer->drawText(r.x1+1, r.y1+1, 40, mLabel);
         }
         setClean();
     }
 }
 
-}
+} // 

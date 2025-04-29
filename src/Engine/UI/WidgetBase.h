@@ -32,7 +32,7 @@ namespace OSRE::Ui {
 ///
 ///	@brief Todo!
 //-------------------------------------------------------------------------------------------------
-class WidgetBase {
+class OSRE_EXPORT WidgetBase {
 public:
     WidgetBase(const Rect2i &rect, WidgetBase *parent);
     virtual ~WidgetBase();
@@ -49,11 +49,12 @@ protected:
     virtual void onRender(RenderBackend::CanvasRenderer *renderer) = 0;
 
 private:
+    WidgetBase *mParent;
     bool mDirty;
     Rect2i mRect;
 };
 
-inline WidgetBase::WidgetBase(const Rect2i &rect, WidgetBase *parent) : mDirty(true), mRect(rect) {
+inline WidgetBase::WidgetBase(const Rect2i &rect, WidgetBase *parent) : mParent(parent), mDirty(true), mRect(rect) {
     // empty
 }
 

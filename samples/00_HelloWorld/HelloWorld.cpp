@@ -52,8 +52,7 @@ class HelloWorldApp : public App::AppBase {
 
 public:
     /// The class constructor with the incoming arguments from the command line.
-    HelloWorldApp(int argc, char *argv[]) :
-            AppBase(argc, const_cast<const char **>(argv)) {
+    HelloWorldApp(int argc, char *argv[]) : AppBase(argc, const_cast<const char **>(argv)) {
         // empty
     }
 

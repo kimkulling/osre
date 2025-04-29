@@ -59,7 +59,7 @@ public:
 
     // No copying
     AbstractLogStream(const AbstractLogStream &) = delete;
-    AbstractLogStream &operator=(const AbstractLogStream &) = delete;
+    AbstractLogStream &operator = (const AbstractLogStream &) = delete;
 
 protected:
     ///	@brief	The default class constructor.
