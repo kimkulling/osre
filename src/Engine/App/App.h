@@ -39,3 +39,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "App/TransformController.h"
 #include "App/KeyboardEventListener.h"
 #include "App/MouseEventListener.h"
+#include "App/OrbitalMouseControl.h"
