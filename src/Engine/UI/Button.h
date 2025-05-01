@@ -40,11 +40,15 @@ protected:
     void onUpdate() override;
     void onRender(RenderBackend::CanvasRenderer *renderer) override;
 
-    private:
-        String mLabel;
+private:
+    String mLabel;
 };
 
 inline void Button::setLabel(const String &text) {
+    if (text == mLabel) {
+        return;
+    }
+
     mLabel = text;
     setDirty();
 }
@@ -53,4 +57,4 @@ inline const String &Button::getLabel() const {
     return mLabel;
 }
 
-}
+} // namespace OSRE::Ui

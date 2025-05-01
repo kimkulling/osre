@@ -30,6 +30,10 @@ namespace Common {
     class AbstractLogStream;    
 }
 
+namespace Ui {
+    class TextPanel;
+}
+
 namespace Editor {
 
 class LogView;

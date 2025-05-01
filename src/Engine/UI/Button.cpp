@@ -55,4 +55,4 @@ void Button::onRender(CanvasRenderer *renderer) {
     }
 }
 
-} // 
+} // namespace OSRE::Ui
