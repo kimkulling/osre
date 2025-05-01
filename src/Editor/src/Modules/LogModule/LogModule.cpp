@@ -162,7 +162,7 @@ LogModule::~LogModule() {
 
 bool LogModule::onLoad() {
     const AppBase *parentApp = getParentApp();
-    Platform::AbstractWindow *rootWindow = parentApp->getRootWindow();
+    AbstractWindow *rootWindow = parentApp->getRootWindow();
     if (nullptr == rootWindow) {
         return true;
     }
@@ -172,7 +172,7 @@ bool LogModule::onLoad() {
     rootWindow->getWindowsRect(rect);
     mLogView->create(rect);
     mLogStream = new LogStream(mLogView);
-    Common::Logger::getInstance()->registerLogStream(mLogStream);
+    Logger::getInstance()->registerLogStream(mLogStream);
 
     Assimp::DefaultLogger::create("log.txt");
     mAssimpLogStream = new AssimpLogStream(mLogView);
