@@ -39,6 +39,7 @@ enum class ServiceType {
     RenderService = 0,
     IOService,
     ResourceService,
+    UiService,
     Count,
 };
 

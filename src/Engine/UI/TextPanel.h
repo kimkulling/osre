@@ -33,7 +33,7 @@ namespace OSRE::Ui {
 ///
 ///	@brief Todo!
 //-------------------------------------------------------------------------------------------------
-class TextPanel : public WidgetBase {
+class OSRE_EXPORT TextPanel : public WidgetBase {
 public:
     using StringArray = cppcore::TArray<String>;
 

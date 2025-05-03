@@ -34,11 +34,11 @@ namespace IO {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class implements the IO-server, which offers access to all mounted file systems.
+///	@brief	This class implements the IO-service, which offers access to all mounted file systems.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT IOService final : public Common::AbstractService {
 public:
-    DECLARE_SINGLETON( IOService )
+    DECLARE_SINGLETON(IOService)
 
 public:
     ///	@brief	The default class constructor.
@@ -46,17 +46,6 @@ public:
 
     ///	@brief	The class destructor.
     ~IOService();
-
-    ///	@brief	Will open the access to the IOServer.
-    ///	@return	true, if the access was opened properly, false if not.
-    bool onOpen() override;
-
-    ///	@brief	Will close the access to the IOServer.
-    ///	@return	true, if the access was opened properly, false if not.
-    bool onClose() override;
-    
-    ///	@brief	The update callback, will be called once per frame.
-    bool onUpdate() override;
 
     ///	@brief	A new file system will be mounted using the given schema.
     ///	@param	name		[in] The name of the new file system.
@@ -92,6 +81,18 @@ public:
     /// @brief  Will create a new instance.
     /// @return The new created instance.
     static IOService *create();
+
+protected:
+    ///	@brief	Will open the access to the IOServer.
+    ///	@return	true, if the access was opened properly, false if not.
+    bool onOpen() override;
+
+    ///	@brief	Will close the access to the IOServer.
+    ///	@return	true, if the access was opened properly, false if not.
+    bool onClose() override;
+    
+    ///	@brief	The update callback, will be called once per frame.
+    bool onUpdate() override;
 
 private:
     using MountedMap = std::map<String, AbstractFileSystem*> ;

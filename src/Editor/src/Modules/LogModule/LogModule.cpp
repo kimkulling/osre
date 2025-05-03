@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "Platform/AbstractWindow.h"
 #include "UI/TextPanel.h"
+#include "UI/UiService.h"
 #include <assimp/Logger.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
@@ -167,10 +168,10 @@ bool LogModule::onLoad() {
         return true;
     }
 
-    mLogView = new LogView(rootWindow);
-    Rect2ui rect;
-    rootWindow->getWindowsRect(rect);
-    mLogView->create(rect);
+    UiService *uiSrv = ServiceProvider::getService<UiService>(ServiceType::UiService);
+    Rect2i rect(10, 10, 100, 200);
+    TextPanel *textPanel = new TextPanel(rect, nullptr);
+    mLogView = new LogView(textPanel);
     mLogStream = new LogStream(mLogView);
     Logger::getInstance()->registerLogStream(mLogStream);
 
