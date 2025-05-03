@@ -347,11 +347,12 @@ bool AppBase::onCreate() {
 
     UiService *uiService = UiService::create();
     ServiceProvider::setService(ServiceType::UiService, uiService);
-
+    printf("1\n");
+    UiService::setInstance(uiService);
     UiService::getInstance()->setCanvasRenderer((CanvasRenderer*)mCanvasRenderer);
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
-
+    printf("2\n");
     return true;
 }
 
