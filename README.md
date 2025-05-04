@@ -13,24 +13,23 @@ these things on Reggit or in the Discussion Forum.
 [![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
 
 # Supported Features: #
-- CMake base build environment
-- Multithreaded Renderer (Based on Active Object-Approach)
-  - 3D-Rendering
-  - 2D-Rendering
-  - Asset loading via assimp
-  - Multipass Rendering
+
+- Platform Features:
+  - CMake-based build-environment
+  - Multithreaded Render-Environment
+  - Support for Windows and Linux
+  - Supported Render APIs
+    - OpenGL-API
+- 2D-Rendering
+  - Basic shapes
+- 3D-Rendering
+  - Multipass Forward Renderer
+  - Font rendering
   - Instancing
-  - Text rendering
-  - Basic lights
+  - Asset loading via assimp
+    - More than 40 3D-formats supported thanks to Assimp
+  - Basic lighting
   - Debug renderer
-- Supported APIs
-  - OpenGL-API
-- Platform support for Windows, Linux, and more.
-- Component-based entity system
-  - Transformation components
-  - Render components
-  - Animation Rendering (experimental)
-- More than 40 3D-formats supported thanks to Assimp
 
 # Sample showcases
   - [How to get started with 3D](samples/00_HelloWorld)
