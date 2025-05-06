@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/AbstractService.h"
 
+#include <cppcore/Container/THashMap.h>
+
 namespace OSRE {
 namespace RenderBackend {
     class CanvasRenderer;
@@ -31,26 +33,48 @@ namespace RenderBackend {
 }
 
 namespace OSRE::Ui {
-        
-    class OSRE_EXPORT UiService : public Common::AbstractService {
-    public:
-        DECLARE_SINGLETON(UiService)
+    
+class Panel;
+class WidgetBase;
 
-    public:
-        UiService();
-        ~UiService();
-        void setCanvasRenderer(RenderBackend::CanvasRenderer *canvasRenderer);
-        /// @brief  Will create a new instance.
-        /// @return The new created instance.
-        static UiService *create();
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Todo!
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT UiService : public Common::AbstractService {
+public:
+    DECLARE_SINGLETON(UiService)
 
+public:
+    /// @brief 
+    UiService();
 
-    protected:
-        bool onOpen() override;
-        bool onClose() override;
-        bool onUpdate() override;
+    /// @brief 
+    ~UiService();
+    
+    /// @brief 
+    /// @param canvasRenderer 
+    void setCanvasRenderer(RenderBackend::CanvasRenderer *canvasRenderer);
+    
+    /// @brief  Will create a new instance.
+    /// @return The new created instance.
+    static UiService *create();
 
-    private:    
-        RenderBackend::CanvasRenderer *mCanvasRenderer;
-    };
-}
+    /// @brief 
+    /// @param name 
+    /// @return 
+    Panel *createPanel(const String &name, const Rect2i &rect, WidgetBase *parent = nullptr);
+
+protected:
+    bool onOpen() override;
+    bool onClose() override;
+    bool onUpdate() override;
+
+private:    
+    RenderBackend::CanvasRenderer *mCanvasRenderer;
+    using PanelMap = cppcore::THashMap<HashId, Panel*>;
+    PanelMap mPanelMap;
+};
+
+} // namespace OSRE::Ui

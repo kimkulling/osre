@@ -60,4 +60,4 @@ void Panel::onRender(CanvasRenderer *renderer) {
     }
 }
 
-}
+} // namespace OSRE::Ui

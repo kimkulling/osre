@@ -49,4 +49,4 @@ private:
     WidgetArray mWidgets;
 };
 
-}
+} // namespace OSRE::Ui

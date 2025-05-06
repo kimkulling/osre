@@ -21,13 +21,19 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UI/UiService.h"
+#include "UI/Panel.h"
+#include "Common/StringUtils.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
 namespace OSRE::Ui {
 
 IMPLEMENT_SINGLETON( ::OSRE::Ui::UiService )
 
+using namespace OSRE::RenderBackend;
+using namespace OSRE::Common;
+
 UiService::UiService() : 
-        AbstractService("UiService"), mCanvasRenderer(nullptr) {
+        AbstractService("Ui/UiService"), mCanvasRenderer(nullptr) {
     // empty
 }
 
@@ -35,20 +41,8 @@ UiService::~UiService() {
     // empty
 }
 
-void UiService::setCanvasRenderer(RenderBackend::CanvasRenderer *canvasRenderer) {
+void UiService::setCanvasRenderer(CanvasRenderer *canvasRenderer) {
     mCanvasRenderer = canvasRenderer;
-}
-
-bool UiService::onOpen() {
-    return true;
-}
-
-bool UiService::onClose() {
-    return true;
-} 
-
-bool UiService::onUpdate() {
-    return true;
 }
 
 UiService *UiService::create() {
@@ -56,4 +50,29 @@ UiService *UiService::create() {
     return uiService;
 }
 
+Panel *UiService::createPanel(const String &name, const Rect2i &rect, WidgetBase *parent) {
+    if (name.empty()) {
+        return nullptr;
+    }
+    
+    Panel *panel  = new Panel(rect, parent);
+    const HashId hashId = StringUtils::hashName(name);
+    mPanelMap.insert(hashId, panel);
+
+    return panel;
 }
+
+bool UiService::onOpen() {
+    return true;
+}
+
+bool UiService::onClose() {
+    mPanelMap.size();
+    return true;
+} 
+
+bool UiService::onUpdate() {
+    return true;
+}
+
+} // namespace OSRE::Ui
