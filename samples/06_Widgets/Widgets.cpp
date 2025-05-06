@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Properties/Settings.h"
 #include "UI/WidgetBase.h"
+#include "UI/UiService.h"
 #include "UI/Button.h"
 #include "UI/Panel.h"
 
@@ -40,7 +41,7 @@ using namespace OSRE::Common;
 
 static Ui::WidgetBase *createUi() {
     Rect2i r1(10, 10, 200, 100);
-    Ui::Panel *panel = new Ui::Panel(r1, nullptr);
+    Ui::Panel *panel = Ui::UiService::getInstance()->createPanel("root", r1, nullptr);
     Rect2i r2(20, 20, 160, 40);
     panel->addWidget(new Ui::Button("Quit", r2, panel));
     return panel;

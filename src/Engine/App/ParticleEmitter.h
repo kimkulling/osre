@@ -53,12 +53,12 @@ public:
     RenderBackend::Mesh* getMesh() const;
 
 private:
-    RenderBackend::RenderBackendService *m_rbSrv;
-    ui32 m_numPoints;
-    glm::vec3 *m_col;
-    glm::vec3 *m_pos;
-    GLushort *m_pt_indices;
-    RenderBackend::Mesh *m_ptGeo;
+    RenderBackend::RenderBackendService *mRbSrv;
+    ui32 mNumPoints;
+    glm::vec3 *mCol;
+    glm::vec3 *mPos;
+    GLushort *mPtIndices;
+    RenderBackend::Mesh *mPtGeo;
     bool mUseBounds;
     Common::AABB mBounds;
 };

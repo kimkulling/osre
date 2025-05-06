@@ -46,8 +46,7 @@ void UiService::setCanvasRenderer(CanvasRenderer *canvasRenderer) {
 }
 
 UiService *UiService::create() {
-    UiService *uiService = new UiService;
-    return uiService;
+    return new UiService;
 }
 
 Panel *UiService::createPanel(const String &name, const Rect2i &rect, WidgetBase *parent) {
@@ -56,8 +55,8 @@ Panel *UiService::createPanel(const String &name, const Rect2i &rect, WidgetBase
     }
     
     Panel *panel  = new Panel(rect, parent);
-    const HashId hashId = StringUtils::hashName(name);
-    mPanelMap.insert(hashId, panel);
+    PanelEntry entry { name, panel };
+    mPanelArray.add(entry);
 
     return panel;
 }
@@ -67,7 +66,15 @@ bool UiService::onOpen() {
 }
 
 bool UiService::onClose() {
-    mPanelMap.size();
+    if (mPanelArray.isEmpty()) {
+        return true;
+    }
+    
+    for (size_t i=0; i<mPanelArray.size(); ++i) {
+        delete mPanelArray[i].panel;
+    }
+    mPanelArray.clear();
+
     return true;
 } 
 

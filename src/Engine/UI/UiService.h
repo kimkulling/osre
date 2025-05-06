@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/AbstractService.h"
 
-#include <cppcore/Container/THashMap.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -73,8 +73,12 @@ protected:
 
 private:    
     RenderBackend::CanvasRenderer *mCanvasRenderer;
-    using PanelMap = cppcore::THashMap<HashId, Panel*>;
-    PanelMap mPanelMap;
+    struct PanelEntry {
+        String name;
+        Panel *panel;
+    };
+    using PanelArray = cppcore::TArray<PanelEntry>;
+    PanelArray mPanelArray;
 };
 
 } // namespace OSRE::Ui
