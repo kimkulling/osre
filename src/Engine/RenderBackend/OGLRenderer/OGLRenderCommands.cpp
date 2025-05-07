@@ -80,6 +80,11 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
 
     for (ui32 i = 0; i < numTextures; ++i) {
         Texture *tex = mat->getTextureStageAt(i);
+        if (tex == nullptr) {
+            osre_error(Tag, "Texture instance is nullptr.");
+            continue;
+        }
+
         if (!tex->TextureName.empty()) {
             OGLTexture *oglTexture = rb->createTexture(tex->TextureName, tex);
             if (nullptr != oglTexture) {
