@@ -20,23 +20,66 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "UI/UiService.h"
+#include "UI/Panel.h"
+#include "Common/StringUtils.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
-// The public API from the App-layer
-#include "App/AppBase.h"
-#include "App/Component.h"
-#include "App/CameraComponent.h"
-#include "App/TransformComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/AppCommon.h"
-#include "App/Project.h"
-#include "App/ServiceProvider.h"
-#include "App/AssetRegistry.h"
-#include "App/AssetBundle.h"
-#include "App/AssimpWrapper.h"
-#include "App/TAbstractCtrlBase.h"
-#include "App/TransformController.h"
-#include "App/KeyboardEventListener.h"
-#include "App/MouseEventListener.h"
-#include "App/OrbitalMouseControl.h"
+namespace OSRE::Ui {
+
+IMPLEMENT_SINGLETON( ::OSRE::Ui::UiService )
+
+using namespace OSRE::RenderBackend;
+using namespace OSRE::Common;
+
+UiService::UiService() : 
+        AbstractService("Ui/UiService"), mCanvasRenderer(nullptr) {
+    // empty
+}
+
+UiService::~UiService() {
+    // empty
+}
+
+void UiService::setCanvasRenderer(CanvasRenderer *canvasRenderer) {
+    mCanvasRenderer = canvasRenderer;
+}
+
+UiService *UiService::create() {
+    return new UiService;
+}
+
+Panel *UiService::createPanel(const String &name, const Rect2i &rect, WidgetBase *parent) {
+    if (name.empty()) {
+        return nullptr;
+    }
+    
+    Panel *panel  = new Panel(rect, parent);
+    PanelEntry entry { name, panel };
+    mPanelArray.add(entry);
+
+    return panel;
+}
+
+bool UiService::onOpen() {
+    return true;
+}
+
+bool UiService::onClose() {
+    if (mPanelArray.isEmpty()) {
+        return true;
+    }
+    
+    for (size_t i=0; i<mPanelArray.size(); ++i) {
+        delete mPanelArray[i].panel;
+    }
+    mPanelArray.clear();
+
+    return true;
+} 
+
+bool UiService::onUpdate() {
+    return true;
+}
+
+} // namespace OSRE::Ui

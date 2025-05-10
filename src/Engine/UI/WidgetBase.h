@@ -22,46 +22,77 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "RenderBackend/RenderCommon.h"
-#include "Common/TAABB.h"
-#include "Common/BaseMath.h"
+#include "Common/osre_common.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-
-namespace OSRE {
-
-// Forward declarations ---------------------------------------------------------------------------
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
-namespace App {
+namespace OSRE::Ui {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class offers some system-specific functions.
+///	@brief Todo!
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleEmitter {
+class OSRE_EXPORT WidgetBase {
 public:
-    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
-    ~ParticleEmitter();
-    void init( ui32 numPoints );
-    void update( d32 tick );
-    void setBounds(const Common::AABB& bounds);
-    RenderBackend::Mesh* getMesh() const;
+    WidgetBase(const Rect2i &rect, WidgetBase *parent);
+    virtual ~WidgetBase();
+    virtual void update();
+    virtual void render(RenderBackend::CanvasRenderer *renderer);
+    void setDirty();
+    void setClean();
+    bool isDirty() const;
+    void setRect(const Rect2i &rect);
+    const Rect2i &getRect() const;
+
+protected:
+    virtual void onUpdate() = 0;
+    virtual void onRender(RenderBackend::CanvasRenderer *renderer) = 0;
 
 private:
-    RenderBackend::RenderBackendService *mRbSrv;
-    ui32 mNumPoints;
-    glm::vec3 *mCol;
-    glm::vec3 *mPos;
-    GLushort *mPtIndices;
-    RenderBackend::Mesh *mPtGeo;
-    bool mUseBounds;
-    Common::AABB mBounds;
+    WidgetBase *mParent;
+    bool mDirty;
+    Rect2i mRect;
 };
 
-} // Namespace App
-} // Namespace OSRE
+inline WidgetBase::WidgetBase(const Rect2i &rect, WidgetBase *parent) : mParent(parent), mDirty(true), mRect(rect) {
+    // empty
+}
+
+inline WidgetBase::~WidgetBase() {
+    // empty
+}
+
+inline void WidgetBase::update() {
+    onUpdate();
+}
+
+inline void WidgetBase::render(RenderBackend::CanvasRenderer *renderer) {
+    onRender(renderer);
+}
+
+inline void WidgetBase::setDirty() {
+    mDirty = true;
+}
+
+inline void WidgetBase::setClean() {
+    mDirty = false;
+}
+
+inline bool WidgetBase::isDirty() const {
+    return mDirty;
+}
+
+inline void WidgetBase::setRect(const Rect2i &rect) {
+    if (mRect == rect) {
+        return;
+    }
+
+    mRect = rect;
+    setDirty();
+}
+
+inline const Rect2i &WidgetBase::getRect() const {
+    return mRect;
+}
+
+} // namespace OSRE::Ui

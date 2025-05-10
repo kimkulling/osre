@@ -59,7 +59,7 @@ public:
 protected:
     ///	@brief The default class constructor.
     ///	@param[in] serviceName    The server name.
-    AbstractService( const String &serviceName );
+    AbstractService(const String &serviceName);
 
     /// @brief  Will be called, when server access is opened.
     /// @return true for success, false for error.

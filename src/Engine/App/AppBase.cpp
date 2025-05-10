@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/2D/CanvasRenderer.h"
 #include "RenderBackend/MaterialBuilder.h"
-
+#include "UI/UiService.h"
 #include "App/MouseEventListener.h"
 #include "Platform/PlatformPluginFactory.h"
 
@@ -55,6 +55,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::Properties;
 using namespace ::OSRE::IO;
+using namespace ::OSRE::Ui;
 
 DECL_OSRE_LOG_MODULE(AppBase)
 
@@ -344,9 +345,14 @@ bool AppBase::onCreate() {
         return false;
     }
 
+    UiService *uiService = UiService::create();
+    ServiceProvider::setService(ServiceType::UiService, uiService);
+    printf("1\n");
+    UiService::setInstance(uiService);
+    UiService::getInstance()->setCanvasRenderer((CanvasRenderer*)mCanvasRenderer);
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
-
+    printf("2\n");
     return true;
 }
 

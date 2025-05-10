@@ -365,6 +365,21 @@ SET( threading_src
 )
 
 #==============================================================================
+# UI
+#==============================================================================
+SET(ui_src
+    UI/Button.cpp
+    UI/Button.h
+    UI/Panel.cpp
+    UI/Panel.h
+    UI/UiService.cpp
+    UI/UiService.h
+    UI/TextPanel.cpp
+    UI/TextPanel.h
+    UI/WidgetBase.h
+)
+
+#==============================================================================
 # Defined Source groups
 #==============================================================================
 SOURCE_GROUP( App                         FILES ${app_src} )
@@ -392,9 +407,8 @@ SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
 SOURCE_GROUP( Resources                   FILES ${resources_src} )
 SOURCE_GROUP( Scene                       FILES ${scene_src} )
 SOURCE_GROUP( Threading                   FILES ${threading_src} )
-SOURCE_GROUP( UI\\Common                  FILES ${ui_common_src} )
-
-SOURCE_GROUP( Documentation                    FILES ${doc_inc} )
+SOURCE_GROUP( UI                          FILES ${ui_src} )
+SOURCE_GROUP( Documentation               FILES ${doc_inc} )
 
 add_definitions( -D${USE_PLATFORM} )
 
@@ -432,6 +446,7 @@ ADD_LIBRARY( osre SHARED
         ${scene_shader_src}
     ${threading_src}
         ${threading_impl_src}
+    ${ui_src}
 )
 
 target_link_libraries ( osre cppcore zlibstatic GLEW::GLEW ${platform_libs} assimp )

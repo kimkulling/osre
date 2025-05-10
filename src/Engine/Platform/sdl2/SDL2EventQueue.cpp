@@ -190,6 +190,7 @@ bool SDL2EventHandler::update() {
                             const auto &rect = mWindow->getProperties()->mRect;
                             getRenderBackendService()->resize(mWindow->getId(), rect.getX1(), rect.getY1(), rect.width, rect.height);
                         } break;
+                        
                         case SDL_WINDOWEVENT_SHOWN:
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
                             const ui32 w = static_cast<ui32>(ev.window.data1);

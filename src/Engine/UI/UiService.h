@@ -22,46 +22,63 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "RenderBackend/RenderCommon.h"
-#include "Common/TAABB.h"
-#include "Common/BaseMath.h"
+#include "Common/AbstractService.h"
 
-#include <GL/glew.h>
-#include <GL/gl.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-
-// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
-    class RenderBackendService;
+    class CanvasRenderer;
+}
 }
 
-namespace App {
+namespace OSRE::Ui {
+    
+class Panel;
+class WidgetBase;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class offers some system-specific functions.
+///	@brief Todo!
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleEmitter {
+class OSRE_EXPORT UiService : public Common::AbstractService {
 public:
-    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
-    ~ParticleEmitter();
-    void init( ui32 numPoints );
-    void update( d32 tick );
-    void setBounds(const Common::AABB& bounds);
-    RenderBackend::Mesh* getMesh() const;
+    DECLARE_SINGLETON(UiService)
 
-private:
-    RenderBackend::RenderBackendService *mRbSrv;
-    ui32 mNumPoints;
-    glm::vec3 *mCol;
-    glm::vec3 *mPos;
-    GLushort *mPtIndices;
-    RenderBackend::Mesh *mPtGeo;
-    bool mUseBounds;
-    Common::AABB mBounds;
+public:
+    /// @brief 
+    UiService();
+
+    /// @brief 
+    ~UiService();
+    
+    /// @brief 
+    /// @param canvasRenderer 
+    void setCanvasRenderer(RenderBackend::CanvasRenderer *canvasRenderer);
+    
+    /// @brief  Will create a new instance.
+    /// @return The new created instance.
+    static UiService *create();
+
+    /// @brief 
+    /// @param name 
+    /// @return 
+    Panel *createPanel(const String &name, const Rect2i &rect, WidgetBase *parent = nullptr);
+
+protected:
+    bool onOpen() override;
+    bool onClose() override;
+    bool onUpdate() override;
+
+private:    
+    RenderBackend::CanvasRenderer *mCanvasRenderer;
+    struct PanelEntry {
+        String name;
+        Panel *panel;
+    };
+    using PanelArray = cppcore::TArray<PanelEntry>;
+    PanelArray mPanelArray;
 };
 
-} // Namespace App
-} // Namespace OSRE
+} // namespace OSRE::Ui

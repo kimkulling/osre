@@ -138,5 +138,4 @@ void SDL2Surface::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
     }
 }
 
-} // Namespace Platform
-// Namespace OSRE
+} // Namespace OSRE::Platform

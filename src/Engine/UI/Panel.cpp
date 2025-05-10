@@ -20,23 +20,44 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "Panel.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
-// The public API from the App-layer
-#include "App/AppBase.h"
-#include "App/Component.h"
-#include "App/CameraComponent.h"
-#include "App/TransformComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/AppCommon.h"
-#include "App/Project.h"
-#include "App/ServiceProvider.h"
-#include "App/AssetRegistry.h"
-#include "App/AssetBundle.h"
-#include "App/AssimpWrapper.h"
-#include "App/TAbstractCtrlBase.h"
-#include "App/TransformController.h"
-#include "App/KeyboardEventListener.h"
-#include "App/MouseEventListener.h"
-#include "App/OrbitalMouseControl.h"
+namespace OSRE::Ui {
+
+using namespace ::OSRE::RenderBackend;
+
+Panel::Panel(const Rect2i &rect, WidgetBase *parent) : WidgetBase(rect, parent) {
+    // empty
+}
+
+Panel::~Panel() {
+    // empty
+}
+
+void Panel::addWidget(WidgetBase *widget) {
+    if (nullptr == widget) {
+        return;
+    }
+
+    mWidgets.add(widget);
+}
+
+void Panel::onUpdate() {
+}
+
+void Panel::onRender(CanvasRenderer *renderer) {
+    osre_assert(renderer != nullptr);
+
+    if (isDirty()) {
+        renderer->selectLayer(0);
+        const Rect2i &r = getRect();
+        renderer->drawRect(r.x1, r.y1, r.width, r.height, true);
+        for (size_t i=0; i<mWidgets.size(); ++i) {
+            mWidgets[i]->render(renderer);
+        }
+        setClean();
+    }
+}
+
+} // namespace OSRE::Ui

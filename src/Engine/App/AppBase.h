@@ -59,13 +59,13 @@ class CameraComponent;
 class Scene;
 class AppBase;
 
-
+/// @brief Enumerator for the supported windows modes
 enum class WindowMode {
-    Invalid = -1,
-    Windowed,
-    WindowedMaximize,
-    Fullscreen,
-    Count
+    Invalid = -1,       ///< Not initialized
+    Windowed,           ///< Common window
+    WindowedMaximize,   ///< Maximized window
+    Fullscreen,         ///< Fullscreen window
+    Count               ///< Number of modes
 };
 
 enum class WindowType {
@@ -229,7 +229,7 @@ public:
     /// @return true if successful,  false if not.
     virtual bool onDestroy();
 
-    /// @brief  The onRener callback.
+    /// @brief  The onRender callback.
     virtual void onRender();
 
     /// @brief  The onUpdate callback, override this for your own update stuff.

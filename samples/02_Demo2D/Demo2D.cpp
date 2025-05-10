@@ -136,20 +136,20 @@ protected:
     
     /// @brief Our render update.
     void onUpdate() override {
-        auto *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        auto *rbService = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         
-        rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSerive->beginRenderBatch("b1");
-        rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
-        rbSerive->endRenderBatch();
-        rbSerive->endPass();
+        rbService->beginPass(RenderPass::getPassNameById(RenderPassId));
+        rbService->beginRenderBatch("b1");
+        rbService->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+        rbService->endRenderBatch();
+        rbService->endPass();
 
-        rbSerive->beginPass(RenderPass::getPassNameById(UiPassId));
-        rbSerive->beginRenderBatch("2d.b1");
-        rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
-        mCanvasRenderer->render(rbSerive);
-        rbSerive->endRenderBatch();
-        rbSerive->endPass();
+        rbService->beginPass(RenderPass::getPassNameById(UiPassId));
+        rbService->beginRenderBatch("2d.b1");
+        rbService->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+        mCanvasRenderer->render(rbService);
+        rbService->endRenderBatch();
+        rbService->endPass();
 
         AppBase::onUpdate();
     }

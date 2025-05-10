@@ -29,8 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/RenderBackendService.h"
 #include "RenderBackend/RenderCommon.h"
 #include "RenderBackend/TransformMatrixBlock.h"
-#include "App/MouseEventListener.h"
-#include "App/OrbitalMouseControl.h"
 
 #include <assimp/scene.h>
 

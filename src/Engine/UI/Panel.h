@@ -22,21 +22,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-// The public API from the App-layer
-#include "App/AppBase.h"
-#include "App/Component.h"
-#include "App/CameraComponent.h"
-#include "App/TransformComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/AppCommon.h"
-#include "App/Project.h"
-#include "App/ServiceProvider.h"
-#include "App/AssetRegistry.h"
-#include "App/AssetBundle.h"
-#include "App/AssimpWrapper.h"
-#include "App/TAbstractCtrlBase.h"
-#include "App/TransformController.h"
-#include "App/KeyboardEventListener.h"
-#include "App/MouseEventListener.h"
-#include "App/OrbitalMouseControl.h"
+#include "WidgetBase.h"
+
+#include <cppcore/Container/TArray.h>
+
+namespace OSRE::Ui {
+
+using WidgetArray = cppcore::TArray<WidgetBase*>;
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Todo!
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT Panel : public WidgetBase {
+public:
+    Panel(const Rect2i &rect, WidgetBase *parent = nullptr);
+    ~Panel() override;
+    void addWidget(WidgetBase *widget);
+
+protected:
+    void onUpdate() override;
+    void onRender(RenderBackend::CanvasRenderer *renderer) override;
+
+private:
+    WidgetArray mWidgets;
+};
+
+} // namespace OSRE::Ui

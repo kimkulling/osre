@@ -20,23 +20,41 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "WidgetBase.h"
 
-// The public API from the App-layer
-#include "App/AppBase.h"
-#include "App/Component.h"
-#include "App/CameraComponent.h"
-#include "App/TransformComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/AppCommon.h"
-#include "App/Project.h"
-#include "App/ServiceProvider.h"
-#include "App/AssetRegistry.h"
-#include "App/AssetBundle.h"
-#include "App/AssimpWrapper.h"
-#include "App/TAbstractCtrlBase.h"
-#include "App/TransformController.h"
-#include "App/KeyboardEventListener.h"
-#include "App/MouseEventListener.h"
-#include "App/OrbitalMouseControl.h"
+namespace OSRE::Ui {
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Todo!
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT Button : public WidgetBase {
+public:
+    Button(const String &label, const Rect2i &rect, WidgetBase *parent = nullptr);
+    ~Button() override;
+    void setLabel(const String &text);
+    const String &getLabel() const;
+
+protected:
+    void onUpdate() override;
+    void onRender(RenderBackend::CanvasRenderer *renderer) override;
+
+private:
+    String mLabel;
+};
+
+inline void Button::setLabel(const String &text) {
+    if (text == mLabel) {
+        return;
+    }
+
+    mLabel = text;
+    setDirty();
+}
+
+inline const String &Button::getLabel() const {
+    return mLabel;
+}
+
+} // namespace OSRE::Ui

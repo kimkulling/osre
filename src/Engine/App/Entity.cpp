@@ -39,10 +39,8 @@ DECL_OSRE_LOG_MODULE(Entity)
 Entity::Entity(const String &name, Ids &ids, Scene *world) :
         Object(name),
         mRenderComponent(nullptr),
-        mComponentArray(),
         mTransformNode(nullptr),
         mIds(ids),
-        mAabb(),
         mOwner(world) {
     mComponentArray.resize(Component::getIndex(ComponentType::Count));
     mComponentArray.set(nullptr);

@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Common/osre_common.h"
 #include "Platform/AbstractWindow.h"
+#include "UI/TextPanel.h"
+#include "UI/UiService.h"
 #include <assimp/Logger.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
@@ -42,7 +44,8 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Modules;
 using namespace ::OSRE::Platform;
-                                
+using namespace ::OSRE::Ui;
+
 static constexpr int MarginWidth  = 20;
 static constexpr int MarginHeight = 300;
 
@@ -67,35 +70,32 @@ static constexpr int MarginHeight = 300;
  */
 class LogView final : public IModuleView {
 public:
-    explicit LogView(AbstractWindow *window) :
+    explicit LogView(TextPanel *textPanel) :
             IModuleView("logview" ),
-            mText() {
-        // empty
+            mTextPanel(textPanel) {
+        osre_assert(textPanel != nullptr);
     }
 
     ~LogView() override = default;
 
     void clear() {
-        mText.clear();
-        onUpdate();
+        osre_assert(mTextPanel != nullptr);
+
+        mTextPanel->clear();
     }
 
     void addEntry(const String &text) {
-        mText.append(text);
-        onUpdate();
+        osre_assert(mTextPanel != nullptr);
+
+        mTextPanel->addLine(text);
     }
 
 protected:
     void onCreate(const Rect2ui &rect) override {
     }
 
-    void onUpdate() override {
-        std::cout << mText << std::endl;
-        mText.clear();
-    }
-
 private:
-    String mText;
+    TextPanel *mTextPanel;
 };
 
 class LogStream final : public AbstractLogStream {
@@ -163,17 +163,17 @@ LogModule::~LogModule() {
 
 bool LogModule::onLoad() {
     const AppBase *parentApp = getParentApp();
-    Platform::AbstractWindow *rootWindow = parentApp->getRootWindow();
+    AbstractWindow *rootWindow = parentApp->getRootWindow();
     if (nullptr == rootWindow) {
         return true;
     }
 
-    mLogView = new LogView(rootWindow);
-    Rect2ui rect;
-    rootWindow->getWindowsRect(rect);
-    mLogView->create(rect);
+    UiService *uiSrv = ServiceProvider::getService<UiService>(ServiceType::UiService);
+    Rect2i rect(10, 10, 100, 200);
+    TextPanel *textPanel = new TextPanel(rect, nullptr);
+    mLogView = new LogView(textPanel);
     mLogStream = new LogStream(mLogView);
-    Common::Logger::getInstance()->registerLogStream(mLogStream);
+    Logger::getInstance()->registerLogStream(mLogStream);
 
     Assimp::DefaultLogger::create("log.txt");
     mAssimpLogStream = new AssimpLogStream(mLogView);

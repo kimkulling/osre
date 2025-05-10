@@ -20,23 +20,39 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "Button.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
-// The public API from the App-layer
-#include "App/AppBase.h"
-#include "App/Component.h"
-#include "App/CameraComponent.h"
-#include "App/TransformComponent.h"
-#include "App/Entity.h"
-#include "App/Scene.h"
-#include "App/AppCommon.h"
-#include "App/Project.h"
-#include "App/ServiceProvider.h"
-#include "App/AssetRegistry.h"
-#include "App/AssetBundle.h"
-#include "App/AssimpWrapper.h"
-#include "App/TAbstractCtrlBase.h"
-#include "App/TransformController.h"
-#include "App/KeyboardEventListener.h"
-#include "App/MouseEventListener.h"
-#include "App/OrbitalMouseControl.h"
+namespace OSRE::Ui {
+
+using namespace ::OSRE::RenderBackend;
+
+Button::Button(const String &label, const Rect2i &rect, WidgetBase *parent) : 
+		WidgetBase(rect, parent), mLabel(label) {
+    setDirty();
+}
+
+Button::~Button() {
+    // empty
+}
+
+void Button::onUpdate() {
+    // empty
+}
+
+void Button::onRender(CanvasRenderer *renderer) {
+    osre_assert(renderer != nullptr);
+
+    if (isDirty()) {
+        renderer->selectLayer(1);
+        renderer->setColor(Color4(0.5f, 0.5f, 0.5f, 1.0f));
+        const Rect2i &r = getRect();
+        renderer->drawRect(r.x1, r.y1, r.width, r.height, true);
+        if (!mLabel.empty()) {
+            renderer->drawText(r.x1+1, r.y1+1, 40, mLabel);
+        }
+        setClean();
+    }
+}
+
+} // namespace OSRE::Ui
