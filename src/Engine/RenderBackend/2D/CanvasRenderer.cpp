@@ -37,11 +37,84 @@ using namespace cppcore;
 
 DECL_OSRE_LOG_MODULE(CanvasRenderer)
 
+static constexpr size_t NumQuadVert = 4;
+static constexpr ui32 NumQuadIndices = 6;
+
 // will rescale coordinates from absolute coordinates into model space coordinates
 inline void mapCoordinates(const Rect2i &resolution, i32 x, i32 y, f32 &xOut, f32 &yOut) {
-    xOut = (2.0f * static_cast<f32>(x)  / static_cast<f32>(resolution.width)) - 1.0f;
+    xOut = (2.0f * static_cast<f32>(x) / static_cast<f32>(resolution.width)) - 1.0f;
     yOut = (2.0f * static_cast<f32>(y) / static_cast<f32>(resolution.height)) - 1.0f;
     yOut = -1.0f * yOut;
+}
+
+static void generateTextBoxVerticesAndIndices(const Rect2i &resolution, i32 x, i32 y, i32 textSize, i32 layer, const String &text,
+        Vec3Array &positions, Vec3Array &colors, Vec2Array &tex0, cppcore::TArray<ui16> &textIndices) {
+    using namespace ::OSRE::Common;
+
+    const size_t NumTextVerts = MeshUtilities::getNumTextVerts(text);
+    positions.resize(NumTextVerts);
+    colors.resize(NumTextVerts);
+    tex0.resize(NumTextVerts);
+    textIndices.resize(MeshUtilities::getNumTextIndices(text));
+
+    const f32 invCol = 1.f / 16.f;
+    const f32 invRow = 1.f / 16.f;
+    ui32 textCol(0), textRow(0);
+    for (size_t i = 0; i < text.size(); i++) {
+        const i32 colOffset = textCol * textSize;
+        const c8 ch = text[i];
+        if (Tokenizer::isLineBreak(ch)) {
+            textCol = 0;
+            ++textRow;
+            continue;
+        }
+
+        const ui16 VertexOffset = static_cast<ui16>(i) * static_cast<ui16>(NumQuadVert);
+        const i32 rowHeight = -1 * textRow * textSize;
+
+        mapCoordinates(resolution, x + colOffset, y + rowHeight, positions[VertexOffset + 0].x, positions[VertexOffset + 0].y);
+        positions[VertexOffset + 0].z = static_cast<f32>(-layer);
+
+        mapCoordinates(resolution, x + colOffset, y + textSize + rowHeight, positions[VertexOffset + 1].x, positions[VertexOffset + 1].y);
+        positions[VertexOffset + 1].z = static_cast<f32>(-layer);
+
+        mapCoordinates(resolution, x + textSize + colOffset, y + rowHeight, positions[VertexOffset + 2].x, positions[VertexOffset + 2].y);
+        positions[VertexOffset + 2].z = static_cast<f32>(-layer);
+
+        mapCoordinates(resolution, x + textSize + colOffset, y + textSize + rowHeight, positions[VertexOffset + 3].x, positions[VertexOffset + 3].y);
+        positions[VertexOffset + 3].z = static_cast<f32>(-layer);
+
+        const i32 column = (ch) % 16;
+        const i32 row = (ch) / 16;
+        const f32 s = column * invCol;
+        const f32 t = (row + 1) * invRow;
+
+        tex0[VertexOffset + 0].x = s;
+        tex0[VertexOffset + 0].y = 1.0f - t;
+
+        tex0[VertexOffset + 1].x = s;
+        tex0[VertexOffset + 1].y = 1.0f - t + 1.0f / 16.0f;
+
+        tex0[VertexOffset + 2].x = s + 1.0f / 16.0f;
+        tex0[VertexOffset + 2].y = 1.0f - t;
+
+        tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
+        tex0[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
+
+        colors[VertexOffset + 0] = glm::vec3(0, 0, 0);
+        colors[VertexOffset + 1] = glm::vec3(0, 0, 0);
+        colors[VertexOffset + 2] = glm::vec3(0, 0, 0);
+        colors[VertexOffset + 3] = glm::vec3(0, 0, 0);
+        const ui32 IndexOffset = i * NumQuadIndices;
+        textIndices[0 + IndexOffset] = 0 + VertexOffset;
+        textIndices[1 + IndexOffset] = 2 + VertexOffset;
+        textIndices[2 + IndexOffset] = 1 + VertexOffset;
+
+        textIndices[3 + IndexOffset] = 1 + VertexOffset;
+        textIndices[4 + IndexOffset] = 2 + VertexOffset;
+        textIndices[5 + IndexOffset] = 3 + VertexOffset;
+        ++textCol;
+    }
 }
 
 inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out) {
@@ -146,13 +219,7 @@ void dealloc(DrawCmd *cmd) {
 }
 
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
-        mDirty(true),
-        mPenColor(1, 1, 1, 0),
-        mActiveLayer(0),
-        mNumLayers(numLayers),
-        mFont(nullptr),
-        mMesh(nullptr),
-        mText(nullptr) {
+        mDirty(true), mPenColor(1, 1, 1, 0), mActiveLayer(0), mNumLayers(numLayers) {
     setResolution(x, y, w, h);
 }
 
@@ -432,15 +499,15 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
         usedSize = mFont->Size;
     }
 
-    f32 x_model = 0.0f;
-    f32 y_model = 0.0f;
-    mapCoordinates(mResolution, x, y, x_model, y_model);
+    //f32 x_model = 0.0f;
+    //f32 y_model = 0.0f;
+    //mapCoordinates(mResolution, x, y, x_model, y_model);
     Vec3Array positions;
     Vec3Array colors;
     Vec2Array tex0;
     TArray<ui16> indices;
-    const f32 fontSize = static_cast<f32>(usedSize) / static_cast<f32>(mResolution.getWidth());
-    MeshUtilities::generateTextBoxVerticesAndIndices(x_model, y_model, fontSize, text, positions, colors, tex0, indices);
+    //const f32 fontSize = static_cast<f32>(usedSize) / static_cast<f32>(mResolution.getWidth());
+    generateTextBoxVerticesAndIndices(mResolution, x, y, usedSize, mActiveLayer+1, text, positions, colors, tex0, indices);
 
     DrawCmd *drawCmd = alloc();
     drawCmd->PrimType = PrimitiveType::TriangleList;

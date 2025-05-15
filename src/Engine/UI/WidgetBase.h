@@ -43,6 +43,9 @@ public:
     bool isDirty() const;
     void setRect(const Rect2i &rect);
     const Rect2i &getRect() const;
+    void setActive();
+    void setInactive();
+    bool isActive() const;
 
 protected:
     virtual void onUpdate() = 0;
@@ -51,10 +54,12 @@ protected:
 private:
     WidgetBase *mParent;
     bool mDirty;
+    bool mActive;
     Rect2i mRect;
 };
 
-inline WidgetBase::WidgetBase(const Rect2i &rect, WidgetBase *parent) : mParent(parent), mDirty(true), mRect(rect) {
+inline WidgetBase::WidgetBase(const Rect2i &rect, WidgetBase *parent) :
+        mParent(parent), mDirty(true), mActive(true), mRect(rect) {
     // empty
 }
 
@@ -93,6 +98,18 @@ inline void WidgetBase::setRect(const Rect2i &rect) {
 
 inline const Rect2i &WidgetBase::getRect() const {
     return mRect;
+}
+
+inline void WidgetBase::setActive() {
+    mActive = true;
+}
+
+inline void WidgetBase::setInactive() {
+    mActive = false;
+}
+
+inline bool WidgetBase::isActive() const {
+    return mActive;
 }
 
 } // namespace OSRE::Ui
