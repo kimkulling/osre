@@ -499,15 +499,11 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
         usedSize = mFont->Size;
     }
 
-    //f32 x_model = 0.0f;
-    //f32 y_model = 0.0f;
-    //mapCoordinates(mResolution, x, y, x_model, y_model);
     Vec3Array positions;
     Vec3Array colors;
     Vec2Array tex0;
     TArray<ui16> indices;
-    //const f32 fontSize = static_cast<f32>(usedSize) / static_cast<f32>(mResolution.getWidth());
-    generateTextBoxVerticesAndIndices(mResolution, x, y, usedSize, mActiveLayer+1, text, positions, colors, tex0, indices);
+    generateTextBoxVerticesAndIndices(mResolution, x, y, usedSize, mActiveLayer-2, text, positions, colors, tex0, indices);
 
     DrawCmd *drawCmd = alloc();
     drawCmd->PrimType = PrimitiveType::TriangleList;
@@ -522,7 +518,7 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
         drawCmd->Vertices[posIndex].color0 = mPenColor.toVec3();
         drawCmd->Vertices[posIndex].position.x = positions[posIndex].x;
         drawCmd->Vertices[posIndex].position.y = positions[posIndex].y;
-        drawCmd->Vertices[posIndex].position.z = static_cast<f32>(-mActiveLayer);
+        drawCmd->Vertices[posIndex].position.z = positions[posIndex].z;
         drawCmd->Vertices[posIndex].tex0.x = tex0[posIndex].x;
         drawCmd->Vertices[posIndex].tex0.y = tex0[posIndex].y;
     }
