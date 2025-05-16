@@ -163,9 +163,9 @@ private:
     Rect2i mResolution;
     i32 mActiveLayer;
     i32 mNumLayers;
-    Font *mFont;
-    Mesh *mMesh;
-    Mesh *mText;
+    Font *mFont = nullptr;
+    Mesh *mMesh = nullptr;
+    Mesh *mText = nullptr;
 };
 
 inline Font* CanvasRenderer::getActiveFont() const {
