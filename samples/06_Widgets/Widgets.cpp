@@ -33,6 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "UI/UiService.h"
 #include "UI/Button.h"
 #include "UI/Panel.h"
+#include "UI/Text.h"
 
 using namespace OSRE;
 using namespace OSRE::App;
@@ -40,10 +41,12 @@ using namespace OSRE::RenderBackend;
 using namespace OSRE::Common;
 
 static Ui::WidgetBase *createUi() {
-    Rect2i r1(10, 10, 200, 100);
+    Rect2i r1(100, 100, 400, 400);
     Ui::Panel *panel = Ui::UiService::getInstance()->createPanel("root", r1, nullptr);
-    Rect2i r2(20, 20, 160, 40);
-    panel->addWidget(new Ui::Button("Quit", r2, panel));
+    Rect2i r2(120, 120, 160, 40);
+
+    Ui::Text *text = new Ui::Text("Hello World", r2, panel);
+    panel->addWidget(text);
     return panel;
 }
 
@@ -61,6 +64,7 @@ public:
 
     /// @brief
     WidgetsApp(int argc, char *argv[]) : AppBase(argc, const_cast<const char **>(argv)) {
+        // empty
     }
 
     /// The class destructor.

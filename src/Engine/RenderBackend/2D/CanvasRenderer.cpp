@@ -232,6 +232,7 @@ CanvasRenderer::~CanvasRenderer() {
 
 void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
+        osre_error(Tag, "Render-Backend is nullptr.");
         return;
     }
 
@@ -243,6 +244,7 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
 
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {
+        osre_error(Tag, "Render-Backend is nullptr.");
         return;
     }
 
@@ -503,6 +505,10 @@ void CanvasRenderer::drawText(i32 x, i32 y, i32 size, const String &text) {
     Vec3Array colors;
     Vec2Array tex0;
     TArray<ui16> indices;
+    f32 xModel{ 0.f }, yModel{ 0.f };
+    mapCoordinates(mResolution, x, y, xModel, yModel);
+
+    //MeshUtilities::generateTextBoxVerticesAndIndices(xModel, yModel, usedSize, text, positions, colors, tex0, indices);
     generateTextBoxVerticesAndIndices(mResolution, x, y, usedSize, mActiveLayer-2, text, positions, colors, tex0, indices);
 
     DrawCmd *drawCmd = alloc();

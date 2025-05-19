@@ -20,37 +20,43 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "Button.h"
-#include "RenderBackend/2D/CanvasRenderer.h"
+#include "UI/Text.h"
 
 namespace OSRE::Ui {
 
-using namespace ::OSRE::RenderBackend;
-
-Button::Button(const String &label, const Rect2i &rect, WidgetBase *parent) : 
-		WidgetBase(rect, parent), mText(nullptr) {
+Text::Text(const String &label, const Rect2i &rect, WidgetBase *parent) :
+        WidgetBase(rect, parent), mLabel(label) {
     setDirty();
-    if (!label.empty()) {
-        setLabel(label);
-    }
 }
 
-Button::~Button() {
-    delete mText;
-}
-
-void Button::onUpdate() {
+Text::~Text() {
     // empty
 }
 
-void Button::onRender(CanvasRenderer *renderer) {
+void Text::setLabel(const String &text) {
+    if (text == mLabel) {
+        return;
+    }
+    mLabel = text;
+    setDirty();
+}
+
+const String &Text::getLabel() const {
+    return mLabel;
+}
+
+void Text::onUpdate() {
+    // empty
+}
+
+void Text::onRender(RenderBackend::CanvasRenderer *renderer) {
     osre_assert(renderer != nullptr);
 
     if (isDirty()) {
         renderer->selectLayer(1);
         renderer->setColor(Color4(0.5f, 0.5f, 0.5f, 1.0f));
         const Rect2i &r = getRect();
-        renderer->drawRect(r.x1, r.y1, r.width, r.height, true);
+        renderer->drawText(r.x1 + 1, r.y1 + 1, 40, mLabel);
         setClean();
     }
 }

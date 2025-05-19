@@ -21,8 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "WidgetBase.h"
+#include "UI/Text.h"
 
-namespace OSRE::Ui {
+ namespace OSRE::Ui {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -41,20 +42,24 @@ protected:
     void onRender(RenderBackend::CanvasRenderer *renderer) override;
 
 private:
-    String mLabel;
+    Text *mText;
 };
 
 inline void Button::setLabel(const String &text) {
-    if (text == mLabel) {
+    if (mText == nullptr) {
+        mText = new Text(text, getRect(), this);
         return;
     }
-
-    mLabel = text;
-    setDirty();
+    
+    mText->setLabel(text);
 }
 
 inline const String &Button::getLabel() const {
-    return mLabel;
+    if (mText == nullptr) {
+        return String();
+    }
+    
+    return mText->getLabel();
 }
 
 } // namespace OSRE::Ui

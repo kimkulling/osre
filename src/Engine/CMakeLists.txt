@@ -374,6 +374,8 @@ SET(ui_src
     UI/Panel.h
     UI/UiService.cpp
     UI/UiService.h
+    UI/Text.cpp
+    UI/Text.h
     UI/TextPanel.cpp
     UI/TextPanel.h
     UI/WidgetBase.h
