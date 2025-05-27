@@ -47,6 +47,16 @@ class RenderComponent;
 class AppBase;
 class Scene;
 
+
+template<class T>
+class System {
+public:
+    using EntityId = guid;
+
+    void registerEntity(EntityId id, T &data);
+    void update();
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///

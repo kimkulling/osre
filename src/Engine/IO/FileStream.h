@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "IO/Stream.h"
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -77,5 +76,4 @@ private:
     FILE *mFile = nullptr;
 };
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

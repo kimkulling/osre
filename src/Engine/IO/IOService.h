@@ -22,14 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "IO/IOCommon.h"
 #include "Common/AbstractService.h"
+#include "IO/AbstractFileSystem.h"
 #include "IO/Stream.h"
 
 #include <map>
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -48,24 +47,24 @@ public:
     ~IOService();
 
     ///	@brief	A new file system will be mounted using the given schema.
-    ///	@param	name		[in] The name of the new file system.
-    ///	@param	pFileSystem	[in] A pointer showing to the new file system instance.
-    void mountFileSystem( const String &name, AbstractFileSystem *pFileSystem );
+    ///	@param	mountPoint  [in] The name of the new file system.
+    ///	@param	pFileSystem [in] A pointer showing to the new file system instance.
+    void mountFileSystem(const String &mountPoint, AbstractFileSystem *pFileSystem);
 
     ///	@brief	A mounted file system will be unmounted.
-    ///	@param	name		[in] The name of the mounted file system.
+    ///	@param	mountPoint  [in] The name of the mounted file system.
     ///	@param	pFileSystem	[in] A pointer showing to the mounted file system instance.
-    void umountFileSystem( const String &name, AbstractFileSystem *pFileSystem );
+    void umountFileSystem(const String &mountPoint, AbstractFileSystem *pFileSystem);
 
     /// @brief  A new stream will be opened, the corresponding file system will be used.
     /// @param  file        [in] The file name as an Uri.
     /// @param  mode        [in] The access mode.
     /// @return A pointer showing to the stream or nullptr in case of an error.
-    Stream *openStream( const Uri &file, Stream::AccessMode mode );
+    Stream *openStream(const Uri &file, Stream::AccessMode mode);
     
     /// @brief  Will close a opened stream.
     /// @param  stream      [in] The pointer to the stream pointer, will be nullptr afterwards.
-    void closeStream( Stream **stream );
+    void closeStream(Stream **stream);
 
     ///	@brief	Returns the assigned file system to a schema.
     ///	@param	schema		[in] The schema description of the mounted file system.
@@ -99,5 +98,4 @@ private:
     MountedMap mMountedMap;
 };
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

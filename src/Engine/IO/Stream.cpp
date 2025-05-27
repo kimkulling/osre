@@ -22,8 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "IO/Stream.h"
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 Stream::Stream() noexcept :
         mUri(), mAccessMode() {
@@ -131,5 +130,5 @@ bool Stream::close() {
     return false;
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO
+

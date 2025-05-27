@@ -22,11 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "IO/IOCommon.h"
+#include "Common/osre_common.h"
 #include "IO/Uri.h"
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -65,7 +64,7 @@ public:
     ///	@brief	The class constructor with the uri and the access type.
     ///	@param	uri				[in] Describes the location of the object to access.
     ///	@param	mode        	[in] The requested access mode.
-    Stream( const Uri &uri, AccessMode mode );
+    Stream(const Uri &uri, AccessMode mode);
 
     ///	@brief	The class destructor, virtual.
     virtual ~Stream() = default;
@@ -185,5 +184,4 @@ public:
     AccessMode mAccessMode;
 };
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

@@ -22,14 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "IO/IOCommon.h"
+#include "Common/osre_common.h"
 #include "IO/Stream.h"
 #include <cppcore/Container/TArray.h>
 
 #include <map>
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 // Forward declarations
 class Uri;
@@ -128,5 +127,4 @@ inline void AbstractFileSystem::normalizeFilename( String &name ) {
     }
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO
