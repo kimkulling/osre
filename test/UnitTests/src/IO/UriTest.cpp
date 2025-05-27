@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "IO/Uri.h"
 
-namespace OSRE {
-namespace UnitTest {
+namespace OSRE::UnitTest {
 
 using namespace ::OSRE::IO;
 
@@ -33,10 +32,10 @@ class UriTest : public ::testing::Test {
   // empty
 };
 
-static const String UriInit = "file://c:/texture.jpg";
+static constexpr c8 UriInit[] = "file://c:/texture.jpg";
 
 TEST_F( UriTest, createTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
         Uri uri1;
         Uri uri2( UriInit );
@@ -47,28 +46,27 @@ TEST_F( UriTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
-TEST_F( UriTest, constructFromCompsTest ) {
+TEST_F(UriTest, constructFromCompsTest) {
     Uri uri1;
-    const String Scheme   = "file";
+    const Uri::SchemeType type = Uri::FileScheme;
     const String path     = "assets/Textures/Fonts/buildin_arial.bmp";
     const String resource = "buildin_arial.bmp";
-    String result = uri1.constructFromComps( Scheme, path, resource );
-    EXPECT_EQ( "file://assets/Textures/Fonts/buildin_arial.bmp", result );
+    String result = uri1.constructFromComps(type, path, resource);
+    EXPECT_EQ("file://assets/Textures/Fonts/buildin_arial.bmp", result);
 }
 
-TEST_F( UriTest, parseTest ) {
-    Uri uri( UriInit );
+TEST_F(UriTest, parseTest) {
+    Uri uri(UriInit);
     EXPECT_TRUE( uri.isValid() );
 
     uri.clear();
     EXPECT_TRUE( uri.isEmpty() );
 
-    uri.setScheme( "file://" );
+    uri.setScheme(Uri::FileScheme);
     uri.setPath( "assets/Textures/Fonts/" );
     uri.setResource( "buildin_arial.bmp" );
     bool ok = uri.parse();
     EXPECT_TRUE( ok );
 }
 
-} // Namespace UnitTest
-} // Namespace OSRE
+} // namespace OSRE::UnitTest

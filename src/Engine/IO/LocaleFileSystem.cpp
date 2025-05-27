@@ -34,8 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include <string.h>
 #endif
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 using namespace ::OSRE::Common;
 using namespace ::cppcore;
@@ -138,5 +137,4 @@ String LocaleFileSystem::getWorkingDirectory() {
     return workingDir;
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // namespace OSRE::IO

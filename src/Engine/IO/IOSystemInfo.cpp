@@ -31,8 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  include <unistd.h>
 #endif
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 IOSystemInfo::IOSystemInfo() {
     // empty
@@ -73,5 +72,4 @@ String IOSystemInfo::getCurrentDirectory() {
     return currentDir;
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

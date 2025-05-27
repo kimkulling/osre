@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "IO/AbstractFileSystem.h"
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -55,5 +54,4 @@ private:
 	StreamMap m_FileMap;
 };
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

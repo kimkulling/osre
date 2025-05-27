@@ -32,8 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    include <unistd.h>
 #endif // OSRE_WINDOWS
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 bool Directory::exists(const String &dir) {
     struct stat info;
@@ -147,5 +146,4 @@ bool Directory::getFileList(const String &absPath, FileList &files) {
     return true;
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

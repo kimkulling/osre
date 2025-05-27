@@ -25,10 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "IO/LocaleFileSystem.h"
 
-IMPLEMENT_SINGLETON( ::OSRE::IO::IOService )
+IMPLEMENT_SINGLETON(::OSRE::IO::IOService)
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 using namespace OSRE::Common;
 
@@ -36,8 +35,6 @@ static constexpr c8 Tag[] = "IOService";
 
 IOService::IOService() : AbstractService("io/ioserver"), mMountedMap() {
     CREATE_SINGLETON( IOService );
-
-//    mMountedMap["file"] = new LocaleFileSystem();
 }
 
 IOService::~IOService() {
@@ -46,7 +43,7 @@ IOService::~IOService() {
 
 bool IOService::onOpen() {
     // create the locale file system
-    AbstractFileSystem *pFileSystem( nullptr );    
+    AbstractFileSystem *pFileSystem{ nullptr };
     pFileSystem = new LocaleFileSystem;
     mountFileSystem( pFileSystem->getSchema(), pFileSystem );
 
@@ -54,9 +51,15 @@ bool IOService::onOpen() {
 }
 
 bool IOService::onClose() {
+    if (mMountedMap.empty()) {
+        return true;
+    }
+
     for (MountedMap::iterator it = mMountedMap.begin(); it != mMountedMap.end(); ++it) {
         delete it->second;
     }
+    mMountedMap.clear();
+    
     return true;
 }
 
@@ -64,12 +67,12 @@ bool IOService::onUpdate() {
     return true;
 }
 
-void IOService::mountFileSystem( const String &schema, AbstractFileSystem *fileSystem ) {
-    mMountedMap[ schema ] = fileSystem;
+void IOService::mountFileSystem(const String &mountPoint, AbstractFileSystem *fileSystem) {
+    mMountedMap[mountPoint] = fileSystem;
 }
 
-void IOService::umountFileSystem( const String &schema, AbstractFileSystem *fileSystem ) {
-    MountedMap::iterator it = mMountedMap.find(schema);
+void IOService::umountFileSystem(const String &mountPoint, AbstractFileSystem *fileSystem) {
+    MountedMap::iterator it = mMountedMap.find(mountPoint);
     if ( mMountedMap.end() == it ) {
         return;
     }
@@ -79,7 +82,7 @@ void IOService::umountFileSystem( const String &schema, AbstractFileSystem *file
 }
 
 Stream *IOService::openStream(const Uri &file, Stream::AccessMode mode) {
-    if (AbstractFileSystem *fs = getFileSystem(file.getScheme()); fs != nullptr) {
+    if (auto *fs = getFileSystem(Uri::schemeEnumToStr(file.getScheme())); fs != nullptr) {
         return fs->open( file, mode );
     }
 
@@ -97,10 +100,9 @@ void IOService::closeStream( Stream **ppStream ) {
         return;
     }
     
-    const String &schema( (*ppStream)->getUri().getScheme() );
-    AbstractFileSystem *pFS = getFileSystem( schema );
-    if (pFS != nullptr) {
-        pFS->close( ppStream );
+    const String &schema = Uri::schemeEnumToStr((*ppStream)->getUri().getScheme());
+    if (auto *fs = getFileSystem(schema); fs != nullptr) {
+        fs->close( ppStream );
     }
 }
 
@@ -109,8 +111,7 @@ AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
         return nullptr;
     }
 
-    MountedMap::const_iterator it = mMountedMap.find( schema );
-    if ( mMountedMap.end() != it ) {
+    if (auto it = mMountedMap.find(schema); mMountedMap.end() != it) {
         return it->second;
     } 
 
@@ -119,7 +120,7 @@ AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
 
 bool IOService::fileExists( const Uri &file ) const {
     bool exists = false;
-    AbstractFileSystem *fs = this->getFileSystem( file.getScheme() );
+    AbstractFileSystem *fs = this->getFileSystem(Uri::schemeEnumToStr(file.getScheme()));
     if (fs != nullptr) {
         exists = fs->fileExist(file);
     }
@@ -131,5 +132,4 @@ IOService *IOService::create() {
     return new IOService;
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

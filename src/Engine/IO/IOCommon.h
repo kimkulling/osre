@@ -23,12 +23,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
-
-namespace OSRE {
-namespace IO {
-
-class AbstractFileSystem;
-class Uri;
-
-} // Namespace IO
-} // Namespace OSRE
+#include "IO/Stream.h"
+#include "IO/AbstractFileSystem.h"
+#include "IO/Directory.h"
+#include "IO/File.h"
+#include "IO/IOService.h"
+#include "IO/IOSystemInfo.h"
+#include "IO/LocaleFileSystem.h"
+#include "IO/Uri.h"

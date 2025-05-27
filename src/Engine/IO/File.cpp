@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "IO/File.h"
 #include <cstdio>
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 bool File::exists(const String &filename) {
     bool exists = false;
@@ -45,5 +44,4 @@ bool File::exists(const String &filename) {
     return exists;
 }
 
-} // namespace IO
-} // namespace OSRE
+} // namespace OSRE::IO

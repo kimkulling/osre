@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "IO/IOCommon.h"
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -49,5 +48,4 @@ public:
 	static String getCurrentDirectory();
 };
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

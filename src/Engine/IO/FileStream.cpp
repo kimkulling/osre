@@ -26,8 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/stat.h>
 #include <sys/types.h>
 
-namespace OSRE {
-namespace IO {
+namespace OSRE::IO {
 
 FileStream::FileStream(const Uri &uri, AccessMode reqAccess) : Stream(uri, reqAccess) {
     // empty
@@ -198,5 +197,4 @@ bool FileStream::isOpen() const {
     return (mFile != nullptr);
 }
 
-} // Namespace IO
-} // Namespace OSRE
+} // Namespace OSRE::IO

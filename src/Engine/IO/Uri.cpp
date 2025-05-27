@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE::IO {
 
+static constexpr c8 FileSchemeAsStr[] = "file://";
+
 static bool isWindowsRootFolder(const String &filename) {
     if (filename.empty()) {
         return false;
@@ -44,34 +46,46 @@ static bool isWindowsRootFolder(const String &filename) {
 
 static String converRootFolder2Uri(const String &filename) {
     String uri;
-    uri += "file://";
+    uri += FileSchemeAsStr;
     uri += filename;
     
     return uri;
 }
 
 Uri::Uri(const String &uri) :
-		mURI(uri), mScheme( "" ), mPath( "" ), mAbsPath( "" ), mResource( "" ) {
-    String normailizedStr;
-    if (Uri::normalizePath( uri, '\\', normailizedStr )) {
-        if (isWindowsRootFolder( normailizedStr )) {
-            mURI = converRootFolder2Uri( normailizedStr );
+		mURI(uri), mScheme(Invalid), mPath( "" ), mAbsPath( "" ), mResource( "" ) {
+    String normalizedStr;
+    if (Uri::normalizePath( uri, '\\', normalizedStr )) {
+        if (isWindowsRootFolder(normalizedStr)) {
+            mURI = converRootFolder2Uri(normalizedStr);
         }
         static_cast<void>(parse());
     }
 }
 
-String Uri::constructFromComps( const String &scheme, const String &path, const String &resName ) {
-    String uriText = scheme + "://" + path;
+String Uri::constructFromComps(SchemeType type, const String &path, const String &resName) {
+    String uriText = schemeEnumToStr(type) + path;
     String::size_type pos( uriText.rfind( resName ) );
     if ( String::npos == pos ) {
         uriText += resName;
     }
+    
     return uriText;
 }
 
+String Uri::schemeEnumToStr(SchemeType type) {
+    switch (type) {
+        case FileScheme:
+            return FileSchemeAsStr;
+        default:
+            break;
+    }
+
+    return "None";
+}
+
 void Uri::setUri(  const String &uri ) {
-	if ( uri == mURI ) {
+	if (uri == mURI) {
 		return;
 	}
 
@@ -84,14 +98,14 @@ const String &Uri::getUri() const {
 	return mURI;
 }
 
-const String &Uri::getScheme() const {
+Uri::SchemeType Uri::getScheme() const {
 	return mScheme;
 }
 
-void Uri::setScheme( const String &scheme ) {
+void Uri::setScheme(SchemeType scheme) {
     if ( mScheme != scheme ) {
         mScheme = scheme;
-        mURI = constructFromComps( mScheme, mPath, mResource );
+        mURI = constructFromComps(mScheme, mPath, mResource);
     }
 }
 
@@ -99,12 +113,14 @@ const String &Uri::getPath() const {
 	return mPath;
 }
 
-void Uri::setPath( const String &path ) {
-    if ( mPath != path ) {
-        mPath = path;
-        mAbsPath = path;
-        mURI = constructFromComps( mScheme, mPath, mResource );
+void Uri::setPath(const String &path) {
+    if (mPath == path) {
+        return;
     }
+
+    mPath = path;
+    mAbsPath = path;
+    mURI = constructFromComps(mScheme, mPath, mResource);
 }
 
 const String &Uri::getAbsPath() const {
@@ -116,16 +132,30 @@ const String &Uri::getResource() const {
 }
 
 void Uri::setResource( const String &res ) {
-    if ( mResource != res ) {
-        mResource = res;
-        mURI = constructFromComps( mScheme, mPath, mResource );
+    if (mResource == res) {
+        return;
     }
+
+    mResource = res;
+    mURI = constructFromComps( mScheme, mPath, mResource );
 }
 
 bool Uri::isEmpty() const {
 	return mURI.empty();
 }
 
+Uri::SchemeType schemeStrToEnum(const String &schemeStr) {
+    if (schemeStr.empty()) {
+        return Uri::Invalid;
+    }
+
+    if (schemeStr == FileSchemeAsStr) {
+        return Uri::FileScheme;
+    }
+
+    return Uri::Invalid;
+}
+ 
 bool Uri::parse() {
 	if ( mURI.empty() ) {
 		clear();
@@ -133,16 +163,20 @@ bool Uri::parse() {
 	}
 
 	// validate the URI syntax
-	String::size_type pos0 = mURI.find( "://" );
-	if ( String::npos == pos0 ) {
+	String::size_type pos0 = mURI.find("://");
+	if (String::npos == pos0) {
 		clear();
 		return false;
 	}
 
-
 	// extract the schema type
-	mScheme = mURI.substr( 0, pos0 );
-	String::size_type pos1 = mURI.rfind( "/" );
+    String schemeStr = mURI.substr(0, pos0+3);
+    mScheme = schemeStrToEnum(schemeStr);
+    if (mScheme == Uri::Invalid) {
+        return false;
+    }
+
+	String::size_type pos1 = mURI.rfind("/");
 	if ( String::npos == pos1 ) {
 		return false;
 	}
@@ -164,7 +198,7 @@ bool Uri::isValid() const {
 }
 
 void Uri::clear() {
-	mScheme.clear();
+    mScheme = Uri::Invalid;
 	mPath.clear();
 	mAbsPath.clear();
 	mResource.clear();
@@ -197,7 +231,7 @@ bool Uri::normalizePath(const String &path, const c8 sep, String &normalized) {
     return true;
 }
 
-bool Uri::operator==(const Uri& rhs) const {
+bool Uri::operator == (const Uri& rhs) const {
     return mURI == rhs.mURI;
 }
 
