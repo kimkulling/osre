@@ -64,55 +64,26 @@ inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out)
     }
 }
 
-static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
+inline void setDrawVertex(size_t index, DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 layer) {
     i32 x_clipped{0}, y_clipped{0};
     f32 x_model{0.f}, y_model{0.f};
+    clip(resolution, x, y, x_clipped, y_clipped);
+    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
+    drawCmd->Vertices[index].color0 = penColor.toVec4();
+    drawCmd->Vertices[index].position.x = x_model;
+    drawCmd->Vertices[index].position.y = y_model;
+    drawCmd->Vertices[index].position.z = static_cast<f32>(-layer);
+}
 
+static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const Rect2i &resolution, i32 x, i32 y, i32 w, i32 h, i32 layer) {
     drawCmd->PrimType = PrimitiveType::TriangleList;
-    drawCmd->NumVertices = 6;
+    drawCmd->NumVertices = 4;
     drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
 
-    clip(resolution, x, y, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[0].color0 = penColor.toVec4();
-    drawCmd->Vertices[0].position.x = x_model;
-    drawCmd->Vertices[0].position.y = y_model;
-    drawCmd->Vertices[0].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x+w, y, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[1].color0 = penColor.toVec4();
-    drawCmd->Vertices[1].position.x = x_model;
-    drawCmd->Vertices[1].position.y = y_model;
-    drawCmd->Vertices[1].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x+w, y+h, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[2].color0 = penColor.toVec4();
-    drawCmd->Vertices[2].position.x = x_model;
-    drawCmd->Vertices[2].position.y = y_model;
-    drawCmd->Vertices[2].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x+w, y+h, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[3].color0 = penColor.toVec4();
-    drawCmd->Vertices[3].position.x = x_model;
-    drawCmd->Vertices[3].position.y = y_model;
-    drawCmd->Vertices[3].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x, y+h, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[4].color0 = penColor.toVec4();
-    drawCmd->Vertices[4].position.x = x_model;
-    drawCmd->Vertices[4].position.y = y_model;
-    drawCmd->Vertices[4].position.z = static_cast<f32>(-layer);
-
-    clip(resolution, x, y, x_clipped, y_clipped);
-    mapCoordinates(resolution, x_clipped, y_clipped, x_model, y_model);
-    drawCmd->Vertices[5].color0 = penColor.toVec4();
-    drawCmd->Vertices[5].position.x = x_model;
-    drawCmd->Vertices[5].position.y = y_model;
-    drawCmd->Vertices[5].position.z = static_cast<f32>(-layer);
+    setDrawVertex(0, drawCmd, penColor, resolution, x, y, layer);
+    setDrawVertex(1, drawCmd, penColor, resolution, x+w, y, layer);
+    setDrawVertex(2, drawCmd, penColor, resolution, x+w, y+h, layer);
+    setDrawVertex(3, drawCmd, penColor, resolution, x, y+h, layer);
 
     drawCmd->NumIndices = 6;
     drawCmd->Indices = new ui16[drawCmd->NumIndices];
@@ -120,9 +91,9 @@ static void createRectVertices(DrawCmd *drawCmd, const Color4 &penColor, const R
     drawCmd->Indices[1] = 2;
     drawCmd->Indices[2] = 1;
 
-    drawCmd->Indices[3] = 3;
-    drawCmd->Indices[4] = 5;
-    drawCmd->Indices[5] = 4;
+    drawCmd->Indices[3] = 2;
+    drawCmd->Indices[4] = 0;
+    drawCmd->Indices[5] = 3;
 }
 
 static TPoolAllocator<DrawCmd> sAllocator;
@@ -254,7 +225,6 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
 
     setClean();
 }
-
 
 void CanvasRenderer::postRender(RenderBackendService *rbSrv) {
     if (rbSrv == nullptr) {

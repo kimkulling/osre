@@ -31,6 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+class CanvasRenderer;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -53,22 +55,23 @@ public:
 private:
     DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
     ~DbgRenderer();
-    DebugText *getDebugText(guid id) const;
+    DebugText *DbgRenderer::getText(guid id) const;
 
 private:
     static DbgRenderer *sInstance;
 
     RenderBackend::RenderBackendService *mRbSrv;
     RenderBackend::TransformMatrixBlock mTransformMatrix;
+    RenderBackend::CanvasRenderer *mCanvasRenderer;
     RenderBackend::Mesh *mDebugMesh;
+    ui16 mLastIndex;
     
     struct DebugText {
-        RenderBackend::Mesh *mesh;
-        String text;
+        guid id;
+        String Text;
     };
-
-    cppcore::TArray<DebugText*> mDebugTextMeshes;
-    ui16 mLastIndex;
+    using DebugTextArray = cppcore::TArray<DebugText*>;
+    DebugTextArray mDebugTextArray;
 };
 
 } // Namespace RenderBackend

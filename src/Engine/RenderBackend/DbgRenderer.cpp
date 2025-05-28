@@ -29,6 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/DbgRenderer.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
+#include "Properties/Settings.h"
 
 namespace OSRE::RenderBackend {
 
@@ -38,9 +40,18 @@ DbgRenderer *DbgRenderer::sInstance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
+        mCanvasRenderer(nullptr),
         mDebugMesh(nullptr),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
+
+    const Properties::Settings *settings = mRbSrv->getSettings();
+    const i32 x = settings->getInt(Properties::Settings::WinX);
+    const i32 y = settings->getInt(Properties::Settings::WinX);
+    const i32 w = settings->getInt(Properties::Settings::WinWidth);
+    const i32 h = settings->getInt(Properties::Settings::WinHeight);
+    static constexpr i32 NumLayers = 4;
+    mCanvasRenderer = new CanvasRenderer(NumLayers, x, y, w, h);
 }
 
 DbgRenderer::~DbgRenderer() {
@@ -77,6 +88,16 @@ const c8 *DbgRenderer::getDebugRenderBatchName() {
     return name;
 }
 
+DbgRenderer::DebugText *DbgRenderer::getText(guid id) const {
+    for (size_t i = 0; i < mDebugTextArray.size(); ++i) {
+        if (mDebugTextArray[i]->id == id) {
+            return mDebugTextArray[i];
+        }
+    }
+
+    return nullptr;
+}
+        
 void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
     if (mRbSrv == nullptr) {
         return;
@@ -85,27 +106,16 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
     if (text.empty()) {
         return;
     }
-
-    DebugText *foundDebugText = getInstance()->getDebugText(id);
-    mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
-    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-    mRbSrv->setMatrix(MatrixType::Projection, projection);
-    if (foundDebugText == nullptr) {
-        MeshBuilder meshBuilder;
-        meshBuilder.allocTextBox(static_cast<f32>(x), static_cast<f32>(y), 20, text, BufferAccessType::ReadWrite);
-        DebugText *entry = new DebugText;
-        entry->mesh = meshBuilder.getMesh();
-        entry->mesh->setId(id);
-        getInstance()->mDebugTextMeshes.add(entry);
-        mRbSrv->setMatrix(MatrixType::Projection, projection);
-        mRbSrv->addMesh(entry->mesh, 0);
-    } else if (foundDebugText->text != text) {
-        MeshBuilder::updateTextBox(foundDebugText->mesh, 10, text);
-        mRbSrv->updateMesh(foundDebugText->mesh);
+    
+    DebugText *txt = getText(id);
+    if (txt == nullptr) {
+        txt = new DebugText;
+        txt->id = id;
+        txt->Text = text;
+        mDebugTextArray.add(txt);
     }
-    mRbSrv->endRenderBatch();
-    mRbSrv->endPass();
+    
+    mCanvasRenderer->drawText(x, y, 10, text);
 }
 
 static constexpr size_t NumIndices = 24;
@@ -195,6 +205,13 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
 void DbgRenderer::clear() {
     delete mDebugMesh;
     mDebugMesh = nullptr;
+    delete mCanvasRenderer;
+    mCanvasRenderer = nullptr;
+
+    for (size_t i = 0; i < mDebugTextArray.size(); ++i) {
+        delete mDebugTextArray[i];
+    }
+    mDebugTextArray.clear();
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
@@ -224,22 +241,6 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
     }
 
     mDebugMesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
-}
-
-DbgRenderer::DebugText *DbgRenderer::getDebugText(guid id) const {
-    if (mDebugTextMeshes.isEmpty()) {
-        return nullptr;
-    }
-
-    DebugText *found = nullptr;
-    for (size_t i = 0; i < mDebugTextMeshes.size(); ++i) {
-        if (mDebugTextMeshes[i]->mesh->getId() == id) {
-            found = mDebugTextMeshes[i];
-            break;
-        }
-    }
-
-    return found;
 }
 
 } // namespace OSRE::RenderBackend

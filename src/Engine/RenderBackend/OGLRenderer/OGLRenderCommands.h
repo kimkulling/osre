@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 //  Forward declarations --------------------------------------------------------------------------
 class OGLRenderContext;
@@ -78,5 +77,4 @@ void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& mode
 void setupInstancedDrawCmd(const char* id, const cppcore::TArray<size_t>& ids, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va, size_t numInstances);
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace OSRE::RenderBackend
