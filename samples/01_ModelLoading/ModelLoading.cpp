@@ -177,11 +177,11 @@ protected:
             return;
         }
 
-        Rect2ui windowsRect;
-        rootWindow->getWindowsRect(windowsRect);
+        Rect2i rect;
+        rootWindow->getWindowsRect(rect);
         auto *scene = new Scene("model");
         addScene(scene, true);
-        mCamera = AppBase::setupCamera("camera", scene, windowsRect, *getIdContainer());
+        mCamera = setupCamera("camera", scene, rect, *getIdContainer());
 
         auto *entity = assimpWrapper.getEntity();
         scene->addEntity(entity);

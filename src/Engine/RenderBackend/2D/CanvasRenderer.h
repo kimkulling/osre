@@ -48,6 +48,11 @@ public:
     /// @param[in] h            The height.
     CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h);
 
+    /// @brief The class constructor.
+    /// @param[in] numLayers    The number of layers.
+    /// @param[in] rect         The requested resolution.
+    CanvasRenderer(i32 numLayers, const Rect2i &rect);
+
     /// @brief The class destructor.
     ~CanvasRenderer() override;
 

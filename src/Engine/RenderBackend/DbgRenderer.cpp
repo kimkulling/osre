@@ -40,14 +40,12 @@ DbgRenderer *DbgRenderer::sInstance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
-        mCanvasRenderer(nullptr),
-        mDebugMesh(nullptr),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 
     const Properties::Settings *settings = mRbSrv->getSettings();
     const i32 x = settings->getInt(Properties::Settings::WinX);
-    const i32 y = settings->getInt(Properties::Settings::WinX);
+    const i32 y = settings->getInt(Properties::Settings::WinY);
     const i32 w = settings->getInt(Properties::Settings::WinWidth);
     const i32 h = settings->getInt(Properties::Settings::WinHeight);
     static constexpr i32 NumLayers = 4;
@@ -113,6 +111,8 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
         txt->id = id;
         txt->Text = text;
         mDebugTextArray.add(txt);
+    } else {
+        txt->Text = text;
     }
     
     mCanvasRenderer->drawText(x, y, 10, text);
@@ -222,8 +222,7 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
     ColorVert vertices[2];
     vertices[0] = v0;
     vertices[1] = v1;
-    BufferData *vb = mDebugMesh->getVertexBuffer();
-    if (vb == nullptr) {
+    if (BufferData *vb = mDebugMesh->getVertexBuffer(); vb == nullptr) {
         mDebugMesh->createVertexBuffer(&vertices[0], sizeof(ColorVert) * 2, RenderBackend::BufferAccessType::ReadOnly);
     } else {
         vb->attach(&vertices[0], sizeof(ColorVert) * 2);
@@ -233,8 +232,7 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
     mLastIndex++;
     lineIndices[1] = mLastIndex;
     mLastIndex++;
-    BufferData *ib = mDebugMesh->getIndexBuffer();
-    if (ib == nullptr) {
+    if (BufferData *ib = mDebugMesh->getIndexBuffer(); ib == nullptr) {
         mDebugMesh->createIndexBuffer(&lineIndices[0], sizeof(ui16) * 2, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
     } else {
         ib->attach(&lineIndices[0], sizeof(ui16) * 2);

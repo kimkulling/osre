@@ -240,7 +240,7 @@ bool AppBase::activateScene(const String &worldName) {
     return false;
 }
 
-CameraComponent *AppBase::setupCamera(const String &name, Scene *scene, Rect2ui &viewport, Ids &ids) {
+CameraComponent *AppBase::setupCamera(const String &name, Scene *scene, Rect2i &viewport, Ids &ids) {
     auto *camEntity = new Entity(name, ids, scene);
     scene->addEntity(camEntity);
     auto *camera = dynamic_cast<CameraComponent*>(camEntity->createComponent(ComponentType::CameraComponentType));
@@ -334,12 +334,9 @@ bool AppBase::onCreate() {
 
     AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
-    Rect2ui rect;
+    Rect2i rect;
     mPlatformInterface->getRootWindow()->getWindowsRect(rect);
-    mCanvasRenderer = new CanvasRenderer(2, static_cast<i32>(rect.getX1()),
-        static_cast<i32>(rect.getY1()),
-        static_cast<i32>(rect.getWidth()),
-        static_cast<i32>(rect.getHeight()));
+    mCanvasRenderer = new CanvasRenderer(2, rect);
     if (!mCanvasRenderer->create()) {
         osre_error(Tag, "Error while creating the canvas renderer.");
         return false;
@@ -437,7 +434,7 @@ void AppBase::getResolution(ui32 &width, ui32 &height) {
         return;
     }
 
-    Rect2ui windowsRect;
+    Rect2i windowsRect;
     rootWindow->getWindowsRect(windowsRect);
     width = windowsRect.getWidth();
     height = windowsRect.getHeight();

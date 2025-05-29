@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/FontService.h"
 #include "RenderBackend/Mesh/MeshUtilities.h"
 #include "Common/Logger.h"
-#include "Debugging/MeshDiagnostic.h"
 
 #include <cppcore/Memory/TPoolAllocator.h>
 
@@ -107,15 +106,6 @@ DrawCmd *alloc() {
     return dc;
 }
 
-void dealloc(DrawCmd *cmd) {
-    if (cmd == nullptr) {
-        osre_debug(Tag, "Invalid command to release");
-        return;
-    }
-
-    delete cmd;
-}
-
 CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mDirty(true),
         mPenColor(1, 1, 1, 0),
@@ -127,11 +117,19 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
     setResolution(x, y, w, h);
 }
 
+CanvasRenderer::CanvasRenderer(i32 numLayers, const Rect2i &rect) :
+        mDirty(true),
+        mPenColor(1, 1, 1, 0),
+        mActiveLayer(0),
+        mNumLayers(numLayers),
+        mFont(nullptr),
+        mMesh(nullptr),
+        mText(nullptr) {
+    setResolution(rect);
+}
+
 CanvasRenderer::~CanvasRenderer() {
-    for (size_t i = 0; i < mDrawCmdArray.size(); ++i) {
-        auto &dc = *mDrawCmdArray[i];
-        dealloc(&dc);
-    }
+    sAllocator.release();
 }
 
 void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
@@ -180,7 +178,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto &dc = *mDrawCmdArray[i];
         if (dc.Vertices == nullptr) {
-            osre_debug(Tag, "Invalid draw command detecetd.");
+            osre_debug(Tag, "Invalid draw command detected.");
             continue;
         }
 
@@ -205,7 +203,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     for (size_t i = 0; i < mFontCmdArray.size(); ++i) {
         const auto &dc = *mFontCmdArray[i];
         if (dc.Vertices == nullptr) {
-            osre_debug(Tag, "Invalid draw command detecetd.");
+            osre_debug(Tag, "Invalid draw command detected.");
             continue;
         }
 

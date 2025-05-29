@@ -58,41 +58,41 @@ struct OSRE_EXPORT Resolution {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct WindowsProperties {
-    Rect2ui mRect; ///< The window rectangle
-    uc8 m_colordepth; ///< Color depth
-    uc8 m_depthbufferdepth; ///< Z-Depth
-    uc8 m_stencildepth; ///< Stencil depth
-    String m_title; ///< Window title
-    bool m_fullscreen; ///< true for full screen
-    bool m_resizable; ///< true, if the window shall be resizable
-    bool m_maximized; ///< treu, if the windows shall be maximized
-    bool m_childWindow; ///< true, if the window is a child window, for embedding
-    bool m_open; ///< Window is open flag.
+    Rect2i mRect;               ///< The window rectangle
+    uc8 m_colordepth;           ///< Color depth
+    uc8 m_depthbufferdepth;     ///< Z-Depth
+    uc8 m_stencildepth;         ///< Stencil depth
+    String m_title;             ///< Window title
+    bool m_fullscreen;          ///< true for full screen
+    bool m_resizable;           ///< true, if the window shall be resizable
+    bool m_maximized;           ///< true, if the windows shall be maximized
+    bool m_childWindow;         ///< true, if the window is a child window, for embedding
+    bool m_open;                ///< Window is open flag.
 
     /// @brief Will return the dimension as a rectangle.
     /// @param[out] rect  The window rect.
-    void getDimension(Rect2ui &rect);
+    void getDimension(Rect2i &rect);
 
     /// @brief Will set the new rectangle geometry.
     /// @param[in] rect   The new rectangle.
-    void setRect(const Rect2ui &rect);
+    void setRect(const Rect2i &rect);
 };
 
-inline void WindowsProperties::getDimension(Rect2ui &rect) {
+inline void WindowsProperties::getDimension(Rect2i &rect) {
     rect = mRect;
 }
 
-inline void WindowsProperties::setRect(const Rect2ui &rect) {
+inline void WindowsProperties::setRect(const Rect2i &rect) {
     mRect = rect;
 }
 
 /// @brief This enum is used to describe the mouse cursor.
 enum class DefaultMouseCursorType {
-    Invali = -1,
-    ComonCursor,
-    SelectCursor,
-    WaitCursor,
-    Count
+    Invalid = -1,       ///< Not inited
+    CommonCursor,       ///< The default cursor
+    SelectCursor,       ///< The cursor to select something
+    WaitCursor,         ///< The cursor if you have to wait
+    Count               ///< The number of cursors
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -107,19 +107,19 @@ class OSRE_EXPORT AbstractWindow {
 public:
     /// @brief  The Windows flags.
     enum class SurfaceFlagType {
-        Invalid, ///< Marks an invalid enum
-        SF_PropertiesClean = 0, ///<
-        SF_WinTitleDirty = (1 << 1), ///<
-        SF_WinResize = (1 << 2), ///<
-        SF_ChildWindow = (1 << 3) ///<
+        Invalid,                        ///< Marks an invalid enum
+        SF_PropertiesClean = 0,         ///<
+        SF_WinTitleDirty = (1 << 1),    ///<
+        SF_WinResize = (1 << 2),        ///<
+        SF_ChildWindow = (1 << 3)       ///<
     };
 
     /// @brief  Will describe the show-state for the window.
     enum class ShowState {
-        Invalid = -1, ///< Marks an invalid enum
-        Visible, ///< Window is visible.
-        Hidden, ///< Window is hidden.
-        Count ///< Number of enums
+        Invalid = -1,                   ///< Marks an invalid enum
+        Visible,                        ///< Window is visible.
+        Hidden,                         ///< Window is hidden.
+        Count                           ///< Number of enums
     };
 
     /// @brief  The class constructor.
@@ -132,7 +132,7 @@ public:
     virtual ~AbstractWindow();
 
     /// @brief  Will set the parent window. Use nullptr for beeing the root window.
-    /// @param  parent Pointer ot the paretn window.
+    /// @param  parent      Pointer ot the parent window.
     virtual void setParent(AbstractWindow *parent);
 
     /// @brief Will return the parent window or nullptr, if this windows is the root window.
@@ -145,7 +145,7 @@ public:
 
     /// @brief  Will return true, if the window is already created.
     /// @return The creation state.
-    virtual bool isCeated() const;
+    virtual bool isCreated() const;
 
     /// @brief  Will destroy the surface.
     /// @return true will be returned, when creation was successful.
@@ -185,22 +185,22 @@ public:
     virtual void showWindow(ShowState showState) = 0;
 
     /// @brief  Will resize the window.
-    /// @param  x   [in] The x-coordinate of the upper left edge-
+    /// @param  x   [in] The x-coordinate of the upper left edge.
     /// @param  y   [in] The y-coordinate of the upper left edge.
-    /// @param  w   [in] The windows width.
-    /// @param  h   [in] The windows height.
+    /// @param  w   [in] The window width.
+    /// @param  h   [in] The window height.
     virtual void resize(ui32 x, ui32 y, ui32 w, ui32 h);
 
-    /// @brief  Will return the windows rectangle.
-    /// @param  rect    [out] The windows rect.
-    virtual void getWindowsRect(Rect2ui &rect) const;
+    /// @brief  Will return the window rectangle.
+    /// @param  rect    [out] The window rect.
+    virtual void getWindowsRect(Rect2i &rect) const;
 
     /// @brief Will set the mouse cursor.
     /// @param ct The mouse cursor type to use.
     virtual void setWindowsMouseCursor(DefaultMouseCursorType ct) = 0;
 
-    /// @brief Will return the windows id.
-    /// @return The windows id.
+    /// @brief Will return the unique window id.
+    /// @return The unique window id.
     guid getId() const;
 
     // Not used
@@ -208,13 +208,15 @@ public:
 
 protected:
     /// @brief  Callback to override on creation.
+    /// @return true if successful, false in case of an error.
     virtual bool onCreate() = 0;
 
     /// @brief  Callback to override on destroying.
+    /// @return true if successful, false in case of an error.
     virtual bool onDestroy() = 0;
 
     /// @brief  Callback to override on updates.
-    /// @return true if successful, false if not.
+    /// @return true if successful, false in case of an error.
     virtual bool onUpdateProperies() = 0;
 
     /// @brief  The onResize callback.
