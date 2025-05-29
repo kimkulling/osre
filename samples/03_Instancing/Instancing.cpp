@@ -69,19 +69,19 @@ protected:
         }
 
         Scene *scene = AppBase::getActiveScene();
-        mEntity = new App::Entity("instance", scene->getIds(), scene);
-        Entity *camEntity = new Entity("camera", scene->getIds(), scene);
-        App::CameraComponent *camera = (App::CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
+        mEntity = new Entity("instance", scene->getIds(), scene);
+        auto *camEntity = new Entity("camera", scene->getIds(), scene);
+        auto *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
         scene->setActiveCamera(camera);
 
-        Rect2ui windowsRect;
-        rootWindow->getWindowsRect(windowsRect);
-        camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
+        Rect2i rect;
+        rootWindow->getWindowsRect(rect);
+        camera->setProjectionParameters(60.f, static_cast<f32>(rect.width), static_cast<f32>(rect.height), 0.0001f, 1000.f);
         MeshBuilder meshBuilder;
         scene->addEntity(mEntity);
         Mesh *mesh = meshBuilder.createCube(VertexType::RenderVertex, 2,2,2, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
-            RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+            auto *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
             scene->init();
             camera->observeBoundingBox(mEntity->getAABB());
@@ -92,7 +92,7 @@ protected:
 
     bool onCreate() override {
         if (!AppBase::onCreate()) {
-            osre_debug(Tag, "Error while creating.");
+            osre_debug(Tag, "Error while creating application.");
             return false;
         }
         AppBase::setWindowsTitle("Instancing sample!");

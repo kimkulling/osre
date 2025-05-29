@@ -148,7 +148,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
-    if (!activeSurface->isCeated()) {
+    if (!activeSurface->isCreated()) {
         if (!activeSurface->create()) {
             osre_debug(Tag, "Cannot create active surface.");
             return false;
@@ -174,7 +174,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
-    Rect2ui rect;
+    Rect2i rect;
     activeSurface->getWindowsRect(rect);
     m_oglBackend->setViewport(0, 0, rect.width, rect.height);
 

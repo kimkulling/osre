@@ -138,8 +138,8 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         return;
     }
 
-    Rect2ui windowsRect;
-    rootWindow->getWindowsRect(windowsRect);
+    Rect2i rect;
+    rootWindow->getWindowsRect(rect);
     scene = getActiveScene();
     if (mProject == nullptr) {
         mProject = createProject(modelLoc.getAbsPath());
@@ -195,8 +195,8 @@ bool OsreEdApp::onCreate() {
     Ui::WidgetBase *p = createUi();
 
     Platform::AbstractWindow *rootWindow = getRootWindow();
-    Rect2ui windowsRect;
-    rootWindow->getWindowsRect(windowsRect);
+    Rect2i rect;
+    rootWindow->getWindowsRect(rect);
 
     mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
     mSceneData.mCamera = setupCamera(scene);

@@ -65,7 +65,7 @@ void ProgressReporter::start() {
 
 void ProgressReporter::stop() {
     if (nullptr != mWindow) {
-        mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::ComonCursor);
+        mWindow->setWindowsMouseCursor(DefaultMouseCursorType::CommonCursor);
         mProgressBar = nullptr;
     }
 }

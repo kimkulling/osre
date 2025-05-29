@@ -254,4 +254,4 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
     eh->enqueueRenderCmd(renderCmd);
 }
 
-} // Namespace RenderBackend
+} // Namespace OSRE::RenderBackend

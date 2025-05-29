@@ -76,7 +76,7 @@ protected:
             auto *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            Rect2ui windowsRect;
+            Rect2i windowsRect;
             getRootWindow()->getWindowsRect(windowsRect);
             CameraComponent *camera = AppBase::setupCamera("camera", scene, windowsRect, *getIdContainer());
             scene->init();

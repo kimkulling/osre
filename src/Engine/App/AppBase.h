@@ -218,7 +218,7 @@ public:
     /// @param viewport     The requested viewport.
     /// @param ids          The id container.
     /// @return Thew new created camera.
-    CameraComponent *setupCamera(const String &name, Scene *scene, Rect2ui &viewport, Common::Ids &ids);
+    CameraComponent *setupCamera(const String &name, Scene *scene, Rect2i &viewport, Common::Ids &ids);
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

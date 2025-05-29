@@ -20,19 +20,17 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#ifndef OSRE_RENDERBACKEND_MESHUTILITIES_H_INC
-#define OSRE_RENDERBACKEND_MESHUTILITIES_H_INC
+#pragma once
 
 #include "Common/osre_common.h"
-#include "Debugging/osre_debugging.h"
 #include "Common/Tokenizer.h"
+
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 ///-----------------------------------------------------------------
-/// @class MeshUtilities
+///	@ingroup	Engine
 ///
 /// @brief This class provides common utilities to generate different
 ///        kind of mesh topology and spatial data.
@@ -45,7 +43,7 @@ public:
 
     /// @brief Will calculate the numbr of vertices needed for the given string glyphes.
     /// @param text     The text for checking.
-    /// @return The number of vertives for the glyphes.
+    /// @return The number of vertices for the glyphes.
     static size_t getNumTextVerts( const String &text ) {
         const size_t NumTextVerts = NumQuadVert * text.size();
         return NumTextVerts;
@@ -104,19 +102,19 @@ public:
             const f32 rowHeight = -1.0f * textRow * textSize;
             positions[VertexOffset + 0].x = pos[0].x + (textCol * textSize);
             positions[VertexOffset + 0].y = pos[0].y + rowHeight;
-            positions[VertexOffset + 0].z = 0;
+            positions[VertexOffset + 0].z = 2;
 
             positions[VertexOffset + 1].x = pos[1].x + (textCol * textSize);
             positions[VertexOffset + 1].y = pos[1].y + rowHeight;
-            positions[VertexOffset + 1].z = 0;
+            positions[VertexOffset + 1].z = 2;
 
             positions[VertexOffset + 2].x = pos[2].x + (textCol * textSize);
             positions[VertexOffset + 2].y = pos[2].y + rowHeight;
-            positions[VertexOffset + 2].z = 0;
+            positions[VertexOffset + 2].z = 2;
 
             positions[VertexOffset + 3].x = pos[3].x + (textCol * textSize);
             positions[VertexOffset + 3].y = pos[3].y + rowHeight;
-            positions[VertexOffset + 3].z = 0;
+            positions[VertexOffset + 3].z = 2;
 
             const i32 column = (ch) % 16;
             const i32 row = (ch) / 16;
@@ -152,7 +150,4 @@ public:
     }
 };
 
-} // namespace RenderBackend
-} // namespace OSRE
-
-#endif // OSRE_RENDERBACKEND_MESHUTILITIES_H_INC
+} // namespace OSRE::RenderBackend
