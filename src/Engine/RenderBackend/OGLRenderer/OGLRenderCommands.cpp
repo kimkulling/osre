@@ -55,7 +55,7 @@ bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
     glReadBuffer(GL_FRONT);
     glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, &pixels[0]);
     bool result = true;
-    if (stbi_write_jpg(filename, w, h, 3, &pixels[0], numberOfPixels) != 0){
+    if (stbi_write_jpg(filename, w, h, 3, &pixels[0], static_cast<i32>(numberOfPixels)) != 0){
         result = false;
     }
 
@@ -110,13 +110,13 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             setupTextures(material, rb, textures);
             auto *renderMatCmd = new OGLRenderCmd(OGLRenderCmdType::SetMaterialCmd);
             if (!textures.isEmpty()) {
-                matData->m_textures = textures;
+                matData->textures = textures;
             }
             const String name = material->getShader()->getName();
             Shader *matShader = material->getShader();
             OGLShader *shader = rb->createShader(name, matShader);
             if (nullptr != shader) {
-                matData->m_shader = shader;
+                matData->shader = shader;
                 for (size_t i = 0; i < matShader->getNumVertexAttributes(); ++i) {
                     shader->addAttribute(matShader->getVertexAttributeAt(i));
                 }
@@ -128,7 +128,7 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
                 // for setting up all buffer objects
                 eh->setActiveShader(shader);
             }
-            renderMatCmd->m_data = matData;
+            renderMatCmd->data = matData;
             eh->enqueueRenderCmd(renderMatCmd);
         }                                  
         break;
@@ -150,7 +150,7 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);
     } else {
-        memcpy(oglParam->m_data->getData(), param->m_data.getData(), param->m_data.m_size);
+        memcpy(oglParam->data->getData(), param->m_data.getData(), param->m_data.m_size);
     }
 
     paramArray.add(oglParam);
@@ -180,7 +180,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 
     // create vertex buffer and  and pass triangle vertex to buffer object
     OGLBuffer *vb = rb->createBuffer(vertices->m_type);
-    vb->m_geoId = mesh->getId();
+    vb->geoId = mesh->getId();
     rb->bindBuffer(vb);
     rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->m_access);
 
@@ -193,7 +193,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 
     // create index buffer and pass indices to element array buffer
     OGLBuffer *ib = rb->createBuffer(indices->m_type);
-    ib->m_geoId = mesh->getId();
+    ib->geoId = mesh->getId();
     rb->bindBuffer(ib);
     rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->m_access);
 
@@ -226,7 +226,7 @@ void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &mode
     for (ui32 i = 0; i < primGroups.size(); ++i) {
         drawPrimitiveCmdData->primitives.add(primGroups[i]);
     }
-    renderCmd->m_data = static_cast<void*>(drawPrimitiveCmdData);
+    renderCmd->data = static_cast<void*>(drawPrimitiveCmdData);
 
     eh->enqueueRenderCmd(renderCmd);
 }
@@ -243,14 +243,14 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
     OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesInstancesCmd);
 
     DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
-    data->m_id = id;
-    data->m_vertexArray = va;
-    data->m_numInstances = numInstances;
-    data->m_primitives.reserve(ids.size());
+    data->id = id;
+    data->vertexArray = va;
+    data->numInstances = numInstances;
+    data->primitives.reserve(ids.size());
     for (ui32 j = 0; j < ids.size(); ++j) {
-        data->m_primitives.add(ids[j]);
+        data->primitives.add(ids[j]);
     }
-    renderCmd->m_data = static_cast<void *>(data);
+    renderCmd->data = static_cast<void *>(data);
     eh->enqueueRenderCmd(renderCmd);
 }
 

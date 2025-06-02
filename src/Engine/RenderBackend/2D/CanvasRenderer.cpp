@@ -125,6 +125,7 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mMesh(nullptr),
         mText(nullptr) {
     setResolution(x, y, w, h);
+    mTransformMatrixBlock.init();
 }
 
 CanvasRenderer::~CanvasRenderer() {
@@ -139,10 +140,10 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
         return;
     }
 
-    glm::mat4 m(1);
-    rbSrv->setMatrix(MatrixType::Model, m);
-    rbSrv->setMatrix(MatrixType::View, m);
-    rbSrv->setMatrix(MatrixType::Projection, m);
+    
+    rbSrv->setMatrix(MatrixType::Model, mTransformMatrixBlock.getModel());
+    rbSrv->setMatrix(MatrixType::View, mTransformMatrixBlock.getView());
+    rbSrv->setMatrix(MatrixType::Projection, mTransformMatrixBlock.getProjection());
 }
 
 void CanvasRenderer::render(RenderBackendService *rbSrv) {

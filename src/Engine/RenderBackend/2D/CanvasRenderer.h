@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 #include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
 
 namespace OSRE::RenderBackend {
 
@@ -159,6 +160,7 @@ private:
     bool mDirty;
     DrawCmdArray mDrawCmdArray;
     DrawCmdArray mFontCmdArray;
+    TransformMatrixBlock mTransformMatrixBlock;
     Color4 mPenColor;
     Rect2i mResolution;
     i32 mActiveLayer;

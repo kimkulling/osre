@@ -34,10 +34,11 @@ namespace OSRE {
 
 // Forward declarations
 namespace IO {
-    class Stream;
+class Stream;
 }
+} // namespace OSRE
 
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 static constexpr GLint InvalidLocationId = -1;
 
@@ -55,13 +56,8 @@ public:
 
     /// @brief Declares an active parameter.
     struct ActiveParameter {
-        c8    name[MaxLen];
-        GLint location;
-
-        ActiveParameter() :
-                name(), location(InvalidLocationId) {
-            ::memset(name, '\0', sizeof(c8) * MaxLen);
-        }
+        c8 name[MaxLen] = { '\0' };         ///< The parameter name
+        GLint location = InvalidLocationId; ///< The parameter index
     };
 
     ///	@brief  Type for parameter shader arrays in OpenGL.
@@ -78,13 +74,13 @@ public:
     /// @param  type    [in] The shader type.
     /// @param  src     [in] The shader source to compile.
     /// @return true, if compile was successful, false in case of an error.
-    bool loadFromSource( ShaderType type, const String &src );
+    bool loadFromSource(ShaderType type, const String &src);
 
     /// @brief	Will load the source fir a given io-stream.
     /// @param  type    [in] The shader type.
     /// @param  stream  [in] The stream  containing the source.
     /// @return true, if compile was successful, false in case of an error.
-    bool loadFromStream( ShaderType type, IO::Stream &stream );
+    bool loadFromStream(ShaderType type, IO::Stream &stream);
 
     /// @brief  Will create and link a shader program.
     /// @return true, if create & link was successful, false in case of an error.
@@ -100,7 +96,7 @@ public:
 	///         The shader program must be compiled before.
 	///	@param	attribute	[in] The name of the attribute to look for.
 	///	@return	true, if the attribute is used in the shader program, false if not.
-    bool hasAttribute( const String& attribute );
+    bool hasAttribute(const String& attribute);
 
     /// @brief  Adds a new attribute to the shader.
     /// @param  attribute   [in] The name of the attribute.
@@ -150,5 +146,4 @@ private:
 	bool mIsInUse;
 };
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend

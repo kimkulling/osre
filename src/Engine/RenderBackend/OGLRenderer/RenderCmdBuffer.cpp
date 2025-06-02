@@ -59,7 +59,7 @@ void RenderCmdBuffer::enqueueRenderCmd(OGLRenderCmd *renderCmd) {
         return;
     }
 
-    if (nullptr == renderCmd->m_data) {
+    if (nullptr == renderCmd->data) {
         osre_debug(Tag, "Nullptr in render-command data detected.");
         return;
     }
@@ -123,16 +123,16 @@ void RenderCmdBuffer::onRenderFrame() {
                 continue;
             }
 
-            if (renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd) {
-                onDrawPrimitivesCmd((DrawPrimitivesCmdData *)renderCmd->m_data);
-            } else if (renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd) {
-                onDrawPrimitivesInstancesCmd((DrawInstancePrimitivesCmdData *)renderCmd->m_data);
-            } else if (renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
-                onSetRenderTargetCmd((SetRenderTargetCmdData *)renderCmd->m_data);
-            } else if (renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd) {
-                onSetMaterialStageCmd((SetMaterialStageCmdData *)renderCmd->m_data);
+            if (renderCmd->type == OGLRenderCmdType::DrawPrimitivesCmd) {
+                onDrawPrimitivesCmd((DrawPrimitivesCmdData *)renderCmd->data);
+            } else if (renderCmd->type == OGLRenderCmdType::DrawPrimitivesInstancesCmd) {
+                onDrawPrimitivesInstancesCmd((DrawInstancePrimitivesCmdData *)renderCmd->data);
+            } else if (renderCmd->type == OGLRenderCmdType::SetRenderTargetCmd) {
+                onSetRenderTargetCmd((SetRenderTargetCmdData *)renderCmd->data);
+            } else if (renderCmd->type == OGLRenderCmdType::SetMaterialCmd) {
+                onSetMaterialStageCmd((SetMaterialStageCmdData *)renderCmd->data);
             } else {
-                osre_error(Tag, "Unsupported render command type: " + static_cast<ui32>(renderCmd->m_type));
+                osre_error(Tag, "Unsupported render command type: " + static_cast<ui32>(renderCmd->type));
             }
         }
 
@@ -160,7 +160,7 @@ void RenderCmdBuffer::clear() {
 static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *> &paramArray, size_t &index) {
     index = paramArray.size();
     for (ui32 i = 0; i < paramArray.size(); i++) {
-        if (name == paramArray[i]->m_name) {
+        if (name == paramArray[i]->name) {
             index = i;
             return true;
         }
@@ -170,7 +170,7 @@ static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *>
 
 void RenderCmdBuffer::setParameter(OGLParameter *param) {
     size_t i = 0;
-    if (hasParam(param->m_name, mParamArray, i)) {
+    if (hasParam(param->name, mParamArray, i)) {
         mParamArray[i] = param;
     }
 
@@ -182,7 +182,7 @@ void RenderCmdBuffer::setParameter(const ::cppcore::TArray<OGLParameter *> &para
         size_t index = 0;
         OGLParameter *param = paramArray[i];
         osre_assert(param != nullptr);
-        if (!hasParam(paramArray[i]->m_name, mParamArray, index)) {
+        if (!hasParam(paramArray[i]->name, mParamArray, index)) {
             mParamArray.add(param);
             return;
         }
@@ -247,33 +247,33 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData
         return false;
     }
 
-    mRBService->bindVertexArray(data->m_vertexArray);
-    for (size_t i = 0; i < data->m_primitives.size(); i++) {
-        mRBService->render(data->m_primitives[i], data->m_numInstances);
+    mRBService->bindVertexArray(data->vertexArray);
+    for (size_t i = 0; i < data->primitives.size(); i++) {
+        mRBService->render(data->primitives[i], data->numInstances);
     }
 
     return true;
 }
 
 bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *data) {
-    if (data->mFrameBuffer == nullptr) {
+    if (data->frameBuffer == nullptr) {
         return true;
     }
 
-    mRBService->bindFrameBuffer(data->mFrameBuffer);
-    mRBService->clearRenderTarget(data->mClearState);
+    mRBService->bindFrameBuffer(data->frameBuffer);
+    mRBService->clearRenderTarget(data->clearState);
 
     return true;
 }
 
 bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
-    mRBService->bindVertexArray(data->m_vertexArray);
-    mRBService->useShader(data->m_shader);
+    mRBService->bindVertexArray(data->vertexArray);
+    mRBService->useShader(data->shader);
 
     commitParameters();
 
-    for (ui32 i = 0; i < data->m_textures.size(); ++i) {
-        OGLTexture *oglTexture = data->m_textures[i];
+    for (ui32 i = 0; i < data->textures.size(); ++i) {
+        OGLTexture *oglTexture = data->textures[i];
         if (nullptr != oglTexture) {
             mRBService->bindTexture(oglTexture, (TextureStageType)i);
         } else {

@@ -92,15 +92,14 @@ bool OGLShader::loadFromStream(ShaderType type, IO::Stream &stream) {
     }
 
     const size_t filesize = stream.getSize();
-    if (0 == filesize) {
+    if (filesize == 0) {
         return true;
     }
 
     MemoryBuffer buffer(filesize);
     stream.read(&buffer[0], filesize);
-    const bool retCode = loadFromSource(type, String(&buffer[0]));
 
-    return retCode;
+    return loadFromSource(type, String(&buffer[0]));
 }
 
 bool OGLShader::createAndLink() {

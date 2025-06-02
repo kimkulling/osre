@@ -282,7 +282,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
             osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
             return false;
         }
-        data->m_vertexArray = m_vertexArray;
+        data->vertexArray = m_vertexArray;
 
         // setup the render calls
         if (0 == currentMeshEntry->numInstances) {
@@ -368,7 +368,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                         osre_error(Tag, "Vertex-Array-pointer is a nullptr.");
                         return false;
                     }
-                    data->m_vertexArray = m_vertexArray;
+                    data->vertexArray = m_vertexArray;
 
                     // setup the render calls
                     if (0 == currentMeshEntry->numInstances) {
@@ -416,7 +416,7 @@ void OGLRenderEventHandler::onHandleCommit(FrameSubmitCmd *cmd) {
         const ui32 offset = cmd->m_data[0] + 1;
         const size_t size = cmd->m_size - offset;
         OGLParameter *oglParam = m_oglBackend->getParameter(name);
-        ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
+        ::memcpy(oglParam->data->getData(), &cmd->m_data[offset], size);
     } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
         OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->m_meshId);
         m_oglBackend->bindBuffer(buffer);
