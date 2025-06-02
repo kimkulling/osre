@@ -55,15 +55,15 @@ public:
 private:
     DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
     ~DbgRenderer();
-    DebugText *DbgRenderer::getText(guid id) const;
+    DebugText *getText(guid id) const;
 
 private:
     static DbgRenderer *sInstance;
 
-    RenderBackend::RenderBackendService *mRbSrv;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    RenderBackend::CanvasRenderer *mCanvasRenderer;
-    RenderBackend::Mesh *mDebugMesh;
+    RenderBackendService *mRbSrv = nullptr;
+    TransformMatrixBlock mTransformMatrix;
+    CanvasRenderer *mCanvasRenderer = nullptr;
+    Mesh *mDebugMesh = nullptr;
     ui16 mLastIndex;
     
     struct DebugText {

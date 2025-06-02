@@ -155,14 +155,13 @@ protected:
             return false;
         }
 
-        Rect2ui windowsRect;
-        rootWindow->getWindowsRect(windowsRect);
-        CameraComponent *camera = AppBase::setupCamera("camera", world, windowsRect, *getIdContainer());
+        Rect2i rect;
+        rootWindow->getWindowsRect(rect);
+        CameraComponent *camera = setupCamera("camera", world, rect, *getIdContainer());
 
-        String filename = "world_heightmap.png";
-        RenderBackend::Mesh *mesh = loadHeightMap(filename);
-        if (mesh != nullptr) {
-            RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
+        const String filename = "world_heightmap.png";
+        if (Mesh *mesh = loadHeightMap(filename); mesh != nullptr) {
+            auto *rc = static_cast<RenderComponent*>(mEntity->getComponent(ComponentType::RenderComponentType));
             rc->addStaticMesh(mesh);
 
             // Initial update
@@ -177,8 +176,7 @@ protected:
     }
 
     void onUpdate() override {
-        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-        if (key != Platform::KEY_UNKNOWN) {
+        if (Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey(); key != Platform::KEY_UNKNOWN) {
             mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
         }
 

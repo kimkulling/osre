@@ -125,8 +125,8 @@ protected:
 
             ui32 w = 0, h = 0;
             AppBase::getResolution(w, h);
-            Rect2ui r(0,0,w,h);
-            CameraComponent *camera = AppBase::setupCamera("camera", scene, r, *getIdContainer());
+            Rect2i rect(0,0,w,h);
+            CameraComponent *camera = AppBase::setupCamera("camera", scene, rect, *getIdContainer());
             scene->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }

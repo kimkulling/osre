@@ -95,7 +95,7 @@ bool AbstractWindow::destroy() {
     return (false == mIsCreated);
 }
 
-bool AbstractWindow::isCeated() const {
+bool AbstractWindow::isCreated() const {
     return mIsCreated;
 }
 
@@ -116,7 +116,7 @@ void AbstractWindow::setFlags(SurfaceFlagType flags) {
     if (mFlags == static_cast<ui32>(flags)) {
         return;
     }
-    mFlags = (ui32)flags;
+    mFlags = static_cast<ui32>(flags);
 }
 
 ui32 AbstractWindow::getFlags() const {
@@ -131,7 +131,7 @@ WindowsProperties *AbstractWindow::getProperties() {
     return mProperties;
 }
 
-void AbstractWindow::getWindowsRect(Rect2ui &rect) const {
+void AbstractWindow::getWindowsRect(Rect2i &rect) const {
     if (nullptr == mProperties) {
         return;
     }
