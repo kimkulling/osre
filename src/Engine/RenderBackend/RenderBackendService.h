@@ -24,10 +24,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/AbstractService.h"
 #include "Common/Event.h"
+#include "Common/glm_common.h"
+#include "Properties/Settings.h"
 #include "RenderBackend/Pipeline.h"
 #include "RenderBackend/RenderCommon.h"
 #include "Threading/SystemTask.h"
-#include "Common/glm_common.h"
 
 #include <cppcore/Container/THashMap.h>
 

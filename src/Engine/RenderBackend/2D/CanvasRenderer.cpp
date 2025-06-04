@@ -110,10 +110,7 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h) :
         mDirty(true),
         mPenColor(1, 1, 1, 0),
         mActiveLayer(0),
-        mNumLayers(numLayers),
-        mFont(nullptr),
-        mMesh(nullptr),
-        mText(nullptr) {
+        mNumLayers(numLayers) {
     setResolution(x, y, w, h);
     mTransformMatrixBlock.init();
 }
@@ -122,10 +119,7 @@ CanvasRenderer::CanvasRenderer(i32 numLayers, const Rect2i &rect) :
         mDirty(true),
         mPenColor(1, 1, 1, 0),
         mActiveLayer(0),
-        mNumLayers(numLayers),
-        mFont(nullptr),
-        mMesh(nullptr),
-        mText(nullptr) {
+        mNumLayers(numLayers) {
     setResolution(rect);
 }
 
@@ -138,7 +132,6 @@ void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
         return;
     }
 
-    
     rbSrv->setMatrix(MatrixType::Model, mTransformMatrixBlock.getModel());
     rbSrv->setMatrix(MatrixType::View, mTransformMatrixBlock.getView());
     rbSrv->setMatrix(MatrixType::Projection, mTransformMatrixBlock.getProjection());

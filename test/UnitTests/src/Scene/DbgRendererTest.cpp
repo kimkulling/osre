@@ -50,6 +50,7 @@ protected:
 
 TEST_F( DbgRendererTest, create_Success ) {
     RenderBackend::RenderBackendService *tstRBSrv = new TestRenderBackendService;
+    tstRBSrv->setSettings(new Properties::Settings, true);
     DbgRenderer::create( tstRBSrv );
     DbgRenderer::destroy();
     delete tstRBSrv;
