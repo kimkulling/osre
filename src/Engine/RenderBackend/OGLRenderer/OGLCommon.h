@@ -54,6 +54,7 @@ void checkOGLErrorState(const c8 *file, ui32 line);
 
 static constexpr GLuint OGLNotSetId = 999999;   ///< Indicates a not inited opengl id.
 static constexpr GLint  NoneLocation = -1;      ///< Indicates a not existing location of an uniform variable.
+static constexpr i32    NotSet = -1;            ///< Indicates a not set value
 
 ///	@brief  This struct declares opengl-specific buffer resources.
 /// Buffer will be used to store different data like vertices, indices or binary data.
@@ -65,7 +66,9 @@ struct OGLBuffer {
     size_t     size;      ///< The buffer size.
 
     /// @brief The default class constructor.
-    OGLBuffer() : handle(0), type(BufferType::Invalid), oglId(OGLNotSetId), geoId(0), size(0){}
+    OGLBuffer() : handle(0), type(BufferType::Invalid), oglId(OGLNotSetId), geoId(0), size(0){
+        // empty
+    }
 };
 
 ///	@brief  This struct declares an OpenGL specific vertex attribute like position or normals.
@@ -78,7 +81,9 @@ struct OGLVertexAttribute {
 
     /// @brief The default class constructor.
     OGLVertexAttribute() :
-            index(OGLNotSetId), attributeName(nullptr), size(0U), type(), ptr(nullptr) {}
+            index(OGLNotSetId), attributeName(nullptr), size(0U), type(), ptr(nullptr) {
+        // empty
+    }
 };
 
 ///	@brief  The OpenGL vertex array description.
@@ -88,7 +93,9 @@ struct OGLVertexArray {
 
     /// @brief The default class constructor.
     OGLVertexArray() :
-            id(0), slot(OGLNotSetId) {}
+            id(0), slot(OGLNotSetId) {
+        // empty
+    }
 };
 
 ///	@brief  This struct represents a txture resource information.
@@ -104,19 +111,24 @@ struct OGLTexture {
 
     /// @brief The default class constructor.
     OGLTexture() : textureId(OGLNotSetId), name(), target(GL_NONE), format(GL_NONE), 
-                   slot(OGLNotSetId), width(0), height(0), channels(0) {}
+                   slot(OGLNotSetId), width(0), height(0), channels(0) {
+        // empty
+    }
 };
 
+
+/// @brief A texure array.
 using OGLTextureArray = cppcore::TArray<OGLTexture*>;
 
 ///	@brief  This enum is used to describe a render command type.
 enum class OGLRenderCmdType {
+    Invalid = -1,
     SetParameterCmd,
     SetRenderTargetCmd,
     SetMaterialCmd,
     DrawPrimitivesCmd,
     DrawPrimitivesInstancesCmd,
-    None
+    Count
 };
 
 ///	@brief This struct declares the render command data.
@@ -127,7 +139,9 @@ struct OGLRenderCmd {
 
     /// @brief The default class constructor.
     OGLRenderCmd(OGLRenderCmdType type) :
-            type(type), id(OGLNotSetId), data(nullptr) {}
+            type(type), id(OGLNotSetId), data(nullptr) {
+        // empty
+    }
 };
 
 ///	@brief This struct declares the needed data for a OpenGL parameter.
@@ -139,8 +153,10 @@ struct OGLParameter {
     size_t              numItems;   ///< Number of items.
 
     /// @brief The default class constructor.
-    OGLParameter() :  name(""), loc(NoneLocation), type(ParameterType::PT_None), 
-                      data(nullptr), numItems(0) {}
+    OGLParameter() : 
+            name(""), loc(NoneLocation), type(ParameterType::Invalid), data(nullptr), numItems(0) {
+        // empty
+    }
 };
 
 ///	@brief This struct declares the data for a group of render primitives for a render call.
@@ -151,7 +167,9 @@ struct OGLPrimGroup {
     GLenum  indexType;     ///< The index data type.
 
     /// @brief The default class constructor.
-    OGLPrimGroup() : primitive(GL_NONE), startIndex(0), numIndices(0), indexType(GL_NONE) {} 
+    OGLPrimGroup() : primitive(GL_NONE), startIndex(0), numIndices(0), indexType(GL_NONE) {
+        // empty
+    } 
 };
 
 ///	@brief  This struct declares the data for a rendercall to set the correct material 
@@ -164,7 +182,9 @@ struct SetMaterialStageCmdData {
     OGLVertexArray *vertexArray;    ///< Ther vertex array.
 
     /// @brief The default class constructor.
-    SetMaterialStageCmdData() : shader(nullptr), textures(), vertexArray(nullptr) {}
+    SetMaterialStageCmdData() : shader(nullptr), textures(), vertexArray(nullptr) {
+        // empty
+    }
 };
 
 ///	@brief  The command data for setting the render target.
@@ -173,7 +193,9 @@ struct SetRenderTargetCmdData {
     OGLFrameBuffer *frameBuffer;   ///< The framebuffer to use.
 
     /// @brief The default class constructor.
-    SetRenderTargetCmdData() : clearState(0), frameBuffer(nullptr) {}
+    SetRenderTargetCmdData() : clearState(0), frameBuffer(nullptr) {
+        // empty
+    }
 };
 
 ///	@brief This struct declares the data for a render call with instanced render data.
@@ -184,7 +206,9 @@ struct DrawInstancePrimitivesCmdData {
     const char             *id;             ///< The call id.
 
     /// @brief The default class constructor.
-    DrawInstancePrimitivesCmdData() : vertexArray(nullptr), numInstances(0), primitives(), id(nullptr) {}
+    DrawInstancePrimitivesCmdData() : vertexArray(nullptr), numInstances(0), primitives(), id(nullptr) {
+        // empty
+    }
 };
 
 ///	@brief  Thsi struct declares the data for a simple render call.
@@ -212,7 +236,7 @@ struct OGLDriverInfo {
     /// @brief The class constructor.
     OGLDriverInfo() :
             glVendorString(nullptr), glRendererString(nullptr), glVersionString(nullptr) {
-        ::memset(openGLVersion, 0, sizeof(i32) * 2);
+        ::memset(openGLVersion, NotSet, sizeof(i32) * 2);
     }
 };
 
@@ -232,12 +256,12 @@ struct OGLCapabilities {
     /// @brief The default class constructor.
     OGLCapabilities() :
             maxAniso(0.0f),
-            contextMask(-1),
-            max3DTextureSize(-1),
-            maxTextureUnits(-1),
-            maxTextureImageUnits(-1),
-            maxTextureCoords(-1),
-            maxVertexAttributes(-1),
+            contextMask(NotSet),
+            max3DTextureSize(NotSet),
+            maxTextureUnits(NotSet),
+            maxTextureImageUnits(NotSet),
+            maxTextureCoords(NotSet),
+            maxVertexAttributes(NotSet),
             instancing(true),
             glslVersionAsStr(nullptr),
             glslVersion(GLSLVersion::Invalid) {
@@ -256,8 +280,9 @@ struct OGLFrameBuffer {
 
     /// @brief The default class constructor.
     OGLFrameBuffer(const char *name, ui32 w, ui32 h) : 
-        name(name), bufferId(0), depthrenderbufferId(0), 
-        renderedTexture(0), width(w), height(h) {}
+            name(name), bufferId(0), depthrenderbufferId(0), renderedTexture(0), width(w), height(h) {
+        // empty
+    }
 };
 
 } // namespace OSRE::RenderBackend

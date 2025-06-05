@@ -32,18 +32,20 @@ namespace OSRE::RenderBackend {
 
 ///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
 enum class ShaderType {
-    Invalid = -1, ///< Enum for invalid enum.
-    SH_VertexShaderType = 0, ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType, ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType, ///< The tesselation evaluation shader.
-    SH_FragmentShaderType, ///< The shader is a fragment shader, used for rasterization.
-    Count ///< Number of enums.
+    Invalid = -1,               ///< Enum for invalid enum.
+    SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
+    SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
+    SH_TesselationShaderType,   ///< The tesselation evaluation shader.
+    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
+    Count                       ///< Number of enums.
 };
 
 /// @brief The type to store shader
 using ShaderSourceArray = cppcore::TStaticArray<String, static_cast<size_t>(ShaderType::Count)>;
 
 //-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This class represents a container for all used shaders in the OSRE-runtime.
 ///
 /// This class defines shader which will build a representation with the used API in the render thread.
@@ -156,7 +158,11 @@ inline bool Shader::hasSource(ShaderType type) const {
     return !mSrc[static_cast<size_t>(type)].empty();
 }
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This class is used to load a shader.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ShaderLoader {
 public:
     /// @brief  The default class constructor.
@@ -177,7 +183,11 @@ public:
     virtual bool unload(Shader *shader);
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 /// @brief  This class is used to represent the shader resource.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ShaderResource : public Common::TResource<Shader, ShaderLoader> {
 public:
     /// @brief  The class constructor with the name and the uri to load from.

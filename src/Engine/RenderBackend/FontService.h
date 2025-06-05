@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
 /// @brief Provides access to the fonts.
@@ -38,7 +37,7 @@ struct FontService {
     /// @return The default font.
     static Font *getDefaultFont() {
         static Font defaultFont;
-        defaultFont.Name = "file://buildin_arial.bmp";
+        defaultFont.Name = "file://assets/Textures/Fonts/";
         defaultFont.Size = 20;
         defaultFont.Style = 0;
 
@@ -63,5 +62,4 @@ struct FontService {
     }
 };
 
-} // namespace RenderBackend
-} // namespace OSRE
+} // namespace OSRE::RenderBackend

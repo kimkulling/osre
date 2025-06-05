@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace Common {
     struct EventData;
 }
@@ -63,7 +63,7 @@ struct OGLParameter;
 /// @ingroup	Engine
 ///
 /// @brief  This class is used to manage a render command buffer. Render command buffers are used
-/// to store the list of render ops for rendering one single render frame.
+/// to store the list of render operations for rendering one single render frame.
 //-------------------------------------------------------------------------------------------------
 class RenderCmdBuffer final {
 public:

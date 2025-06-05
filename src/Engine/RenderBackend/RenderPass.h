@@ -81,6 +81,8 @@ public:
     const ClearState &getClearState() const;
     RenderPass &setStencilState(StencilState &stencilState);
     const StencilState &getStencilState() const;
+    void setRenderStates(const RenderStates &renderStates);
+    const RenderStates getRenderStates() const;
     RenderPass &setShader(Shader *shader);
     Shader *getShader() const;
     guid getId() const;
@@ -126,6 +128,14 @@ inline guid RenderPass::getId() const {
 
 inline guid RenderPass::getFrameBufferId() const {
     return mFrameBufferId;
+}
+
+inline void RenderPass::setRenderStates(const RenderStates& renderStates) {
+    mStates = renderStates;
+}
+
+inline const RenderStates RenderPass::getRenderStates() const {
+    return mStates;
 }
 
 } // namespace RenderBackend

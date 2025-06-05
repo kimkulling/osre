@@ -23,19 +23,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/TResource.h"
-#include "RenderBackend/Shader.h"
 #include "Common/osre_common.h"
+#include "Common/glm_common.h"
+#include "RenderBackend/Shader.h"
 #include "Debugging/osre_debugging.h"
 #include "IO/Uri.h"
-#include "Common/glm_common.h"
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 #include <cppcore/Container/TStaticArray.h>
 #include <cppcore/Memory/TPoolAllocator.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 // Forward declarations ---------------------------------------------------------------------------
 struct UniformVar;
@@ -79,10 +78,10 @@ enum class BufferAccessType {
 
 /// @brief The enum is used to describe the different pixel formats
 enum class PixelFormatType {
-    Invalid=-1,     ///< Marker for an invalid texture.
-    R8G8B8 = 0,     ///< 24 bit data, r, g, b
-    R8G8B8A8,       ///< 32 bit data, r, g, b, a
-    Count           ///< The number of formats
+    Invalid=-1,         ///< Marker for an invalid texture.
+    R8G8B8 = 0,         ///< 24 bit data, r, g, b
+    R8G8B8A8,           ///< 32 bit data, r, g, b, a
+    Count               ///< The number of formats
 };
 
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
@@ -95,11 +94,11 @@ enum class VertexType {
 
 ///	@brief  This enum describes the supported texture target types.
 enum class TextureTargetType {
-    Invalid = -1,   ///< Enum for invalid enum.
-    Texture1D = 0,  ///< 1D-textures, used for simple arrays in shaders.
-    Texture2D,      ///< 2D-textures, used for images and render targets.
-    Texture3D,      ///< 3D-textures, used for volume rendering.
-    Count           ///< Number of enums.
+    Invalid = -1,       ///< Enum for invalid enum.
+    Texture1D = 0,      ///< 1D-textures, used for simple arrays in shaders.
+    Texture2D,          ///< 2D-textures, used for images and render targets.
+    Texture3D,          ///< 3D-textures, used for volume rendering.
+    Count               ///< Number of enums.
 };
 
 ///	@brief  This enum describes the supported texture stages. 
@@ -117,18 +116,18 @@ enum class TextureStageType {
 
 /// @brief  This enum describes different texture parameter names.
 enum class TextureParameterName {
-    Invalid = -1,               ///< Enum for invalid enum.
-    TextureParamMinFilter = 0,  ///< The min filter name.
-    TextureParamMagFilter,      ///< The mag filter name.
-    TextureParamWrapS,          ///< The wrap name for s
-    TextureParamWrapT,          ///< The warp name for t.
-    Count                       ///< Number of enums.
+    Invalid = -1,           ///< Enum for invalid enum.
+    TextureParamMinFilter,  ///< The min filter name.
+    TextureParamMagFilter,  ///< The mag filter name.
+    TextureParamWrapS,      ///< The wrap name for s
+    TextureParamWrapT,      ///< The warp name for t.
+    Count                   ///< Number of enums.
 };
 
 /// @brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
 enum class TextureParameterType {
     Invalid = -1,               ///< Enum for invalid enum.
-    TexturePTNearest = 0,       ///< Use nearest filter mode.
+    TexturePTNearest,           ///< Use nearest filter mode.
     TexturePTLinear,            ///< Use linear interpolation mode.
     TexturePTClamp,             ///< Use clamp mode, texture data will be clamped.
     TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeated mirrored.
@@ -169,19 +168,18 @@ enum class MatrixType {
 
 /// @brief  This enum is used to describe the data-type of a parameter.
 enum class ParameterType {
-    Invalid = -1,  ///<
-    PT_None,
-    PT_Int,
-    PT_IntArray,
-    PT_Float,
-    PT_FloatArray,
-    PT_Float2,
-    PT_Float2Array,
-    PT_Float3,
-    PT_Float3Array,
-    PT_Mat4,
-    PT_Mat4Array,
-    Count
+    Invalid = -1,   ///< Invalid parameter type, indicates not inited value.
+    PT_Int,         ///< Integer type, 32 bit
+    PT_IntArray,    ///< Integer array type, 32 bit
+    PT_Float,       ///< Float type, 32 bit
+    PT_FloatArray,  ///< Float array type, 32 bit
+    PT_Float2,      ///< Float2 type, 32 bit
+    PT_Float2Array, ///< Float2 array type, 32 bit
+    PT_Float3,      ///< Float3 type, 32 bit
+    PT_Float3Array, ///< Float3 array type, 32 bit
+    PT_Mat4,        ///< Float matrix4 type, 32 bit
+    PT_Mat4Array,   ///< Float matrix4 array  type, 32 bit
+    Count           ///< Number of enums
 };
 
 /// @brief  This enum to describes the type of the vertex attribute.
@@ -265,9 +263,10 @@ struct OSRE_EXPORT RenderVert {
 
 OSRE_EXPORT const String &getVertCompName(VertexAttribute attrib);
 
+/// @brief The vertex declaration for the UI elements.
 struct OSRE_EXPORT UIVert {
-    glm::vec2 position; ///< The position ( x|y )
-    glm::vec4 color0; ///< The diffuse color ( r|g|b|a )
+    glm::vec2 position;     ///< The position ( x|y )
+    glm::vec4 color0;       ///< The diffuse color ( r|g|b|a )
 
     /// @brief The class constructor
     UIVert() = default;
@@ -281,7 +280,7 @@ struct OSRE_EXPORT UIVert {
 
 ///	@brief  Utility function for calculate the vertex format size.
 inline size_t getVertexFormatSize(VertexFormat format) {
-    ui32 size(0);
+    size_t size = 0;
     switch (format) {
         case VertexFormat::Float:
             size = sizeof(f32);
@@ -309,8 +308,6 @@ inline size_t getVertexFormatSize(VertexFormat format) {
             break;
         case VertexFormat::Count:
         case VertexFormat::Invalid:
-            break;
-
         default:
             break;
     }
@@ -320,22 +317,26 @@ inline size_t getVertexFormatSize(VertexFormat format) {
 
 /// @brief  This struct declares an extension description.
 struct ExtensionProperty {
-    c8 m_extensionName[MaxEntNameLen];
-    ui32 m_version;
+    c8 extensionName[MaxEntNameLen];    ///< The name of the extention
+    ui32 version;                       ///< The version of the extension
 
     /// @brief The class constructor
-    ExtensionProperty() : m_version(0) {
-        ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
+    ExtensionProperty() : version(0) {
+        ::memset(extensionName, '\0', sizeof(c8) * MaxEntNameLen);
     }
 };
 
-/// @brief
+/// @brief This struct is used to declare a vertex description.
 struct OSRE_EXPORT VertComponent {
-    VertexAttribute m_attrib;
-    VertexFormat m_format;
+    VertexAttribute attrib; ///< The attribute array
+    VertexFormat    format; ///< The format array
 
-    /// @brief The class constructor
+    /// @brief The class constructor.
     VertComponent();
+
+    /// @brief The class constructor with the attributes and parameters.
+    /// @param[in] attrib   The vertex attribute array.
+    /// @param[in] format   The vertex attribute format array.
     VertComponent(VertexAttribute attrib, VertexFormat format);
 
     OSRE_NON_COPYABLE(VertComponent)
@@ -1089,5 +1090,4 @@ inline void renumberIndices(const DrawCmd &dc, T offset) {
     }
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend

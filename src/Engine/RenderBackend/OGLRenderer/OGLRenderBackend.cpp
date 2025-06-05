@@ -251,8 +251,8 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     glClearColor(mClearColor.m_r, mClearColor.m_g, mClearColor.m_b, mClearColor.m_a);
 }
 
-void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
-    glViewport(x, y, w, h);
+void OGLRenderBackend::setViewport(const Viewport &viewport) {
+    glViewport(viewport.m_x, viewport.m_y, viewport.m_w, viewport.m_h);
 }
 
 OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
@@ -380,10 +380,10 @@ bool OGLRenderBackend::createVertexCompArray(const VertexLayout *layout, OGLShad
     for (ui32 i = 0; i < layout->numComponents(); i++) {
         VertComponent &comp(layout->getAt(i));
         attribute = new OGLVertexAttribute;
-        attribute->attributeName = getVertCompName(comp.m_attrib).c_str();
+        attribute->attributeName = getVertCompName(comp.attrib).c_str();
         attribute->index = shader->getAttributeLocation(attribute->attributeName);
-        attribute->size = OGLEnum::getOGLSizeForFormat(comp.m_format);
-        attribute->type = OGLEnum::getOGLTypeForFormat(comp.m_format);
+        attribute->size = OGLEnum::getOGLSizeForFormat(comp.format);
+        attribute->type = OGLEnum::getOGLTypeForFormat(comp.format);
         attribute->ptr = (GLvoid *)index;
         attributes.add(attribute);
         index += attribute->size;

@@ -141,14 +141,14 @@ const String *UIVert::getAttributes() {
 }
 
 VertComponent::VertComponent() :
-        m_attrib(VertexAttribute::Invalid),
-        m_format(VertexFormat::Invalid) {
+        attrib(VertexAttribute::Invalid),
+        format(VertexFormat::Invalid) {
     // empty
 }
 
 VertComponent::VertComponent(VertexAttribute attrib, VertexFormat format) :
-        m_attrib(attrib),
-        m_format(format) {
+        attrib(attrib),
+        format(format) {
     // empty
 }
 
@@ -180,7 +180,7 @@ void VertexLayout::clear() {
 size_t VertexLayout::sizeInBytes() {
     if (0 == m_sizeInBytes) {
         for (size_t i = 0; i < m_components.size(); ++i) {
-            const size_t compSizeInBytes = getVertexFormatSize(m_components[i]->m_format);
+            const size_t compSizeInBytes = getVertexFormatSize(m_components[i]->format);
             m_sizeInBytes += compSizeInBytes;
         }
     }
@@ -198,7 +198,7 @@ VertexLayout &VertexLayout::add(VertComponent *comp) {
     }
 
     m_components.add(comp);
-    const size_t offset(getVertexFormatSize(comp->m_format));
+    const size_t offset(getVertexFormatSize(comp->format));
     m_offsets.add(m_currentOffset);
     m_currentOffset += offset;
 
@@ -222,8 +222,7 @@ const String *VertexLayout::getAttributes() {
         const size_t numAttributes(m_components.size());
         m_attributes = new String[numAttributes];
         for (size_t i = 0; i < m_components.size(); ++i) {
-            m_attributes[i] =
-                    VertCompName[static_cast<int>(m_components[i]->m_attrib)];
+            m_attributes[i] = VertCompName[static_cast<int>(m_components[i]->attrib)];
         }
     }
 
@@ -677,7 +676,7 @@ UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
 
 UniformVar::UniformVar() :
         m_name(""),
-        m_type(ParameterType::PT_None),
+        m_type(ParameterType::Invalid),
         m_numItems(1),
         m_next(nullptr) {
     // empty

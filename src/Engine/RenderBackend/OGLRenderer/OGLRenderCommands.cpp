@@ -132,6 +132,7 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             eh->enqueueRenderCmd(renderMatCmd);
         }                                  
         break;
+
     default:
         osre_debug(Tag, "Unsupported material type.");
         break;

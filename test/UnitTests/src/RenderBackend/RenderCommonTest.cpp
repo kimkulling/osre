@@ -40,8 +40,8 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
     try {
         VertComponent comp1;
         VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
-        EXPECT_EQ( VertexAttribute::Position, comp2.m_attrib );
-        EXPECT_EQ( VertexFormat::Float3,   comp2.m_format );
+        EXPECT_EQ( VertexAttribute::Position, comp2.attrib );
+        EXPECT_EQ( VertexFormat::Float3,   comp2.format );
     } catch( ... ) {
         ok = false;
     }

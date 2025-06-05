@@ -107,17 +107,10 @@ void RenderCmdBuffer::onRenderFrame() {
             continue;
         }
 
-        RenderStates states;
-        states.m_polygonState = pass->getPolygonState();
-        states.m_cullState = pass->getCullState();
-        states.m_blendState = pass->getBlendState();
-        states.m_samplerState = pass->getSamplerState();
-        states.m_stencilState = pass->getStencilState();
-        mRBService->setFixedPipelineStates(states);
+        mRBService->setFixedPipelineStates(pass->getRenderStates());
         mRBService->setMatrix(MatrixType::View, pass->getView());
         mRBService->setMatrix(MatrixType::Projection, pass->getProjection());
-        const Viewport &v = pass->getViewport();
-        mRBService->setViewport(v.m_x, v.m_y, v.m_w, v.m_h);
+        mRBService->setViewport(pass->getViewport());
         for (OGLRenderCmd *renderCmd : mCommandQueue) {
             if (nullptr == renderCmd) {
                 continue;

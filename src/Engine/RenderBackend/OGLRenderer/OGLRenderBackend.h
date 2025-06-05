@@ -105,7 +105,7 @@ public:
 	void setTimer(Platform::AbstractTimer *timer);
 	void setRenderContext(Platform::AbstractOGLRenderContext *renderCtx);
 	void clearRenderTarget(const ClearState &clearState);
-	void setViewport(i32 x, i32 y, i32 w, i32 h);
+	void setViewport(const Viewport &viewport);
 	OGLBuffer *createBuffer(BufferType type);
     OGLBuffer *getBufferById(guid bufferId);
 	void bindBuffer(ui32 handle);
@@ -170,9 +170,9 @@ private:
 	GLuint mActiveIB;
 	cppcore::TArray<OGLVertexArray*> mVertexArrays;
 	GLuint mActiveVertexArray;
-	cppcore::TArray<OGLShader *> mShaders;
-	cppcore::TArray<OGLTexture *> mTextures;
-    cppcore::TArray<OGLTexture *> mBindedTextures;
+	cppcore::TArray<OGLShader*> mShaders;
+	cppcore::TArray<OGLTexture*> mTextures;
+    cppcore::TArray<OGLTexture*> mBindedTextures;
 	cppcore::TArray<size_t> mFreeTexSlots;
 	std::map<String, size_t> m_texLookupMap;
 	cppcore::TArray<OGLParameter *> mParameters;

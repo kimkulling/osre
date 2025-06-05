@@ -176,7 +176,8 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
 
     Rect2i rect;
     activeSurface->getWindowsRect(rect);
-    m_oglBackend->setViewport(0, 0, rect.width, rect.height);
+    Viewport viewport(0, 0, rect.width, rect.height);
+    m_oglBackend->setViewport(viewport);
 
     const String defaultFont = PlatformInterface::getInstance()->getDefaultFontName();
     IO::Uri fontUri("file://assets/Textures/Fonts/" + defaultFont);
@@ -474,7 +475,8 @@ bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
     ResizeEventData *data = (ResizeEventData *)eventData;
     if (data != nullptr) {
         mActivePipeline->resizeRenderTargets(data->targetId, data->X, data->Y, data->W, data->H);
-        m_oglBackend->setViewport(data->X, data->Y, data->W, data->H);
+        Viewport viewport(data->X, data->Y, data->W, data->H);
+        m_oglBackend->setViewport(viewport);
     }
 
     return true;

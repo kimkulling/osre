@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "Common/TAABB.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 class CanvasRenderer;
 
@@ -74,5 +73,4 @@ private:
     DebugTextArray mDebugTextArray;
 };
 
-} // Namespace RenderBackend
-} // namespace OSRE
+} // Namespace OSRE::RenderBackend
