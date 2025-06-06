@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 #include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "Common/TAABB.h"
 
@@ -56,17 +57,16 @@ private:
     DebugText *getDebugText(guid id) const;
 
 private:
-    static DbgRenderer *sInstance;
-
-    RenderBackend::RenderBackendService *mRbSrv;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    RenderBackend::Mesh *mDebugMesh;
-    
     struct DebugText {
-        RenderBackend::Mesh *mesh;
+        guid id;
         String text;
     };
 
+    static DbgRenderer *sInstance;
+    RenderBackend::RenderBackendService *mRbSrv = nullptr;
+    RenderBackend::TransformMatrixBlock mTransformMatrix;
+    RenderBackend::CanvasRenderer *mCanvasRenderer = nullptr;
+    RenderBackend::Mesh *mDebugMesh = nullptr;
     cppcore::TArray<DebugText*> mDebugTextMeshes;
     ui16 mLastIndex;
 };
