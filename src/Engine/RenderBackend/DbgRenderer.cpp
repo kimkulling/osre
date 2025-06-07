@@ -29,18 +29,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/DbgRenderer.h"
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/MeshBuilder.h"
+#include "Properties/Settings.h"
 
 namespace OSRE::RenderBackend {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Properties;
 
 DbgRenderer *DbgRenderer::sInstance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
-        mDebugMesh(nullptr),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
+    auto *settings = rbSrv->getSettings();
+    i32 x = settings->getInt(Settings::WinX);
+    i32 y = settings->getInt(Settings::WinY);
+    i32 w = settings->getInt(Settings::WinWidth);
+    i32 h = settings->getInt(Settings::WinHeight);
+
+    mCanvasRenderer = new CanvasRenderer(2, x, y, w, h);
+    mCanvasRenderer->create();
 }
 
 DbgRenderer::~DbgRenderer() {
@@ -86,26 +95,15 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
         return;
     }
 
-    DebugText *foundDebugText = getInstance()->getDebugText(id);
-    mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
-    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-    mRbSrv->setMatrix(MatrixType::Projection, projection);
-    if (foundDebugText == nullptr) {
-        MeshBuilder meshBuilder;
-        meshBuilder.allocTextBox(static_cast<f32>(x), static_cast<f32>(y), 20, text, BufferAccessType::ReadWrite);
-        DebugText *entry = new DebugText;
-        entry->mesh = meshBuilder.getMesh();
-        entry->mesh->setId(id);
-        getInstance()->mDebugTextMeshes.add(entry);
-        mRbSrv->setMatrix(MatrixType::Projection, projection);
-        mRbSrv->addMesh(entry->mesh, 0);
-    } else if (foundDebugText->text != text) {
-        MeshBuilder::updateTextBox(foundDebugText->mesh, 10, text);
-        mRbSrv->updateMesh(foundDebugText->mesh);
+    DebugText *debugText = getInstance()->getDebugText(id);
+    if (debugText == nullptr) {
+        debugText = new DebugText;
+        debugText->id = id;
+        debugText->text = text;
+    } else if (debugText->text != text) {
+        debugText->text = text;
     }
-    mRbSrv->endRenderBatch();
-    mRbSrv->endPass();
+    mCanvasRenderer->drawText(x, y, 10, text);
 }
 
 static constexpr size_t NumIndices = 24;
@@ -233,7 +231,7 @@ DbgRenderer::DebugText *DbgRenderer::getDebugText(guid id) const {
 
     DebugText *found = nullptr;
     for (size_t i = 0; i < mDebugTextMeshes.size(); ++i) {
-        if (mDebugTextMeshes[i]->mesh->getId() == id) {
+        if (mDebugTextMeshes[i]->id == id) {
             found = mDebugTextMeshes[i];
             break;
         }
