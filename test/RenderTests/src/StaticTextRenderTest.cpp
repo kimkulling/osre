@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iomanip>
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -66,5 +65,4 @@ public:
 
 ATTACH_RENDERTEST( StaticTextRenderTest )
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest

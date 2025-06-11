@@ -30,8 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Platform/PlatformInterface.h"
 #include "RenderBackend/RenderCommon.h"
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -112,5 +111,4 @@ Platform::AbstractWindow *AbstractRenderTest::getWindow() const {
     return mWindow;
 }
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest

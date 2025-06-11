@@ -34,8 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TStaticArray.h>
 #include <cppcore/Memory/TPoolAllocator.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 // Forward declarations ---------------------------------------------------------------------------
 struct UniformVar;
@@ -1076,18 +1075,5 @@ struct DrawCmd {
 /// @brief The draw command array.
 using DrawCmdArray = cppcore::TArray<DrawCmd *>;
 
-/// @brief Will renumber the indices.
-/// @tparam T Index type
-/// @param dc       The draw command container
-/// @param offset   Offset as renumbering parameter
-template<class T>
-inline void renumberIndices(const DrawCmd &dc, T offset) {
-    if (offset > 0) {
-        for (size_t j = 0; j < dc.NumIndices; ++j) {
-            dc.Indices[j] += static_cast<ui16>(offset);
-        }
-    }
-}
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend

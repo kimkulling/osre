@@ -33,8 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MeshBuilder.h"
 #include "RenderBackend/OGLRenderer/OGLShader.h"
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -171,5 +170,5 @@ public:
 
 ATTACH_RENDERTEST(GeoInstanceRenderTest)
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest
+

@@ -23,15 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "App/AppCommon.h"
+#include "Common/AbstractService.h"
 
-namespace OSRE {
-
-// Forward declarations ---------------------------------------------------------------------------
-namespace Common {
-    class AbstractService;
-}
-
-namespace App {
+namespace OSRE::App {
 
 /// @brief 
 enum class ServiceType {
@@ -58,7 +52,7 @@ public:
         if (type == ServiceType::Invalid || type == ServiceType::Count) {
             return nullptr;
         }
-        return (T *) s_instance->mServiceArray[static_cast<size_t>(type)];
+        return (T *) sInstance->mServiceArray[static_cast<size_t>(type)];
     }
 
 private:
@@ -66,13 +60,12 @@ private:
     ~ServiceProvider() = default;
 
 private:
-    static ServiceProvider *s_instance;
+    static ServiceProvider *sInstance;
 
     using ServiceArray = cppcore::TArray<Common::AbstractService*>;
     ServiceArray mServiceArray;
 };
 
-} // Namespace App
-} // Namespace OSRE
+} // Namespace OSRE::App
 
 

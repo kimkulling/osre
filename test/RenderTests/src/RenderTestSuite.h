@@ -33,13 +33,14 @@ namespace OSRE {
 namespace Platform {
     class AbstractTimer;
     class PlatformInterface;
-}
+} // namespace Platform
 
 namespace RenderBackend {
     class RenderBackendService;
 }
+} // namespace OSRE
 
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 class AbstractRenderTest;
 class KeyboardEventListener;
@@ -80,7 +81,7 @@ private:
     RenderTestSuite( const String &suiteName );
 
 private:
-    static RenderTestSuite *s_pInstance;
+    static RenderTestSuite *sInstance;
     AbstractRenderTest *m_pActiveRenderTest;
     ui32 m_activeTestIdx;
     cppcore::TArray<AbstractRenderTest*> m_attachedRenderTests;
@@ -94,5 +95,4 @@ private:
     String mSelectedTest;
 };
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest

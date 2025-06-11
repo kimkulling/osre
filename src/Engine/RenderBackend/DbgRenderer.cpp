@@ -100,6 +100,7 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
         debugText = new DebugText;
         debugText->id = id;
         debugText->text = text;
+        mDebugTextMeshes.add(debugText);
     } else if (debugText->text != text) {
         debugText->text = text;
     }

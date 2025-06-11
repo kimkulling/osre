@@ -253,7 +253,7 @@ private:
     Common::Environment *mEnvironment = nullptr;
     Properties::Settings *mSettings = nullptr;
     Platform::PlatformInterface *mPlatformInterface = nullptr;
-    Platform::AbstractTimer *mTimer;
+    Platform::AbstractTimer *mTimer = nullptr;
     RenderBackend::RenderBackendService *mRbService = nullptr;
     cppcore::TArray<Scene*> mScenes;
     Scene *mActiveScene = nullptr;

@@ -20,16 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#ifndef OSRE_RENDERBACKEND_MESHUTILITIES_H_INC
-#define OSRE_RENDERBACKEND_MESHUTILITIES_H_INC
+#pragma once
 
 #include "Common/osre_common.h"
 #include "Debugging/osre_debugging.h"
 #include "Common/Tokenizer.h"
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 ///-----------------------------------------------------------------
 /// @class MeshUtilities
@@ -152,7 +150,17 @@ public:
     }
 };
 
-} // namespace RenderBackend
-} // namespace OSRE
+/// @brief Will renumber the indices.
+/// @tparam T Index type
+/// @param dc       The draw command container
+/// @param offset   Offset as renumbering parameter
+template <class T>
+inline void renumberIndices(const DrawCmd &dc, T offset) {
+    if (offset > 0) {
+        for (size_t j = 0; j < dc.NumIndices; ++j) {
+            dc.Indices[j] += static_cast<ui16>(offset);
+        }
+    }
+}
 
-#endif // OSRE_RENDERBACKEND_MESHUTILITIES_H_INC
+} // namespace OSRE::RenderBackend

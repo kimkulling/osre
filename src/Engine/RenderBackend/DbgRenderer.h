@@ -29,13 +29,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/TransformMatrixBlock.h"
 #include "Common/TAABB.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief Will render debug data onto the current frame.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT DbgRenderer {
     struct DebugText;
@@ -71,5 +70,4 @@ private:
     ui16 mLastIndex;
 };
 
-} // Namespace RenderBackend
-} // namespace OSRE
+} // Namespace OSRE::RenderBackend

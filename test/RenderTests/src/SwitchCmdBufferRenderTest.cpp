@@ -33,8 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include <cppcore/Random/RandomGenerator.h>
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::App;
@@ -82,21 +81,18 @@ const String FsSrc =
 //-------------------------------------------------------------------------------------------------
 class SwitchCmdBufferRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
-    static const ui32 NumPoints = 1000;
-    Mesh *m_pointMesh;
-    ParticleEmitter *m_particeGen;
+    static constexpr ui32 NumPoints = 1000;
+    Mesh *m_pointMesh = nullptr;
+    ParticleEmitter *m_particeGen = nullptr;
 
 public:
-    SwitchCmdBufferRenderTest()
-    : AbstractRenderTest( "rendertest/SwitchCmdBufferRenderTest" )
-    , m_pointMesh( nullptr )
-    , m_particeGen( nullptr ) {
+    SwitchCmdBufferRenderTest() :
+            AbstractRenderTest( "rendertest/SwitchCmdBufferRenderTest" ) {
         // empty
     }
 
-    virtual ~SwitchCmdBufferRenderTest() {
+    ~SwitchCmdBufferRenderTest() override {
         delete m_particeGen;
-        m_particeGen = nullptr;
     }
 
     bool onCreate( RenderBackendService *rbSrv ) override {
@@ -136,5 +132,4 @@ public:
 
 ATTACH_RENDERTEST( SwitchCmdBufferRenderTest )
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest
