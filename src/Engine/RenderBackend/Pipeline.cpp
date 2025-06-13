@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "Common/osre_common.h"
 #include "RenderBackend/Pipeline.h"
+#include "Common/osre_common.h"
 #include "RenderBackend/RenderBackendService.h"
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
+
 namespace DefaultPipelines {
 
 const c8 *get3DPipelineDefault() {
@@ -37,6 +37,7 @@ const c8* get2DPipelineDefault() {
     static constexpr c8 Name[] = "pipeline.default.2d";
     return Name;
 }
+
 }
 
 constexpr guid InvalidPassIdx = 99999999u;
@@ -136,5 +137,4 @@ void Pipeline::resizeRenderTargets(guid id, ui32 x, ui32 y, ui32 w, ui32 h) {
     }
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend

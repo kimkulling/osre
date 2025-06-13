@@ -396,6 +396,11 @@ bool AppBase::onDestroy() {
     delete mKeyboardEvListener;
     mKeyboardEvListener = nullptr;
 
+    for (size_t i = 0; i < mScenes.size(); ++i) {
+     //   delete mScenes[i];
+    }
+    mScenes.clear();
+
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
 

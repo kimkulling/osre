@@ -225,7 +225,7 @@ void MainRenderView::createEditorElements(RenderComponent *rc) {
     mEditorElements.add(axis);
 }
 
-void MainRenderView::render( RenderBackendService *rbSrv, glm::mat4 model ) {
+void MainRenderView::render(RenderBackendService *rbSrv, glm::mat4 model) {
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
 

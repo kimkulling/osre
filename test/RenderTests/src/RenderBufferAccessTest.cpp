@@ -35,8 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/OGLRenderer/OGLShader.h"
 #include <iostream>
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -147,5 +146,4 @@ public:
 
 ATTACH_RENDERTEST(RenderBufferAccessTest)
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest

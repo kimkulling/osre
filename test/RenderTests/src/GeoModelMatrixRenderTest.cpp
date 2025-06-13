@@ -30,8 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iomanip>
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -134,5 +133,4 @@ public:
 
 ATTACH_RENDERTEST(GeoModelMatrixRenderTest)
 
-} // namespace RenderTest
-} // namespace OSRE
+} // namespace OSRE::RenderTest

@@ -42,7 +42,7 @@ DECL_OSRE_LOG_MODULE(HelloWorldApp)
 /// @brief This is the simple HelloWorld-App to get familiar with the base concept of the
 ///        OSRE engine.
 //-------------------------------------------------------------------------------------------------
-class HelloWorldApp : public App::AppBase {
+class HelloWorldApp final : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix.
     TransformMatrixBlock mTransformMatrix;
     /// The entity to render.
@@ -115,11 +115,12 @@ int main( int argc, char *argv[] )  {
     if ( !myApp.create() ) {
         return 1;
     }
-    while ( myApp.handleEvents() ) {
+    while (myApp.handleEvents()) {
         myApp.update();
         myApp.requestNextFrame();
     }
     myApp.destroy();
+
     return 0;
 }
 

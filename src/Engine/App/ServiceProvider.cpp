@@ -29,25 +29,27 @@ namespace OSRE::App {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 
-ServiceProvider *ServiceProvider::s_instance = nullptr;
+ServiceProvider *ServiceProvider::sInstance = nullptr;
 
 ServiceProvider *ServiceProvider::create() {
-    if (nullptr == s_instance) {
-        s_instance = new ServiceProvider;
+    if (nullptr == sInstance) {
+        sInstance = new ServiceProvider;
     }
 
-    return s_instance;
+    return sInstance;
 }
 
 void ServiceProvider::destroy() {
-    if (nullptr != s_instance) {
-        delete s_instance;
-        s_instance = nullptr;
+    if (nullptr != sInstance) {
+        delete sInstance;
+        sInstance = nullptr;
     }
 }
 
 void ServiceProvider::setService(ServiceType type, Common::AbstractService *service) {
-    s_instance->mServiceArray[static_cast<size_t>(type)] = service;
+    if (type == ServiceType::Invalid || type == ServiceType::Count) {
+    }
+    sInstance->mServiceArray[static_cast<size_t>(type)] = service;
 }
 
 ServiceProvider::ServiceProvider() :
