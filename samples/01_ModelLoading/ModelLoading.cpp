@@ -133,9 +133,7 @@ public:
     }
 
     /// @brief The class destructor.
-    ~ModelLoadingApp() override {
-        delete mOrbitalMouseControl;
-    }
+    ~ModelLoadingApp() override = default;
 
     /// @brief  Will return true, if a model was loaded.
     /// @return true for model loaded.
@@ -223,6 +221,13 @@ protected:
         rbSrv->endPass();
 
         AppBase::onUpdate();
+    }
+
+    bool onDestroy() override {
+        delete mOrbitalMouseControl;
+        mOrbitalMouseControl = nullptr;
+
+        return true;
     }
 };
 

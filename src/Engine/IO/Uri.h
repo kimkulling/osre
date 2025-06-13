@@ -135,7 +135,7 @@ public:
 
 private:
     String mURI;
-    SchemeType mScheme;
+    SchemeType mScheme = FileScheme;
     String mPath;
     String mAbsPath;
     String mResource;
