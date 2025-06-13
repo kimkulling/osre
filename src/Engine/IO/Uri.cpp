@@ -131,7 +131,7 @@ const String &Uri::getResource() const {
 	return mResource;
 }
 
-void Uri::setResource( const String &res ) {
+void Uri::setResource(const String &res) {
     if (mResource == res) {
         return;
     }
