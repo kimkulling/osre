@@ -227,7 +227,7 @@ protected:
         delete mOrbitalMouseControl;
         mOrbitalMouseControl = nullptr;
 
-        return true;
+        return App::AppBase::onDestroy();
     }
 };
 
