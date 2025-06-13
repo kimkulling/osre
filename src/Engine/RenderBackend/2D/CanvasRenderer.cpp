@@ -214,7 +214,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         }
 
         const ui32 lastIndex = mMesh->getLastIndex();
-        renumberIndices(dc, numVertices);
+        renumberIndices(dc.Indices, dc.NumIndices, numVertices);
 
         mMesh->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mMesh->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));
@@ -239,7 +239,7 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         }
 
         const ui32 lastIndex = mText->getLastIndex();
-        renumberIndices(dc, numVertices);
+        renumberIndices(dc.Indices, dc.NumIndices, numVertices);
 
         mText->attachVertices(dc.Vertices, dc.NumVertices * sizeof(RenderVert));
         mText->attachIndices(dc.Indices, dc.NumIndices * sizeof(ui16));

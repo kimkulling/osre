@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/osre_common.h"
 #include "Debugging/osre_debugging.h"
 #include "Common/Tokenizer.h"
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE::RenderBackend {
@@ -155,10 +156,10 @@ public:
 /// @param dc       The draw command container
 /// @param offset   Offset as renumbering parameter
 template <class T>
-inline void renumberIndices(const DrawCmd &dc, T offset) {
+inline void renumberIndices(ui16 *indices, size_t numIndices, T offset) {
     if (offset > 0) {
-        for (size_t j = 0; j < dc.NumIndices; ++j) {
-            dc.Indices[j] += static_cast<ui16>(offset);
+        for (size_t j = 0; j < numIndices; ++j) {
+            indices[j] += static_cast<ui16>(offset);
         }
     }
 }

@@ -26,18 +26,18 @@ namespace OSRE::Common {
 
 using namespace ::cppcore;
 
-static const String EmptyToken = "";
-
 size_t Tokenizer::getNumOfToken() const {
     return m_Token.size();
 }
 
-const String &Tokenizer::getTokenAt( ui32 index ) const {
-    if ( m_Token.isEmpty() || m_Token.size() >= index ) {
-        return EmptyToken;
+bool Tokenizer::getTokenAt(size_t index, String &token) const {
+    if ( m_Token.isEmpty() || m_Token.size() >= index ) {        
+        token = "";
+        return false;
     }
 
-    return m_Token[ index ];
+    token = m_Token[index];
+    return true;
 }
 
 bool Tokenizer::isEmpty() const {

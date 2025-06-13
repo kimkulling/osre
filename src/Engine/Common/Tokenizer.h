@@ -57,10 +57,10 @@ public:
     size_t getNumOfToken() const;
     
     ///	@brief	Returns the token at the given index.
-    ///	@param	idx		[in] The given index, must be between ( 0 ... numToken-1 ).
-    ///	@return	The token at the given index. If the index is out of range an empty string will be 
-    ///			returned.
-    const String &getTokenAt( ui32 idx ) const;
+    ///	@param	index		[in] The given index, must be between (0 ... numToken-1).
+    /// @param  token       [out] the token at the requested index.
+    ///	@return	true, if any else false.
+    bool getTokenAt(size_t index, String &token) const;
     
     ///	@brief	Returns true, if the stored list of token is empty.
     ///	@return	true, if no token are store, false if tokens are stored.
