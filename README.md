@@ -3,9 +3,7 @@
 </p>
 
 # OSRE - Just another Open-Source-Render-Engine
-This is just another open-source render engine / game engine made by Kim Kulling. This is a playground project for me to work on my side projects.
-Don't expect too much, I will not invest too much time into it. But If you are interested in playing around with 3D stuff feel free to discuss 
-these things on Reggit or in the Discussion Forum.
+This is an experimental render engine I made to play around to learn more about render engine architecture.
 
 # Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
