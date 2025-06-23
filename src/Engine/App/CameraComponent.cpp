@@ -33,12 +33,6 @@ using namespace ::glm;
 
 DECL_OSRE_LOG_MODULE(Camera)
 
-static const String CameraModelName[3] = {
-    "Perspective ",
-    "Orthogonal",
-    "Invalid"
-};
-
 static constexpr f32 DefaultNear = 0.001f;
 static constexpr f32 DefaultFar = 1000.0f;
 static constexpr f32 DefaultAspectRatio = 1.0f;
@@ -121,7 +115,13 @@ void CameraComponent::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane,
 }
 
 void CameraComponent::setCameraModel(CameraModel cm) {
-    osre_trace(Tag, "Set camera model to " + CameraModelName[static_cast<size_t>(cm)]);
+    static constexpr c8 *CameraModelName[3] = {
+        "Perspective ",
+        "Orthogonal",
+        "Invalid"
+    };
+
+    osre_trace(Tag, "Set camera model to " + String(CameraModelName[static_cast<size_t>(cm)]));
 
     mCameraModel = cm;
 }

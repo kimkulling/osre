@@ -24,14 +24,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/OGLRenderer/OGLCommon.h"
 #include "RenderBackend/OGLRenderer/OGLEnum.h"
 #include "RenderBackend/OGLRenderer/OGLShader.h"
+#include "RenderBackend/RenderStates.h"
+#include "RenderBackend/Shader.h"
 #include "Common/Logger.h"
 #include "Common/glm_common.h"
 #include "Debugging/osre_debugging.h"
 #include "IO/Uri.h"
 #include "Platform/AbstractOGLRenderContext.h"
 #include "Profiling/PerformanceCounterRegistry.h"
-#include "RenderBackend/RenderStates.h"
-#include "RenderBackend/Shader.h"
 
 #include <cppcore/CPPCoreCommon.h>
 #include <cppcore/Memory/MemUtils.h>

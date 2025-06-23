@@ -35,8 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
@@ -44,9 +43,9 @@ using namespace ::OSRE::Platform;
 using namespace ::cppcore;
 
 // static member initialization
-RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
-static const c8 *Tag = "RenderTestSuite";
-static const ui32 AllTestsDone = 999999;
+RenderTestSuite *RenderTestSuite::sInstance = nullptr;
+static constexpr c8   Tag[] = "RenderTestSuite";
+static constexpr ui32 AllTestsDone = 999999;
 
 // our base keyboard event listener, for switching to the next test case
 class KeyboardEventListener : public Platform::OSEventListener {
@@ -79,21 +78,21 @@ private:
 };
 
 RenderTestSuite *RenderTestSuite::create(const String &suiteName) {
-    if (!s_pInstance) {
-        s_pInstance = new RenderTestSuite(suiteName);
+    if (!sInstance) {
+        sInstance = new RenderTestSuite(suiteName);
     }
 
-    return s_pInstance;
+    return sInstance;
 }
 
 RenderTestSuite *RenderTestSuite::getInstance() {
-    if (!s_pInstance) {
+    if (!sInstance) {
         // in case of an invalid call use opengl backend as the fall-back
         static_cast<void>(RenderTestSuite::create("tests"));
         osre_error(Tag, "RenderTestSuite::getInstance called before RenderTestSuite::create, using fallback backend");
     }
 
-    return s_pInstance;
+    return sInstance;
 }
 
 bool RenderTestSuite::setup(const String &API) {
@@ -172,11 +171,11 @@ bool RenderTestSuite::teardown() {
 }
 
 void RenderTestSuite::kill() {
-    osre_assert(nullptr != s_pInstance);
-    if (s_pInstance) {
-        s_pInstance->teardown();
-        delete s_pInstance;
-        s_pInstance = nullptr;
+    osre_assert(nullptr != sInstance);
+    if (sInstance) {
+        sInstance->teardown();
+        delete sInstance;
+        sInstance = nullptr;
         Logger::kill();
     }
 }
@@ -347,5 +346,4 @@ RenderTestSuite::~RenderTestSuite() {
     }
 }
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest

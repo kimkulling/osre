@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iomanip>
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -40,8 +39,8 @@ using namespace ::OSRE::RenderBackend;
 /// @brief  A debug font - rendering test
 //-------------------------------------------------------------------------------------------------
 class DbgFontRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock mTransformMatrix;
-    ui32 mFrameCount;
+    TransformMatrixBlock    mTransformMatrix;
+    ui32                    mFrameCount;
 
 public:
     DbgFontRenderTest() :
@@ -64,19 +63,21 @@ public:
 
     bool onDestroy(RenderBackendService *) override {
         DbgRenderer::getInstance()->clear();
+        
         return true;
     }
 
-    bool onRender(RenderBackend::RenderBackendService *) override {
+    bool onRender(RenderBackendService *) override {
         mFrameCount++;
         std::stringstream stream;
         stream << std::setfill('0') << std::setw(3) << mFrameCount;
         DbgRenderer::getInstance()->renderDbgText(10, 10, 1, stream.str());
+        
         return true;
     }
 };
 
 ATTACH_RENDERTEST(DbgFontRenderTest)
 
-} // namespace RenderTest
-} // namespace OSRE
+} // namespace OSRE::RenderTest
+

@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/osre_common.h"
 
-namespace OSRE {
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Test
@@ -66,16 +65,16 @@ protected:
     AbstractTestFixture &operator = ( const AbstractTestFixture & ) = delete;
 
 private:
-    String m_name;
+    String mName;
 };
 
-inline AbstractTestFixture::AbstractTestFixture( const String &name ) : m_name( name ) {
+inline AbstractTestFixture::AbstractTestFixture(const String &name) :
+        mName(name) {
     // empty
 }
 
 inline const String &AbstractTestFixture::getName() const {
-    return m_name;
+    return mName;
 }
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // Namespace OSRE::RenderTest
