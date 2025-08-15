@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 
-namespace OSRE {
-namespace RenderBackend {
+namespace OSRE::RenderBackend {
 
 // Forward declarations ---------------------------------------------------------------------------
 class Shader;
@@ -50,10 +49,10 @@ namespace DefaultPipelines {
 /// passes. Each frame which will be rendered by the pipeline walks through all the passes. So
 /// a pipeline could look like:
 /// MyPipeline:
-///   1.) ClearPass ( will clear all the buffers)
-///   2.) Render all static meshes
-///   3.) Render special tiles for lightning
-///   4.) UI-Rendering 
+///   1. ClearPass (will clear all the buffers)
+///   2. Render all static meshes
+///   3. Render special tiles for lightning
+///   4. UI-Rendering 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Pipeline : public Common::Object {
 public:
@@ -108,5 +107,4 @@ private:
     bool mInFrame;
 };
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace OSRE::RenderBackend

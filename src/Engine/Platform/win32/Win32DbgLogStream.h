@@ -25,8 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Common/Logger.h"
 #include "Platform/Windows/MinWindows.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -34,7 +33,7 @@ namespace Platform {
 ///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger
 ///	output window.
 //-------------------------------------------------------------------------------------------------
-class Win32DbgLogStream : public Common::AbstractLogStream {
+class Win32DbgLogStream final : public Common::AbstractLogStream {
 public:
     ///	@brief The default class constructor.
     Win32DbgLogStream() = default;
@@ -44,14 +43,13 @@ public:
     
     ///	Writes the message into the debug output buffer.
     /// @param[in] msg   Message to log.
-    void write(const String &msg);
+    void write(const String &msg) override;
 };
 
 inline void Win32DbgLogStream::write(const String &msg) {
     if (!msg.empty()) {
-        ::OutputDebugString(msg.c_str());
+        OutputDebugString(msg.c_str());
     }
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform

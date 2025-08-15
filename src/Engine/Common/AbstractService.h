@@ -141,7 +141,7 @@ private:
 /// @brief  Helper macro to define a singleton and implement all needed methods.
 //-------------------------------------------------------------------------------------------------
 #define IMPLEMENT_SINGLETON( type )                 \
-    type * type::s_instance( nullptr );
+    type * type::s_instance(nullptr);
 
 //-------------------------------------------------------------------------------------------------
 /// @ingroup    Engine

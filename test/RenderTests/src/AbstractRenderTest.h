@@ -28,16 +28,17 @@ namespace OSRE {
 
 // Forward declarations ---------------------------------------------------------------------------
 namespace Platform {
-    class AbstractWindow;
+class AbstractWindow;
 }
 
 namespace RenderBackend {
-    class RenderBackendService;
-    class Material;
+class RenderBackendService;
+class Material;
 
 } // namespace RenderBackend
+}
 
-namespace RenderTest {
+namespace OSRE::RenderTest {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -140,5 +141,5 @@ private:
     Platform::AbstractWindow *mWindow;
 };
 
-} // namespace RenderTest
-} // namespace OSRE
+} // namespace OSRE::RenderTest
+
