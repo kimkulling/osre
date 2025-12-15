@@ -86,7 +86,8 @@ void ParticleEmitter::init(ui32 numPoints) {
     mPtGeo->setModelMatrix(true, glm::mat4(1.0f));
 
     // setup material
-    Material *mat = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+    TextureResourceArray texResArray;
+    Material *mat = MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::ColorVertex);
     mPtGeo->setMaterial(mat);
 }
 

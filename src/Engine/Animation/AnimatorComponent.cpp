@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Animation/AnimatorComponent.h"
 #include "Common/Logger.h"
 
+#include <iostream>
 
 namespace OSRE::Animation {
 
@@ -91,8 +92,9 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     // calculate the time
-    double time = static_cast<d32>(dt.asMilliSeconds()) / 1000.0f;
+    double time = static_cast<d32>(dt.asMilliSeconds());
     const double ticksPerSecond = track->ticksPerSecond != 0.0 ? track->ticksPerSecond : 25.0;
+    std::cout << "Time: " << time << ", last time: " << mLastTime << ", delta: " << (time - mLastTime) << ", ticksPerSecond: " << ticksPerSecond << std::endl;
     
     // every following time calculation happens in ticks
     time *= ticksPerSecond;
@@ -103,7 +105,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     const size_t currentAnimationTrack = getActiveTrack();
-
+    std::cout << "Current animation track: " << currentAnimationTrack << std::endl;
     AnimationChannel &animChannel = track->animationChannels[currentAnimationTrack];
     glm::vec3 presentPosition(0, 0, 0);
     glm::quat q(0, 0, 0, 1);

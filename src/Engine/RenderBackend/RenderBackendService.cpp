@@ -151,6 +151,8 @@ bool RenderBackendService::onClose() {
         mRenderTaskPtr->detachEventHandler();
         mRenderTaskPtr->stop();
     }
+    delete mGPUFeatureSet;
+    mGPUFeatureSet = nullptr;
 
     if (mOwnsSettingsConfig) {
         delete mSettings;
@@ -299,6 +301,19 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
     if (mRenderTaskPtr != nullptr) {
         mRenderTaskPtr->sendEvent(ev, eventData);
     }
+}
+
+GPUFeatureSet *RenderBackendService::enumerateGPU() {
+    if (mRenderTaskPtr == nullptr) {
+        osre_error(Tag, "Render task not available.");
+        return nullptr;
+    }
+    
+    mGPUFeatureSet = new GPUFeatureSet;
+    mGPUFeatureSet->shaderLanguageType = ShaderLanguageType::GLSL; // Default
+    mGPUFeatureSet->shaderVersion = "450"; // Default
+    
+    return mGPUFeatureSet;
 }
 
 Pipeline *RenderBackendService::createDefault3DPipeline(guid framebufferId) {

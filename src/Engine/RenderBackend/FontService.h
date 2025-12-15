@@ -57,7 +57,7 @@ struct FontService {
         const IO::Uri uri("file://assets/Textures/Fonts/" + font.Name);
         TextureResource *texRes = new TextureResource(font.Name, uri);
         texResArray.add(texRes);
-        Material *fontMaterial = MaterialBuilder::createTexturedMaterial(font.Name + ".mat", texResArray, VertexType::RenderVertex);
+        Material *fontMaterial = MaterialBuilder::createBuildinMaterial(font.Name + ".mat", texResArray, VertexType::RenderVertex);
 
         return fontMaterial;
     }

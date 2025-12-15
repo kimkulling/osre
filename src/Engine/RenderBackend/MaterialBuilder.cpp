@@ -286,50 +286,7 @@ void MaterialBuilder::destroy() {
     sData = nullptr;
 }
 
-Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
-    MaterialCache *materialCache = sData->mMaterialCache;
-    Material *mat = materialCache->find("buildinShaderMaterial");
-    if (nullptr != mat) {
-        return mat;
-    }
-
-    mat = materialCache->create("buildinShaderMaterial", IO::Uri());
-    String vs, fs, shaderName;
-    if (type == VertexType::ColorVertex) {
-        vs = GLSLVsSrc;
-        fs = GLSLFsSrc;
-        shaderName = "buildinShaderColVert.sh";
-    } else if (type == VertexType::RenderVertex) {
-        vs = GLSLVertexShaderSrcRV;
-        fs = GLSLFragmentShaderSrcRV;
-        shaderName = "buildinShaderRenderVert.sh";
-    }
-    if (vs.empty() || fs.empty()) {
-        delete mat;
-        return nullptr;
-    }
-
-    ShaderSourceArray arr;
-    arr[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = vs;
-    arr[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = fs;
-    mat->createShader(shaderName, arr);
-
-    // Setup shader attributes and variables
-    Shader *shader = mat->getShader();
-    if (shader != nullptr) {
-        if (type == VertexType::ColorVertex) {
-            shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
-        } else if (type == VertexType::RenderVertex) {
-            shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
-        }
-
-        addMaterialParameter(mat);
-    }
-
-    return mat;
-}
-
-Material *MaterialBuilder::createTexturedMaterial(const String &matName, const TextureResourceArray &texResArray,
+Material *MaterialBuilder::createBuildinMaterial(const String &matName, const TextureResourceArray &texResArray,
         VertexType type) {
     if (matName.empty()) {
         return nullptr;
@@ -404,24 +361,6 @@ Material *MaterialBuilder::createTexturedMaterial(const String &matName, const T
 
         addMaterialParameter(mat);
     }
-
-    return mat;
-}
-
-static constexpr c8 DefaultDebugTestMat[] = "debug_text.mat";
-
-Material *MaterialBuilder::createDebugRenderTextMaterial() {
-    MaterialCache *materialCache = sData->mMaterialCache;
-    Material *mat = materialCache->find(DefaultDebugTestMat);
-    if (nullptr != mat) {
-        return mat;
-    }
-    const String shaderName = "debug_text.sh";
-    mat = materialCache->create(DefaultDebugTestMat);
-    ShaderSourceArray shArray;
-    shArray[static_cast<size_t>(ShaderType::SH_VertexShaderType)] = "\n";
-    shArray[static_cast<size_t>(ShaderType::SH_FragmentShaderType)] = "\n";
-    mat->createShader(shaderName, shArray);
 
     return mat;
 }

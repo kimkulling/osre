@@ -129,7 +129,8 @@ MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType acces
     mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
@@ -178,7 +179,8 @@ MeshBuilder &MeshBuilder::allocQuads(VertexType type, BufferAccessType access) {
     mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
@@ -242,7 +244,8 @@ MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, Buffe
 
     const size_t ibSize = sizeof(ui16) * NumIndices;
     mActiveMesh->createIndexBuffer(indices, ibSize, IndexType::UnsignedShort, access);
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
@@ -281,7 +284,8 @@ MeshBuilder &MeshBuilder::allocPoints(VertexType type, BufferAccessType access, 
     mActiveMesh->addPrimitiveGroup(3, PrimitiveType::PointList, 0);
 
     // setup material
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
