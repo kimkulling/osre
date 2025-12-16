@@ -48,7 +48,7 @@ public:
 
     ///	@brief	Returns the milli-seconds since starting the application.
     ///	@return	Seconds past since starting the application.
-    virtual i64 getMicroCurrentSeconds() = 0;
+    virtual i64 getMilliCurrentSeconds() = 0;
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
     ///	@return	The time difference in ms.
@@ -80,7 +80,7 @@ inline i64 AbstractTimer::getRequestedTimeStep() const {
 }
 
 inline Time AbstractTimer::getTimeDiff() {
-    const i64 currentTime = getMicroCurrentSeconds();
+    const i64 currentTime = getMilliCurrentSeconds();
     if (mLastTime == 0L) {
         mLastTime = currentTime;
         return 0l;
