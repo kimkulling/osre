@@ -80,7 +80,7 @@ protected:
         Animation::AnimatorComponent *animator = static_cast<Animation::AnimatorComponent *>(camEntity->createComponent(ComponentType::AnimationComponentType));
         mTrack.numVectorChannels = 1;
         mTrack.animationChannels = new Animation::AnimationChannel[mTrack.numVectorChannels];
-        mTrack.duration = 1.0f;
+        mTrack.duration = 1000.0f;
         Animation::AnimationChannel channel;
         Animation::RotationKey rot;
         rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
