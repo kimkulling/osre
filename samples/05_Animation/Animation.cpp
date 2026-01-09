@@ -70,7 +70,7 @@ protected:
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         scene->addEntity(camEntity);
         MeshBuilder meshBuilder;
-        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
+        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, 2, 2, 2, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
             auto *rc = static_cast<RenderComponent*>(mEntity->getComponent(ComponentType::RenderComponentType));
             rc->addStaticMesh(mesh);
         }
@@ -83,7 +83,7 @@ protected:
         mTrack.duration = 1000.0f;
         Animation::AnimationChannel channel;
         Animation::RotationKey rot;
-        rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
+        rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(0.f, 0.00f, 0.f));
         rot.Time = 1.0f;
         mTrack.animationChannels[0].RotationKeys.add(rot);
         animator->addTrack(&mTrack);

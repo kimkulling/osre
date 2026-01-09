@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Animation/AnimatorComponent.h"
+#include "RenderBackend/RenderBackendService.h"
 #include "Common/Logger.h"
 
 #include <iostream>
@@ -28,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE::Animation {
 
 using namespace OSRE::App;
+using namespace OSRE::RenderBackend;
 
 DECL_OSRE_LOG_MODULE(AnimatorComponent);
 
@@ -203,9 +205,10 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     glm::mat4 &transform = mTransformArray[currentAnimationTrack];
-    transform = toMat4(q);
+    transform *= toMat4(q);
     transform = scale(transform, presenceScale);
     transform = translate(transform, presentPosition);
+    mTransformArray[currentAnimationTrack] = transform;
 
     return true;
 }
@@ -213,6 +216,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
 bool AnimatorComponent::onRender(RenderBackend::RenderBackendService *renderBackendSrv) {
     osre_assert(renderBackendSrv != nullptr);
 
+    renderBackendSrv->setMatrix(MatrixType::Model, mTransformArray[mActiveTrack]);
     return true;
 }
 
