@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Common/Object.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -59,19 +58,16 @@ protected:
     ///	@param	name        [in] The name for the timer instance.
     AbstractTimer(const String &name);
 
-    ///	@brief Will set the reuqested time step.
-    /// @param  reqTimeStep [in] The time-step for the target FPS-value.
-    void setMaxTimeDiff(i64 reqTimeStep = 1000L / 60L);
-
-    /// @brief  Will return the target time slice for 
+    /// @brief  Will return the target time slice.
+    /// @return The requested time step in milliseconds.
     i64 getRequestedTimeStep() const;
 
 private:
-    i64 mReqTimeSlice;
-    i64 mLastTime;
+    i64 mReqTimeSlice{ -1 };
+    i64 mLastTime{ 0l };
 };
 
-inline AbstractTimer::AbstractTimer(const String &name) : Object(name), mReqTimeSlice(-1), mLastTime(0l) {
+inline AbstractTimer::AbstractTimer(const String &name) : Object(name) {
     // empty
 }
 
@@ -99,5 +95,4 @@ inline Time AbstractTimer::getTimeDiff() {
     return dt;
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform

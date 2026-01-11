@@ -87,7 +87,7 @@ protected:
         Animation::AnimationChannel channel;
         Animation::RotationKey rot;
         rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(1.f, 0.0f, 0.f));
-        rot.Time = 1.0f;
+        rot.Time = 1000.0f;
         mTrack.animationChannels[0].RotationKeys.add(rot);
         animator->addTrack(&mTrack);
 
