@@ -28,8 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MeshProcessor.h"
 #include "Common/Logger.h"
 
-#include <iostream>
-
 namespace OSRE::App {
 
 using namespace ::OSRE::Common;
@@ -74,7 +72,6 @@ TransformComponent *Entity::getNode() const {
 }
 
 bool Entity::update(Time dt) {
-    std::cout << "dt = " << dt.asMilliSeconds() << " ms\n";
     for (auto &it : mComponentArray) {
         if (it != nullptr) {
             it->update(dt);

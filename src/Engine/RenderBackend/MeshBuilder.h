@@ -61,16 +61,18 @@ public:
     /// @return The created mesh.
     MeshBuilder& allocQuads(RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
     
-    /// @brief 
-    /// @param type 
-    /// @param w 
-    /// @param access 
-    /// @return 
+    /// @brief Will allocate a cube mesh.
+    ///	@param  type        [in] The vertex type.
+    /// @param  w           The width
+    /// @param access       The access type
+    /// @return The created mesh.
     MeshBuilder& createCube(RenderBackend::VertexType type, f32 w, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.
-    MeshBuilder& allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
+    /// @param  access      [in] The data access type.
+    /// @param  numLines    [in] The number of lines to generate.
+    MeshBuilder &allocLineList(RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
 
     /// @brief 
