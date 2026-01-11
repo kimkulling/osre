@@ -30,13 +30,13 @@ Win32Timer::Win32Timer() : AbstractTimer("platform/win32timer"), mGlobeTime(), m
     ::QueryPerformanceFrequency(&mGlobeFrequency);
 }
 
-i64 Win32Timer::getMicroCurrentSeconds() {
+i64 Win32Timer::getMilliCurrentSeconds() {
     LARGE_INTEGER currentTime = {};
     ::QueryPerformanceCounter(&currentTime);
-    const i64 secs = static_cast<i64>( ( currentTime.QuadPart - mGlobeTime.QuadPart ) )
-        / static_cast<i64>(mGlobeFrequency.QuadPart );
+    const i64 ms = static_cast<i64>( ( currentTime.QuadPart - mGlobeTime.QuadPart ) )
+        / static_cast<i64>(mGlobeFrequency.QuadPart/1000 );
 
-    return secs;
+    return ms;
 }
 
 } // namespace Platform

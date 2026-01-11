@@ -86,8 +86,12 @@ public:
                 TextureResourceArray texResArray;
                 TextureResource *texRes = new TextureResource("SpiderTex", IO::Uri("file://assets/Models/Obj/SpiderTex.jpg"));
                 texResArray.add(texRes);
-                Material *material = MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray,
-                    VertexType::RenderVertex);
+                Material *material = 
+                    MaterialBuilder::createBuildinMaterial(
+                        "SpiderTex", 
+                        texResArray, 
+                        VertexType::RenderVertex
+                    );
                 mesh->setMaterial(material);
                 Shader *shader = material->getShader();
                 if (shader != nullptr) {

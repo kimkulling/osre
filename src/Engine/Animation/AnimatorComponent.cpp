@@ -21,12 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Animation/AnimatorComponent.h"
+#include "RenderBackend/RenderBackendService.h"
 #include "Common/Logger.h"
-
 
 namespace OSRE::Animation {
 
 using namespace OSRE::App;
+using namespace OSRE::RenderBackend;
 
 DECL_OSRE_LOG_MODULE(AnimatorComponent);
 
@@ -90,11 +91,11 @@ bool AnimatorComponent::onUpdate(Time dt) {
         return true;
     }
 
-    // calculate the time
-    double time = static_cast<d32>(dt.asMilliSeconds()) / 1000.0f;
+    // Calculate the time
+    auto time = static_cast<d32>(dt.asMilliSeconds());
     const double ticksPerSecond = track->ticksPerSecond != 0.0 ? track->ticksPerSecond : 25.0;
     
-    // every following time calculation happens in ticks
+    // Every following time calculation happens in ticks
     time *= ticksPerSecond;
 
     // map into animation track duration
@@ -103,7 +104,6 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     const size_t currentAnimationTrack = getActiveTrack();
-
     AnimationChannel &animChannel = track->animationChannels[currentAnimationTrack];
     glm::vec3 presentPosition(0, 0, 0);
     glm::quat q(0, 0, 0, 1);
@@ -201,9 +201,10 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     glm::mat4 &transform = mTransformArray[currentAnimationTrack];
-    transform = toMat4(q);
+    transform *= toMat4(q);
     transform = scale(transform, presenceScale);
     transform = translate(transform, presentPosition);
+    mTransformArray[currentAnimationTrack] = transform;
 
     return true;
 }
@@ -211,6 +212,8 @@ bool AnimatorComponent::onUpdate(Time dt) {
 bool AnimatorComponent::onRender(RenderBackend::RenderBackendService *renderBackendSrv) {
     osre_assert(renderBackendSrv != nullptr);
 
+    renderBackendSrv->setMatrix(MatrixType::Model, mTransformArray[mActiveTrack]);
+    
     return true;
 }
 

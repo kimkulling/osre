@@ -44,6 +44,7 @@ public:
     /// @param[in] id               The pass id
     /// @param[in] framebufferId    The framebuffer id
     static RenderPass *build(guid id, guid framebufferId);
+
 };
 
 inline RenderPass *RenderPass2D::build(guid id, guid framebufferId) {

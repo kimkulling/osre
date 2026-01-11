@@ -129,7 +129,8 @@ MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType acces
     mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
@@ -178,26 +179,85 @@ MeshBuilder &MeshBuilder::allocQuads(VertexType type, BufferAccessType access) {
     mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
 
-MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access) {
+MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, BufferAccessType access) {
     clear();
     mActiveMesh = new Mesh("cube", type, IndexType::UnsignedShort);
 
-    static constexpr size_t Numvertices = 8;
+    static constexpr size_t Numvertices = 24;
     glm::vec3 pos[Numvertices] = {};
-    pos[0] = glm::vec3(0, 0, h);
-    pos[1] = glm::vec3(w, 0, h);
-    pos[2] = glm::vec3(0, d, h);
-    pos[3] = glm::vec3(w, d, h);
 
-    pos[4] = glm::vec3(0, 0, 0);
-    pos[5] = glm::vec3(w, 0, 0);
-    pos[6] = glm::vec3(0, d, 0);
-    pos[7] = glm::vec3(w, d, 0);
+    pos[0] = glm::vec3(-w, -w, w);
+    pos[1] = glm::vec3(w, -w, w);
+    pos[2] = glm::vec3(w, w, w);
+    pos[3] = glm::vec3(-w, w, w);
+
+    pos[4] = glm::vec3(-w, -w, -w);
+    pos[5] = glm::vec3(w, -w, -w);
+    pos[6] = glm::vec3(w, w, -w);
+    pos[7] = glm::vec3(-w, w, -w);
+
+    pos[8] = glm::vec3(-w, w, w);
+    pos[9] = glm::vec3(w, w, w);
+    pos[10] = glm::vec3(w, w, -w);
+    pos[11] = glm::vec3(-w, w, -w);
+
+    pos[12] = glm::vec3(-w, -w, w);
+    pos[13] = glm::vec3(w, -w, w);
+    pos[14] = glm::vec3(w, -w, -w);
+    pos[15] = glm::vec3(-w, -w, -w);
+
+    pos[16] = glm::vec3(-w, -w, -w);
+    pos[17] = glm::vec3(-w, -w, w);
+    pos[18] = glm::vec3(-w, w, w);
+    pos[19] = glm::vec3(-w, w, -w);
+
+    pos[20] = glm::vec3(w, -w, w);
+    pos[21] = glm::vec3(w, -w, -w);
+    pos[22] = glm::vec3(w, w, -w);
+    pos[23] = glm::vec3(w, w, w);
+
+            /* { {}, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }, // 0
+            { {  }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } }, // 1
+            { {  }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 2
+            { {  }, { 1.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } }, // 3
+
+            // Rückseite
+            { {  }, { 1.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } }, // 4
+            { {  }, { 0.0f, 1.0f, 1.0f },  { 0.0f, 0.0f } }, // 5
+            { {  }, { 1.0f, 0.0f, 1.0f },  { 0.0f, 1.0f } }, // 6
+            { {  }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } }, // 7
+
+            // Oben
+            { {  }, { 1.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } }, // 8 (gleich wie 3)
+            { { }, { 0.0f, 0.5f, 0.5f }, { 1.0f, 1.0f } }, // 9 (gleich wie 2)
+            { {  }, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f } }, // 10 (gleich wie 6)
+            { {  }, { 0.5f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // 11 (gleich wie 7)
+
+            // Unten
+            { {  }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 12 (gleich wie 0)
+            { {  }, { 1.0f, 0.5f, 0.0f }, { 0.0f, 1.0f } }, // 13 (gleich wie 1)
+            { { }, { 0.5f, 0.0f, 0.5f }, { 0.0f, 0.0f } }, // 14 (gleich wie 5)
+            { { }, { 0.0f, 0.5f, 1.0f }, { 1.0f, 0.0f } }, // 15 (gleich wie 4)
+
+            // Links
+            { {  }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } }, // 16 (gleich wie 4)
+            { {  }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } }, // 17 (gleich wie 0)
+            { { }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } }, // 18 (gleich wie 3)
+            { {  }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } }, // 19 (gleich wie 7)
+
+            // Rechts
+            { { }, { 1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } }, // 20 (gleich wie 1)
+            { {  }, { 0.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // 21 (gleich wie 5)
+            { {  }, { 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 22 (gleich wie 6)
+            { {  }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } } // 23 (gleich wie 2)
+};*/
+
 
     glm::vec3 col[Numvertices] = {};
     col[0] = glm::vec3(0.5, 0.5, 0.5);
@@ -209,40 +269,54 @@ MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, Buffe
     col[6] = glm::vec3(0.5, 0.5, 0.5);
     col[7] = glm::vec3(0.5, 0.5, 0.5);
 
+    col[8] = glm::vec3(0.5, 0.5, 0.5);
+    col[9] = glm::vec3(0.5, 0.5, 0.5);
+    col[10] = glm::vec3(0.5, 0.5, 0.5);
+    col[11] = glm::vec3(0.5, 0.5, 0.5);
+    col[12] = glm::vec3(0.5, 0.5, 0.5);
+    col[13] = glm::vec3(0.5, 0.5, 0.5);
+    col[14] = glm::vec3(0.5, 0.5, 0.5);
+    col[15] = glm::vec3(0.5, 0.5, 0.5);
+
+    col[16] = glm::vec3(0.5, 0.5, 0.5);
+    col[17] = glm::vec3(0.5, 0.5, 0.5);
+    col[18] = glm::vec3(0.5, 0.5, 0.5);
+    col[19] = glm::vec3(0.5, 0.5, 0.5);
+    col[20] = glm::vec3(0.5, 0.5, 0.5);
+    col[21] = glm::vec3(0.5, 0.5, 0.5);
+    col[22] = glm::vec3(0.5, 0.5, 0.5);
+    col[23] = glm::vec3(0.5, 0.5, 0.5);
+
     allocVertices(mActiveMesh, mActiveMesh->getVertexType(), Numvertices, pos, col, nullptr, access);
 
     static constexpr size_t NumIndices = 36;
     ui16 indices[NumIndices] = {
-        // Top
-        2, 6, 7,
-        2, 7, 3,
-
-        // Bottom
-        0, 4, 5,
-        0, 5, 1,
-
-        // Left
-        0, 2, 6,
-        0, 6, 4,
-
-        // Right
-        1, 3, 7,
-        1, 7, 5,
-
-        // Front
-        0, 3, 2,
-        0, 1, 3,
-
-        // Back
-        4, 6, 7,
-        4, 7, 5
+        // Front face
+        0, 1, 2,
+        1, 3, 2,
+        // Back face
+        4, 6, 5,
+        5, 6, 7,
+        // Top face
+        8, 9, 10,
+        9, 11, 10,
+        // Bottom face
+        12, 14, 13,
+        13, 14, 15,
+        // Left face
+        16, 17, 18,
+        17, 19, 18,
+        // Right face
+        20, 22, 21,
+        21, 22, 23
     };
 
     mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     const size_t ibSize = sizeof(ui16) * NumIndices;
     mActiveMesh->createIndexBuffer(indices, ibSize, IndexType::UnsignedShort, access);
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }
@@ -281,7 +355,8 @@ MeshBuilder &MeshBuilder::allocPoints(VertexType type, BufferAccessType access, 
     mActiveMesh->addPrimitiveGroup(3, PrimitiveType::PointList, 0);
 
     // setup material
-    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
+    TextureResourceArray texResArray;
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, type));
 
     return *this;
 }

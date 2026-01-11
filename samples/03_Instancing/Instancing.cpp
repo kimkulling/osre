@@ -79,7 +79,7 @@ protected:
         camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         MeshBuilder meshBuilder;
         scene->addEntity(mEntity);
-        Mesh *mesh = meshBuilder.createCube(VertexType::RenderVertex, 2,2,2, BufferAccessType::ReadWrite).getMesh();
+        Mesh *mesh = meshBuilder.createCube(VertexType::RenderVertex, 2, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);

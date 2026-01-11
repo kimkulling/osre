@@ -82,14 +82,8 @@ struct OSRE_EXPORT Skeleton {
 };
 
 struct VectorKey {
-    f32 Time;
-    glm::vec3 Value;
-
-    VectorKey() : Time(1.0f), Value(1) {
-        // empty
-    }
-
-    ~VectorKey() = default;
+    f32 Time{ 1.0f };
+    glm::vec3 Value{ 1 };
 };
 
 using VectorKeyArray = ::cppcore::TArray<VectorKey>;

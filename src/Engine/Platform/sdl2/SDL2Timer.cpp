@@ -31,7 +31,7 @@ SDL2Timer::SDL2Timer() : AbstractTimer("platform/sdl2timer") {
     // empty
 }
 
-i64 SDL2Timer::getMicroCurrentSeconds() {
+i64 SDL2Timer::getMilliCurrentSeconds() {
     // There is no micro seconds tick from SDL2
     i64 ticks = static_cast<i64>(SDL_GetTicks64() * 1000l);
     return ticks;

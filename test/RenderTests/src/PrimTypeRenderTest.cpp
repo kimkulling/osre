@@ -106,7 +106,8 @@ public:
                 lineMesh->addPrimitiveGroup(6, PrimitiveType::LineList, 0);
 
                 // setup material
-                lineMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
+                TextureResourceArray texResArray;
+                lineMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::ColorVertex));
                 rbSrv->addMesh(lineMesh, 0);
 
                 mTransformMatrix.mModel = glm::rotate(mTransformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));

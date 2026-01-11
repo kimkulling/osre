@@ -54,7 +54,17 @@ struct BufferData;
 struct UniformVar;
 struct TransformMatrixBlock;
 
-// Event declarations
+enum class ShaderLanguageType {
+    Invalid = -1,
+    GLSL = 0,
+    Count
+};
+
+struct GPUFeatureSet {
+    ShaderLanguageType  shaderLanguageType;
+    String              shaderVersion;
+};
+        // Event declarations
 DECL_EVENT(OnScreenshotEvent);
 DECL_EVENT(OnAttachEventHandlerEvent);
 DECL_EVENT(OnDetatachEventHandlerEvent);
@@ -193,6 +203,8 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent(const Common::Event *ev, const Common::EventData *eventData);
 
+    GPUFeatureSet *enumerateGPU();
+
     /// @brief  Will create the default render pipeline.
     /// @return Pointer showing to the default render pipeline.
     Pipeline *createDefault3DPipeline(guid framebufferId);
@@ -296,6 +308,7 @@ private:
 
         Behaviour() : ResizeViewport(true) {}
     } mBehaviour;
+    GPUFeatureSet *mGPUFeatureSet = nullptr;
 };
 
 inline void RenderBackendService::enableAutoResizing(bool enabled) {

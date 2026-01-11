@@ -51,7 +51,7 @@ protected:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         MeshBuilder meshBuilder;
-        meshBuilder.createCube(VertexType::RenderVertex, 1, 1, 1, BufferAccessType::ReadOnly);
+        meshBuilder.createCube(VertexType::RenderVertex, 1, BufferAccessType::ReadOnly);
         Mesh *mesh = meshBuilder.getMesh();
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));

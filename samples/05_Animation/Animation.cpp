@@ -44,11 +44,13 @@ class AnimationApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;
     /// The entity to render
-    Entity *mEntity;
+    Entity *mEntity{ nullptr };
     /// The keyboard controller instance.
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
+    Animation::AnimationControllerBase *mKeyboardTransCtrl{ nullptr };
+    /// The used animation track
     Animation::AnimationTrack mTrack;
-    f32 mAngle;
+    /// The rotation angle
+    f32 mAngle{0.1};
 
 public:
     AnimationApp(int argc, char *argv[]) :
@@ -70,7 +72,8 @@ protected:
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         scene->addEntity(camEntity);
         MeshBuilder meshBuilder;
-        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
+        
+        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, 0.8, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
             auto *rc = static_cast<RenderComponent*>(mEntity->getComponent(ComponentType::RenderComponentType));
             rc->addStaticMesh(mesh);
         }
@@ -80,11 +83,11 @@ protected:
         Animation::AnimatorComponent *animator = static_cast<Animation::AnimatorComponent *>(camEntity->createComponent(ComponentType::AnimationComponentType));
         mTrack.numVectorChannels = 1;
         mTrack.animationChannels = new Animation::AnimationChannel[mTrack.numVectorChannels];
-        mTrack.duration = 1.0f;
+        mTrack.duration = 1000.0f;
         Animation::AnimationChannel channel;
         Animation::RotationKey rot;
-        rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(0.f, 1.f, 0.f));
-        rot.Time = 1.0f;
+        rot.Quad = angleAxis(glm::radians(mAngle), glm::vec3(1.f, 0.0f, 0.f));
+        rot.Time = 1000.0f;
         mTrack.animationChannels[0].RotationKeys.add(rot);
         animator->addTrack(&mTrack);
 
