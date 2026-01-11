@@ -71,7 +71,7 @@ protected:
         addScene(scene, true);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), scene);
         MeshBuilder meshBuilder;
-        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
+        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, BufferAccessType::ReadOnly).getMesh();
         if (mesh != nullptr) {
             auto *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);

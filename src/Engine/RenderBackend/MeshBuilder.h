@@ -64,11 +64,9 @@ public:
     /// @brief 
     /// @param type 
     /// @param w 
-    /// @param h 
-    /// @param d 
     /// @param access 
     /// @return 
-    MeshBuilder& createCube(RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
+    MeshBuilder& createCube(RenderBackend::VertexType type, f32 w, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.

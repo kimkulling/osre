@@ -94,7 +94,7 @@ bool AnimatorComponent::onUpdate(Time dt) {
     }
 
     // calculate the time
-    double time = static_cast<d32>(dt.asMilliSeconds());
+    auto time = static_cast<d32>(dt.asMilliSeconds());
     const double ticksPerSecond = track->ticksPerSecond != 0.0 ? track->ticksPerSecond : 25.0;
     std::cout << "Time: " << time << ", last time: " << mLastTime << ", delta: " << (time - mLastTime) << ", ticksPerSecond: " << ticksPerSecond << std::endl;
     
@@ -217,6 +217,7 @@ bool AnimatorComponent::onRender(RenderBackend::RenderBackendService *renderBack
     osre_assert(renderBackendSrv != nullptr);
 
     renderBackendSrv->setMatrix(MatrixType::Model, mTransformArray[mActiveTrack]);
+    
     return true;
 }
 

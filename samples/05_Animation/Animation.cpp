@@ -73,8 +73,7 @@ protected:
         scene->addEntity(camEntity);
         MeshBuilder meshBuilder;
         
-        if (Mesh *mesh = meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
-        //if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, 0.5, 0.5, 0.5, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
+        if (Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, 0.8, BufferAccessType::ReadOnly).getMesh(); mesh != nullptr) {
             auto *rc = static_cast<RenderComponent*>(mEntity->getComponent(ComponentType::RenderComponentType));
             rc->addStaticMesh(mesh);
         }
