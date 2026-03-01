@@ -98,7 +98,8 @@ public:
                 m_pointMesh->addPrimitiveGroup(NumPts, PrimitiveType::PointList, 0);
 
                 // setup material
-                m_pointMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
+                TextureResourceArray texResArray;
+                m_pointMesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::ColorVertex));
 
                 m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));
                 m_transformMatrix.mModel = glm::scale(m_transformMatrix.mModel, glm::vec3(.5, .5, .5));

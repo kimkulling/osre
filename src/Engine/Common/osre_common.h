@@ -194,17 +194,17 @@ using MemoryBuffer = cppcore::TArray<c8>;
 
 /// @brief  A time stamp.
 struct Time {
-    i64 microSeconds = 0l;  ///< The store time stamp in microseconds
+    i64 milliSeconds = 0l;  ///< The store time stamp in microseconds
 
     /// @brief  The default constructor.
     Time() = default;
 
     /// @brief  The constructor with the timestamp in ms.
-    /// @param[in] microseconds  The timestamp in microseconds.
-    Time(i64 microseconds);
+    /// @param[in] milliseconds  The timestamp in milliseconds.
+    Time(i64 milliseconds);
 
     void setMilliSeconds(i64 ms) {
-        microSeconds = ms * 1000l; 
+        milliSeconds = ms; 
     }
 
     /// @brief The class destructor.
@@ -223,21 +223,21 @@ struct Time {
     i64 asMicroSeconds() const;
 };
 
-inline Time::Time(i64 microseconds) :
-        microSeconds(microseconds) {
+inline Time::Time(i64 ms) :
+        milliSeconds(ms) {
     // empty
 }
 
 inline f32 Time::asSeconds() const {
-    return microSeconds / 1000000.f;
+    return milliSeconds / 1000.f;
 }
 
 inline i32 Time::asMilliSeconds() const {
-    return static_cast<i32>(microSeconds / 1000);
+    return static_cast<i32>(milliSeconds);
 }
 
 inline i64 Time::asMicroSeconds() const {
-    return microSeconds;
+    return milliSeconds * 1000;
 }
 
 /// @brief  This type can be used to define a color with 4 colors.

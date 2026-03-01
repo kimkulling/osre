@@ -112,7 +112,6 @@ protected:
     void importNode(const aiNode *node, TransformComponent *parent );
     void importMaterial( aiMaterial *material );
     void importAnimations(const aiScene *scene);
-    void optimizeVertexBuffer();
 
 private:
     aiLogStream mStream;

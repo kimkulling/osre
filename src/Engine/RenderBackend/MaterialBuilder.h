@@ -46,26 +46,19 @@ public:
 
     /// @brief Will destroy the material builder instance.
     static void destroy();
-    
-    /// @brief  Will create the built-in material for the given type of vertex.
-    /// @param  type    The vertex type.
-    /// @return The built-in material instance will be returned.
-    static Material *createBuildinMaterial(VertexType type);
         
-    /// @brief  Will create the texture material instance.
-    /// @param  matName      The name for the material.
+    /// @brief  Will create the built-in material for the given type of vertex.
     /// @param  texResArray  The array with all textures to use.
     /// @param  type         The vertex type.
     /// @return The created instance will be returned.
-    static Material* createTexturedMaterial(const String& matName, const TextureResourceArray& texResArray, VertexType type );
-
-    /// @brief  Will create the debug render text material.
-    /// @return The instance of the material.
-    static Material *createDebugRenderTextMaterial();
+    static Material *createBuildinMaterial(const String &matName, const TextureResourceArray &texResArray, VertexType type);
 
     /// @brief Will return the default 2d material.
     /// @return The 2D material.
     static Material *create2DMaterial();
+
+    /// @brief  Will create the render text material.
+    /// @return The instance of the material.
     static Material *createTextMaterial(const String &fontName);
 
 private:

@@ -180,7 +180,8 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     mesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 
     // setup material
-    mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
+    TextureResourceArray texResArray;
+    mesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::ColorVertex));
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch(getDebugRenderBatchName());

@@ -469,7 +469,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
         matName = "material1";
     }
 
-    Material *osreMat = MaterialBuilder::createTexturedMaterial(matName, texResArray, VertexType::RenderVertex);
+    Material *osreMat = MaterialBuilder::createBuildinMaterial(matName, texResArray, VertexType::RenderVertex);
     if (nullptr == osreMat) {
         osre_error(Tag, "Error while creating material for " + matName);
         return;

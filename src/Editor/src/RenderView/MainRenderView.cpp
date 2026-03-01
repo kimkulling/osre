@@ -94,7 +94,8 @@ Mesh *MainRenderView::createCoordAxis(ui32 size) {
 
     axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
     axis->addPrimitiveGroup(axisData.size(), PrimitiveType::LineList, 0);
-    axis->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
+    TextureResourceArray texResArray;
+    axis->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::ColorVertex));
 
     return axis;
 }
@@ -147,7 +148,8 @@ Mesh *MainRenderView::createGrid(ui32 numLines) {
     grid->attachVertices(&lineData[0], sizeof(ColorVert) * lineData.size());
     grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
     grid->addPrimitiveGroup(lineData.size(), PrimitiveType::LineList, 0);
-    grid->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
+    TextureResourceArray texResArray;
+    grid->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::ColorVertex));
 
     return grid;
 }

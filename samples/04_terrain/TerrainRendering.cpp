@@ -134,7 +134,8 @@ protected:
 
         // setup primitives
         mesh->addPrimitiveGroup(indices.size(), PrimitiveType::TriangelStrip, 0);
-        mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::RenderVertex));
+        TextureResourceArray texResArray;
+        mesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::RenderVertex));
 
         return mesh;
     }

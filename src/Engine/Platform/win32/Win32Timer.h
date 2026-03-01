@@ -43,7 +43,7 @@ public:
 
 	/// @brief Will return the current milliseconds.
     /// @return The current ,illiseconds.
-    i64 getMicroCurrentSeconds() override;
+    i64 getMilliCurrentSeconds() override;
 
 private:
 	LARGE_INTEGER mGlobeTime, mGlobeFrequency;
