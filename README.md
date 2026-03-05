@@ -32,6 +32,7 @@ An experimental render engine to explore render engine architecture and modern g
 
 ## Samples
 - [3D Hello World](samples/00_HelloWorld)
+- [Animation](samples/05_Animation)
 - [Model Loading](samples/01_ModelLoading)
 - [2D Demo](samples/02_Demo2D)
 - [Terrain Rendering](samples/04_terrain)
