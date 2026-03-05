@@ -129,6 +129,18 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     delete mesh;
 }
 
+TEST_F(MeshBuilderTest, createCubeTest) {
+    MeshBuilder meshBuilder;
+    meshBuilder.createCube(VertexType::ColorVertex, 1.0f, BufferAccessType::ReadOnly);
+    Mesh *mesh = meshBuilder.getMesh();
+    ASSERT_NE(mesh, nullptr);
+    EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
+    EXPECT_NE(mesh->getVertexBuffer(), nullptr);
+    EXPECT_NE(mesh->getIndexBuffer(), nullptr);
+    EXPECT_EQ(mesh->getNumberOfPrimitiveGroups(), 1u);
+    delete mesh;
+}
+
 class GeometryDiagnosticUtilsTest : public ::testing::Test {
     // empty
 };
