@@ -47,7 +47,7 @@ An experimental render engine to explore render engine architecture and modern g
 - [Reddit Community](https://www.reddit.com/r/osre/)
 
 ## Supported Compilers
-- **Windows:** Visual Studio 2019/2022
+- **Windows:** Visual Studio 2019/2022/2026
 - **Linux:** GCC, Clang
 
 ## OSRE-Ed
