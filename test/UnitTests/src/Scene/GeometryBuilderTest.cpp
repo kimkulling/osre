@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2026 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Mesh.h"
 
-namespace OSRE {
-namespace UnitTest {
+namespace OSRE::UnitTest {
 
 using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
@@ -138,12 +137,34 @@ TEST_F(MeshBuilderTest, createCubeTest) {
     EXPECT_NE(mesh->getVertexBuffer(), nullptr);
     EXPECT_NE(mesh->getIndexBuffer(), nullptr);
     EXPECT_EQ(mesh->getNumberOfPrimitiveGroups(), 1u);
+ 
+    MeshBuilder meshBuilder;
+    meshBuilder.createCube(VertexType::ColorVertex, 1.0f, BufferAccessType::ReadOnly);
+    Mesh *mesh = meshBuilder.getMesh();
+    ASSERT_NE(mesh, nullptr);
+    EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
+    EXPECT_NE(mesh->getVertexBuffer(), nullptr);
+    const BufferData *indexBuffer = mesh->getIndexBuffer();
+    ASSERT_NE(indexBuffer, nullptr);
+    EXPECT_EQ(indexBuffer->getSize(), sizeof(ui16) * 36);
+    const ui16 expectedIndices[] = {
+        0, 1, 2, 0, 2, 3,
+        4, 6, 5, 4, 7, 6,
+        8, 9, 10, 8, 10, 11,
+        12, 14, 13, 12, 15, 14,
+        16, 17, 18, 16, 18, 19,
+        20, 21, 22, 20, 22, 23
+    };
+    const ui16 *indices = reinterpret_cast<const ui16 *>(indexBuffer->getData());
+    ASSERT_NE(indices, nullptr);
+    for (size_t i = 0; i < sizeof(expectedIndices) / sizeof(expectedIndices[0]); ++i) {
+        EXPECT_EQ(indices[i], expectedIndices[i]) << "Mismatch at index " << i;
+    }
+    EXPECT_EQ(mesh->getNumberOfPrimitiveGroups(), 1u);
     delete mesh;
 }
 
-class GeometryDiagnosticUtilsTest : public ::testing::Test {
-    // empty
-};
+class GeometryDiagnosticUtilsTest : public ::testing::Test {};
 
 TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
     EXPECT_NO_THROW(MeshDiagnostic::dumpVertices( nullptr, 1));
@@ -152,6 +173,5 @@ TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
     EXPECT_NO_THROW(MeshDiagnostic::dumpVertices(vertices));
 }
 
-} // Namespace UnitTest
-} // Namespace OSRE
+} // Namespace OSRE::UnitTest
 
