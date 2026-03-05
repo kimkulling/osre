@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Mesh.h"
 
+#include <memory>
+
 namespace OSRE::UnitTest {
 
 using namespace ::OSRE::Debugging;
@@ -46,17 +48,16 @@ protected:
 TEST_F( MeshBuilderTest, allocTrianglesTest ) {
     MeshBuilder meshBuilder;
     meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-    Mesh *mesh = meshBuilder.getMesh();
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
     ASSERT_NE(mesh, nullptr);
     EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
     EXPECT_NE(mesh->getVertexBuffer(), nullptr);
     EXPECT_NE(mesh->getIndexBuffer(), nullptr);
     EXPECT_NE(mesh->getMaterial(), nullptr);
-    delete  mesh;
 }
 
 TEST_F( MeshBuilderTest, allocLineListTest ) {
-    const ui32 numLines = 2;
+    constexpr ui32 numLines = 2;
     glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
     pos[ 0 ].y = 0;
@@ -88,15 +89,14 @@ TEST_F( MeshBuilderTest, allocLineListTest ) {
     indices[ 2 ]=1;
     indices[ 3 ]=2;
 
-    MeshBuilder geoBuilder;
-    geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
-    Mesh *mesh = geoBuilder.getMesh();
-    EXPECT_NE( nullptr, mesh );
-    delete mesh;
+    MeshBuilder meshBuilder;
+    meshBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
+    EXPECT_NE( nullptr, mesh );    
 }
 
 TEST_F( MeshBuilderTest, allocPointsTest ) {
-    const ui32 numPoints = 3;
+    constexpr ui32 numPoints = 3;
     glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
     pos[ 0 ].y = 0;
@@ -123,15 +123,14 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     col[ 2 ].z = 0.8f;
     MeshBuilder meshBuilder;
     meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
-    Mesh *mesh = meshBuilder.getMesh();
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
     EXPECT_NE( nullptr, mesh );
-    delete mesh;
 }
 
 TEST_F(MeshBuilderTest, createCubeTest) {
     MeshBuilder meshBuilder;
     meshBuilder.createCube(VertexType::ColorVertex, 1.0f, BufferAccessType::ReadOnly);
-    Mesh *mesh = meshBuilder.getMesh();
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
     ASSERT_NE(mesh, nullptr);
     EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
     EXPECT_NE(mesh->getVertexBuffer(), nullptr);
@@ -161,7 +160,6 @@ TEST_F(MeshBuilderTest, createCubeTest) {
         EXPECT_EQ(indices[i], expectedIndices[i]) << "Mismatch at index " << i;
     }
     EXPECT_EQ(mesh->getNumberOfPrimitiveGroups(), 1u);
-    delete mesh;
 }
 
 class GeometryDiagnosticUtilsTest : public ::testing::Test {};
