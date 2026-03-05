@@ -24,18 +24,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Platform/PlatformCommon.h"
 
-namespace OSRE {
-namespace Platform {
+namespace OSRE::Platform {
+    /**
+     * @brief Enum representing various types of platform plugins available in the system.
+     *
+     * This enum is used to identify the specific implementation of a plugin that is either
+     * platform-specific or for a specific framework.
+     *
+     * The supported plugin types are:
+     * - Invalid: Represents an uninitialized or invalid plugin type.
+     * - WindowsPlugin: The plugin implementation for Windows platforms (enabled when OSRE_WINDOWS is defined).
+     * - SDL2Plugin: The plugin implementation for SDL2 framework (used when OSRE_WINDOWS is not defined).
+     * - Count: Represents the number of defined plugin types and serves as a terminator.
+     *
+     * The actual plugin type is determined at compile-time based on platform-specific macros.
+     */
+    enum class PluginType {
+        Invalid = -1,
+    #ifdef OSRE_WINDOWS
+        WindowsPlugin = 0,
+    #else
+        SDL2Plugin = 0,
+    #endif // OSRE_WINDOWS
+        Count
+    };
 
-enum class PluginType {
-    Invalid = -1,
-#ifdef OSRE_WINDOWS
-    WindowsPlugin = 0,
-#else
-    SDL2Plugin = 0,
-#endif // OSRE_WINDOWS
-    Count
-};
-
-} // Namespace Platform
-} // Namespace OSRE
+} // Namespace OSRE::Platform

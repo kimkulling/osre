@@ -265,6 +265,7 @@
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/BREAK_TEMPLATE_DECLARATION/@EntryValue" value="LINE_BREAK" type="string" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/CASE_BLOCK_BRACES/@EntryValue" value="END_OF_LINE" type="string" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/CONTINUOUS_LINE_INDENT/@EntryValue" value="Double" type="string" />
+    <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/FREE_BLOCK_BRACES/@EntryValue" value="END_OF_LINE" type="string" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INDENT_ACCESS_SPECIFIERS_FROM_CLASS/@EntryValue" value="false" type="bool" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INDENT_CASE_FROM_SWITCH/@EntryValue" value="true" type="bool" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INDENT_CLASS_MEMBERS_FROM_ACCESS_SPECIFIERS/@EntryValue" value="true" type="bool" />

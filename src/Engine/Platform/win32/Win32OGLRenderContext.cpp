@@ -85,13 +85,12 @@ static void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint i
 namespace OSRE {
 namespace Platform {
 
-Win32RenderContext::Win32RenderContext() :
-        AbstractOGLRenderContext(), m_dc(nullptr), m_rc(nullptr), m_active(false) {
+Win32RenderContext::Win32RenderContext() : m_dc(nullptr), m_rc(nullptr), m_active(false) {
     // empty
 }
 
 bool Win32RenderContext::onCreate(AbstractWindow *surface) {
-    Win32Window *win32Surface = reinterpret_cast<Win32Window *>(surface);
+    auto *win32Surface = reinterpret_cast<Win32Window *>(surface);
     if (nullptr == win32Surface) {
         osre_error(Tag, "Invalid pointer to window.");
         return false;
@@ -105,8 +104,7 @@ bool Win32RenderContext::onCreate(AbstractWindow *surface) {
         return false;
     }
 
-    PIXELFORMATDESCRIPTOR pfd;
-    ::memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+    PIXELFORMATDESCRIPTOR pfd = {};
     pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
     pfd.nVersion = 1;
     pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW;
@@ -116,26 +114,26 @@ bool Win32RenderContext::onCreate(AbstractWindow *surface) {
     pfd.cStencilBits = props->m_stencildepth;
     pfd.iLayerType = PFD_MAIN_PLANE;
 
-    i32 pixelFormat = ::ChoosePixelFormat(dc, &pfd);
+    i32 pixelFormat = ChoosePixelFormat(dc, &pfd);
     if (0 == pixelFormat) {
         osre_error(Tag, "Invalid pixel format chosen.");
         return false;
     }
 
-    BOOL bResult = ::SetPixelFormat(dc, pixelFormat, &pfd);
+    BOOL bResult = SetPixelFormat(dc, pixelFormat, &pfd);
     if (FALSE == bResult) {
         osre_error(Tag, "Cannot set pixel format.");
         return false;
     }
 
-    HGLRC tempContext = ::wglCreateContext(dc);
-    bResult = ::wglMakeCurrent(dc, tempContext);
+    HGLRC tempContext = wglCreateContext(dc);
+    bResult = wglMakeCurrent(dc, tempContext);
     if (FALSE == bResult) {
         osre_error(Tag, "Calling wglMakeCurrent failed.");
         return false;
     }
 
-    GLenum err = glewInit();
+    const GLenum err = glewInit();
     if (GLEW_OK != err) {
         osre_error(Tag, "GLEW is not initialized!");
         return false;
@@ -210,7 +208,7 @@ bool Win32RenderContext::onDestroy() {
 }
 
 bool Win32RenderContext::onUpdate() {
-    if (TRUE == ::SwapBuffers(m_dc)) {
+    if (SwapBuffers(m_dc) == TRUE) {
         return true;
     }
 

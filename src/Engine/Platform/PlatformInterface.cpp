@@ -168,7 +168,6 @@ String PlatformInterface::getOSPluginName(PluginType type) {
 
 bool PlatformInterface::onOpen() {
     if (!mContext->mSettings) {
-        assert(nullptr != mContext->mSettings);
         osre_debug(Tag, "Invalid pointer to configuration.");
         return false;
     }
@@ -178,11 +177,11 @@ bool PlatformInterface::onOpen() {
 
     WindowsProperties *props(nullptr);
     bool polls(false);
-    const Properties::Settings *config = mContext->mSettings;
+    const Settings *config = mContext->mSettings;
     if (appType == Settings::GfxApp) {
         // get the configuration values for the window
         props = new WindowsProperties;
-        bool fullscreen = false;
+        const bool fullscreen = false;
         props->mRect.x1 = config->get(Settings::WinX).getInt();
         props->mRect.y1 = config->get(Settings::WinY).getInt();
         props->mRect.width = config->get(Settings::WinWidth).getInt();
