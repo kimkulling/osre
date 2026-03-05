@@ -34,7 +34,7 @@ namespace OSRE::UnitTest {
 using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
 
-class MeshBuilderTest final : public ::testing::Test {
+class MeshBuilderTest : public ::testing::Test {
 protected:
     void SetUp() override {
         MaterialBuilder::create(GLSLVersion::GLSL_400);
@@ -45,7 +45,7 @@ protected:
     }
 };
 
-TEST_F( MeshBuilderTest, allocTrianglesTest ) {
+TEST_F(MeshBuilderTest, allocTrianglesTest) {
     MeshBuilder meshBuilder;
     meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
     std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
@@ -56,7 +56,7 @@ TEST_F( MeshBuilderTest, allocTrianglesTest ) {
     EXPECT_NE(mesh->getMaterial(), nullptr);
 }
 
-TEST_F( MeshBuilderTest, allocLineListTest ) {
+TEST_F(MeshBuilderTest, allocLineListTest) {
     constexpr ui32 numLines = 2;
     glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
@@ -145,7 +145,7 @@ TEST_F(MeshBuilderTest, createCubeTest) {
         16, 17, 18, 16, 18, 19,
         20, 21, 22, 20, 22, 23
     };
-    const ui16 *indices = reinterpret_cast<const ui16 *>(indexBuffer->getData());
+    const ui16 *indices = (const ui16 *)(indexBuffer->getData());
     ASSERT_NE(indices, nullptr);
     for (size_t i = 0; i < sizeof(expectedIndices) / sizeof(expectedIndices[0]); ++i) {
         EXPECT_EQ(indices[i], expectedIndices[i]) << "Mismatch at index " << i;
