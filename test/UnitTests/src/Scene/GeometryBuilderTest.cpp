@@ -34,7 +34,7 @@ namespace OSRE::UnitTest {
 using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
 
-class MeshBuilderTest : public ::testing::Test {
+class MeshBuilderTest final : public ::testing::Test {
 protected:
     void SetUp() override {
         MaterialBuilder::create(GLSLVersion::GLSL_400);
@@ -127,19 +127,10 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     EXPECT_NE( nullptr, mesh );
 }
 
-TEST_F(MeshBuilderTest, createCubeTest) {
+TEST_F(MeshBuilderTest, createCubeTest) { 
     MeshBuilder meshBuilder;
     meshBuilder.createCube(VertexType::ColorVertex, 1.0f, BufferAccessType::ReadOnly);
     std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
-    ASSERT_NE(mesh, nullptr);
-    EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
-    EXPECT_NE(mesh->getVertexBuffer(), nullptr);
-    EXPECT_NE(mesh->getIndexBuffer(), nullptr);
-    EXPECT_EQ(mesh->getNumberOfPrimitiveGroups(), 1u);
- 
-    MeshBuilder meshBuilder;
-    meshBuilder.createCube(VertexType::ColorVertex, 1.0f, BufferAccessType::ReadOnly);
-    Mesh *mesh = meshBuilder.getMesh();
     ASSERT_NE(mesh, nullptr);
     EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
     EXPECT_NE(mesh->getVertexBuffer(), nullptr);
