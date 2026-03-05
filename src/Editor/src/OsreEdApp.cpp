@@ -176,9 +176,15 @@ bool setupEditorGimmics(const Entity *guiEntity) {
     }
 
     Mesh *axis = MainRenderView::createCoordAxis(150);
+    if (axis == nullptr) {
+        return false;
+    }
     rc->addStaticMesh(axis);
 
     Mesh *grid = MainRenderView::createGrid(50);
+    if (grid == nullptr) {
+        return false;
+    }
     rc->addStaticMesh(grid);
 
     return true;
