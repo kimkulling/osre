@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2026 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -222,43 +222,6 @@ MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, BufferAccessType ac
     pos[22] = glm::vec3(w, w, -w);
     pos[23] = glm::vec3(w, w, w);
 
-            /* { {}, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }, // 0
-            { {  }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } }, // 1
-            { {  }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 2
-            { {  }, { 1.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } }, // 3
-
-            // Rückseite
-            { {  }, { 1.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } }, // 4
-            { {  }, { 0.0f, 1.0f, 1.0f },  { 0.0f, 0.0f } }, // 5
-            { {  }, { 1.0f, 0.0f, 1.0f },  { 0.0f, 1.0f } }, // 6
-            { {  }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } }, // 7
-
-            // Oben
-            { {  }, { 1.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } }, // 8 (gleich wie 3)
-            { { }, { 0.0f, 0.5f, 0.5f }, { 1.0f, 1.0f } }, // 9 (gleich wie 2)
-            { {  }, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f } }, // 10 (gleich wie 6)
-            { {  }, { 0.5f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // 11 (gleich wie 7)
-
-            // Unten
-            { {  }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 12 (gleich wie 0)
-            { {  }, { 1.0f, 0.5f, 0.0f }, { 0.0f, 1.0f } }, // 13 (gleich wie 1)
-            { { }, { 0.5f, 0.0f, 0.5f }, { 0.0f, 0.0f } }, // 14 (gleich wie 5)
-            { { }, { 0.0f, 0.5f, 1.0f }, { 1.0f, 0.0f } }, // 15 (gleich wie 4)
-
-            // Links
-            { {  }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } }, // 16 (gleich wie 4)
-            { {  }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } }, // 17 (gleich wie 0)
-            { { }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } }, // 18 (gleich wie 3)
-            { {  }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } }, // 19 (gleich wie 7)
-
-            // Rechts
-            { { }, { 1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } }, // 20 (gleich wie 1)
-            { {  }, { 0.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // 21 (gleich wie 5)
-            { {  }, { 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 22 (gleich wie 6)
-            { {  }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } } // 23 (gleich wie 2)
-};*/
-
-
     glm::vec3 col[Numvertices] = {};
     col[0] = glm::vec3(0.5, 0.5, 0.5);
     col[1] = glm::vec3(0.5, 0.5, 0.5);
@@ -293,22 +256,22 @@ MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, BufferAccessType ac
     ui16 indices[NumIndices] = {
         // Front face
         0, 1, 2,
-        1, 3, 2,
+        0, 2, 3,
         // Back face
         4, 6, 5,
-        5, 6, 7,
+        4, 7, 6,
         // Top face
         8, 9, 10,
-        9, 11, 10,
+        8, 10, 11,
         // Bottom face
         12, 14, 13,
-        13, 14, 15,
+        12, 15, 14,
         // Left face
         16, 17, 18,
-        17, 19, 18,
+        16, 18, 19,
         // Right face
-        20, 22, 21,
-        21, 22, 23
+        20, 21, 22,
+        20, 22, 23
     };
 
     mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);

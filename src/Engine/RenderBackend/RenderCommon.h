@@ -368,18 +368,18 @@ struct OSRE_EXPORT BufferData {
     friend BufferDataAllocator;
     static BufferDataAllocator sBufferDataAllocator;
 
-    BufferType m_type; ///< The buffer type ( @see BufferType )
-    MemoryBuffer m_buffer; ///< The memory buffer
-    size_t m_cap; ///<
-    BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
-
+    BufferType m_type;          ///< The buffer type ( @see BufferType )
+    MemoryBuffer m_buffer;      ///< The memory buffer
+    size_t m_cap;               ///<
+    BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
+    
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
     void copyFrom(void *data, size_t size);
     void attach(const void *data, size_t size);
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
     size_t getSize() const;
-    c8 *getData();
+    c8 *getData() const;
 
 private:
     /// @brief The class constructor
@@ -392,7 +392,7 @@ inline size_t BufferData::getSize() const {
     return m_buffer.size();
 }
 
-inline c8 *BufferData::getData() {
+inline c8 *BufferData::getData() const {
     return (c8 *)&m_buffer[0];
 }
 
