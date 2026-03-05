@@ -59,9 +59,9 @@ static Project *createProject(const String &name) {
 }
 
 static Ui::WidgetBase *createUi() {
-    Rect2i r1(10,10, 200,100);
-    Ui::Panel *panel = new Ui::Panel(r1, nullptr);
-    Rect2i r2(20,20, 50,20);
+    const Rect2i r1(10,10, 200,100);
+    auto *panel = new Ui::Panel(r1, nullptr);
+    const Rect2i r2(20,20, 50,20);
     panel->addWidget(new Ui::Button("Quit", r2, panel));
     return panel;
 }
@@ -69,12 +69,16 @@ static Ui::WidgetBase *createUi() {
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, const_cast<const char **>(argv), "api:script", "The render API:Python startup script"),
         mProject(nullptr),
+        mTransformMatrix(),
         mEntity(nullptr),
         mGuiEntity(nullptr),
         mKeyboardTransCtrl(nullptr),
+        mSceneData(),
         mPythonInterface(nullptr),
         mOrbitalMouseControl(nullptr) {
-    // empty
+    mConfig.mFov = 60.0f;
+    mConfig.mNear = 0.01f;
+    mConfig.mFar = 1000.0f;
 }
 
 CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
@@ -83,7 +87,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
         camEntity = new Entity("camera", *getIdContainer(), scene);
     }
 
-    auto *camera = static_cast<CameraComponent *>(camEntity->createComponent(ComponentType::CameraComponentType));
+    auto *camera = dynamic_cast<CameraComponent *>(camEntity->createComponent(ComponentType::CameraComponentType));
     scene->addEntity(camEntity);
     scene->setActiveCamera(camera);
     ui32 w{ 0u }, h{ 0u };
@@ -96,7 +100,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
 void OsreEdApp::newProjectCmd(ui32, void *data) {
     String name = "New project";
     if (data != nullptr) {
-        cppcore::Variant *v = static_cast<cppcore::Variant *>(data);
+        auto *v = static_cast<cppcore::Variant *>(data);
         name = v->getString();
     }
     mProject = createProject(name);
@@ -155,18 +159,20 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     String title;
     createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
-    mOrbitalMouseControl = new OrbitalMouseControl(&mTransformMatrix);
+    if (mOrbitalMouseControl == nullptr) {
+        mOrbitalMouseControl = new OrbitalMouseControl(&mTransformMatrix);
+    }
 
     reporter.update(70);
     reporter.stop();
 }
 
-bool setupEditorGimmics(Entity *guiEntity) {
+bool setupEditorGimmics(const Entity *guiEntity) {
     if (guiEntity == nullptr) {
         return false;
     }
 
-    RenderComponent *rc = (RenderComponent*) guiEntity->getComponent(ComponentType::RenderComponentType);
+    auto *rc = static_cast<RenderComponent *>(guiEntity->getComponent(ComponentType::RenderComponentType));
     if (rc == nullptr) {
         return false;
     }
@@ -194,7 +200,7 @@ bool OsreEdApp::onCreate() {
     scene->init();
     Ui::WidgetBase *p = createUi();
 
-    Platform::AbstractWindow *rootWindow = getRootWindow();
+    const Platform::AbstractWindow *rootWindow = getRootWindow();
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
 
@@ -212,7 +218,8 @@ bool OsreEdApp::onCreate() {
     osre_info(Tag, "Creation finished.");
 
     if (getArgumentParser().hasArgument("script")) {
-        String scriptPath = getArgumentParser().getArgument("script");
+        String scriptPath;
+        scriptPath = getArgumentParser().getArgument("script");
         mPythonInterface->runScript(scriptPath);
     }
 
@@ -220,11 +227,17 @@ bool OsreEdApp::onCreate() {
 }
 
 bool OsreEdApp::onDestroy() {
-    mPythonInterface->destroy();
-    delete mPythonInterface;
-    mPythonInterface = nullptr;
+    if (mPythonInterface != nullptr) {
+        mPythonInterface->destroy();
+        delete mPythonInterface;
+        mPythonInterface = nullptr;
+    }
+
     delete mOrbitalMouseControl;
     mOrbitalMouseControl = nullptr;
+
+    delete mProject;
+    mProject = nullptr;
 
     return AppBase::onDestroy();
 }
@@ -238,15 +251,14 @@ void OsreEdApp::onUpdate() {
         }
     }
 
-    Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-    if (key != Platform::KEY_UNKNOWN && mKeyboardTransCtrl != nullptr) {
+    if (Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey(); key != Platform::KEY_UNKNOWN && mKeyboardTransCtrl != nullptr) {
         mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
     }
     if (mOrbitalMouseControl != nullptr) {
         mOrbitalMouseControl->update(AppBase::getMouseEventListener(), mSceneData.mCamera->getRight(), mSceneData.mCamera->getUp());
     }
 
-    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+    auto *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     {
         rbSrv->beginRenderBatch("b1");
