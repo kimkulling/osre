@@ -161,7 +161,7 @@ void AppBase::requestNextFrame() {
 
 bool AppBase::handleEvents() {
     if (mPlatformInterface == nullptr) {
-        osre_debug(Tag, "AppBase::PlatforInterface not in proper state: not nullptr.");
+        osre_debug(Tag, "AppBase::PlatformInterface not in proper state: not nullptr.");
         return false;
     }
 
@@ -305,18 +305,18 @@ bool AppBase::onCreate() {
 
     // Enable render-back-end
     AbstractWindow *rootWindow = mPlatformInterface->getRootWindow();
-    CreateRendererEventData *data = new CreateRendererEventData(rootWindow);
+    auto *data = new CreateRendererEventData(rootWindow);
     data->RequestedPipeline = mRbService->createDefault3DPipeline(rootWindow->getId());
     mRbService->sendEvent(&OnCreateRendererEvent, data);
 
     mTimer = PlatformInterface::getInstance()->getTimer();
 
     MaterialBuilder::create(GLSLVersion::GLSL_400);
-    ResourceCacheService *rcSrv = new ResourceCacheService;
+    auto *rcSrv = new ResourceCacheService;
     ServiceProvider::setService(ServiceType::ResourceService, rcSrv);
 
     // Setup onMouse event-listener
-    AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
+    auto evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
         EventPtrArray eventArray;
         attachMouseEventPtrs(eventArray);
@@ -347,12 +347,11 @@ bool AppBase::onCreate() {
 
     UiService *uiService = UiService::create();
     ServiceProvider::setService(ServiceType::UiService, uiService);
-    printf("1\n");
     UiService::setInstance(uiService);
     UiService::getInstance()->setCanvasRenderer((CanvasRenderer*)mCanvasRenderer);
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
-    printf("2\n");
+    
     return true;
 }
 

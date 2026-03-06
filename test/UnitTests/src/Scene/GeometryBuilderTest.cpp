@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2025 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2026 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,8 +27,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Mesh.h"
 
-namespace OSRE {
-namespace UnitTest {
+#include <memory>
+
+namespace OSRE::UnitTest {
 
 using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
@@ -44,20 +45,19 @@ protected:
     }
 };
 
-TEST_F( MeshBuilderTest, allocTrianglesTest ) {
+TEST_F(MeshBuilderTest, allocTrianglesTest) {
     MeshBuilder meshBuilder;
     meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-    Mesh *mesh = meshBuilder.getMesh();
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
     ASSERT_NE(mesh, nullptr);
     EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
     EXPECT_NE(mesh->getVertexBuffer(), nullptr);
     EXPECT_NE(mesh->getIndexBuffer(), nullptr);
     EXPECT_NE(mesh->getMaterial(), nullptr);
-    delete  mesh;
 }
 
-TEST_F( MeshBuilderTest, allocLineListTest ) {
-    const ui32 numLines = 2;
+TEST_F(MeshBuilderTest, allocLineListTest) {
+    constexpr ui32 numLines = 2;
     glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
     pos[ 0 ].y = 0;
@@ -89,15 +89,14 @@ TEST_F( MeshBuilderTest, allocLineListTest ) {
     indices[ 2 ]=1;
     indices[ 3 ]=2;
 
-    MeshBuilder geoBuilder;
-    geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
-    Mesh *mesh = geoBuilder.getMesh();
-    EXPECT_NE( nullptr, mesh );
-    delete mesh;
+    MeshBuilder meshBuilder;
+    meshBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
+    EXPECT_NE( nullptr, mesh );    
 }
 
 TEST_F( MeshBuilderTest, allocPointsTest ) {
-    const ui32 numPoints = 3;
+    constexpr ui32 numPoints = 3;
     glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
     pos[ 0 ].y = 0;
@@ -124,14 +123,37 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     col[ 2 ].z = 0.8f;
     MeshBuilder meshBuilder;
     meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
-    Mesh *mesh = meshBuilder.getMesh();
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
     EXPECT_NE( nullptr, mesh );
-    delete mesh;
 }
 
-class GeometryDiagnosticUtilsTest : public ::testing::Test {
-    // empty
-};
+TEST_F(MeshBuilderTest, createCubeTest) { 
+    MeshBuilder meshBuilder;
+    meshBuilder.createCube(VertexType::ColorVertex, 1.0f, BufferAccessType::ReadOnly);
+    std::unique_ptr<Mesh> mesh(meshBuilder.getMesh());
+    ASSERT_NE(mesh, nullptr);
+    EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
+    EXPECT_NE(mesh->getVertexBuffer(), nullptr);
+    const BufferData *indexBuffer = mesh->getIndexBuffer();
+    ASSERT_NE(indexBuffer, nullptr);
+    EXPECT_EQ(indexBuffer->getSize(), sizeof(ui16) * 36);
+    const ui16 expectedIndices[] = {
+        0, 1, 2, 0, 2, 3,
+        4, 6, 5, 4, 7, 6,
+        8, 9, 10, 8, 10, 11,
+        12, 14, 13, 12, 15, 14,
+        16, 17, 18, 16, 18, 19,
+        20, 21, 22, 20, 22, 23
+    };
+    const ui16 *indices = (const ui16 *)(indexBuffer->getData());
+    ASSERT_NE(indices, nullptr);
+    for (size_t i = 0; i < sizeof(expectedIndices) / sizeof(expectedIndices[0]); ++i) {
+        EXPECT_EQ(indices[i], expectedIndices[i]) << "Mismatch at index " << i;
+    }
+    EXPECT_EQ(mesh->getNumberOfPrimitiveGroups(), 1u);
+}
+
+class GeometryDiagnosticUtilsTest : public ::testing::Test {};
 
 TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
     EXPECT_NO_THROW(MeshDiagnostic::dumpVertices( nullptr, 1));
@@ -140,6 +162,5 @@ TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
     EXPECT_NO_THROW(MeshDiagnostic::dumpVertices(vertices));
 }
 
-} // Namespace UnitTest
-} // Namespace OSRE
+} // Namespace OSRE::UnitTest
 
