@@ -1,149 +1,176 @@
-## Terrain renderer
-![A simple model](../../assets/Images/01_box.png)
-This sample shows how to import a model using Assimp.
+## Terrain Renderer
+![Terrain rendering](../../assets/Images/01_box.png)
+This sample shows how to render a terrain from a heightmap image.
 
 ```cpp
-#include <osre/App/AppBase.h>
-#include <osre/App/Entity.h>
-#include <osre/Properties/Settings.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/View.h>
-#include <osre/App/World.h>
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/App/Component.h>
-#include <osre/IO/Uri.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/GeometryBuilder.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Math/BaseMath.h>
+#include "App/App.h"
+#include "App/CameraComponent.h"
+#include "App/Entity.h"
+#include "App/Scene.h"
+#include "App/ServiceProvider.h"
+#include "App/TransformController.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/MaterialBuilder.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+
+#define STB_IMAGE_IMPLEMENTATION 
+#include "stb_image.h"
+
+#include <vector>
+#include <iostream>
 
 using namespace ::OSRE;
-using namespace ::OSRE::App;
-using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::App;
 
-// To identify local log entries 
-static const c8 *Tag = "ModelLoadingApp";
+DECL_OSRE_LOG_MODULE(TerrainRenderingApp);
 
-// The file to load
-static const char *ModelPath = "file://assets/Models/Obj/spider.obj";
-
-static const char *AssetFolderArg = "asset_folder";
-
-static const char* ModelArg = "model";
-
-/// The example application, will create the render environment and render a simple triangle onto it
-class ModelLoadingApp : public App::AppBase {
-    String m_assetFolder;
-    Scene::Stage *m_stage;
-    Scene::View  *m_view;
-    f32 m_angle;
-    glm::mat4 m_model;
-    TransformMatrixBlock m_transformMatrix;
-    Node::NodePtr m_modelNode;
+class TerrainRenderingApp : public App::AppBase {
+    TransformMatrixBlock mTransformMatrix;
+    Entity *mEntity = nullptr;
+    Animation::AnimationControllerBase *mKeyboardTransCtrl = nullptr;
+    ui32 mPixelPerSample = 1;
 
 public:
-    ModelLoadingApp( int argc, char *argv[] )
-    : AppBase( argc, (const char**) argv, "api:model", "The render API:The model to load")
-    , m_assetFolder("")
-    , m_stage( nullptr )
-    , m_view( nullptr )
-    , m_angle( 0.0f )
-	, m_model()
-    , m_transformMatrix()
-    , m_modelNode() {
-        // empty
+    TerrainRenderingApp(int argc, char *argv[]) : AppBase(argc, (const char **)argv) {
     }
 
-    virtual ~ModelLoadingApp() {
-        // empty
+    ~TerrainRenderingApp() override {
+        delete mEntity;
+    }
+
+    void setPixelPerSample(ui32 pixelPerSample) {
+        mPixelPerSample = pixelPerSample;
+    }
+
+    ui32 getPixelPerSample() const {
+        return mPixelPerSample;
     }
 
 protected:
+    Mesh *loadHeightMap(const String &filename) {
+        if (filename.empty()) {
+            return nullptr;
+        }
+
+        int width = 0, height = 0, nChannels = 0;
+        unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nChannels, 0);
+        if (data == nullptr) {
+            return nullptr;
+        }
+
+        const int numVertices = width * height;
+        size_t index = 0;
+        RenderVert *v = new RenderVert[numVertices];
+        std::vector<float> vertices;
+        float yScale = 128.0f / 256.0f, yShift = 16.0f;
+        for (int i = 0; i<height; i=i+mPixelPerSample) {
+            for (int j = 0; j<width; j=j+mPixelPerSample) {
+                unsigned char *texel = data + (j + width * i) * nChannels;
+                unsigned char y = texel[0];
+
+                v[index].position.x = -height/2.0f + i;
+                v[index].position.y = (int) y * yScale - yShift;
+                v[index].position.z = -width/2.0f + j;
+                ++index;
+            }
+        }
+        stbi_image_free(data);
+
+        std::vector<unsigned int> indices;
+        for (ui32 i = 0; i < (height/mPixelPerSample)-1; i++) {
+            for (ui32 j = 0; j < (width/mPixelPerSample); j++) {
+                for (ui32 k = 0; k < 2; k++)  {
+                    indices.push_back(j + width * (i + k));
+                }
+            }
+        }
+
+        MeshBuilder meshBuilder;
+        Mesh *mesh = meshBuilder.allocEmptyMesh("terrain", VertexType::RenderVertex).getMesh();
+        if (mesh == nullptr) {
+            return nullptr;
+        }
+
+        mesh->createVertexBuffer(v, (size_t) numVertices * sizeof(RenderVert), BufferAccessType::ReadWrite);
+        mesh->createIndexBuffer(&indices[0], indices.size(), IndexType::UnsignedInt, BufferAccessType::ReadWrite);
+        mesh->addPrimitiveGroup(indices.size(), PrimitiveType::TriangelStrip, 0);
+        TextureResourceArray texResArray;
+        mesh->setMaterial(MaterialBuilder::createBuildinMaterial("default.mat", texResArray, VertexType::RenderVertex));
+
+        return mesh;
+    }
+
     bool onCreate() override {
-        if ( !AppBase::onCreate() ) {
+        if (!AppBase::onCreate()) {
             return false;
         }
-        AppBase::setWindowsTitle("ModelLoader sample!");
 
-        const Common::ArgumentParser &parser = AppBase::getArgumentParser();
-        if ( parser.hasArgument( AssetFolderArg ) ) {
-            m_assetFolder = parser.getArgument( AssetFolderArg );
+        AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, zoom with q, e");
+        Scene *world = new Scene("hello_world");
+        addScene(world, true);
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
+
+        Platform::AbstractWindow *rootWindow = getRootWindow();
+        if (nullptr == rootWindow) {
+            osre_error(Tag, "Root window not available.");
+            return false;
         }
 
-        IO::Uri modelLoc(ModelPath);
-        if (parser.hasArgument(ModelArg)) {
-            String modelArg = parser.getArgument(ModelArg);
-            String model = "file://assets/" + modelArg;
-            modelLoc.setPath(model);
+        Rect2ui windowsRect;
+        rootWindow->getWindowsRect(windowsRect);
+        CameraComponent *camera = AppBase::setupCamera("camera", world, windowsRect, *getIdContainer());
+
+        String filename = "world_heightmap.png";
+        RenderBackend::Mesh *mesh = loadHeightMap(filename);
+        if (mesh != nullptr) {
+            RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
+            rc->addStaticMesh(mesh);
+            world->init();
+            camera->observeBoundingBox(mEntity->getAABB());
         }
+        mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
 
-#ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath( "assets", "../../assets" );
-#else
-        AssetRegistry::registerAssetPath( "assets", "../assets" );
-#endif 
-        AssimpWrapper assimpWrapper(*getIdContainer());
-        if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
-            RenderBackendService *rbSrv( getRenderBackendService() );
-            if (nullptr == rbSrv) {
-                return false;
-            }
-                
-            Platform::AbstractWindow *rootWindow(getRootWindow());
-            if (nullptr == rootWindow) {
-                return false;
-            }
-
-            m_stage = AppBase::createStage("ModelLoading");
-            AppBase::setActiveStage(m_stage);
-            Scene::View *view = m_stage->addView("default_view", nullptr);
-            AppBase::setActiveView(view);
-
-            const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-            view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.01f, 1000.f );
-            Entity *entity = assimpWrapper.getEntity();
-            
-            World *world = getActiveWorld();
-            world->addEntity( entity );
-            view->observeBoundingBox( entity->getAABB() );
-            m_modelNode = entity->getNode();
-        }
+        osre_info(Tag, "Creation finished.");
 
         return true;
     }
 
     void onUpdate() override {
-        
-        // Rotate the model
-        glm::mat4 rot( 1.0 );
-        m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 0, 1, 1 ) );
+        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
+        if (key != Platform::KEY_UNKNOWN) {
+            mKeyboardTransCtrl->update(mKeyboardTransCtrl->getKeyBinding(key));
+        }
 
-        m_angle += 0.01f;
-        RenderBackendService *rbSrv( getRenderBackendService() );
-
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
-
-        rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model);
-
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
         rbSrv->endRenderBatch();
         rbSrv->endPass();
-
-        Scene::DbgRenderer::getInstance()->renderDbgText(-1, -1, 2U, "XXX");
 
         AppBase::onUpdate();
     }
 };
 
-OSRE_MAIN( ModelLoadingApp )
-```
-At first we are generating our render window as usual. In the onCreate-Method we will generate the 
-assimp-wrapper and import a model with it.
+int main(int argc, char *argv[]) {
+    TerrainRenderingApp myApp(argc, argv);
+    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", WindowMode::Windowed, WindowType::Root, RenderBackendType::OpenGLRenderBackend)) {
+        return 1;
+    }
 
-In the onUpdate-callback the model will be rotated.
+    while (myApp.handleEvents()) {
+        myApp.update();
+        myApp.requestNextFrame();
+    }
+
+    myApp.destroy();
+
+    return 0;
+}
+```
+
+## Key Concepts
+The terrain renderer loads a heightmap image and generates a 3D terrain mesh from it. The height values from the image are used to set the Y-coordinate of each vertex, creating the terrain topography.
