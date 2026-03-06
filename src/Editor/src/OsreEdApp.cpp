@@ -69,11 +69,9 @@ static Ui::WidgetBase *createUi() {
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, const_cast<const char **>(argv), "api:script", "The render API:Python startup script"),
         mProject(nullptr),
-        mTransformMatrix(),
         mEntity(nullptr),
         mGuiEntity(nullptr),
         mKeyboardTransCtrl(nullptr),
-        mSceneData(),
         mPythonInterface(nullptr),
         mOrbitalMouseControl(nullptr) {
     mConfig.mFov = 60.0f;
@@ -100,7 +98,7 @@ CameraComponent *OsreEdApp::setupCamera(Scene *scene) {
 void OsreEdApp::newProjectCmd(ui32, void *data) {
     String name = "New project";
     if (data != nullptr) {
-        auto *v = static_cast<cppcore::Variant *>(data);
+        const auto *v = static_cast<cppcore::Variant *>(data);
         name = v->getString();
     }
     mProject = createProject(name);
@@ -178,9 +176,15 @@ bool setupEditorGimmics(const Entity *guiEntity) {
     }
 
     Mesh *axis = MainRenderView::createCoordAxis(150);
+    if (axis == nullptr) {
+        return false;
+    }
     rc->addStaticMesh(axis);
 
     Mesh *grid = MainRenderView::createGrid(50);
+    if (grid == nullptr) {
+        return false;
+    }
     rc->addStaticMesh(grid);
 
     return true;
