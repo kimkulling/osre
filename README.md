@@ -9,7 +9,6 @@ An experimental render engine to explore render engine architecture and modern g
 ## Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kimkulling_osre&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kimkulling_osre)
-[![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
 
 ## Features
 
