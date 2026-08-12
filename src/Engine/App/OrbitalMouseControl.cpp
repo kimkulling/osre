@@ -59,13 +59,15 @@ void OrbitalMouseControl::update(MouseEventListener *mouseListener, const glm::v
         const int diffX = (mMousePos.x - mLastMousePos.x);
         const int diffY = (mMousePos.y - mLastMousePos.y);
         if (diffX != 0) {
+            // Horizontal drag yaws the model around the camera up axis.
             const f32 angle = glm::radians(((f32)diffX)/6);
-            localModel = rotate(localModel, angle, right);
+            localModel = rotate(localModel, angle, up);
         }
 
         if (diffY != 0) {
+            // Vertical drag pitches the model around the camera right axis.
             const f32 angle = glm::radians(((f32)diffY)/6);
-            localModel = rotate(localModel, angle, up);
+            localModel = rotate(localModel, angle, right);
         }
         mTransformMatrix->mModel *= localModel;
     }
